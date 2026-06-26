@@ -73,6 +73,8 @@ app.innerHTML = `
         ${iconButton('Import', 'id="importButton"')}
         ${iconButton('Insert', 'id="insertButton" data-requires-drawing disabled')}
         ${iconButton('Duplicate Drawing')}
+        <span class="toolbar-divider header-divider" aria-hidden="true"></span>
+        ${iconButton('Insert Image', 'id="insertImageButton"')}
       </nav>
       <div class="header-spacer"></div>
       ${iconButton('Zoom All', 'id="resetView"')}
@@ -135,7 +137,7 @@ function panel(body, attrs = '') {
 }
 
 function drawingToolbar() {
-  return `<div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-tools">${drawingTools.filter((label) => label !== 'Select').map((label) => iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`)).join('')}${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${iconButton('Insert Image', 'id="insertImageButton"')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-aids">${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}${iconButton('Properties', 'id="propertiesToggle" aria-pressed="false"')}</div>`;
+  return `<div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-tools">${drawingTools.filter((label) => label !== 'Select').map((label) => iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`)).join('')}${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-aids">${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}${iconButton('Properties', 'id="propertiesToggle" aria-pressed="false"')}</div>`;
 }
 
 function constraintToolbar() {

@@ -85,6 +85,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     parent: objectLayer,
     screenToWorld,
     getScale: () => camera.scale,
+    getDrawingUnit: () => solver.drawingUnit || 'in',
     evaluateNumeric: (expression) => solver.evaluateParameterExpression(expression),
     onSelect: selectOnly,
     onMoveStart: (event, record) => {
