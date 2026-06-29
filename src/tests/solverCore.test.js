@@ -197,13 +197,90 @@ test('driving arc radius can grow very large while endpoints remain fixed', () =
     },
   });
 
-  const result = controller.setDimension(dimension.entity.dimensionId, '1000000000');
+  const result = controller.setDimension(dimension.entity.dimensionId, '1000000000 mm');
   const solved = controller.getEntity('arc-a');
 
   assert.ok(['converged', 'unchanged'].includes(result.status), result.message);
   near(solved.radius, 1_000_000_000, 1e-2);
   assert.deepEqual(solved.start, [-50, 0]);
   assert.deepEqual(solved.end, [50, 0]);
+});
+
+test('arc-heavy dimension edits can converge beyond the former 100 iteration limit', () => {
+  const point = (recordId, index) => ({ kind: 'point', recordId, index });
+  const segment = (recordId) => ({ kind: 'segment', recordId, index: 0 });
+  const dimension = (id, name, expression, value, order) => ({
+    id,
+    name,
+    type: 'Expression',
+    expression,
+    value,
+    kind: 'dimension',
+    driving: true,
+    computed: false,
+    unit: 'in',
+    annotationId: null,
+    error: null,
+    order,
+  });
+  const coincident = (first, second) => ({ type: 'Coincident', featureRefs: [first, second] });
+  const driving = (id, type, start, end) => ({
+    id: `constraint-${id}`,
+    type,
+    source: 'dimension',
+    anchors: { start, end },
+    featureRefs: [],
+    dimensionRef: id,
+  });
+  const controller = createSolverController();
+  const loaded = controller.loadSketch({
+    drawingUnit: 'in',
+    entities: [
+      { id: 'top', type: 'line', construction: true, start: [-349.38309996220386, -302.25739040445217], end: [412.612853934674, -302.25739014081233] },
+      { id: 'right', type: 'line', construction: true, start: [412.6128539727381, -302.257390140596], end: [412.6128539546616, 205.74260958737233] },
+      { id: 'bottom', type: 'line', construction: true, start: [412.61285395538135, 205.74260959221013], end: [-349.38309997554006, 205.7426095968316] },
+      { id: 'left', type: 'line', construction: true, start: [-349.38309995580113, 205.74260959662004], end: [-349.3830999369198, -302.25739040380796] },
+      { id: 'top-arc', type: 'arc', start: [-349.3830999604744, -302.2573902543075], arcPoint: [36.877601600506836, -327.65739081887386], end: [412.6128539013355, -302.25738988351344], center: [31.21164730992925, 2541.8833739307497], radius: 2869.546358503009, ccw: true },
+      { id: 'left-arc', type: 'arc', start: [-349.3830999806072, -302.2573902582662], arcPoint: [-374.7830998938789, -52.06480284046954], end: [-349.3830999961393, 205.74260960144832], center: [907.6315030289745, -48.257129861653205], radius: 1282.420255674127, ccw: false },
+      { id: 'right-arc', type: 'arc', start: [412.61285390135725, -302.257390134904], arcPoint: [438.0128540284352, -102.3873210923577], end: [412.61285393514464, 205.7426095823182], center: [-786.9958631692148, -48.2512253100278], radius: 1226.2043361841393, ccw: true },
+    ],
+    parameters: [
+      dimension('d1', 'd1', '1 in', 25.4, 0),
+      dimension('d2', 'd2', '30 in', 762, 1),
+      dimension('d3', 'd3', 'd1', 25.4, 2),
+      dimension('d4', 'd4', '20 in', 508, 3),
+      dimension('d5', 'd5', 'd1', 25.4, 4),
+    ],
+    constraints: [
+      { type: 'Horizontal', featureRefs: [segment('top')] },
+      coincident(point('right', 0), point('top', 2)),
+      { type: 'Vertical', featureRefs: [segment('right')] },
+      coincident(point('bottom', 0), point('right', 2)),
+      { type: 'Horizontal', featureRefs: [segment('bottom')] },
+      coincident(point('left', 0), point('bottom', 2)),
+      coincident(point('left', 2), point('top', 0)),
+      { type: 'Vertical', featureRefs: [segment('left')] },
+      coincident(point('top-arc', 0), point('top', 0)),
+      coincident(point('top-arc', 2), point('top', 2)),
+      driving('d1', 'Vertical Distance', point('top-arc', 1), point('top', 0)),
+      driving('d2', 'Distance', { type: 'segment-start', recordId: 'top', index: 0 }, { type: 'segment-end', recordId: 'top', index: 0 }),
+      coincident(point('left-arc', 0), point('top-arc', 0)),
+      coincident(point('left-arc', 2), point('bottom', 2)),
+      driving('d3', 'Horizontal Distance', point('left-arc', 1), point('left', 2)),
+      driving('d4', 'Vertical Distance', { type: 'segment-start', recordId: 'left', index: 0 }, { type: 'segment-end', recordId: 'left', index: 0 }),
+      coincident(point('right-arc', 0), point('top', 2)),
+      coincident(point('right-arc', 2), point('right', 2)),
+      driving('d5', 'Horizontal Distance', point('right-arc', 1), point('right', 0)),
+    ],
+  });
+
+  assert.ok(['converged', 'unchanged'].includes(loaded.status), loaded.message);
+  const result = controller.setDimension('d4', '10 in');
+  const solvedLeft = controller.getEntity('left');
+
+  assert.equal(result.status, 'converged', result.message);
+  assert.ok(result.iterations > 100, `Expected the regression fixture to require more than 100 iterations; got ${result.iterations}.`);
+  near(Math.abs(solvedLeft.end[1] - solvedLeft.start[1]), 254, 1e-3);
 });
 
 test('serialized sketches retain stable entity and constraint references', () => {
@@ -216,6 +293,76 @@ test('serialized sketches retain stable entity and constraint references', () =>
   assert.ok(['converged', 'unchanged'].includes(result.status));
   assert.equal(restored.getEntity('stable-line').id, 'stable-line');
   assert.equal(restored.constraints()[0].id, 'stable-horizontal');
+});
+
+test('drawing properties persist and unitless dimension input uses the drawing unit', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    drawingUnit: 'in',
+    dxfExportUnit: 'cm',
+    parameters: [{
+      id: 'dimension-width',
+      name: 'd1',
+      type: 'Expression',
+      expression: '1 in',
+      value: 25.4,
+      kind: 'dimension',
+      driving: true,
+      computed: false,
+      unit: 'in',
+      annotationId: null,
+      error: null,
+      order: 0,
+    }],
+  });
+
+  assert.ok(['converged', 'unchanged'].includes(controller.setDimension('d1', '2').status));
+  near(controller.dimensions.get('d1').value, 50.8);
+  assert.equal(controller.dimensions.get('d1').expression, '2');
+
+  controller.setDrawingProperties({ drawingUnit: 'mm', dxfExportUnit: 'ft' });
+  assert.equal(controller.dimensions.get('d1').value, 50.8);
+  assert.equal(controller.dimensions.get('d1').unit, 'mm');
+  assert.equal(controller.dimensions.get('d1').expression, '50.8');
+  assert.equal(controller.getDimensionText('d1', 'value'), '50.8');
+
+  assert.ok(['converged', 'unchanged'].includes(controller.setDimension('d1', '75').status));
+  assert.equal(controller.dimensions.get('d1').value, 75);
+  assert.equal(controller.dimensions.get('d1').expression, '75');
+  assert.deepEqual(
+    (({ drawingUnit, dxfExportUnit }) => ({ drawingUnit, dxfExportUnit }))(controller.getSketchSnapshot()),
+    { drawingUnit: 'mm', dxfExportUnit: 'ft' },
+  );
+});
+
+test('driven rendered measurements persist for multi-curve-length dimensions', () => {
+  const controller = createSolverController();
+  const line = controller.addEntity({ id: 'mcl-line', type: 'line', start: [0, 0], end: [100, 0] });
+  const added = controller.addDimension({
+    type: 'multi-curve-length-dimension',
+    dimensionMode: 'driven',
+    target: [50, 0],
+    elbow: [120, -20],
+    label: [120, -20],
+    text: '3.937',
+    measuredValue: 100,
+    useRenderedMeasurement: true,
+    anchors: {
+      features: [{ kind: 'segment', recordId: line.id, index: 0 }],
+    },
+  });
+
+  assert.equal(controller.dimensions.get(added.entity.dimensionId).value, 100);
+  controller.dimensions.evaluateAll({ strict: false });
+  assert.equal(controller.dimensions.get(added.entity.dimensionId).value, 100);
+
+  controller.updateDimensionAnnotation(added.entity.dimensionId, {
+    ...added.entity,
+    measuredValue: 120,
+    useRenderedMeasurement: true,
+  });
+  controller.dimensions.evaluateAll({ strict: false });
+  assert.equal(controller.dimensions.get(added.entity.dimensionId).value, 120);
 });
 
 test('redundant constraints remain stable', () => {

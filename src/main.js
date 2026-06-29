@@ -1,12 +1,14 @@
 import { drawingTools, constraintGroups, dimensionTools, directories, sampleEntities } from './modules/config.js';
 import { createInfiniteCanvas } from './modules/infiniteCanvas.js';
 import { createDrawingTools } from './modules/DrawingTools.js';
+import { createFilletTools } from './modules/FilletTools.js';
 import { createSmartDimensionTools } from './modules/SmartDimensionTools.js';
 import { createConstraintHandlers } from './modules/ConstraintHandlers.js';
 import { createSolverController } from './modules/solver/SolverController.js';
 import { parseDrawingText, serializeDxf, serializeDrawingJson } from './modules/DrawingIO.js';
 import { DrawingHistory } from './modules/DrawingHistory.js';
 import { createImageEntityFromFile } from './modules/ImageManipulation.js';
+import { formatUnitlessValue } from './modules/solver/Units.js';
 
 const iconPaths = {
   New: '<path d="M12 5v14M5 12h14"/>',
@@ -23,6 +25,7 @@ const iconPaths = {
   Select: '<path d="M6 4l10 8-5 1 3 6-3 1-3-6-4 3z"/>',
   Line: '<path d="M5 19L19 5"/>',
   Arc: '<path d="M6 16a8 8 0 0 1 12 0"/>',
+  Fillet: '<path d="M5 19v-6a8 8 0 0 1 8-8h6"/><path d="M5 19h4M19 5v4"/>',
   Polyline: '<path d="M4 17l5-8 5 4 6-7"/>',
   Polygon: '<path d="M12 4l7 5v8l-7 4-7-4V9z"/>',
   Circle: '<circle cx="12" cy="12" r="7"/>',
@@ -30,6 +33,7 @@ const iconPaths = {
   'Curve / Spline': '<path d="M4 15c4-8 8 8 16-3"/>',
   Construction: '<path d="M12 4l8 8-8 8-8-8z"/><path d="M4 12h16" stroke-dasharray="2 2"/>',
   'Insert Image': '<rect x="4" y="5" width="16" height="14"/><circle cx="9" cy="10" r="2"/><path d="M5 17l5-5 3 3 2-2 4 4"/>',
+  'Drawing Properties': '<path d="M6 4h9l3 3v13H6z"/><path d="M15 4v4h4M9 12h6M9 16h6"/><circle cx="8" cy="12" r="1"/><circle cx="16" cy="16" r="1"/>',
   'Auto Constrain': '<path d="M5 12h14"/><path d="M12 5v14"/><circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/>',
   'Object Snap': '<path d="M5 12h14M12 5v14"/><circle cx="12" cy="12" r="3"/><path d="M4 4h4M4 4v4M20 4h-4M20 4v4M4 20h4M4 20v-4M20 20h-4M20 20v-4"/>',
   Properties: '<path d="M5 7h14M5 12h14M5 17h14"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="17" r="2"/>',
@@ -75,6 +79,7 @@ app.innerHTML = `
         ${iconButton('Duplicate Drawing')}
         <span class="toolbar-divider header-divider" aria-hidden="true"></span>
         ${iconButton('Insert Image', 'id="insertImageButton"')}
+        ${iconButton('Drawing Properties', 'id="drawingPropertiesButton"')}
       </nav>
       <div class="header-spacer"></div>
       ${iconButton('Zoom All', 'id="resetView"')}
@@ -137,7 +142,13 @@ function panel(body, attrs = '') {
 }
 
 function drawingToolbar() {
-  return `<div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-tools">${drawingTools.filter((label) => label !== 'Select').map((label) => iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`)).join('')}${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-aids">${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}${iconButton('Properties', 'id="propertiesToggle" aria-pressed="false"')}</div>`;
+  const tools = drawingTools
+    .filter((label) => label !== 'Select')
+    .map((label) => iconButton(label, label === 'Fillet'
+      ? 'data-fillet-tool aria-pressed="false"'
+      : `data-drawing-tool="${label}" aria-pressed="false"`))
+    .join('');
+  return `<div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-tools">${tools}${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}</div><span class="toolbar-divider"></span><div class="toolbar-section drawing-aids">${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}${iconButton('Properties', 'id="propertiesToggle" aria-pressed="false"')}</div>`;
 }
 
 function constraintToolbar() {
@@ -221,6 +232,7 @@ document.getElementById('insertImageButton').addEventListener('click', () => {
   window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'image' } }));
   document.getElementById('imageFileInput').click();
 });
+document.getElementById('drawingPropertiesButton').addEventListener('click', openDrawingPropertiesModal);
 document.getElementById('imageFileInput').addEventListener('change', async (event) => {
   const file = event.target.files[0];
   event.target.value = '';
@@ -252,6 +264,45 @@ function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 }
 
+const drawingUnitOptions = [
+  ['in', 'Inches'],
+  ['mm', 'Millimeters'],
+  ['cm', 'Centimeters'],
+  ['m', 'Meters'],
+  ['ft', 'Feet'],
+];
+
+function openDrawingPropertiesModal() {
+  const properties = canvasController.getDrawingProperties();
+  const options = (selected) => drawingUnitOptions
+    .map(([value, label]) => `<option value="${value}" ${value === selected ? 'selected' : ''}>${label}</option>`)
+    .join('');
+  modal(`<div class="drawing-properties-modal-content">
+    <h2>Drawing Properties</h2>
+    <p class="drawing-properties-note">Dimension and parameter expressions use the drawing unit automatically. Unit suffixes are not required.</p>
+    <label class="drawing-property-field" for="drawingUnitProperty">
+      <span>Drawing Units</span>
+      <select id="drawingUnitProperty">${options(properties.drawingUnit)}</select>
+    </label>
+    <label class="drawing-property-field" for="dxfExportUnitProperty">
+      <span>DXF Export Unit</span>
+      <select id="dxfExportUnitProperty">${options(properties.dxfExportUnit)}</select>
+    </label>
+    <p class="drawing-properties-footnote">The DXF setting changes exported coordinates only; it does not resize the drawing.</p>
+  </div>`);
+  const backdrop = document.querySelector('.modal-backdrop');
+  backdrop.querySelector('.modal').classList.add('drawing-properties-modal');
+  const drawingUnit = backdrop.querySelector('#drawingUnitProperty');
+  const dxfExportUnit = backdrop.querySelector('#dxfExportUnitProperty');
+  const apply = () => canvasController.setDrawingProperties({
+    drawingUnit: drawingUnit.value,
+    dxfExportUnit: dxfExportUnit.value,
+  });
+  drawingUnit.addEventListener('change', apply);
+  dxfExportUnit.addEventListener('change', apply);
+  drawingUnit.focus();
+}
+
 function openParametersModal(solver, canvas) {
   modal(`<div class="parameters-modal-content">
     <div class="parameters-heading"><h2>Parameters</h2><button type="button" class="parameters-help-button" aria-label="Expression help" title="Expression help">?</button></div>
@@ -262,7 +313,7 @@ function openParametersModal(solver, canvas) {
         <tbody></tbody>
       </table>
     </div>
-    <p class="parameters-help">Operators: + - * / ^, comparisons, &&, ||, !. Functions: min, max, abs, round, sqrt, pow, clamp, if, and degree-based trig. Units: mm, cm, m, in, deg.</p>
+    <p class="parameters-help">Operators: + - * / ^, comparisons, &&, ||, !. Functions: min, max, abs, round, sqrt, pow, clamp, if, and degree-based trig. Numeric values use the drawing unit.</p>
   </div>`);
   const backdrop = document.querySelector('.modal-backdrop');
   backdrop.querySelector('.modal').classList.add('parameters-modal');
@@ -271,15 +322,22 @@ function openParametersModal(solver, canvas) {
   let draggingId = null;
   backdrop.querySelector('.parameters-help-button').addEventListener('click', openExpressionHelpModal);
 
+  const expressionWithoutUnits = (expression) => String(expression ?? '')
+    .replace(/\s+(?:mm|cm|m|in|ft|deg)\b/gi, '')
+    .trim();
+  const expressionForEntry = (entry) => entry.computed
+    ? formatUnitlessValue(entry.value, entry.unit)
+    : expressionWithoutUnits(entry.expression);
+
   function rowMarkup(entry) {
     const dimension = entry.kind === 'dimension';
     const computed = dimension && !entry.driving;
     const yesNo = entry.type === 'Yes/No' && !dimension;
     const rowClass = [dimension ? 'dimension-parameter-row' : '', computed ? 'computed-parameter-row' : '', entry.error ? 'invalid-parameter-row' : '', entry.id === selectedId ? 'selected-parameter-row' : ''].filter(Boolean).join(' ');
-    const valueText = typeof entry.value === 'boolean' ? (entry.value ? 'Yes' : 'No') : solver.dimensions.formatValue(entry.value, entry.unit);
+    const valueText = typeof entry.value === 'boolean' ? (entry.value ? 'Yes' : 'No') : formatUnitlessValue(entry.value, entry.unit);
     const expressionControl = yesNo
       ? `<label class="parameter-boolean-control"><input type="checkbox" class="parameter-boolean" aria-label="${escapeHtml(entry.name)} value" ${entry.value ? 'checked' : ''} /><span>${entry.value ? 'Yes' : 'No'}</span></label>`
-      : `<input class="parameter-expression" aria-label="Parameter expression" value="${escapeHtml(entry.expression)}" ${computed ? 'readonly' : ''} aria-invalid="${entry.error ? 'true' : 'false'}" />`;
+      : `<input class="parameter-expression" aria-label="Parameter expression" value="${escapeHtml(expressionForEntry(entry))}" ${computed ? 'readonly' : ''} aria-invalid="${entry.error ? 'true' : 'false'}" />`;
     return `<tr tabindex="0" class="${rowClass}" data-parameter-id="${escapeHtml(entry.id)}" title="${escapeHtml(entry.error || `Value: ${valueText}`)}">
       <td><input type="hidden" value="${escapeHtml(entry.id)}" /><span class="row-drag-handle" draggable="true" aria-hidden="true" title="Drag to reorder">&#8942;&#8942;</span><input class="parameter-name" aria-label="Parameter name" value="${escapeHtml(entry.name)}" /></td>
       <td><select class="parameter-type" aria-label="Parameter type" ${dimension ? 'disabled' : ''}><option ${entry.type === 'Expression' ? 'selected' : ''}>Expression</option><option ${entry.type === 'Yes/No' ? 'selected' : ''}>Yes/No</option></select></td>
@@ -310,7 +368,7 @@ function openParametersModal(solver, canvas) {
     if (['converged', 'unchanged'].includes(outcome.result?.status)) canvas.applySolverSnapshot();
     if (outcome.entry?.kind === 'dimension') canvas.updateDimensionParameterName(outcome.entry.id, outcome.entry.name);
     row.classList.toggle('invalid-parameter-row', Boolean(outcome.entry?.error));
-    row.title = outcome.entry?.error || `Value: ${solver.dimensions.formatValue(outcome.entry?.value, outcome.entry?.unit)}`;
+    row.title = outcome.entry?.error || `Value: ${formatUnitlessValue(outcome.entry?.value, outcome.entry?.unit)}`;
     row.querySelector('.parameter-expression')?.setAttribute('aria-invalid', String(Boolean(outcome.entry?.error)));
     canvas.notifyObjectChange();
   }
@@ -321,7 +379,7 @@ function openParametersModal(solver, canvas) {
       if (candidate.dataset.parameterId === activeId) return;
       const input = candidate.querySelector('.parameter-expression');
       const entry = entries.get(candidate.dataset.parameterId);
-      if (input && entry && document.activeElement !== input) input.value = entry.expression;
+      if (input && entry && document.activeElement !== input) input.value = expressionForEntry(entry);
     });
   }
 
@@ -420,11 +478,11 @@ function openExpressionHelpModal() {
     <div class="modal expression-help-modal" role="dialog" aria-modal="true" aria-labelledby="expressionHelpTitle">
       <button class="close expression-help-close" aria-label="Close" title="Close">x</button>
       <h2 id="expressionHelpTitle">Expression examples</h2>
-      <section><h3>Conditional values</h3><p><code>if(condition, value_when_true, value_when_false)</code></p><pre>if(test_YN, 600 mm, 50 mm)</pre><p>If <code>test_YN</code> is checked, the result is 600 mm; otherwise it is 50 mm.</p></section>
-      <section><h3>Parameter references and arithmetic</h3><pre>plate_width / 2 + 10 mm</pre><pre>d1 - 25 mm</pre></section>
-      <section><h3>Comparisons and logic</h3><pre>width &gt;= 100 mm</pre><pre>enabled &amp;&amp; width &lt; 500 mm</pre><pre>!disabled</pre></section>
-      <section><h3>Functions</h3><pre>max(25 mm, width / 4)</pre><pre>clamp(width, 100 mm, 600 mm)</pre><pre>round(sqrt(area))</pre><pre>sin(30) * 100 mm</pre></section>
-      <section><h3>Units and constants</h3><p>Units: <code>mm</code>, <code>cm</code>, <code>m</code>, <code>in</code>, <code>deg</code>. Constants: <code>pi</code>, <code>e</code>, <code>yes</code>, <code>no</code>, <code>true</code>, <code>false</code>.</p></section>
+      <section><h3>Conditional values</h3><p><code>if(condition, value_when_true, value_when_false)</code></p><pre>if(test_YN, 600, 50)</pre><p>If <code>test_YN</code> is checked, the result is 600; otherwise it is 50.</p></section>
+      <section><h3>Parameter references and arithmetic</h3><pre>plate_width / 2 + 10</pre><pre>d1 - 25</pre></section>
+      <section><h3>Comparisons and logic</h3><pre>width &gt;= 100</pre><pre>enabled &amp;&amp; width &lt; 500</pre><pre>!disabled</pre></section>
+      <section><h3>Functions</h3><pre>max(25, width / 4)</pre><pre>clamp(width, 100, 600)</pre><pre>round(sqrt(area))</pre><pre>sin(30) * 100</pre></section>
+      <section><h3>Drawing units and constants</h3><p>Numeric values use the drawing unit. Constants: <code>pi</code>, <code>e</code>, <code>yes</code>, <code>no</code>, <code>true</code>, <code>false</code>.</p></section>
     </div>
   </div>`);
   const helpBackdrop = document.querySelector('.expression-help-backdrop');
@@ -472,6 +530,7 @@ constraintToggle.addEventListener('keydown', (event) => {
 });
 
 function deactivateConstraintSelection() {
+  if (constraintToggle.getAttribute('aria-pressed') !== 'true') return;
   constraintController?.deactivate();
   constraintToggle.setAttribute('aria-pressed', 'false');
   constraintToggle.classList.remove('active');
@@ -703,6 +762,10 @@ const drawingHistory = new DrawingHistory({
     redoButton.disabled = !canRedo;
   },
 });
+window.addEventListener('paramagic:history-checkpoint', () => {
+  drawingHistory.flush();
+  drawingHistory.record();
+});
 function runHistoryAction(action) {
   window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'history' } }));
   return action === 'undo' ? drawingHistory.undo() : drawingHistory.redo();
@@ -729,9 +792,10 @@ document.getElementById('newButton').onclick = () => {
   canvasController.clearDrawing();
   updateDrawingActionState();
 };
-canvasController.onObjectsChange(() => {
+canvasController.onObjectsChange((change = {}) => {
   updateDrawingActionState();
-  drawingHistory.recordSoon();
+  if (change.history === 'commit') drawingHistory.record();
+  else drawingHistory.recordSoon();
 });
 filenameInput.addEventListener('input', updateDrawingActionState);
 filenameInput.addEventListener('blur', updateDrawingActionState);
@@ -739,6 +803,11 @@ filenameInput.addEventListener('input', () => drawingHistory.recordSoon());
 updateDrawingActionState();
 
 createDrawingTools({
+  toolbar: document.querySelector('.drawing-tools'),
+  canvas: canvasController,
+});
+
+createFilletTools({
   toolbar: document.querySelector('.drawing-tools'),
   canvas: canvasController,
 });

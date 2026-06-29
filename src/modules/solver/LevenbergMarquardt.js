@@ -10,7 +10,15 @@ function diagnosticConstraints(evaluation) {
     .map((item) => item.constraintId);
 }
 
-export function solveLevenbergMarquardt({ model, registry, dimensions, maxIterations = 100, tolerance = 1e-8 }) {
+export const DEFAULT_MAX_ITERATIONS = 2000;
+
+export function solveLevenbergMarquardt({
+  model,
+  registry,
+  dimensions,
+  maxIterations = DEFAULT_MAX_ITERATIONS,
+  tolerance = 1e-8,
+}) {
   const now = () => globalThis.performance?.now?.() ?? Date.now();
   const startedAt = now();
   const timings = { residualMs: 0, jacobianMs: 0, linearSolveMs: 0, totalMs: 0 };

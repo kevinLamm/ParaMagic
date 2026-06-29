@@ -1,5 +1,14 @@
+import { evaluateFilletedGeometry } from './FilletFeatures.js';
+
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const dxfUnitFactors = { 1: 25.4, 2: 304.8, 4: 1, 5: 10, 6: 1000 };
+const dxfUnits = {
+  in: { code: 1, factor: 25.4 },
+  ft: { code: 2, factor: 304.8 },
+  mm: { code: 4, factor: 1 },
+  cm: { code: 5, factor: 10 },
+  m: { code: 6, factor: 1000 },
+};
 let fallbackId = 0;
 
 function newId(prefix) {
@@ -13,6 +22,7 @@ export function normalizeDrawingData(input = {}) {
   const parameters = source.parameters || source.dimensions || [];
   return {
     drawingUnit: source.drawingUnit || 'in',
+    dxfExportUnit: source.dxfExportUnit || 'in',
     entities: clone(source.entities || []),
     constraints: clone(source.constraints || []),
     parameters: clone(parameters),
@@ -95,6 +105,7 @@ export function mergeDrawingData(baseInput, insertedInput) {
   const parameters = [...base.parameters, ...remapped.parameters];
   return {
     drawingUnit: base.drawingUnit,
+    dxfExportUnit: base.dxfExportUnit,
     entities: [...base.entities, ...remapped.entities],
     constraints: [...base.constraints, ...remapped.constraints],
     parameters,
@@ -119,6 +130,12 @@ function dxfUnitFactor(pairs) {
   return dxfUnitFactors[Number(setting?.value)] || 1;
 }
 
+function dxfUnitName(pairs) {
+  const marker = pairs.findIndex((pair) => pair.code === 9 && pair.value === '$INSUNITS');
+  const setting = marker < 0 ? null : pairs.slice(marker + 1, marker + 4).find((pair) => pair.code === 70);
+  return Object.entries(dxfUnits).find(([, config]) => config.code === Number(setting?.value))?.[0] || 'mm';
+}
+
 function entityFields(pairs) {
   const fields = new Map();
   pairs.forEach(({ code, value }) => {
@@ -131,6 +148,7 @@ function entityFields(pairs) {
 export function parseDxf(text) {
   const pairs = dxfPairs(text);
   const factor = dxfUnitFactor(pairs);
+  const unit = dxfUnitName(pairs);
   const entities = [];
   let inEntities = false;
   for (let index = 0; index < pairs.length; index += 1) {
@@ -163,7 +181,7 @@ export function parseDxf(text) {
     }
     index = end - 1;
   }
-  return normalizeDrawingData({ drawingUnit: 'in', entities });
+  return normalizeDrawingData({ drawingUnit: unit, dxfExportUnit: unit, entities });
 }
 
 function circleThrough(a, b, c) {
@@ -188,12 +206,14 @@ function arcCircle(entity) {
 
 export function serializeDxf(snapshot) {
   const drawing = normalizeDrawingData(snapshot);
-  const scale = 1 / 25.4;
-  const lines = ['0', 'SECTION', '2', 'HEADER', '9', '$INSUNITS', '70', '1', '0', 'ENDSEC', '0', 'SECTION', '2', 'ENTITIES'];
+  const drawingUnit = dxfUnits[drawing.drawingUnit] || dxfUnits.in;
+  const exportUnit = dxfUnits[drawing.dxfExportUnit] || dxfUnits.in;
+  const scale = drawingUnit.factor / exportUnit.factor;
+  const lines = ['0', 'SECTION', '2', 'HEADER', '9', '$INSUNITS', '70', String(exportUnit.code), '0', 'ENDSEC', '0', 'SECTION', '2', 'ENTITIES'];
   const push = (...values) => lines.push(...values.map(String));
   const x = (value) => Number(value) * scale;
   const y = (value) => -Number(value) * scale;
-  drawing.entities.forEach((entity) => {
+  evaluateFilletedGeometry(drawing.entities.filter((entity) => entity.type !== 'image')).forEach((entity) => {
     if (entity.type === 'line') push(0, 'LINE', 8, 0, 10, x(entity.start[0]), 20, y(entity.start[1]), 11, x(entity.end[0]), 21, y(entity.end[1]));
     if (entity.type === 'circle') push(0, 'CIRCLE', 8, 0, 10, x(entity.center[0]), 20, y(entity.center[1]), 40, x(entity.radius));
     if (entity.type === 'arc') {

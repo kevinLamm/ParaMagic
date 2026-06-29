@@ -1,3 +1,5 @@
+import { featureLength, featureTargetPoint } from './DimensionFeatureGeometry.js';
+
 function midpoint(a, b) {
   return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 }
@@ -25,6 +27,26 @@ function pointLength(point) {
 function unitVector(point, fallback = [1, 0]) {
   const length = pointLength(point);
   return length > 0.0001 ? [point[0] / length, point[1] / length] : fallback;
+}
+
+function lineIntersection(a, b) {
+  const r = subtractPoints(a.end, a.start);
+  const s = subtractPoints(b.end, b.start);
+  const denominator = r[0] * s[1] - r[1] * s[0];
+  if (Math.abs(denominator) < 0.0001) return null;
+  const delta = subtractPoints(b.start, a.start);
+  const t = (delta[0] * s[1] - delta[1] * s[0]) / denominator;
+  return addPoints(a.start, scalePoint(r, t));
+}
+
+function distanceToSegment(point, start, end) {
+  const dx = end[0] - start[0];
+  const dy = end[1] - start[1];
+  const lengthSquared = dx * dx + dy * dy;
+  if (!lengthSquared) return pointLength(subtractPoints(point, start));
+  const t = Math.max(0, Math.min(1, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / lengthSquared));
+  const projection = [start[0] + dx * t, start[1] + dy * t];
+  return pointLength(subtractPoints(point, projection));
 }
 
 function perpendicular(point) {
@@ -375,4 +397,351 @@ export function moveDimensionLine(record, world, startWorld, startEntity, scale)
     entity.label = [entity.elbow[0] + (34 / scale + 8 / scale) * textSide, entity.elbow[1]];
   }
   updateDimensionNode(record, scale);
+}
+
+export function dimensionAnchorRecordIds(entity) {
+  const ids = new Set();
+  const visit = (value) => {
+    if (!value || typeof value !== 'object') return;
+    if (value.recordId) ids.add(value.recordId);
+    Object.values(value).forEach(visit);
+  };
+  visit(entity.anchors);
+  return ids;
+}
+
+export function createDimensionLinkManager({
+  records,
+  recordById,
+  recordHandles,
+  recordSegments,
+  renderedEntityForRecord,
+  filletEvaluation,
+  arcCircle,
+  screenToWorld,
+  formatDrawingLength,
+  solver,
+  applyManagedDimensionText,
+  updateRecordHandles,
+  syncScreenInvariantSizing,
+  getScale,
+}) {
+  function resolveRecordEntity(record, rendered = false) {
+    return (rendered ? renderedEntityForRecord(record) : null) || record?.entity || null;
+  }
+
+  function nearestSegmentFeature(record, world, sourceNode = null, { rendered = false } = {}) {
+    const segments = recordSegments(resolveRecordEntity(record, rendered));
+    if (!segments.length) return null;
+    const requestedIndex = sourceNode?.dataset?.segmentIndex;
+    const segment = requestedIndex === undefined
+      ? segments.reduce((best, current) => {
+        const distance = distanceToSegment(world, current.start, current.end);
+        return !best || distance < best.distance ? { ...current, distance } : best;
+      }, null)
+      : segments.find((item) => String(item.index) === requestedIndex);
+    if (!segment) return null;
+    return {
+      kind: 'segment',
+      recordId: record.id,
+      entityType: record.entity.type,
+      start: [...segment.start],
+      end: [...segment.end],
+      index: segment.index,
+      node: record.segmentNodes?.[segment.index] || sourceNode || record.node,
+    };
+  }
+
+  function segmentFeatureFromRecord(record, index = 0, { rendered = false } = {}) {
+    const segments = recordSegments(resolveRecordEntity(record, rendered));
+    const segment = segments[Math.max(0, Math.min(index, segments.length - 1))];
+    if (!segment) return null;
+    return {
+      kind: 'segment',
+      recordId: record.id,
+      entityType: record.entity.type,
+      start: [...segment.start],
+      end: [...segment.end],
+      index: segment.index,
+      node: record.segmentNodes?.[segment.index] || record.node,
+    };
+  }
+
+  function entityFeatureFromRecord(record, { rendered = false } = {}) {
+    if (!record || !['geometry', 'fillet'].includes(record.recordType)) return null;
+    if (record.recordType === 'fillet') {
+      const evaluated = filletEvaluation(record);
+      if (!evaluated.valid) return null;
+      return {
+        kind: 'arc',
+        recordId: record.id,
+        entityType: 'fillet',
+        center: [...evaluated.arc.center],
+        radius: evaluated.arc.radius,
+        start: [...evaluated.arc.start],
+        arcPoint: [...evaluated.arc.arcPoint],
+        end: [...evaluated.arc.end],
+        node: record.node,
+        derivedFromFillet: true,
+      };
+    }
+    const entity = resolveRecordEntity(record, rendered);
+    if (entity?.type === 'circle') {
+      return { kind: 'circle', recordId: record.id, center: [...entity.center], radius: entity.radius, node: record.node };
+    }
+    if (entity?.type === 'arc') {
+      const circle = arcCircle(entity);
+      if (!circle) return null;
+      return {
+        kind: 'arc',
+        recordId: record.id,
+        center: circle.center,
+        radius: circle.radius,
+        start: [...entity.start],
+        arcPoint: [...entity.arcPoint],
+        end: [...entity.end],
+        node: record.node,
+      };
+    }
+    return null;
+  }
+
+  function getFeatureFromEvent(event, { rendered = false } = {}) {
+    const recordElement = event.target.closest?.('.canvas-record');
+    if (!recordElement) return null;
+    const record = records.find((item) => item.id === recordElement.dataset.recordId);
+    if (!record || !['geometry', 'fillet'].includes(record.recordType)) return null;
+    if (record.recordType === 'fillet') {
+      const feature = entityFeatureFromRecord(record, { rendered: true });
+      return feature ? { ...feature, node: event.target } : null;
+    }
+    const world = screenToWorld(event.clientX, event.clientY);
+    if (event.target.classList?.contains('point-handle')) {
+      const index = Number(event.target.dataset.handleIndex);
+      const entity = resolveRecordEntity(record, rendered);
+      const point = recordHandles(entity)[index];
+      return point ? { kind: 'point', recordId: record.id, entityType: record.entity.type, index, point: [...point], node: event.target } : null;
+    }
+    if (event.target.dataset?.segmentIndex !== undefined) return nearestSegmentFeature(record, world, event.target, { rendered });
+    if (record.entity.type === 'line') return { ...nearestSegmentFeature(record, world, record.node, { rendered }), node: event.target };
+    if (record.entity.type === 'rect' || record.entity.type === 'polyline' || record.entity.type === 'polygon') return nearestSegmentFeature(record, world, event.target, { rendered });
+    if (record.entity.type === 'circle') {
+      const entity = resolveRecordEntity(record, rendered);
+      return { kind: 'circle', recordId: record.id, center: [...entity.center], radius: entity.radius, node: event.target };
+    }
+    if (record.entity.type === 'arc') {
+      const entity = resolveRecordEntity(record, rendered);
+      const circle = arcCircle(entity);
+      if (!circle) return null;
+      return {
+        kind: 'arc',
+        recordId: record.id,
+        entityType: record.entity.type,
+        center: circle.center,
+        radius: circle.radius,
+        start: [...entity.start],
+        arcPoint: [...entity.arcPoint],
+        end: [...entity.end],
+        node: event.target,
+      };
+    }
+    if (record.entity.type === 'curve') {
+      const entity = resolveRecordEntity(record, rendered);
+      return {
+        kind: 'curve',
+        recordId: record.id,
+        entityType: record.entity.type,
+        points: entity.points.map((point) => [...point]),
+        node: event.target,
+      };
+    }
+    return null;
+  }
+
+  function getEntityFeature(recordId, options = {}) {
+    return entityFeatureFromRecord(recordById(recordId, { includeFillets: true }), options);
+  }
+
+  function getSegmentFeature(recordId, index = 0, options = {}) {
+    const record = recordById(recordId);
+    return record ? segmentFeatureFromRecord(record, index, options) : null;
+  }
+
+  function getPointFeature(recordId, index = 0, { rendered = false } = {}) {
+    const record = recordById(recordId);
+    const entity = resolveRecordEntity(record, rendered);
+    const point = entity ? recordHandles(entity)[index] : null;
+    return point ? { kind: 'point', recordId: record.id, entityType: record.entity.type, index, point: [...point] } : null;
+  }
+
+  function resolveAnchor(anchor, { rendered = false } = {}) {
+    if (!anchor) return null;
+    const record = recordById(anchor.recordId, { includeFillets: true });
+    if (!record) return null;
+    const entity = resolveRecordEntity(record, rendered && record.recordType !== 'fillet');
+    if (anchor.type === 'point') return recordHandles(entity)[anchor.index]?.slice() || null;
+    if (anchor.type === 'segment-start' || anchor.type === 'segment-end') {
+      const segment = segmentFeatureFromRecord(record, anchor.index, { rendered });
+      if (!segment) return null;
+      return anchor.type === 'segment-start' ? [...segment.start] : [...segment.end];
+    }
+    if (anchor.type === 'center') return entityFeatureFromRecord(record, { rendered })?.center?.slice() || null;
+    if (anchor.type === 'radius') return entityFeatureFromRecord(record, { rendered })?.radius || null;
+    return null;
+  }
+
+  function resolveFeatureFromAnchor(featureAnchor, { rendered = false } = {}) {
+    const record = recordById(featureAnchor?.recordId, { includeFillets: true });
+    if (!record) return null;
+    if (featureAnchor.kind === 'segment') return segmentFeatureFromRecord(record, featureAnchor.index, { rendered });
+    if (featureAnchor.kind === 'circle' || featureAnchor.kind === 'arc') return entityFeatureFromRecord(record, { rendered });
+    if (featureAnchor.kind === 'curve') {
+      const entity = resolveRecordEntity(record, rendered && record.recordType !== 'fillet');
+      return entity?.type === 'curve'
+        ? { kind: 'curve', recordId: record.id, points: entity.points.map((point) => [...point]) }
+        : null;
+    }
+    return null;
+  }
+
+  function computedDimensionValue(entity) {
+    if (entity.useRenderedMeasurement && Number.isFinite(entity.measuredValue)) return Number(entity.measuredValue);
+    if (entity.type === 'dimension-line') {
+      const a = entity.measureStart || entity.start;
+      const b = entity.measureEnd || entity.end;
+      if (entity.subtype === 'horizontal') return Math.abs(b[0] - a[0]);
+      if (entity.subtype === 'vertical') return Math.abs(b[1] - a[1]);
+      return pointLength(subtractPoints(a, b));
+    }
+    if (entity.type === 'radius-dimension') return entity.radius;
+    if (entity.type === 'angle-dimension') {
+      const first = subtractPoints(entity.start, entity.vertex);
+      const second = subtractPoints(entity.end, entity.vertex);
+      return Math.abs(Math.atan2(first[0] * second[1] - first[1] * second[0], first[0] * second[0] + first[1] * second[1])) * 180 / Math.PI;
+    }
+    if (entity.type === 'multi-curve-length-dimension') {
+      const features = entity.anchors?.features?.map(resolveFeatureFromAnchor).filter(Boolean) || [];
+      return features.reduce((total, feature) => total + featureLength(feature), 0);
+    }
+    return 0;
+  }
+
+  function computedDimensionUnit(entity) {
+    return entity.type === 'angle-dimension' ? 'deg' : solver.drawingUnit;
+  }
+
+  function dimensionLineText(entity) {
+    const sourceStart = entity.measureStart || entity.start;
+    const sourceEnd = entity.measureEnd || entity.end;
+    const measured = entity.subtype === 'horizontal'
+      ? Math.abs(sourceEnd[0] - sourceStart[0])
+      : entity.subtype === 'vertical'
+        ? Math.abs(sourceEnd[1] - sourceStart[1])
+        : pointLength(subtractPoints(entity.start, entity.end));
+    return formatDrawingLength(measured);
+  }
+
+  function updateLinkedDimensionEntity(entity) {
+    if (!entity.anchors) return false;
+    const useRendered = entity.dimensionMode === 'driven';
+    if (entity.type === 'dimension-line') {
+      const oldMid = midpoint(entity.measureStart || entity.start, entity.measureEnd || entity.end);
+      const nextStart = resolveAnchor(entity.anchors.start, { rendered: useRendered }) || entity.start;
+      const nextEnd = resolveAnchor(entity.anchors.end, { rendered: useRendered }) || entity.end;
+      const nextMeasureStart = resolveAnchor(entity.anchors.measureStart, { rendered: useRendered }) || nextStart;
+      const nextMeasureEnd = resolveAnchor(entity.anchors.measureEnd, { rendered: useRendered }) || nextEnd;
+      const nextMid = midpoint(nextMeasureStart, nextMeasureEnd);
+      const delta = subtractPoints(nextMid, oldMid);
+      entity.start = nextStart;
+      entity.end = nextEnd;
+      entity.measureStart = nextMeasureStart;
+      entity.measureEnd = nextMeasureEnd;
+      entity.label = addPoints(entity.label, delta);
+      entity.text = dimensionLineText(entity);
+      entity.measuredValue = computedDimensionValue(entity);
+      return true;
+    }
+    if (entity.type === 'radius-dimension') {
+      const oldCenter = entity.center;
+      const center = resolveAnchor(entity.anchors.center, { rendered: useRendered });
+      const radius = resolveAnchor(entity.anchors.radius, { rendered: useRendered });
+      if (!center) return false;
+      const delta = subtractPoints(center, oldCenter);
+      entity.center = center;
+      if (radius) entity.radius = radius;
+      entity.elbow = addPoints(entity.elbow || entity.label, delta);
+      entity.label = addPoints(entity.label, delta);
+      entity.text = formatDrawingLength(entity.radius);
+      entity.measuredValue = computedDimensionValue(entity);
+      return true;
+    }
+    if (entity.type === 'angle-dimension') {
+      const first = entity.anchors.firstSegment;
+      const second = entity.anchors.secondSegment;
+      const firstSegment = first?.start && first?.end ? {
+        start: resolveAnchor(first.start, { rendered: useRendered }),
+        end: resolveAnchor(first.end, { rendered: useRendered }),
+      } : null;
+      const secondSegment = second?.start && second?.end ? {
+        start: resolveAnchor(second.start, { rendered: useRendered }),
+        end: resolveAnchor(second.end, { rendered: useRendered }),
+      } : null;
+      if (!firstSegment?.start || !firstSegment?.end || !secondSegment?.start || !secondSegment?.end) return false;
+      const oldVertex = entity.vertex;
+      const vertex = lineIntersection(firstSegment, secondSegment) || firstSegment.end;
+      const firstVector = unitVector(subtractPoints(firstSegment.end, firstSegment.start));
+      const secondVector = unitVector(subtractPoints(secondSegment.end, secondSegment.start), [0, 1]);
+      const delta = subtractPoints(vertex, oldVertex);
+      entity.vertex = vertex;
+      entity.start = addPoints(vertex, scalePoint(firstVector, 80));
+      entity.end = addPoints(vertex, scalePoint(secondVector, 80));
+      entity.label = addPoints(entity.label, delta);
+      entity.measuredValue = computedDimensionValue(entity);
+      return true;
+    }
+    if (entity.type === 'multi-curve-length-dimension') {
+      const features = entity.anchors.features?.map((featureAnchor) => resolveFeatureFromAnchor(featureAnchor, { rendered: useRendered })).filter(Boolean) || [];
+      if (!features.length) return false;
+      const first = features[0];
+      const target = featureTargetPoint(first);
+      if (!target) return false;
+      const delta = subtractPoints(target, entity.target);
+      entity.target = target;
+      entity.elbow = addPoints(entity.elbow || entity.label, delta);
+      entity.label = addPoints(entity.label, delta);
+      entity.measuredValue = features.reduce((total, feature) => total + featureLength(feature), 0);
+      entity.text = formatDrawingLength(entity.measuredValue);
+      return true;
+    }
+    return false;
+  }
+
+  function refreshLinkedDimensions(changedRecordIds = null) {
+    records.forEach((record) => {
+      if (record.recordType !== 'dimension' || !record.entity.anchors) return;
+      const anchorIds = dimensionAnchorRecordIds(record.entity);
+      if (changedRecordIds && ![...anchorIds].some((id) => changedRecordIds.has(id))) return;
+      if (!updateLinkedDimensionEntity(record.entity)) return;
+      if (record.entity.dimensionId) solver.updateDimensionAnnotation?.(record.entity.dimensionId, record.entity);
+      if (record.entity.dimensionMode === 'driven' && record.entity.dimensionId) {
+        solver.dimensions.setComputedValue(
+          record.entity.dimensionId,
+          computedDimensionValue(record.entity),
+          computedDimensionUnit(record.entity),
+        );
+      }
+      applyManagedDimensionText(record.entity);
+      updateDimensionNode(record, getScale());
+      updateRecordHandles(record);
+    });
+    syncScreenInvariantSizing?.();
+  }
+
+  return {
+    getEntityFeature,
+    getSegmentFeature,
+    getPointFeature,
+    getFeatureFromEvent,
+    refreshLinkedDimensions,
+  };
 }

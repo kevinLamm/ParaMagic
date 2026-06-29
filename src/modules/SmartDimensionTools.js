@@ -1,3 +1,6 @@
+import { featureLength, featureTargetPoint } from './DimensionFeatureGeometry.js';
+import { formatUnitlessValue } from './solver/Units.js';
+
 const pointDistance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 const midpoint = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 const subtract = (a, b) => [a[0] - b[0], a[1] - b[1]];
@@ -11,7 +14,7 @@ const unit = (point, fallback = [1, 0]) => {
   return size > 0.0001 ? [point[0] / size, point[1] / size] : fallback;
 };
 
-const formatDrawingLength = (value) => formatUnitValue(value, 'in');
+const formatDrawingLength = (value, drawingUnit) => formatUnitlessValue(value, drawingUnit || 'in');
 
 function pointAnchor(feature) {
   return feature?.kind === 'point' ? { type: 'point', recordId: feature.recordId, index: feature.index } : null;
@@ -33,64 +36,10 @@ function entityRadiusAnchor(feature) {
   return ['circle', 'arc'].includes(feature?.kind) ? { type: 'radius', recordId: feature.recordId } : null;
 }
 
-function curveControlPoint(current, previous, next, tension = 0.18) {
-  return [
-    current[0] + (next[0] - previous[0]) * tension,
-    current[1] + (next[1] - previous[1]) * tension,
-  ];
-}
-
-function cubicPoint(a, b, c, d, t) {
-  const mt = 1 - t;
-  return [
-    mt ** 3 * a[0] + 3 * mt ** 2 * t * b[0] + 3 * mt * t ** 2 * c[0] + t ** 3 * d[0],
-    mt ** 3 * a[1] + 3 * mt ** 2 * t * b[1] + 3 * mt * t ** 2 * c[1] + t ** 3 * d[1],
-  ];
-}
-
-function curveLength(points) {
-  if (points.length < 2) return 0;
-  if (points.length === 2) return pointDistance(points[0], points[1]);
-  return points.slice(1).reduce((total, point, index) => {
-    const currentIndex = index + 1;
-    const previous = points[Math.max(0, currentIndex - 2)];
-    const current = points[currentIndex - 1];
-    const next = point;
-    const after = points[Math.min(points.length - 1, currentIndex + 1)];
-    const c1 = curveControlPoint(current, previous, next);
-    const c2 = curveControlPoint(next, after, current);
-    let segmentTotal = 0;
-    let last = current;
-    for (let step = 1; step <= 24; step += 1) {
-      const sampled = cubicPoint(current, c1, c2, next, step / 24);
-      segmentTotal += pointDistance(last, sampled);
-      last = sampled;
-    }
-    return total + segmentTotal;
-  }, 0);
-}
-
 function featureEndpoints(feature) {
   if (feature.kind === 'segment' || feature.kind === 'arc') return [feature.start, feature.end];
   if (feature.kind === 'curve') return [feature.points[0], feature.points[feature.points.length - 1]];
   return [];
-}
-
-function segmentLength(feature) {
-  if (feature.kind === 'segment') return pointDistance(feature.start, feature.end);
-  if (feature.kind === 'circle') return Math.PI * 2 * feature.radius;
-  if (feature.kind === 'arc') {
-    const startAngle = Math.atan2(feature.start[1] - feature.center[1], feature.start[0] - feature.center[0]);
-    const midAngle = Math.atan2(feature.arcPoint[1] - feature.center[1], feature.arcPoint[0] - feature.center[0]);
-    const endAngle = Math.atan2(feature.end[1] - feature.center[1], feature.end[0] - feature.center[0]);
-    const tau = Math.PI * 2;
-    const normalize = (angle) => (angle + tau) % tau;
-    const ccwSpan = normalize(endAngle - startAngle);
-    const midOnCcw = normalize(midAngle - startAngle) <= ccwSpan;
-    return feature.radius * (midOnCcw ? ccwSpan : tau - ccwSpan);
-  }
-  if (feature.kind === 'curve') return curveLength(feature.points);
-  return 0;
 }
 
 function projectionOnSegment(point, segment) {
@@ -109,7 +58,7 @@ function projectionOnLine(point, segment) {
   return add(segment.start, scale(vector, t));
 }
 
-function parallelEndpointDimension(first, second, pointer, mode) {
+function parallelEndpointDimension(first, second, pointer, mode, drawingUnit) {
   const firstAnchors = segmentEndpointAnchors(first);
   const secondAnchors = segmentEndpointAnchors(second);
   const firstEndpoints = [
@@ -136,7 +85,7 @@ function parallelEndpointDimension(first, second, pointer, mode) {
   return distanceDimension(best.projected, best.secondEndpoint, pointer, mode, best.firstEndpoint, best.secondEndpoint, {
     measureStart: best.firstAnchor,
     measureEnd: best.secondAnchor,
-  });
+  }, drawingUnit);
 }
 
 function linesIntersection(a, b) {
@@ -176,7 +125,7 @@ function distanceSubtype(start, end, pointer) {
   return 'aligned';
 }
 
-function distanceDimension(start, end, pointer, mode, sourceStart = start, sourceEnd = end, anchors = null) {
+function distanceDimension(start, end, pointer, mode, sourceStart = start, sourceEnd = end, anchors = null, drawingUnit = 'in') {
   const subtype = distanceSubtype(start, end, pointer);
   const measured = subtype === 'horizontal'
     ? Math.abs(sourceEnd[0] - sourceStart[0])
@@ -192,8 +141,10 @@ function distanceDimension(start, end, pointer, mode, sourceStart = start, sourc
     measureStart: sourceStart,
     measureEnd: sourceEnd,
     label: pointer,
-    text: formatDrawingLength(measured),
+    text: formatDrawingLength(measured, drawingUnit),
     anchors,
+    measuredValue: measured,
+    useRenderedMeasurement: mode === 'driven',
   };
 }
 
@@ -201,6 +152,7 @@ function angleBetweenSegments(first, second, pointer, mode) {
   const vertex = linesIntersection(first, second) || first.end;
   const firstVector = unit(subtract(first.end, first.start));
   const secondVector = unit(subtract(second.end, second.start));
+  const measuredValue = Math.abs(Math.atan2(cross(firstVector, secondVector), dot(firstVector, secondVector))) * 180 / Math.PI;
   return {
     type: 'angle-dimension',
     dimensionMode: mode,
@@ -210,6 +162,8 @@ function angleBetweenSegments(first, second, pointer, mode) {
     radius: Math.max(24, pointDistance(vertex, pointer)),
     label: pointer,
     text: '0 deg',
+    measuredValue,
+    useRenderedMeasurement: mode === 'driven',
     anchors: {
       firstSegment: segmentEndpointAnchors(first),
       secondSegment: segmentEndpointAnchors(second),
@@ -217,7 +171,7 @@ function angleBetweenSegments(first, second, pointer, mode) {
   };
 }
 
-function radiusDimension(feature, pointer, mode) {
+function radiusDimension(feature, pointer, mode, drawingUnit) {
   return {
     type: 'radius-dimension',
     dimensionMode: mode,
@@ -225,7 +179,9 @@ function radiusDimension(feature, pointer, mode) {
     radius: feature.radius,
     elbow: pointer,
     label: pointer,
-    text: formatDrawingLength(feature.radius),
+    text: formatDrawingLength(feature.radius, drawingUnit),
+    measuredValue: feature.radius,
+    useRenderedMeasurement: mode === 'driven',
     anchors: {
       center: entityCenterAnchor(feature),
       radius: entityRadiusAnchor(feature),
@@ -233,21 +189,19 @@ function radiusDimension(feature, pointer, mode) {
   };
 }
 
-function mclDimension(features, pointer) {
+function mclDimension(features, pointer, drawingUnit) {
   const targetFeature = features[0];
-  const target = targetFeature.kind === 'segment'
-    ? midpoint(targetFeature.start, targetFeature.end)
-    : targetFeature.kind === 'curve'
-      ? targetFeature.points[Math.floor(targetFeature.points.length / 2)]
-      : add(targetFeature.center, [targetFeature.radius, 0]);
-  const total = features.reduce((sum, feature) => sum + segmentLength(feature), 0);
+  const target = featureTargetPoint(targetFeature);
+  const total = features.reduce((sum, feature) => sum + featureLength(feature), 0);
   return {
     type: 'multi-curve-length-dimension',
     dimensionMode: 'driven',
     target,
     elbow: pointer,
     label: pointer,
-    text: formatDrawingLength(total),
+    text: formatDrawingLength(total, drawingUnit),
+    measuredValue: total,
+    useRenderedMeasurement: true,
     anchors: {
       features: features.map((feature) => ({
         kind: feature.kind,
@@ -258,11 +212,11 @@ function mclDimension(features, pointer) {
   };
 }
 
-function candidateFromSelections(selections, pointer, mode, ctrlMcl) {
-  if (ctrlMcl && mode === 'driven' && selections.length) return mclDimension(selections, pointer);
+function candidateFromSelections(selections, pointer, mode, ctrlMcl, drawingUnit) {
+  if (ctrlMcl && mode === 'driven' && selections.length) return mclDimension(selections, pointer, drawingUnit);
   if (selections.length === 1) {
     const [feature] = selections;
-    if (feature.kind === 'circle' || feature.kind === 'arc') return radiusDimension(feature, pointer, mode);
+    if (feature.kind === 'circle' || feature.kind === 'arc') return radiusDimension(feature, pointer, mode, drawingUnit);
     if (feature.kind === 'segment') {
       const anchors = segmentEndpointAnchors(feature);
       return distanceDimension(feature.start, feature.end, pointer, mode, feature.start, feature.end, {
@@ -270,7 +224,7 @@ function candidateFromSelections(selections, pointer, mode, ctrlMcl) {
         end: anchors?.end,
         measureStart: anchors?.start,
         measureEnd: anchors?.end,
-      });
+      }, drawingUnit);
     }
   }
   if (selections.length === 2) {
@@ -280,18 +234,18 @@ function candidateFromSelections(selections, pointer, mode, ctrlMcl) {
       end: pointAnchor(second),
       measureStart: pointAnchor(first),
       measureEnd: pointAnchor(second),
-    });
+    }, drawingUnit);
     if (first.kind === 'point' && second.kind === 'segment') {
       const projected = projectionOnSegment(first.point, second);
-      return distanceDimension(projected, first.point, pointer, mode, projected, first.point);
+      return distanceDimension(projected, first.point, pointer, mode, projected, first.point, null, drawingUnit);
     }
     if (first.kind === 'segment' && second.kind === 'point') {
       const projected = projectionOnSegment(second.point, first);
-      return distanceDimension(projected, second.point, pointer, mode, projected, second.point);
+      return distanceDimension(projected, second.point, pointer, mode, projected, second.point, null, drawingUnit);
     }
     if (first.kind === 'segment' && second.kind === 'segment') {
       if (areParallel(first, second)) {
-        return parallelEndpointDimension(first, second, pointer, mode);
+        return parallelEndpointDimension(first, second, pointer, mode, drawingUnit);
       }
       return angleBetweenSegments(first, second, pointer, mode);
     }
@@ -342,13 +296,14 @@ export function createSmartDimensionTools({ toolbar, canvas }) {
   }
 
   function updateCandidate(pointer) {
-    candidate = candidateFromSelections(selections, pointer, activeMode, ctrlMcl);
+    candidate = candidateFromSelections(selections, pointer, activeMode, ctrlMcl, canvas.getDrawingUnit?.() || 'in');
     if (candidate) canvas.setDimensionPreview(candidate);
     else canvas.clearPreview();
   }
 
   function addSelection(feature, event) {
     if (!feature) return;
+    if (feature.derivedFromFillet && activeMode !== 'driven') return;
     const shouldUseMcl = activeMode === 'driven' && (event.ctrlKey || ctrlMcl);
     if (shouldUseMcl) {
       ctrlMcl = true;
@@ -376,7 +331,7 @@ export function createSmartDimensionTools({ toolbar, canvas }) {
   const delegate = {
     pointerDown(event) {
       if (!activeMode || event.button !== 0) return false;
-      const feature = canvas.getFeatureFromEvent(event);
+      const feature = canvas.getFeatureFromEvent(event, { rendered: activeMode === 'driven' });
       const pointer = canvas.screenToWorld(event.clientX, event.clientY);
       if (!feature && placeCandidate()) {
         event.preventDefault();
@@ -423,4 +378,3 @@ export function createSmartDimensionTools({ toolbar, canvas }) {
 
   return { clearSelections, deactivate };
 }
-import { formatUnitValue } from './solver/Units.js';

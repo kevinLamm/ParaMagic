@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { ParameterRepository, parseExpression } from '../modules/solver/ParameterRepository.js';
 import { createSolverController } from '../modules/solver/SolverController.js';
 import { dimensionDisplayText } from '../modules/DimensionTools.js';
+import { formatDrivenDimensionValue } from '../modules/solver/Units.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 
@@ -30,6 +31,24 @@ test('renaming parameters updates dependent expression references', () => {
   repository.update(width.id, { name: 'plate_width' }, { strict: true });
   assert.equal(repository.get(half.id).expression, 'plate_width / 2');
   assert.equal(repository.value(half.id), 20);
+});
+
+test('drawing parameters use the drawing unit for suffix-free arithmetic expressions', () => {
+  const controller = createSolverController();
+  const width = controller.createParameter({ name: 'width', expression: '41*2' });
+  const dimension = controller.dimensions.addDimension({
+    name: 'd1',
+    expression: 'width',
+    value: 0,
+    driving: true,
+    unit: 'in',
+  });
+
+  near(controller.dimensions.get(width.id).value, 82 * 25.4);
+  near(controller.dimensions.get(dimension.id).value, 82 * 25.4);
+  assert.equal(controller.dimensions.get(width.id).expression, '41*2');
+  assert.equal(controller.dimensions.get(dimension.id).expression, 'width');
+  assert.equal(controller.getDimensionText(dimension.id, 'value'), '82');
 });
 
 test('cycles and missing references are retained as row errors without losing last valid values', () => {
@@ -155,15 +174,43 @@ test('drawing dimensions default to inches and support all three display modes',
   });
   const id = added.entity.dimensionId;
   assert.equal(controller.dimensions.get(id).unit, 'in');
-  assert.equal(controller.getDimensionText(id, 'named-value'), 'd1 = 10 in');
-  assert.equal(controller.getDimensionText(id, 'value'), '10 in');
-  assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = 10 in');
+  assert.equal(controller.getDimensionText(id, 'named-value'), 'd1 = 10');
+  assert.equal(controller.getDimensionText(id, 'value'), '10');
+  assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = 10');
 
   const result = controller.setDimension(id, 'if(yes, 12 in, 4 in)');
   assert.ok(['converged', 'unchanged'].includes(result.status));
-  assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = if(yes, 12 in, 4 in)');
-  assert.equal(controller.getDimensionText(id, 'named-value'), 'd1 = 12 in');
-  assert.equal(controller.getDimensionText(id, 'value'), '12 in');
+  assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = if(yes, 12, 4)');
+  assert.equal(controller.getDimensionText(id, 'named-value'), 'd1 = 12');
+  assert.equal(controller.getDimensionText(id, 'value'), '12');
+});
+
+test('only driven value-only dimensions display units using architectural symbols', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    drawingUnit: 'in',
+    parameters: [{
+      id: 'driven-width',
+      name: 'd1',
+      type: 'Expression',
+      expression: '82 in',
+      value: 82 * 25.4,
+      kind: 'dimension',
+      driving: false,
+      computed: true,
+      unit: 'in',
+      annotationId: null,
+      error: null,
+      order: 0,
+    }],
+  });
+
+  assert.equal(controller.getDimensionText('d1', 'expression'), 'd1 = 82');
+  assert.equal(controller.getDimensionText('d1', 'named-value'), 'd1 = 82');
+  assert.equal(controller.getDimensionText('d1', 'value'), '82"');
+  assert.equal(formatDrivenDimensionValue(914.4, 'ft'), "3'");
+  assert.equal(formatDrivenDimensionValue(90, 'deg'), '90°');
+  assert.equal(formatDrivenDimensionValue(250, 'mm'), '250 mm');
 });
 
 test('display formatting converts internal millimetres into the requested unit', () => {

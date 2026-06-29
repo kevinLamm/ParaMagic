@@ -8,6 +8,7 @@
     "build": "node scripts/validate-app.js",
     "test": "node --test src/tests/*.test.js"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "@techstark/opencv-js": "^5.0.0-release.1"
+  }
 }

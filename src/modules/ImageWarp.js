@@ -44,8 +44,26 @@ export function normalizeWarpSettings(input = {}, entity = {}) {
   };
 }
 
+export function rebaseWarpSettings(input = {}, entity = {}) {
+  const warp = normalizeWarpSettings(input, entity);
+  const width = clampDimension(entity.width, warp.sourceDisplayWidth);
+  const height = clampDimension(entity.height, warp.sourceDisplayHeight);
+  const scaleX = width / warp.sourceDisplayWidth;
+  const scaleY = height / warp.sourceDisplayHeight;
+  return {
+    ...warp,
+    sourceDisplayWidth: width,
+    sourceDisplayHeight: height,
+    points: warp.points.map(([x, y]) => [x * scaleX, y * scaleY]),
+  };
+}
+
 export function enableWarpSettings(entity) {
-  return normalizeWarpSettings({ ...(entity.warp || {}), enabled: true, source: entity.warp?.source || entity.source }, entity);
+  return {
+    ...rebaseWarpSettings(entity.warp || {}, entity),
+    enabled: true,
+    source: entity.warp?.source || entity.source,
+  };
 }
 
 export function toggleWarpSettings(entity) {
@@ -72,6 +90,7 @@ export function setWarpDimension(input, axis, value) {
 function normalizeLengthUnit(unit = '') {
   const normalized = String(unit || '').trim().toLowerCase();
   if (normalized === '"' || normalized === 'inch' || normalized === 'inches') return 'in';
+  if (normalized === 'foot' || normalized === 'feet') return 'ft';
   if (normalized === 'millimeter' || normalized === 'millimeters') return 'mm';
   return unitFactors[normalized] && normalized !== 'deg' ? normalized : '';
 }
@@ -96,7 +115,7 @@ export function formatWarpDimensionWithUnit(value, unit = '') {
 export function parseWarpDimensionInput(value, fallback, defaultUnit = '') {
   const source = String(value ?? '').trim();
   if (!source) return fallback;
-  const match = source.match(/^(-?(?:\d+(?:\.\d*)?|\.\d+))(?:\s*("|in|inch|inches|mm|millimeter|millimeters|cm|m))?$/i);
+  const match = source.match(/^(-?(?:\d+(?:\.\d*)?|\.\d+))(?:\s*("|in|inch|inches|mm|millimeter|millimeters|cm|m|ft|foot|feet))?$/i);
   if (!match) return fallback;
   return lengthValueToDrawingUnits(Number(match[1]), match[2] || defaultUnit);
 }
@@ -247,52 +266,6 @@ export async function projectFullImageWarpBounds(entity) {
   return calculateWarpPlan(entity, image);
 }
 
-function sampleBilinear(imageData, x, y) {
-  const { data, width, height } = imageData;
-  if (x < 0 || y < 0 || x >= width - 1 || y >= height - 1) return [0, 0, 0, 0];
-  const x0 = Math.floor(x);
-  const y0 = Math.floor(y);
-  const x1 = x0 + 1;
-  const y1 = y0 + 1;
-  const dx = x - x0;
-  const dy = y - y0;
-  const index = (px, py) => (py * width + px) * 4;
-  const result = [0, 0, 0, 0];
-  [[x0, y0, (1 - dx) * (1 - dy)], [x1, y0, dx * (1 - dy)], [x0, y1, (1 - dx) * dy], [x1, y1, dx * dy]]
-    .forEach(([px, py, weight]) => {
-      const offset = index(px, py);
-      for (let channel = 0; channel < 4; channel += 1) result[channel] += data[offset + channel] * weight;
-    });
-  return result;
-}
-
-async function warpWithCanvas(entity) {
-  const source = normalizeWarpSettings(entity.warp || {}, entity).source || entity.source;
-  const image = await loadImage(source);
-  const plan = calculateWarpPlan(entity, image);
-  const sourceCanvas = document.createElement('canvas');
-  sourceCanvas.width = image.naturalWidth;
-  sourceCanvas.height = image.naturalHeight;
-  const sourceContext = sourceCanvas.getContext('2d', { willReadFrequently: true });
-  sourceContext.drawImage(image, 0, 0);
-  const sourceImageData = sourceContext.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
-  const outputCanvas = document.createElement('canvas');
-  outputCanvas.width = plan.outputWidth;
-  outputCanvas.height = plan.outputHeight;
-  const outputContext = outputCanvas.getContext('2d');
-  const outputImageData = outputContext.createImageData(plan.outputWidth, plan.outputHeight);
-  for (let y = 0; y < plan.outputHeight; y += 1) {
-    for (let x = 0; x < plan.outputWidth; x += 1) {
-      const sourcePoint = transformPerspectivePoint(plan.destinationToSource, [x, y]);
-      const sample = sampleBilinear(sourceImageData, sourcePoint[0], sourcePoint[1]);
-      const offset = (y * plan.outputWidth + x) * 4;
-      for (let channel = 0; channel < 4; channel += 1) outputImageData.data[offset + channel] = sample[channel];
-    }
-  }
-  outputContext.putImageData(outputImageData, 0, 0);
-  return { source: outputCanvas.toDataURL('image/png'), width: plan.displayWidth, height: plan.displayHeight };
-}
-
 async function loadOpenCv() {
   if (globalThis.cv?.Mat) return globalThis.cv;
   if (openCvPromise) return openCvPromise;
@@ -303,7 +276,7 @@ async function loadOpenCv() {
     }
     const script = document.createElement('script');
     script.async = true;
-    script.src = new URL('../../public/vendor/opencv.js', import.meta.url).href;
+    script.src = new URL('../../node_modules/@techstark/opencv-js/dist/opencv.js', import.meta.url).href;
     script.onload = async () => {
       try {
         if (globalThis.cv?.then) globalThis.cv = await globalThis.cv;
@@ -317,7 +290,7 @@ async function loadOpenCv() {
         reject(error);
       }
     };
-    script.onerror = () => reject(new Error('OpenCV.js was not found at public/vendor/opencv.js.'));
+    script.onerror = () => reject(new Error('Could not load @techstark/opencv-js.'));
     document.head.appendChild(script);
   });
   return openCvPromise;
@@ -356,13 +329,7 @@ export async function warpImageEntity(input) {
   const originalWidth = clampDimension(entity.originalWidth ?? warp.originalWidth, entity.baseWidth || entity.width);
   const originalHeight = clampDimension(entity.originalHeight ?? warp.originalHeight, entity.baseHeight || entity.height);
   entity.warp = warp;
-  let result;
-  try {
-    result = await warpWithOpenCv(entity);
-  } catch (error) {
-    if (!/OpenCV\.js/.test(error.message)) throw error;
-    result = await warpWithCanvas(entity);
-  }
+  const result = await warpWithOpenCv(entity);
   return {
     ...entity,
     source: result.source,

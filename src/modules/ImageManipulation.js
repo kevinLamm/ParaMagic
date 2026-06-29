@@ -2,10 +2,10 @@ import { resolveOpacityExpression } from './AppearanceExpressions.js';
 import {
   enableWarpSettings,
   formatWarpDimension,
-  formatWarpDimensionWithUnit,
   moveWarpGuideCorner,
   normalizeWarpSettings,
   parseWarpDimensionInput,
+  rebaseWarpSettings,
   setWarpDimension,
   toggleWarpSettings,
   warpImageEntity,
@@ -111,7 +111,14 @@ export function scaleImageFromCorner(input, cornerIndex, pointer) {
   const width = entity.width * ratio;
   const height = entity.height * ratio;
   const centerOffset = rotatePoint([signs[0] * width / 2, signs[1] * height / 2], entity.rotation);
-  return { ...entity, x: oppositeWorld[0] + centerOffset[0], y: oppositeWorld[1] + centerOffset[1], width, height };
+  return {
+    ...entity,
+    x: oppositeWorld[0] + centerOffset[0],
+    y: oppositeWorld[1] + centerOffset[1],
+    width,
+    height,
+    warp: rebaseWarpSettings(entity.warp, { ...entity, width, height }),
+  };
 }
 
 export function rotateImageFromPointer(input, startPointer, pointer) {
@@ -204,22 +211,29 @@ function createWarpGuide(addSvg, parent) {
   const warpGuide = addSvg(parent, 'g', { class: 'image-warp-guide' });
   const warpPolygon = addSvg(warpGuide, 'polygon', { class: 'image-warp-polygon' });
   const warpSides = [0, 1, 2, 3].map((index) => addSvg(warpGuide, 'line', { class: 'image-warp-side', 'data-warp-side': index }));
-  const warpHandles = [0, 1, 2, 3].map((index) => addSvg(warpGuide, 'rect', { class: 'image-warp-handle point-handle', 'data-warp-corner': index }));
-  const warpTexts = [0, 1, 2, 3].map((index) => addSvg(warpGuide, 'text', { class: 'image-warp-dimension-text', 'data-warp-dimension': index }));
+  const warpHandles = [0, 1, 2, 3].map((index) => addSvg(warpGuide, 'circle', { class: 'image-warp-handle point-handle', 'data-warp-corner': index }));
+  const warpLabels = [0, 1, 2, 3].map((index) => {
+    const group = addSvg(warpGuide, 'g', { class: 'image-warp-dimension-label' });
+    const background = addSvg(group, 'rect', { class: 'image-warp-dimension-background' });
+    const text = addSvg(group, 'text', { class: 'image-warp-dimension-text', 'data-warp-dimension': index });
+    return { group, background, text };
+  });
+  const warpTexts = warpLabels.map(({ text }) => text);
   const warpApply = addSvg(warpGuide, 'foreignObject', { class: 'image-warp-apply' });
   const warpApplyContent = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
   warpApplyContent.className = 'image-warp-apply-content canvas-overlay-button';
-  warpApplyContent.innerHTML = '<button type="button" class="image-warp-apply-button">Apply Warp</button><span class="image-warp-status" role="status"></span>';
+  warpApplyContent.innerHTML = `
+    <button type="button" class="image-warp-apply-button" aria-label="Apply Warp" title="Apply Warp">
+      <svg viewBox="0 0 24 24" aria-hidden="true">${toolbarIcons.warp}</svg>
+    </button>
+    <span class="image-warp-status" role="status"></span>`;
   warpApply.appendChild(warpApplyContent);
 
   const warpEditor = addSvg(warpGuide, 'foreignObject', { class: 'image-warp-dimension-editor' });
   const warpEditorContent = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
   warpEditorContent.className = 'image-warp-dimension-editor-content canvas-overlay-button';
   warpEditorContent.innerHTML = `
-    <input class="image-warp-dimension-input" type="text" inputmode="decimal" />
-    <span class="image-warp-dimension-unit"></span>
-    <button type="button" class="image-warp-dimension-ok">OK</button>
-    <button type="button" class="image-warp-dimension-cancel">Cancel</button>`;
+    <input class="image-warp-dimension-input" type="text" inputmode="decimal" aria-label="Warp dimension" title="Press Enter to apply or Escape to cancel; unit suffixes are optional" />`;
   warpEditor.appendChild(warpEditorContent);
   warpEditor.style.display = 'none';
 
@@ -228,6 +242,7 @@ function createWarpGuide(addSvg, parent) {
     warpPolygon,
     warpSides,
     warpHandles,
+    warpLabels,
     warpTexts,
     warpApply,
     warpApplyContent,
@@ -236,9 +251,6 @@ function createWarpGuide(addSvg, parent) {
     warpEditor,
     warpEditorContent,
     warpEditorInput: warpEditorContent.querySelector('.image-warp-dimension-input'),
-    warpEditorUnit: warpEditorContent.querySelector('.image-warp-dimension-unit'),
-    warpEditorOk: warpEditorContent.querySelector('.image-warp-dimension-ok'),
-    warpEditorCancel: warpEditorContent.querySelector('.image-warp-dimension-cancel'),
     handles: warpHandles,
   };
 }
@@ -258,15 +270,11 @@ function updateWarpGuide(record) {
     side.setAttribute('y1', points[startIndex][1]);
     side.setAttribute('x2', points[endIndex][0]);
     side.setAttribute('y2', points[endIndex][1]);
-    side.setAttribute('stroke-width', 1.5 / scale);
   });
-  const size = 10 / scale;
   record.warpHandles.forEach((handle, index) => {
-    handle.setAttribute('x', points[index][0] - size / 2);
-    handle.setAttribute('y', points[index][1] - size / 2);
-    handle.setAttribute('width', size);
-    handle.setAttribute('height', size);
-    handle.setAttribute('stroke-width', 1.5 / scale);
+    handle.setAttribute('cx', points[index][0]);
+    handle.setAttribute('cy', points[index][1]);
+    handle.setAttribute('r', 6 / scale);
   });
   const textData = [
     { side: [points[0], points[1]], value: warp.targetWidth, offset: [0, -16 / scale], anchor: 'middle' },
@@ -276,11 +284,19 @@ function updateWarpGuide(record) {
   ];
   record.warpTexts.forEach((text, index) => {
     const { side, value, offset, anchor } = textData[index];
-    text.textContent = formatWarpDimensionWithUnit(value, record.getDrawingUnit());
+    text.textContent = formatWarpDimension(value, record.getDrawingUnit());
     text.setAttribute('x', (side[0][0] + side[1][0]) / 2 + offset[0]);
     text.setAttribute('y', (side[0][1] + side[1][1]) / 2 + offset[1]);
     text.setAttribute('font-size', 13 / scale);
     text.setAttribute('text-anchor', anchor);
+    const bounds = text.getBBox();
+    const paddingX = 5 / scale;
+    const paddingY = 3 / scale;
+    const background = record.warpLabels[index].background;
+    background.setAttribute('x', bounds.x - paddingX);
+    background.setAttribute('y', bounds.y - paddingY);
+    background.setAttribute('width', bounds.width + paddingX * 2);
+    background.setAttribute('height', bounds.height + paddingY * 2);
   });
   record.warpApply.setAttribute('x', Math.min(...points.map(([x]) => x)));
   record.warpApply.setAttribute('y', Math.max(...points.map(([, y]) => y)) + 30 / scale);
@@ -288,10 +304,10 @@ function updateWarpGuide(record) {
   record.warpApply.setAttribute('height', 56 / scale);
   record.warpApplyContent.style.transform = `scale(${1 / scale})`;
   record.warpApplyContent.style.transformOrigin = '0 0';
-  record.warpApplyContent.style.width = '220px';
   record.warpStatus.textContent = '';
   record.warpApplyButton.disabled = false;
-  record.warpApplyButton.textContent = 'Apply Warp';
+  record.warpApplyButton.setAttribute('aria-label', 'Apply Warp');
+  record.warpApplyButton.title = 'Apply Warp';
 }
 
 function openWarpDimensionEditor(record, textIndex) {
@@ -300,10 +316,9 @@ function openWarpDimensionEditor(record, textIndex) {
   const text = record.warpTexts[textIndex];
   record.warpEditingAxis = isHeight ? 'height' : 'width';
   record.warpEditorInput.value = formatWarpDimension(isHeight ? warp.targetHeight : warp.targetWidth, record.getDrawingUnit());
-  record.warpEditorUnit.textContent = record.getDrawingUnit();
   record.warpEditor.setAttribute('x', Number(text.getAttribute('x')) - 36 / (record.currentScale || 1));
   record.warpEditor.setAttribute('y', Number(text.getAttribute('y')) + 8 / (record.currentScale || 1));
-  record.warpEditor.setAttribute('width', 190 / (record.currentScale || 1));
+  record.warpEditor.setAttribute('width', 120 / (record.currentScale || 1));
   record.warpEditor.setAttribute('height', 38 / (record.currentScale || 1));
   record.warpEditorContent.style.transform = `scale(${1 / (record.currentScale || 1)})`;
   record.warpEditorContent.style.transformOrigin = '0 0';
@@ -355,21 +370,16 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
       node.setAttribute('height', entity.height);
     });
     const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
-    const size = 10 / scale;
     record.cornerHandles.forEach((handle, index) => {
-      handle.setAttribute('x', corners[index][0] * entity.width / 2 - size / 2);
-      handle.setAttribute('y', corners[index][1] * entity.height / 2 - size / 2);
-      handle.setAttribute('width', size);
-      handle.setAttribute('height', size);
-      handle.setAttribute('stroke-width', 1.5 / scale);
+      handle.setAttribute('cx', corners[index][0] * entity.width / 2);
+      handle.setAttribute('cy', corners[index][1] * entity.height / 2);
+      handle.setAttribute('r', 6 / scale);
     });
     const rotationOffset = 28 / scale;
     record.rotationStem.setAttribute('y1', -entity.height / 2);
     record.rotationStem.setAttribute('y2', -entity.height / 2 - rotationOffset);
-    record.rotationStem.setAttribute('stroke-width', 1.5 / scale);
     record.rotationHandle.setAttribute('cy', -entity.height / 2 - rotationOffset);
     record.rotationHandle.setAttribute('r', 6 / scale);
-    record.rotationHandle.setAttribute('stroke-width', 1.5 / scale);
     const angle = entity.rotation * Math.PI / 180;
     const visualTop = (Math.abs(entity.width * Math.sin(angle)) + Math.abs(entity.height * Math.cos(angle))) / 2;
     record.toolbar.setAttribute('x', -toolbarVisualWidth / 2 / scale);
@@ -448,7 +458,7 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
     const selectionFrame = addSvg(transform, 'rect', { class: 'image-selection-frame' });
     const rotationStem = addSvg(transform, 'line', { x1: 0, x2: 0, class: 'image-rotation-stem' });
     const handleGroup = addSvg(transform, 'g', { class: 'image-handle-group' });
-    const cornerHandles = [0, 1, 2, 3].map((index) => addSvg(handleGroup, 'rect', { class: 'image-scale-handle point-handle', 'data-corner-index': index }));
+    const cornerHandles = [0, 1, 2, 3].map((index) => addSvg(handleGroup, 'circle', { class: 'image-scale-handle point-handle', 'data-corner-index': index }));
     const rotationHandle = addSvg(handleGroup, 'circle', { cx: 0, class: 'image-rotation-handle point-handle' });
     const warpGuide = createWarpGuide(addSvg, transform);
     const toolbar = addSvg(group, 'foreignObject', { class: 'image-context-toolbar' });
@@ -466,8 +476,12 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
     resetPanel.innerHTML = `
       <p>Reset this image's size, rotation, and flips?</p>
       <div class="image-reset-actions">
-        <button type="button" class="image-reset-confirm">Reset</button>
-        <button type="button" class="image-reset-cancel">Cancel</button>
+        <button type="button" class="image-reset-confirm" aria-label="Reset image" title="Reset image">
+          <svg viewBox="0 0 24 24" aria-hidden="true">${toolbarIcons.reset}</svg>
+        </button>
+        <button type="button" class="image-reset-cancel" aria-label="Cancel image reset" title="Cancel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
       </div>`;
     const resetConfirmButton = resetPanel.querySelector('.image-reset-confirm');
     const resetCancelButton = resetPanel.querySelector('.image-reset-cancel');
@@ -559,7 +573,9 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
       event.stopPropagation();
       if (record.entity.locked) return;
       record.warpApplyButton.disabled = true;
-      record.warpApplyButton.textContent = 'Warping...';
+      record.warpApplyButton.setAttribute('aria-label', 'Warping image');
+      record.warpApplyButton.title = 'Warping image';
+      record.warpStatus.textContent = 'Warping…';
       try {
         record.entity = normalizeImageEntity(await warpImageEntity(record.entity));
         updateRecord(record);
@@ -567,7 +583,8 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
       } catch (error) {
         record.warpStatus.textContent = error.message;
         record.warpApplyButton.disabled = false;
-        record.warpApplyButton.textContent = 'Apply Warp';
+        record.warpApplyButton.setAttribute('aria-label', 'Apply Warp');
+        record.warpApplyButton.title = 'Apply Warp';
       }
     });
     record.warpEditorInput.addEventListener('keydown', (event) => {
@@ -580,14 +597,6 @@ export function createImageManipulation({ addSvg, parent, screenToWorld, getScal
         event.preventDefault();
         closeWarpDimensionEditor(record);
       }
-    });
-    record.warpEditorOk.addEventListener('click', (event) => {
-      event.stopPropagation();
-      submitWarpDimensionEditor(record);
-    });
-    record.warpEditorCancel.addEventListener('click', (event) => {
-      event.stopPropagation();
-      closeWarpDimensionEditor(record);
     });
     updateRecord(record);
     return record;

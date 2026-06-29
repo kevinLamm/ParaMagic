@@ -1,17 +1,25 @@
 import {
+  createDimensionLinkManager,
   createDimensionRecord,
+  dimensionAnchorRecordIds,
   dimensionHandles,
   isDimensionEntity,
   moveDimensionHandle,
   moveDimensionLine,
   updateDimensionNode,
 } from './DimensionTools.js';
-import { formatUnitValue } from './solver/Units.js';
+import { formatUnitlessValue, formatUnitValue } from './solver/Units.js';
 import { mergeDrawingData } from './DrawingIO.js';
 import { findClosedGeometryCycles } from './ClosedRegionTopology.js';
 import { detectAutoConstraints } from './AutoConstraintDetector.js';
 import { resolveColorExpression, resolveOpacityExpression } from './AppearanceExpressions.js';
 import { createImageManipulation, imageAppearance, isImageEntity, normalizeImageEntity } from './ImageManipulation.js';
+import { createFilletSystem } from './FilletSystem.js';
+import {
+  evaluateFilletedGeometry,
+  filletTopologyConstraints,
+  isFilletEntity,
+} from './FilletFeatures.js';
 
 export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entities, solver }) {
   const minZoom = 0.03;
@@ -64,21 +72,14 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     </label>
     <datalist id="dimensionEditParameterNames"></datalist>
     <p class="dimension-edit-error" role="alert" aria-live="polite"></p>
-    <div class="dimension-edit-actions">
-      <button type="button" class="dimension-edit-ok">OK</button>
-      <button type="button" class="dimension-edit-cancel">Cancel</button>
-    </div>
   `;
-  canvas.appendChild(selectionBox);
-  canvas.appendChild(dimensionEditPanel);
+  canvas.append(selectionBox, dimensionEditPanel);
   svg.appendChild(g);
   g.append(axisLayer, objectLayer, previewLayer);
 
   const dimensionEditInput = dimensionEditPanel.querySelector('.dimension-edit-input');
   const dimensionEditOptions = dimensionEditPanel.querySelector('#dimensionEditParameterNames');
   const dimensionEditError = dimensionEditPanel.querySelector('.dimension-edit-error');
-  const dimensionEditOk = dimensionEditPanel.querySelector('.dimension-edit-ok');
-  const dimensionEditCancel = dimensionEditPanel.querySelector('.dimension-edit-cancel');
 
   const imageTools = createImageManipulation({
     addSvg: add,
@@ -111,8 +112,6 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
   dimensionEditPanel.addEventListener('click', (event) => event.stopPropagation());
   dimensionEditPanel.addEventListener('dblclick', (event) => event.stopPropagation());
   dimensionEditPanel.addEventListener('keydown', (event) => event.stopPropagation());
-  dimensionEditOk.addEventListener('click', submitDimensionEditPanel);
-  dimensionEditCancel.addEventListener('click', closeDimensionEditPanel);
   dimensionEditInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -179,13 +178,13 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
   function recordAppearance(record) {
     return record.recordType === 'image'
       ? imageAppearance(record.entity, (expression) => solver.evaluateParameterExpression(expression))
-      : geometryAppearance(record.entity);
+      : geometryAppearance(record.renderEntity || record.entity);
   }
 
   function editableStackOrder() {
     return records
       .map((record, originalIndex) => ({ record, originalIndex }))
-      .filter(({ record }) => ['geometry', 'image'].includes(record.recordType) && !record.entity.construction)
+      .filter(({ record }) => ['geometry', 'image', 'fillet'].includes(record.recordType) && !record.entity.construction)
       .sort((a, b) => {
         const aIndex = recordAppearance(a.record).zIndex;
         const bIndex = recordAppearance(b.record).zIndex;
@@ -196,7 +195,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
 
   function syncGeometryStacking() {
     const editable = editableStackOrder();
-    const construction = records.filter((record) => ['geometry', 'image'].includes(record.recordType) && record.entity.construction);
+    const construction = records.filter((record) => ['geometry', 'image', 'fillet'].includes(record.recordType) && record.entity.construction);
     const dimensions = records.filter((record) => record.recordType === 'dimension');
     const stackPositions = new Map(editable.map((record, index) => [record.id, index]));
     const regionsByPosition = new Map();
@@ -286,6 +285,10 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
   }
 
   const formatDrawingLength = (value) => formatUnitValue(value, solver.drawingUnit || 'in');
+  const formatDrawingNumber = (value) => formatUnitlessValue(value, solver.drawingUnit || 'in');
+  const expressionWithoutUnits = (expression) => String(expression ?? '')
+    .replace(/\s+(?:mm|cm|m|in|ft|deg)\b/gi, '')
+    .trim();
 
   function applyManagedDimensionText(entity) {
     if (!entity.dimensionId) return;
@@ -305,26 +308,6 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     const hideConstruction = dimensionTextMode === 'value' && record.entity.construction === true;
     record.group.style.display = hideConstruction ? 'none' : '';
     record.group.setAttribute('aria-hidden', String(hideConstruction));
-  }
-
-  function lineIntersection(a, b) {
-    const r = subtractPoints(a.end, a.start);
-    const s = subtractPoints(b.end, b.start);
-    const denominator = r[0] * s[1] - r[1] * s[0];
-    if (Math.abs(denominator) < 0.0001) return null;
-    const delta = subtractPoints(b.start, a.start);
-    const t = (delta[0] * s[1] - delta[1] * s[0]) / denominator;
-    return addPoints(a.start, scalePoint(r, t));
-  }
-
-  function distanceToSegment(point, start, end) {
-    const dx = end[0] - start[0];
-    const dy = end[1] - start[1];
-    const lengthSquared = dx * dx + dy * dy;
-    if (!lengthSquared) return pointDistance(point, start);
-    const t = Math.max(0, Math.min(1, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy) / lengthSquared));
-    const projection = [start[0] + dx * t, start[1] + dy * t];
-    return pointDistance(point, projection);
   }
 
   function arcPath(entity) {
@@ -441,10 +424,12 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
   function renderClosedRegions() {
     closedRegionNodes.forEach((region) => region.remove());
     closedRegionNodes.clear();
-    const geometryRecords = records.filter((record) => record.recordType === 'geometry');
-    const byId = new Map(geometryRecords.map((record) => [record.id, record.entity]));
+    const drawableRecords = records.filter((record) => record.recordType === 'geometry' || record.recordType === 'fillet');
+    const fillets = drawableRecords.filter((record) => record.recordType === 'fillet').map((record) => record.entity);
+    const evaluatedEntities = evaluateFilletedGeometry(drawableRecords.map((record) => record.entity));
+    const byId = new Map(evaluatedEntities.map((entity) => [entity.id, entity]));
     const stackPositions = new Map(editableStackOrder().map((record, index) => [record.id, index]));
-    const cycles = findClosedGeometryCycles(geometryRecords.map((record) => record.entity), solver.constraints())
+    const cycles = findClosedGeometryCycles(evaluatedEntities, filletTopologyConstraints(solver.constraints(), fillets))
       .sort((a, b) => (
         Math.max(...a.map(({ entityId }) => stackPositions.get(entityId) ?? -1))
         - Math.max(...b.map(({ entityId }) => stackPositions.get(entityId) ?? -1))
@@ -546,6 +531,16 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     return [];
   }
 
+  function renderedEntityForRecord(record) {
+    if (!record) return null;
+    if (record.recordType === 'fillet') {
+      const evaluated = filletSystem.evaluateRecord(record);
+      return evaluated.valid ? evaluated.arc : null;
+    }
+    if (record.recordType !== 'geometry') return record.entity || null;
+    return record.renderEntity || evaluatedGeometryMap().get(record.id) || record.entity;
+  }
+
   function recordSnapPoints(record) {
     if (record.recordType !== 'geometry') return [];
     const snapPoints = recordHandles(record.entity).map((point, index) => ({ point: [...point], kind: 'handle', index }));
@@ -621,8 +616,16 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     return null;
   }
 
+  function evaluatedGeometryMap() {
+    const entities = records
+      .filter((record) => record.recordType === 'geometry' || record.recordType === 'fillet')
+      .map((record) => record.entity);
+    return new Map(evaluateFilletedGeometry(entities).map((entity) => [entity.id, entity]));
+  }
+
   function updateGeometryNode(record) {
-    const entity = record.entity;
+    const entity = evaluatedGeometryMap().get(record.id) || record.entity;
+    record.renderEntity = cloneEntity(entity);
     const nodes = [record.node, record.hitNode].filter(Boolean);
     if (entity.type === 'line') {
       nodes.forEach((node) => {
@@ -652,7 +655,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     if (entity.type === 'arc') nodes.forEach((node) => node.setAttribute('d', arcPath(entity)));
     syncGeometryClasses(record);
     applyGeometryAppearance(record);
-    updateSegmentNodes(record);
+    updateSegmentNodes(record, entity);
   }
 
   function applyGeometryAppearance(record) {
@@ -688,10 +691,10 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     });
   }
 
-  function updateSegmentNodes(record) {
+  function updateSegmentNodes(record, renderedEntity = record.entity) {
     if (!record.segmentGroup) return;
     record.segmentGroup.replaceChildren();
-    record.segmentNodes = recordSegments(record.entity).map((segment) => {
+    record.segmentNodes = recordSegments(renderedEntity).map((segment) => {
       const node = add(record.segmentGroup, 'line', {
         x1: segment.start[0],
         y1: segment.start[1],
@@ -706,6 +709,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
 
   function updateRecordNode(record) {
     if (record.recordType === 'dimension') updateDimensionNode(record, camera.scale);
+    else if (record.recordType === 'fillet') filletSystem.updateRecord(record);
     else updateGeometryNode(record);
   }
 
@@ -730,7 +734,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     const hitNode = createGeometryNode(group, entity, 'selectable-entity hit-target');
     const segmentGroup = add(group, 'g', { class: 'segment-selection-layer' });
     const handleGroup = add(group, 'g', { class: 'handle-group' });
-    const record = { id: group.dataset.recordId, recordType: 'geometry', entity, group, node, hitNode, segmentGroup, segmentNodes: [], handleGroup, handles: [] };
+    const record = { id: group.dataset.recordId, recordType: 'geometry', entity, renderEntity: cloneEntity(entity), group, node, hitNode, segmentGroup, segmentNodes: [], handleGroup, handles: [] };
     updateSegmentNodes(record);
     updateRecordHandles(record);
     bindRecordEvents(record);
@@ -773,6 +777,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
         suppressRecordClick = false;
         return;
       }
+      if (smartDimensionDelegate || featureCommandDelegate) return;
       selectOnly(record.id);
     };
     record.group.addEventListener('pointerdown', handlePointerDown);
@@ -848,12 +853,42 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     return record;
   }
 
-  function notifyObjectChange() {
+  function notifyObjectChange({ history = 'coalesce' } = {}) {
     records.filter((record) => record.recordType === 'geometry').forEach(applyGeometryAppearance);
     renderClosedRegions();
     syncState();
-    objectChangeListeners.forEach((listener) => listener(records.length));
+    objectChangeListeners.forEach((listener) => listener({ count: records.length, history }));
   }
+
+  function requestHistoryCheckpoint(reason = 'generic') {
+    window.dispatchEvent(new CustomEvent('paramagic:history-checkpoint', { detail: { reason } }));
+  }
+
+  const filletSystem = createFilletSystem({
+    canvas,
+    records,
+    addSvg: add,
+    objectLayer,
+    arcPath,
+    bindRecordEvents,
+    cloneEntity,
+    applyGeometryAppearance,
+    updateGeometryNode,
+    worldToScreen,
+    closeDimensionEditPanel,
+    selectOnly,
+    populateExpressionOptions,
+    expressionWithoutUnits,
+    formatDrawingNumber,
+    evaluateDrawingLengthExpression: (expression) => solver.evaluateDrawingLengthExpression(expression),
+    requestHistoryCheckpoint,
+    notifyObjectChange,
+    syncGeometryStacking,
+    renderClosedRegions,
+    refreshLinkedDimensions,
+    status,
+    solver,
+  });
 
   function setPreview(entity) {
     clearPreview();
@@ -898,91 +933,8 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     });
   }
 
-  function nearestSegmentFeature(record, world, sourceNode = null) {
-    const segments = recordSegments(record.entity);
-    if (!segments.length) return null;
-    const requestedIndex = sourceNode?.dataset?.segmentIndex;
-    const segment = requestedIndex === undefined
-      ? segments.reduce((best, current) => {
-        const distance = distanceToSegment(world, current.start, current.end);
-        return !best || distance < best.distance ? { ...current, distance } : best;
-      }, null)
-      : segments.find((item) => String(item.index) === requestedIndex);
-    if (!segment) return null;
-    return {
-      kind: 'segment',
-      recordId: record.id,
-      entityType: record.entity.type,
-      start: [...segment.start],
-      end: [...segment.end],
-      index: segment.index,
-      node: record.segmentNodes?.[segment.index] || sourceNode || record.node,
-    };
-  }
-
-  function segmentFeatureFromRecord(record, index = 0) {
-    const segments = recordSegments(record.entity);
-    const segment = segments[Math.max(0, Math.min(index, segments.length - 1))];
-    if (!segment) return null;
-    return {
-      kind: 'segment',
-      recordId: record.id,
-      entityType: record.entity.type,
-      start: [...segment.start],
-      end: [...segment.end],
-      index: segment.index,
-      node: record.segmentNodes?.[segment.index] || record.node,
-    };
-  }
-
-  function entityFeatureFromRecord(record) {
-    if (!record || record.recordType !== 'geometry') return null;
-    if (record.entity.type === 'circle') {
-      return { kind: 'circle', recordId: record.id, center: [...record.entity.center], radius: record.entity.radius, node: record.node };
-    }
-    if (record.entity.type === 'arc') {
-      const circle = arcCircle(record.entity);
-      if (!circle) return null;
-      return {
-        kind: 'arc',
-        recordId: record.id,
-        center: circle.center,
-        radius: circle.radius,
-        start: [...record.entity.start],
-        arcPoint: [...record.entity.arcPoint],
-        end: [...record.entity.end],
-        node: record.node,
-      };
-    }
-    return null;
-  }
-
-  function featureFromEvent(event) {
-    const recordElement = event.target.closest?.('.canvas-record');
-    if (!recordElement) return null;
-    const record = records.find((item) => item.id === recordElement.dataset.recordId);
-    if (!record || record.recordType !== 'geometry') return null;
-    const world = screenToWorld(event.clientX, event.clientY);
-    if (event.target.classList?.contains('point-handle')) {
-      const index = Number(event.target.dataset.handleIndex);
-      const point = recordHandles(record.entity)[index];
-      return point ? { kind: 'point', recordId: record.id, entityType: record.entity.type, index, point: [...point], node: event.target } : null;
-    }
-    if (event.target.dataset?.segmentIndex !== undefined) return nearestSegmentFeature(record, world, event.target);
-    if (record.entity.type === 'line') return { ...nearestSegmentFeature(record, world, record.node), node: event.target };
-    if (record.entity.type === 'rect' || record.entity.type === 'polyline' || record.entity.type === 'polygon') return nearestSegmentFeature(record, world, event.target);
-    if (record.entity.type === 'circle') {
-      return { kind: 'circle', recordId: record.id, center: [...record.entity.center], radius: record.entity.radius, node: event.target };
-    }
-    if (record.entity.type === 'arc') {
-      const circle = arcCircle(record.entity);
-      if (!circle) return null;
-      return { kind: 'arc', recordId: record.id, center: circle.center, radius: circle.radius, start: [...record.entity.start], arcPoint: [...record.entity.arcPoint], end: [...record.entity.end], node: event.target };
-    }
-    if (record.entity.type === 'curve') {
-      return { kind: 'curve', recordId: record.id, points: record.entity.points.map((point) => [...point]), node: event.target };
-    }
-    return null;
+  function featureFromEvent(event, options = {}) {
+    return dimensionLinkManager.getFeatureFromEvent(event, options);
   }
 
   function syncState() {
@@ -1020,6 +972,15 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
       }));
   }
 
+  function populateExpressionOptions(target, excludeId = null) {
+    target.replaceChildren(...dimensionParameterOptions(excludeId).map((entry) => {
+      const option = document.createElement('option');
+      option.value = entry.name;
+      option.label = entry.label;
+      return option;
+    }));
+  }
+
   function positionDimensionEditPanel() {
     if (!dimensionEdit || dimensionEditPanel.hidden) return;
     const label = dimensionEdit.record?.entity?.label;
@@ -1050,13 +1011,8 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     if (!current) return;
     selectOnly(record.id);
     dimensionEdit = { record, dimensionId: record.entity.dimensionId };
-    dimensionEditOptions.replaceChildren(...dimensionParameterOptions(record.entity.dimensionId).map((entry) => {
-      const option = document.createElement('option');
-      option.value = entry.name;
-      option.label = entry.label;
-      return option;
-    }));
-    dimensionEditInput.value = current.expression || '';
+    populateExpressionOptions(dimensionEditOptions, record.entity.dimensionId);
+    dimensionEditInput.value = expressionWithoutUnits(current.expression || '');
     dimensionEditError.textContent = '';
     dimensionEditPanel.classList.remove('invalid');
     dimensionEditPanel.hidden = false;
@@ -1187,6 +1143,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
 
   function selectOnly(id) {
     if (dimensionEdit && dimensionEdit.record.id !== id) closeDimensionEditPanel();
+    filletSystem.closeEditorIfDifferent(id);
     selectedIds.clear();
     selectedIds.add(id);
     syncState();
@@ -1202,6 +1159,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
 
   function clearSelection() {
     closeDimensionEditPanel();
+    filletSystem.closeEditPanel();
     selectedIds.clear();
     syncState();
   }
@@ -1320,6 +1278,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
 
   function deleteSelection() {
     if (!selectedIds.size) return;
+    requestHistoryCheckpoint('delete-selection');
     const selectedGeometryIds = new Set(records.filter((record) => selectedIds.has(record.id) && record.recordType === 'geometry').map((record) => record.id));
     const deletionIds = new Set([...selectedIds].filter((id) => {
       const record = records.find((candidate) => candidate.id === id);
@@ -1328,7 +1287,12 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     if (!deletionIds.size) return;
     records.forEach((record) => {
       if (dimensionReferencesAny(record, selectedGeometryIds)) deletionIds.add(record.id);
+      if (
+        record.recordType === 'fillet'
+        && [record.entity.sourceA.recordId, record.entity.sourceB.recordId].some((id) => selectedGeometryIds.has(id))
+      ) deletionIds.add(record.id);
     });
+    filletSystem.handleDeletedIds(deletionIds);
     for (let index = records.length - 1; index >= 0; index -= 1) {
       if (!deletionIds.has(records[index].id)) continue;
       if (records[index].recordType === 'geometry') solver.removeEntity(records[index].id);
@@ -1339,14 +1303,16 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     constraintOverlaySystem?.prune?.();
     deletionIds.forEach((id) => selectedIds.delete(id));
     hoveredId = null;
+    filletSystem.refreshPresentation();
     syncState();
-    notifyObjectChange();
+    notifyObjectChange({ history: 'commit' });
   }
 
   function clearDrawing() {
     if (solveFrame !== null) cancelAnimationFrame(solveFrame);
     solveFrame = null;
     closeDimensionEditPanel();
+    filletSystem.closeEditPanel();
     pendingSolveRecords.clear();
     records.splice(0).forEach((record) => record.group.remove());
     solver.clear();
@@ -1364,6 +1330,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     if (solveFrame !== null) cancelAnimationFrame(solveFrame);
     solveFrame = null;
     closeDimensionEditPanel();
+    filletSystem.closeEditPanel();
     pendingSolveRecords.clear();
     records.splice(0).forEach((record) => record.group.remove());
     selectedIds.clear();
@@ -1372,12 +1339,14 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     objectSnapCandidate = null;
     constraintOverlaySystem?.clear?.();
     const sourceEntities = snapshot?.entities || [];
-    solver.loadSketch({ ...snapshot, entities: sourceEntities.filter((entity) => entity.type !== 'image') });
+    solver.loadSketch({ ...snapshot, entities: sourceEntities.filter((entity) => entity.type !== 'image' && !isFilletEntity(entity)) });
     const geometryEntities = solver.getGeometrySnapshot();
     let geometryIndex = 0;
     sourceEntities.forEach((entity, index) => {
       const record = isImageEntity(entity)
         ? imageTools.createRecord(entity)
+        : isFilletEntity(entity)
+          ? filletSystem.createRecord(entity)
         : createGeometryRecord(geometryEntities[geometryIndex++], index);
       if (record) records.push(record);
     });
@@ -1395,6 +1364,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
       syncDimensionPresentation(record);
       records.push(record);
     });
+    filletSystem.refreshPresentation({ renderRegions: false });
     syncGeometryStacking();
     refreshLinkedDimensions();
     renderClosedRegions();
@@ -1415,7 +1385,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     return {
       ...snapshot,
       entities: records
-        .filter((record) => ['geometry', 'image'].includes(record.recordType))
+        .filter((record) => ['geometry', 'image', 'fillet'].includes(record.recordType))
         .map((record) => cloneEntity(record.entity)),
     };
   }
@@ -1527,9 +1497,29 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     updateGeometryNode(record);
   }
 
-  function recordById(recordId) {
-    return records.find((record) => record.id === recordId && record.recordType === 'geometry') || null;
+  function recordById(recordId, { includeFillets = false } = {}) {
+    return records.find((record) => (
+      record.id === recordId
+      && (record.recordType === 'geometry' || (includeFillets && record.recordType === 'fillet'))
+    )) || null;
   }
+
+  const dimensionLinkManager = createDimensionLinkManager({
+    records,
+    recordById,
+    recordHandles,
+    recordSegments,
+    renderedEntityForRecord,
+    filletEvaluation: filletSystem.evaluateRecord,
+    arcCircle,
+    screenToWorld,
+    formatDrawingLength,
+    solver,
+    applyManagedDimensionText,
+    updateRecordHandles,
+    syncScreenInvariantSizing,
+    getScale: () => camera.scale,
+  });
 
   function applySolverSnapshot(snapshot = solver.getGeometrySnapshot()) {
     const byId = new Map(snapshot.map((entity) => [entity.id, entity]));
@@ -1543,6 +1533,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
       updateRecordHandles(record);
       changedIds.add(record.id);
     });
+    filletSystem.refreshPresentation();
     refreshLinkedDimensions();
     constraintOverlaySystem?.render?.();
     syncState();
@@ -1604,168 +1595,20 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     });
   }
 
-  function getEntityFeature(recordId) {
-    return entityFeatureFromRecord(recordById(recordId));
+  function getEntityFeature(recordId, options = {}) {
+    return dimensionLinkManager.getEntityFeature(recordId, options);
   }
 
-  function getSegmentFeature(recordId, index = 0) {
-    const record = recordById(recordId);
-    return record ? segmentFeatureFromRecord(record, index) : null;
+  function getSegmentFeature(recordId, index = 0, options = {}) {
+    return dimensionLinkManager.getSegmentFeature(recordId, index, options);
   }
 
-  function getPointFeature(recordId, index = 0) {
-    const record = recordById(recordId);
-    const point = record ? recordHandles(record.entity)[index] : null;
-    return point ? { kind: 'point', recordId: record.id, entityType: record.entity.type, index, point: [...point] } : null;
-  }
-
-  function dimensionAnchorRecordIds(entity) {
-    const ids = new Set();
-    const visit = (value) => {
-      if (!value || typeof value !== 'object') return;
-      if (value.recordId) ids.add(value.recordId);
-      Object.values(value).forEach(visit);
-    };
-    visit(entity.anchors);
-    return ids;
-  }
-
-  function resolveAnchor(anchor) {
-    if (!anchor) return null;
-    const record = recordById(anchor.recordId);
-    if (!record) return null;
-    if (anchor.type === 'point') return recordHandles(record.entity)[anchor.index]?.slice() || null;
-    if (anchor.type === 'segment-start' || anchor.type === 'segment-end') {
-      const segment = segmentFeatureFromRecord(record, anchor.index);
-      if (!segment) return null;
-      return anchor.type === 'segment-start' ? [...segment.start] : [...segment.end];
-    }
-    if (anchor.type === 'center') return entityFeatureFromRecord(record)?.center?.slice() || null;
-    if (anchor.type === 'radius') return entityFeatureFromRecord(record)?.radius || null;
-    return null;
-  }
-
-  function resolveFeatureFromAnchor(featureAnchor) {
-    const record = recordById(featureAnchor?.recordId);
-    if (!record) return null;
-    if (featureAnchor.kind === 'segment') return segmentFeatureFromRecord(record, featureAnchor.index);
-    if (featureAnchor.kind === 'circle' || featureAnchor.kind === 'arc') return entityFeatureFromRecord(record);
-    if (featureAnchor.kind === 'curve') {
-      return record.entity.type === 'curve'
-        ? { kind: 'curve', recordId: record.id, points: record.entity.points.map((point) => [...point]) }
-        : null;
-    }
-    return null;
-  }
-
-  function featureLength(feature) {
-    if (!feature) return 0;
-    if (feature.kind === 'segment') return pointDistance(feature.start, feature.end);
-    if (feature.kind === 'circle') return Math.PI * 2 * feature.radius;
-    if (feature.kind === 'arc') {
-      const startAngle = Math.atan2(feature.start[1] - feature.center[1], feature.start[0] - feature.center[0]);
-      const midAngle = Math.atan2(feature.arcPoint[1] - feature.center[1], feature.arcPoint[0] - feature.center[0]);
-      const endAngle = Math.atan2(feature.end[1] - feature.center[1], feature.end[0] - feature.center[0]);
-      const tau = Math.PI * 2;
-      const normalize = (angle) => (angle + tau) % tau;
-      const ccwSpan = normalize(endAngle - startAngle);
-      return feature.radius * (normalize(midAngle - startAngle) <= ccwSpan ? ccwSpan : tau - ccwSpan);
-    }
-    if (feature.kind === 'curve') {
-      return feature.points.slice(1).reduce((total, point, index) => total + pointDistance(feature.points[index], point), 0);
-    }
-    return 0;
-  }
-
-  function dimensionLineText(entity) {
-    const sourceStart = entity.measureStart || entity.start;
-    const sourceEnd = entity.measureEnd || entity.end;
-    const measured = entity.subtype === 'horizontal'
-      ? Math.abs(sourceEnd[0] - sourceStart[0])
-      : entity.subtype === 'vertical'
-        ? Math.abs(sourceEnd[1] - sourceStart[1])
-        : pointDistance(entity.start, entity.end);
-    return formatDrawingLength(measured);
-  }
-
-  function updateLinkedDimensionEntity(entity) {
-    if (!entity.anchors) return false;
-    if (entity.type === 'dimension-line') {
-      const oldMid = midpoint(entity.measureStart || entity.start, entity.measureEnd || entity.end);
-      const nextStart = resolveAnchor(entity.anchors.start) || entity.start;
-      const nextEnd = resolveAnchor(entity.anchors.end) || entity.end;
-      const nextMeasureStart = resolveAnchor(entity.anchors.measureStart) || nextStart;
-      const nextMeasureEnd = resolveAnchor(entity.anchors.measureEnd) || nextEnd;
-      const nextMid = midpoint(nextMeasureStart, nextMeasureEnd);
-      const delta = subtractPoints(nextMid, oldMid);
-      entity.start = nextStart;
-      entity.end = nextEnd;
-      entity.measureStart = nextMeasureStart;
-      entity.measureEnd = nextMeasureEnd;
-      entity.label = addPoints(entity.label, delta);
-      entity.text = dimensionLineText(entity);
-      return true;
-    }
-    if (entity.type === 'radius-dimension') {
-      const oldCenter = entity.center;
-      const center = resolveAnchor(entity.anchors.center);
-      const radius = resolveAnchor(entity.anchors.radius);
-      if (!center) return false;
-      const delta = subtractPoints(center, oldCenter);
-      entity.center = center;
-      if (radius) entity.radius = radius;
-      entity.elbow = addPoints(entity.elbow || entity.label, delta);
-      entity.label = addPoints(entity.label, delta);
-      entity.text = formatDrawingLength(entity.radius);
-      return true;
-    }
-    if (entity.type === 'angle-dimension') {
-      const first = entity.anchors.firstSegment;
-      const second = entity.anchors.secondSegment;
-      const firstSegment = first?.start && first?.end ? { start: resolveAnchor(first.start), end: resolveAnchor(first.end) } : null;
-      const secondSegment = second?.start && second?.end ? { start: resolveAnchor(second.start), end: resolveAnchor(second.end) } : null;
-      if (!firstSegment?.start || !firstSegment?.end || !secondSegment?.start || !secondSegment?.end) return false;
-      const oldVertex = entity.vertex;
-      const vertex = lineIntersection(firstSegment, secondSegment) || firstSegment.end;
-      const firstVector = unitVector(subtractPoints(firstSegment.end, firstSegment.start));
-      const secondVector = unitVector(subtractPoints(secondSegment.end, secondSegment.start), [0, 1]);
-      const delta = subtractPoints(vertex, oldVertex);
-      entity.vertex = vertex;
-      entity.start = addPoints(vertex, scalePoint(firstVector, 80));
-      entity.end = addPoints(vertex, scalePoint(secondVector, 80));
-      entity.label = addPoints(entity.label, delta);
-      return true;
-    }
-    if (entity.type === 'multi-curve-length-dimension') {
-      const features = entity.anchors.features?.map(resolveFeatureFromAnchor).filter(Boolean) || [];
-      if (!features.length) return false;
-      const first = features[0];
-      const target = first.kind === 'segment'
-        ? midpoint(first.start, first.end)
-        : first.kind === 'curve'
-          ? first.points[Math.floor(first.points.length / 2)]
-          : addPoints(first.center, [first.radius, 0]);
-      const delta = subtractPoints(target, entity.target);
-      entity.target = target;
-      entity.elbow = addPoints(entity.elbow || entity.label, delta);
-      entity.label = addPoints(entity.label, delta);
-      entity.text = formatDrawingLength(features.reduce((total, feature) => total + featureLength(feature), 0));
-      return true;
-    }
-    return false;
+  function getPointFeature(recordId, index = 0, { rendered = false } = {}) {
+    return dimensionLinkManager.getPointFeature(recordId, index, { rendered });
   }
 
   function refreshLinkedDimensions(changedRecordIds = null) {
-    records.forEach((record) => {
-      if (record.recordType !== 'dimension' || !record.entity.anchors) return;
-      const anchorIds = dimensionAnchorRecordIds(record.entity);
-      if (changedRecordIds && ![...anchorIds].some((id) => changedRecordIds.has(id))) return;
-      if (!updateLinkedDimensionEntity(record.entity)) return;
-      applyManagedDimensionText(record.entity);
-      updateDimensionNode(record, camera.scale);
-      updateRecordHandles(record);
-    });
-    syncScreenInvariantSizing();
+    dimensionLinkManager.refreshLinkedDimensions(changedRecordIds);
   }
 
   function translateGeometryEntity(entity, startEntity, delta) {
@@ -1928,8 +1771,9 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     }
     if (changedIds.size) {
       scheduleGeometrySolve([...changedIds].map(recordById).filter(Boolean));
+      filletSystem.refreshPresentation();
     }
-    renderClosedRegions();
+    else renderClosedRegions();
     constraintOverlaySystem?.render?.();
     syncState();
   }
@@ -1942,7 +1786,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     updateRecordHandles(record);
     if (record.recordType === 'geometry') {
       scheduleGeometrySolve([record]);
-      renderClosedRegions();
+      filletSystem.refreshPresentation();
     }
     constraintOverlaySystem?.render?.();
     syncState();
@@ -2212,6 +2056,7 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
   return {
     addObject,
     addImage,
+    addFillet: filletSystem.addFillet,
     addDimension,
     clearDrawing,
     getDrawingData: drawingSnapshot,
@@ -2239,6 +2084,21 @@ export function createInfiniteCanvas({ canvas, grid, svg, status, reset, entitie
     },
     getObjectCount() {
       return records.length;
+    },
+    getDrawingUnit() {
+      return solver.drawingUnit || 'in';
+    },
+    getDrawingProperties() {
+      return {
+        drawingUnit: solver.drawingUnit || 'in',
+        dxfExportUnit: solver.dxfExportUnit || 'in',
+      };
+    },
+    setDrawingProperties(properties) {
+      const next = solver.setDrawingProperties(properties);
+      applySolverSnapshot();
+      notifyObjectChange();
+      return next;
     },
     onObjectsChange(listener) {
       objectChangeListeners.add(listener);

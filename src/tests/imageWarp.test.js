@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   calculateWarpPlan,
+  enableWarpSettings,
   formatWarpDimension,
   formatWarpDimensionWithUnit,
   localPointToSourcePixel,
@@ -45,6 +46,45 @@ test('warp corner and dimension edits preserve shared side values', () => {
   assert.equal(parseWarpDimensionInput('', 10), 10);
   assert.equal(parseWarpDimensionInput('bad value', 10), 10);
   assert.equal(setWarpDimension(moved, 'width', parseWarpDimensionInput('', moved.targetWidth)).targetWidth, moved.targetWidth);
+});
+
+test('enabling warp rebases a stale guide to the image current display size', () => {
+  const entity = {
+    source: 'data:image/png;base64,a',
+    width: 760,
+    height: 380,
+    warp: normalizeWarpSettings({
+      sourceDisplayWidth: 320,
+      sourceDisplayHeight: 160,
+      points: [[-80, -60], [40, -60], [40, 60], [-80, 60]],
+      targetWidth: 16 * 25.4,
+      targetHeight: 24 * 25.4,
+    }, { source: 'data:image/png;base64,a', width: 320, height: 160 }),
+  };
+  const rebased = enableWarpSettings(entity);
+  assert.equal(rebased.enabled, true);
+  assert.equal(rebased.sourceDisplayWidth, 760);
+  assert.equal(rebased.sourceDisplayHeight, 380);
+  assert.deepEqual(rebased.points, [[-190, -142.5], [95, -142.5], [95, 142.5], [-190, 142.5]]);
+  assert.equal(rebased.targetWidth, 16 * 25.4);
+  assert.equal(rebased.targetHeight, 24 * 25.4);
+  const sourceBefore = localPointToSourcePixel(entity.warp.points[0], entity.warp, 1600, 800);
+  const sourceAfter = localPointToSourcePixel(rebased.points[0], rebased, 1600, 800);
+  assert.deepEqual(sourceAfter, sourceBefore);
+
+  const plan = calculateWarpPlan({ ...entity, warp: rebased }, { naturalWidth: 1600, naturalHeight: 800 });
+  const rendered = rebased.points.map((point) => {
+    const sourcePixel = localPointToSourcePixel(point, rebased, 1600, 800);
+    const outputPixel = transformPerspectivePoint(plan.rasterSourceToDestination, sourcePixel);
+    return [
+      outputPixel[0] * plan.displayWidth / plan.outputWidth,
+      outputPixel[1] * plan.displayHeight / plan.outputHeight,
+    ];
+  });
+  near(rendered[1][1], rendered[0][1]);
+  near(rendered[3][0], rendered[0][0]);
+  near(rendered[1][0] - rendered[0][0], 16 * 25.4, 0.2);
+  near(rendered[3][1] - rendered[0][1], 24 * 25.4, 0.2);
 });
 
 test('image-local guide coordinates convert to source pixels', () => {

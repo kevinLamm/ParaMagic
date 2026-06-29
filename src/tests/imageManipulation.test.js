@@ -36,6 +36,9 @@ test('corner scaling preserves aspect ratio and anchors the opposite corner', ()
   near(scaled.width / scaled.height, 2);
   near(scaled.x - scaled.width / 2, -100);
   near(scaled.y - scaled.height / 2, -50);
+  assert.equal(scaled.warp.sourceDisplayWidth, 300);
+  assert.equal(scaled.warp.sourceDisplayHeight, 150);
+  assert.deepEqual(scaled.warp.points, [[-105, -52.5], [105, -52.5], [105, 52.5], [-105, 52.5]]);
 });
 
 test('rotation and flip helpers preserve the rest of the image entity', () => {

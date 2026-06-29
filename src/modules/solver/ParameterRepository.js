@@ -157,6 +157,19 @@ function parseExpression(source, resolveName) {
   return result;
 }
 
+function expressionMetadata(expression) {
+  const tokens = tokenize(expression);
+  const hasExplicitUnit = tokens.some((token, index) => Number.isFinite(Number(tokens[index - 1])) && Object.hasOwn(units, token.toLowerCase()));
+  const hasReference = tokens.some((token, index) => {
+    if (!/^[A-Za-z_]/.test(token)) return false;
+    const normalized = token.toLowerCase();
+    if (Object.hasOwn(units, normalized) || Object.hasOwn(constants, normalized)) return false;
+    if (Object.hasOwn(functions, normalized) && tokens[index + 1] === '(') return false;
+    return true;
+  });
+  return { hasExplicitUnit, hasReference };
+}
+
 function replaceReference(expression, oldName, nextName) {
   const escaped = oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return String(expression).replace(new RegExp(`\\b${escaped}\\b`, 'g'), nextName);
@@ -174,11 +187,17 @@ export class ParameterRepository {
     this.computedResolvers = new Map();
     this.nextUserIndex = 1;
     this.nextDimensionIndex = 1;
+    this.defaultLengthUnit = null;
   }
 
   subscribe(listener) {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
+  }
+
+  setDefaultLengthUnit(unit = null) {
+    this.defaultLengthUnit = unitFactors[unit] && unit !== 'deg' ? unit : null;
+    this.evaluateAll({ strict: false });
   }
 
   emit() {
@@ -313,11 +332,15 @@ export class ParameterRepository {
       if (visiting.has(id)) throw new Error(`Dependency cycle detected at ${entry.name}.`);
       if (!entry.expression.trim()) throw new Error(`${entry.name} requires an expression.`);
       visiting.add(id);
-      const raw = parseExpression(entry.expression, (name) => {
+      let raw = parseExpression(entry.expression, (name) => {
         const dependencyId = this.names.get(name);
         if (!dependencyId) throw new Error(`Unknown parameter: ${name}`);
         return evaluate(dependencyId);
       });
+      if (this.defaultLengthUnit && entry.type === 'Expression' && entry.unit !== 'deg') {
+        const { hasExplicitUnit, hasReference } = expressionMetadata(entry.expression);
+        if (!hasExplicitUnit && !hasReference) raw = Number(raw) * unitFactors[this.defaultLengthUnit];
+      }
       visiting.delete(id);
       const value = entry.type === 'Yes/No' ? Boolean(raw) : Number(raw);
       if (entry.type === 'Expression' && !Number.isFinite(value)) throw new Error(`${entry.name} must evaluate to a finite number.`);
@@ -398,6 +421,15 @@ export class ParameterRepository {
       if (entry.error) throw new Error(entry.error);
       return entry.value;
     });
+  }
+
+  evaluateLengthExpression(expression) {
+    const value = this.evaluateExpression(expression);
+    if (!this.defaultLengthUnit) return value;
+    const { hasExplicitUnit, hasReference } = expressionMetadata(expression);
+    return !hasExplicitUnit && !hasReference
+      ? Number(value) * unitFactors[this.defaultLengthUnit]
+      : value;
   }
 
   list() {

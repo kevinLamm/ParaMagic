@@ -4,15 +4,34 @@ import { SketchModel } from './SketchModel.js';
 import { solveLevenbergMarquardt } from './LevenbergMarquardt.js';
 import { isSuccessfulSolve } from './SolverDiagnostics.js';
 import { createStableId } from './Variable.js';
+import { formatDrivenDimensionValue, formatUnitlessValue, unitFactors } from './Units.js';
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
 const distance = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const drawingUnits = new Set(['in', 'mm', 'cm', 'm', 'ft']);
+const simpleLength = /^([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?)\s*(in|mm|cm|m|ft)?$/i;
+
+function convertedLengthExpression(expression, previousUnit, nextUnit) {
+  const match = simpleLength.exec(String(expression ?? '').trim());
+  if (!match) return expression;
+  const sourceUnit = match[2]?.toLowerCase() || previousUnit;
+  const value = Number(match[1]) * unitFactors[sourceUnit] / unitFactors[nextUnit];
+  const rounded = Math.round((value + Number.EPSILON) * 1e9) / 1e9;
+  return String(rounded);
+}
+
+function expressionWithoutUnitSuffixes(expression) {
+  return String(expression ?? '')
+    .replace(/\s+(?:mm|cm|m|in|ft|deg)\b/gi, '')
+    .trim();
+}
 
 function restoreEntities(model, snapshot) {
   snapshot.forEach((entity) => model.updateEntity(entity));
 }
 
 function dimensionValue(entity) {
+  if (Number.isFinite(entity?.measuredValue)) return Number(entity.measuredValue);
   if (entity.type === 'dimension-line') {
     const a = entity.measureStart || entity.start;
     const b = entity.measureEnd || entity.end;
@@ -30,6 +49,7 @@ function dimensionValue(entity) {
 }
 
 function dimensionValueFromModel(entity, model) {
+  if (entity?.useRenderedMeasurement && Number.isFinite(entity?.measuredValue)) return Number(entity.measuredValue);
   if (entity.type === 'dimension-line') {
     const startAnchor = entity.anchors?.measureStart || entity.anchors?.start;
     const endAnchor = entity.anchors?.measureEnd || entity.anchors?.end;
@@ -86,6 +106,8 @@ export class SolverController {
     this.dimensionConstraints = new Map();
     this.dimensionAnnotations = new Map();
     this.drawingUnit = 'in';
+    this.dxfExportUnit = 'in';
+    this.dimensions.setDefaultLengthUnit(this.drawingUnit);
   }
 
   emit() {
@@ -136,11 +158,18 @@ export class SolverController {
     return this.dimensions.evaluateExpression(expression);
   }
 
+  evaluateDrawingLengthExpression(expression) {
+    return this.dimensions.evaluateLengthExpression(expression);
+  }
+
   clear() {
     this.model.clear();
     this.dimensions.clear();
     this.dimensionConstraints.clear();
     this.dimensionAnnotations.clear();
+    this.drawingUnit = 'in';
+    this.dxfExportUnit = 'in';
+    this.dimensions.setDefaultLengthUnit(this.drawingUnit);
     this.lastResult = null;
     this.emit();
   }
@@ -151,6 +180,8 @@ export class SolverController {
     this.dimensionConstraints.clear();
     this.dimensionAnnotations.clear();
     this.drawingUnit = snapshot?.drawingUnit || 'in';
+    this.dxfExportUnit = snapshot?.dxfExportUnit || 'in';
+    this.dimensions.setDefaultLengthUnit(this.drawingUnit);
     (snapshot?.entities || []).forEach((entity) => this.model.addEntity(entity));
     const parameters = snapshot?.parameters || snapshot?.dimensions;
     if (parameters) this.dimensions.restore(parameters);
@@ -179,6 +210,7 @@ export class SolverController {
     const parameters = this.dimensions.snapshot();
     return {
       drawingUnit: this.drawingUnit,
+      dxfExportUnit: this.dxfExportUnit,
       entities: this.getGeometrySnapshot(),
       constraints: this.constraints(),
       parameters,
@@ -372,6 +404,12 @@ export class SolverController {
     return removed;
   }
 
+  updateDimensionAnnotation(dimensionId, entity) {
+    if (!this.dimensionAnnotations.has(dimensionId)) return false;
+    this.dimensionAnnotations.set(dimensionId, clone(entity));
+    return true;
+  }
+
   parameters() {
     this.dimensions.evaluateAll({ strict: false });
     return this.dimensions.list();
@@ -381,9 +419,12 @@ export class SolverController {
     this.dimensions.evaluateAll({ strict: false });
     const entry = this.dimensions.get(idOrName);
     if (!entry) return '';
-    if (mode === 'expression') return `${entry.name} = ${entry.expression}`;
-    const valueText = this.dimensions.formatValue(entry.value, entry.unit);
-    return mode === 'value' ? valueText : `${entry.name} = ${valueText}`;
+    if (mode === 'expression') return `${entry.name} = ${expressionWithoutUnitSuffixes(entry.expression)}`;
+    const valueText = formatUnitlessValue(entry.value, entry.unit);
+    if (mode === 'value') {
+      return entry.driving ? valueText : formatDrivenDimensionValue(entry.value, entry.unit);
+    }
+    return `${entry.name} = ${valueText}`;
   }
 
   createParameter(input = {}) {
@@ -421,6 +462,27 @@ export class SolverController {
 
   reorderParameter(id, beforeId = null) {
     return this.dimensions.reorder(id, beforeId);
+  }
+
+  setDrawingProperties({ drawingUnit = this.drawingUnit, dxfExportUnit = this.dxfExportUnit } = {}) {
+    const nextDrawingUnit = drawingUnits.has(drawingUnit) ? drawingUnit : this.drawingUnit;
+    const nextDxfExportUnit = drawingUnits.has(dxfExportUnit) ? dxfExportUnit : this.dxfExportUnit;
+    const unitChanged = nextDrawingUnit !== this.drawingUnit;
+    const previousDrawingUnit = this.drawingUnit;
+    this.drawingUnit = nextDrawingUnit;
+    this.dxfExportUnit = nextDxfExportUnit;
+    this.dimensions.setDefaultLengthUnit(nextDrawingUnit);
+    if (unitChanged) {
+      this.dimensions.list()
+        .filter((entry) => entry.kind === 'dimension' && entry.unit !== 'deg')
+        .forEach((entry) => this.dimensions.update(entry.id, {
+          unit: nextDrawingUnit,
+          ...(entry.computed ? {} : { expression: convertedLengthExpression(entry.expression, previousDrawingUnit, nextDrawingUnit) }),
+        }, { strict: false }));
+      this.solve();
+    }
+    this.emit();
+    return { drawingUnit: this.drawingUnit, dxfExportUnit: this.dxfExportUnit };
   }
 
   getGeometrySnapshot() {
