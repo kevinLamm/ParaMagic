@@ -1,0 +1,3 @@
+[submodule "packages/paramagic-core"]
+	path = packages/paramagic-core
+	url = https://github.com/kevinLamm/paramagic-core.git
