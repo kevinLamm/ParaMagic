@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { resolveColorExpression, resolveOpacityExpression } from '../modules/AppearanceExpressions.js';
-import { ParameterRepository } from '../modules/solver/ParameterRepository.js';
+import { resolveColorExpression, resolveOpacityExpression } from '../../packages/paramagic-core/src/modules/AppearanceExpressions.js';
+import { ParameterRepository } from '../../packages/paramagic-core/src/modules/solver/ParameterRepository.js';
 
 test('appearance colors accept direct hex, numeric expressions, and parameter names', () => {
   const parameters = new ParameterRepository();
@@ -9,6 +9,7 @@ test('appearance colors accept direct hex, numeric expressions, and parameter na
   assert.equal(resolveColorExpression('#3af', (expression) => parameters.evaluateExpression(expression)), '#33aaff');
   assert.equal(resolveColorExpression('16711680', (expression) => parameters.evaluateExpression(expression)), '#ff0000');
   assert.equal(resolveColorExpression('brandColor', (expression) => parameters.evaluateExpression(expression)), '#ff8000');
+  assert.equal(resolveColorExpression('namedColor', () => '#12abef'), '#12abef');
 });
 
 test('appearance opacity accepts expressions and clamps resolved percentages', () => {

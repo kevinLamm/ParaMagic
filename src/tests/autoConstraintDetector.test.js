@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { detectAutoConstraints } from '../modules/AutoConstraintDetector.js';
+import {
+  applyAutoConstraints,
+  detectAutoConstraints,
+  detectAutoConstraintsForEntities,
+} from '../../packages/paramagic-core/src/modules/ConstraintSystem.js';
 
 function types(result) {
   return result.map((constraint) => constraint.type);
@@ -17,6 +21,33 @@ test('detects horizontal and vertical segments at commit time', () => {
   });
   assert.deepEqual(types(horizontal), ['Horizontal']);
   assert.deepEqual(types(vertical), ['Vertical']);
+});
+
+test('horizontal and vertical auto constraints use a 1.5 degree threshold', () => {
+  const endpoint = (degrees) => {
+    const radians = degrees * Math.PI / 180;
+    return [100 * Math.cos(radians), 100 * Math.sin(radians)];
+  };
+  const nearHorizontal = detectAutoConstraints({
+    entity: { type: 'line', start: [0, 0], end: endpoint(1.49) },
+    recordId: 'near-horizontal',
+  });
+  const outsideHorizontal = detectAutoConstraints({
+    entity: { type: 'line', start: [0, 0], end: endpoint(1.51) },
+    recordId: 'outside-horizontal',
+  });
+  const nearVertical = detectAutoConstraints({
+    entity: { type: 'line', start: [0, 0], end: endpoint(90 - 1.49) },
+    recordId: 'near-vertical',
+  });
+  const outsideVertical = detectAutoConstraints({
+    entity: { type: 'line', start: [0, 0], end: endpoint(90 - 1.51) },
+    recordId: 'outside-vertical',
+  });
+  assert.deepEqual(types(nearHorizontal), ['Horizontal']);
+  assert.deepEqual(types(outsideHorizontal), []);
+  assert.deepEqual(types(nearVertical), ['Vertical']);
+  assert.deepEqual(types(outsideVertical), []);
 });
 
 test('detects the closest parallel or perpendicular existing segment', () => {
@@ -77,5 +108,61 @@ test('detects concentric circles and arcs using their derived centers', () => {
   assert.deepEqual(result[0].featureRefs, [
     { kind: 'arc', recordId: 'arc' },
     { kind: 'circle', recordId: 'circle' },
+  ]);
+});
+
+test('commits every auto constraint from one rectangle in a single solver batch', () => {
+  const batches = [];
+  let individualAdds = 0;
+  const solver = {
+    applyConstraintBatch(batch) {
+      batches.push(batch);
+      return {
+        committed: true,
+        constraints: batch.constraints,
+        result: { status: 'unchanged' },
+        snapshot: [],
+      };
+    },
+    addConstraint() {
+      individualAdds += 1;
+    },
+  };
+
+  const outcome = applyAutoConstraints({
+    solver,
+    entity: { type: 'polygon', points: [[0, 0], [20, 0], [20, 10], [0, 10]] },
+    recordId: 'rectangle',
+  });
+
+  assert.equal(outcome.committed, true);
+  assert.equal(batches.length, 1);
+  assert.deepEqual(types(batches[0].constraints), ['Horizontal', 'Vertical', 'Horizontal', 'Vertical']);
+  assert.equal(individualAdds, 0);
+});
+
+test('detects the complete editable rectangle chain as one eight-constraint transaction', () => {
+  const ids = ['top', 'right', 'bottom', 'left'];
+  const points = [[0, 0], [20, 0], [20, 10], [0, 10]];
+  const entries = ids.map((id, index) => ({
+    entity: {
+      id,
+      type: 'line',
+      start: points[index],
+      end: points[(index + 1) % points.length],
+    },
+    snapRefs: [
+      index ? { recordId: ids[index - 1], index: 2, point: points[index] } : null,
+      index === ids.length - 1 ? { recordId: ids[0], index: 0, point: points[0] } : null,
+    ],
+  }));
+
+  const constraints = detectAutoConstraintsForEntities({ entries });
+
+  assert.deepEqual(types(constraints), [
+    'Horizontal',
+    'Coincident', 'Vertical',
+    'Coincident', 'Horizontal',
+    'Coincident', 'Coincident', 'Vertical',
   ]);
 });

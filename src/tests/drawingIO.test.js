@@ -1,13 +1,168 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mergeDrawingData, parseDxf, serializeDxf, serializeDrawingJson } from '../modules/DrawingIO.js';
+import {
+  mergeDrawingData, mergeDrawingDataWithMap, normalizeDrawingData, parseDxf, serializeDxf, serializeDrawingJson,
+} from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { createDrawingDxfSnapshot } from '../../packages/paramagic-core/src/modules/DxfExport.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
+const exportDxf = (drawing) => serializeDxf(createDrawingDxfSnapshot(drawing));
+
+test('drawing normalization upgrades Classes to root-level data and migrates legacy geometry into X', () => {
+  const drawing = normalizeDrawingData({
+    entities: [{
+      id: 'legacy-edge',
+      type: 'line',
+      start: [0, 0],
+      end: [10, 0],
+      appearance: { strokeColor: '#123456' },
+    }],
+  });
+
+  assert.equal(drawing.activeClassId, 'class-x');
+  assert.deepEqual(drawing.classes.map(({ id, name }) => ({ id, name })), [{ id: 'class-x', name: 'X' }]);
+  assert.equal(drawing.entities[0].classId, 'class-x');
+  assert.deepEqual(drawing.entities[0].classPropertyOverrides, ['stroke']);
+  assert.equal(JSON.parse(serializeDrawingJson(drawing)).version, 2);
+});
+
+test('drawing normalization upgrades legacy parallel-edge dimensions to live supporting-line distance semantics', () => {
+  const dimensionId = 'legacy-parallel-distance';
+  const drawing = normalizeDrawingData({
+    entities: [
+      { id: 'reference', type: 'line', start: [0, 0], end: [10, 0] },
+      { id: 'measured', type: 'line', start: [20, 5], end: [30, 5] },
+    ],
+    constraints: [{
+      id: 'legacy-constraint',
+      type: 'Distance',
+      source: 'dimension',
+      anchors: {
+        start: { type: 'segment-point', recordId: 'reference', index: 0, ratio: 1 },
+        end: { type: 'segment-start', recordId: 'measured', index: 0 },
+      },
+      featureRefs: [],
+      dimensionRef: dimensionId,
+    }],
+    dimensionAnnotations: [{
+      id: 'legacy-annotation',
+      dimensionId,
+      type: 'dimension-line',
+      dimensionMode: 'driving',
+      subtype: 'aligned',
+      start: [10, 0],
+      end: [20, 5],
+      measureStart: [10, 0],
+      measureEnd: [20, 5],
+      label: [20, 10],
+      anchors: {
+        measureStart: { type: 'segment-point', recordId: 'reference', index: 0, ratio: 1 },
+        measureEnd: { type: 'segment-start', recordId: 'measured', index: 0 },
+      },
+    }],
+  });
+
+  const annotation = drawing.dimensionAnnotations[0];
+  assert.equal(annotation.measurementKind, 'parallel-edge-distance');
+  assert.deepEqual(annotation.measureStart, [25, 0]);
+  assert.deepEqual(annotation.measureEnd, [25, 5]);
+  assert.deepEqual(annotation.anchors.lineToLine, {
+    reference: { kind: 'segment', recordId: 'reference', index: 0 },
+    measured: { kind: 'segment', recordId: 'measured', index: 0 },
+  });
+  const constraint = drawing.constraints[0];
+  assert.equal(constraint.type, 'Line Line Distance');
+  assert.equal(constraint.subtype, 'aligned');
+  assert.equal(constraint.anchors, undefined);
+  assert.deepEqual(constraint.featureRefs, [
+    { kind: 'segment', recordId: 'reference', index: 0 },
+    { kind: 'segment', recordId: 'measured', index: 0 },
+  ]);
+});
+
+test('drawing normalization upgrades point-to-line parallel dimensions to line-to-line constraints', () => {
+  const dimensionId = 'point-line-parallel-distance';
+  const drawing = normalizeDrawingData({
+    entities: [
+      { id: 'reference', type: 'line', start: [0, 0], end: [10, 0] },
+      { id: 'measured', type: 'line', start: [20, 5], end: [30, 5] },
+    ],
+    constraints: [{
+      id: 'point-line-constraint',
+      type: 'Point Line Distance',
+      source: 'dimension',
+      subtype: 'aligned',
+      projectionMode: 'line',
+      featureRefs: [
+        { kind: 'point', type: 'segment-start', recordId: 'measured', index: 0 },
+        { kind: 'segment', recordId: 'reference', index: 0 },
+      ],
+      dimensionRef: dimensionId,
+    }],
+    dimensionAnnotations: [{
+      id: 'point-line-annotation',
+      dimensionId,
+      type: 'dimension-line',
+      dimensionMode: 'driving',
+      measurementKind: 'parallel-edge-distance',
+      subtype: 'aligned',
+      start: [20, 0],
+      end: [20, 5],
+      measureStart: [20, 0],
+      measureEnd: [20, 5],
+      label: [20, 10],
+      anchors: {
+        pointToSegment: {
+          point: { type: 'segment-start', recordId: 'measured', index: 0 },
+          segment: { kind: 'segment', recordId: 'reference', index: 0 },
+          projectionMode: 'line',
+        },
+      },
+    }],
+  });
+  assert.equal(drawing.constraints[0].type, 'Line Line Distance');
+  assert.deepEqual(drawing.dimensionAnnotations[0].anchors.lineToLine, {
+    reference: { kind: 'segment', recordId: 'reference', index: 0 },
+    measured: { kind: 'segment', recordId: 'measured', index: 0 },
+  });
+});
+
+test('insert merges same-named classes and preserves unique inserted class definitions', () => {
+  const base = normalizeDrawingData({
+    classes: [{ id: 'class-cut-a', name: 'Cut', properties: { strokeThickness: 2 } }],
+    entities: [],
+  });
+  const inserted = normalizeDrawingData({
+    classes: [
+      { id: 'class-cut-b', name: 'Cut', properties: { strokeThickness: 7 } },
+      { id: 'class-shell', name: 'Shell', properties: { strokeThickness: 4 } },
+    ],
+    entities: [
+      { id: 'cut-edge', type: 'line', start: [0, 0], end: [1, 0], classId: 'class-cut-b' },
+      { id: 'shell-edge', type: 'line', start: [0, 0], end: [0, 1], classId: 'class-shell' },
+    ],
+  });
+  const { drawing, idMap } = mergeDrawingDataWithMap(base, inserted);
+
+  assert.deepEqual(drawing.classes.map(({ name }) => name), ['X', 'Cut', 'Shell']);
+  assert.equal(drawing.entities.find(({ id }) => id === idMap.get('cut-edge')).classId, 'class-cut-a');
+  assert.equal(
+    drawing.entities.find(({ id }) => id === idMap.get('shell-edge')).classId,
+    drawing.classes.find(({ name }) => name === 'Shell').id,
+  );
+});
 
 test('JSON export includes drawing parameters as first-class data', () => {
   const json = serializeDrawingJson({
     drawingUnit: 'in',
-    entities: [{ id: 'line-1', type: 'line', start: [0, 0], end: [25.4, 0] }],
+    entities: [{
+      id: 'line-1', type: 'line', start: [0, 0], end: [25.4, 0],
+      appearance: {
+        fillType: 'image', fillExpression: 'basic/Fabric/sample.webp',
+        fillImageReference: 'basic/Fabric/sample.webp', fillImageMode: 'tile',
+        fillImageScaleExpression: 'textureScale',
+      },
+    }],
     constraints: [],
     parameters: [{ id: 'parameter-1', name: 'width', kind: 'user', type: 'Expression', expression: '12 in', value: 304.8, order: 0 }],
     dimensionAnnotations: [],
@@ -17,11 +172,29 @@ test('JSON export includes drawing parameters as first-class data', () => {
   assert.equal(parsed.name, 'Parameterized Part');
   assert.equal(parsed.parameters[0].name, 'width');
   assert.equal(parsed.parameters[0].expression, '12 in');
+  assert.equal(parsed.entities[0].appearance.fillImageMode, 'tile');
+  assert.equal(parsed.entities[0].appearance.fillImageScaleExpression, 'textureScale');
   assert.equal(parsed.drawingUnit, 'in');
   assert.equal(parsed.dxfExportUnit, 'in');
+  assert.equal(parsed.filletRadius, 25.4);
 });
 
-test('insert remaps entity IDs and conflicting parameter names and references', () => {
+test('drawing normalization migrates legacy text font sizes to physical millimetre heights', () => {
+  const drawing = normalizeDrawingData({
+    entities: [
+      { id: 'legacy-text', type: 'text', x: 0, y: 0, text: 'Legacy', fontSize: 96 },
+      { id: 'physical-text', type: 'text', x: 0, y: 20, text: 'Physical', fontSize: 12, textHeight: 4 },
+    ],
+  });
+  near(drawing.entities[0].textHeight, 25.4);
+  assert.equal(drawing.entities[1].textHeight, 4);
+
+  const serialized = JSON.parse(serializeDrawingJson(drawing));
+  near(serialized.entities[0].textHeight, 25.4);
+  assert.equal(serialized.entities[1].textHeight, 4);
+});
+
+test('insert inherits matching active user parameters and remaps entity IDs', () => {
   const base = {
     entities: [{ id: 'shared-line', type: 'line', start: [0, 0], end: [10, 0] }],
     parameters: [{ id: 'base-width', name: 'width', kind: 'user', expression: '10', value: 10, order: 0 }],
@@ -36,8 +209,114 @@ test('insert remaps entity IDs and conflicting parameter names and references', 
   const merged = mergeDrawingData(base, inserted);
   assert.equal(merged.entities.length, 2);
   assert.notEqual(merged.entities[0].id, merged.entities[1].id);
-  assert.deepEqual(merged.parameters.map(({ name }) => name), ['width', 'width_2', 'double']);
-  assert.equal(merged.parameters[2].expression, 'width_2 * 2');
+  assert.deepEqual(merged.parameters.map(({ name }) => name), ['width', 'double']);
+  assert.equal(merged.parameters[0].expression, '10');
+  assert.equal(merged.parameters[1].expression, 'width * 2');
+});
+
+test('insert remaps primitive and cycle Subtract parent relationships', () => {
+  const inserted = {
+    entities: [
+      { id: 'edge-a', type: 'line', start: [0, 0], end: [10, 0] },
+      { id: 'edge-b', type: 'line', start: [10, 0], end: [0, 0] },
+      { id: 'primitive-parent', type: 'rect', x: 20, y: 0, width: 10, height: 10 },
+      {
+        id: 'cutter', type: 'circle', center: [5, 0], radius: 2,
+        subtractFrom: ['cycle:edge-a|edge-b', 'primitive-parent'],
+      },
+    ],
+  };
+  const { drawing, idMap } = mergeDrawingDataWithMap({}, inserted);
+  const cutter = drawing.entities.find((entity) => entity.id === idMap.get('cutter'));
+  const remappedCycle = `cycle:${[idMap.get('edge-a'), idMap.get('edge-b')].sort().join('|')}`;
+
+  assert.deepEqual(cutter.subtractFrom, [remappedCycle, idMap.get('primitive-parent')]);
+});
+
+test('insert remaps control parameters and expressions without losing control metadata', () => {
+  const merged = mergeDrawingData(
+    { parameters: [{ id: 'base-c1', name: 'c1', kind: 'control', expression: '10', value: 10, order: 0 }] },
+    {
+      parameters: [
+        { id: 'insert-c1', name: 'c1', kind: 'control', expression: '20', value: 20, order: 0 },
+        { id: 'insert-p1', name: 'result', kind: 'user', expression: 'c1 * 2', value: 40, order: 1 },
+      ],
+      entities: [{
+        id: 'insert-control',
+        type: 'control',
+        controlType: 'horizontal-slider',
+        x: 10,
+        y: 20,
+        width: 160,
+        height: 48,
+        parameterId: 'insert-c1',
+        parameterName: 'c1',
+        minExpression: '0',
+        maxExpression: 'result',
+        initialExpression: 'c1',
+      }],
+    },
+  );
+  const control = merged.entities[0];
+  assert.equal(control.type, 'control');
+  assert.equal(control.parameterId, 'base-c1');
+  assert.equal(control.parameterName, 'c1');
+  assert.equal(control.maxExpression, 'result');
+  assert.equal(control.initialExpression, 'c1');
+  assert.equal(merged.parameters.length, 2);
+});
+
+test('clipboard-style insert can duplicate a control parameter instead of linking the pasted control to its source', () => {
+  const base = {
+    parameters: [{ id: 'base-c1', name: 'c1', kind: 'control', expression: '10', value: 10, order: 0 }],
+  };
+  const inserted = {
+    parameters: [{ id: 'insert-c1', name: 'c1', kind: 'control', expression: '20', value: 20, order: 0 }],
+    entities: [{
+      id: 'insert-control', type: 'control', controlType: 'horizontal-slider', x: 0, y: 0,
+      parameterId: 'insert-c1', parameterName: 'c1', minExpression: '0', maxExpression: '100', initialExpression: 'c1',
+    }],
+  };
+  const { drawing } = mergeDrawingDataWithMap(base, inserted, { inheritControlParameters: false });
+  const pasted = drawing.entities[0];
+  assert.equal(pasted.parameterName, 'c2');
+  assert.equal(pasted.initialExpression, 'c2');
+  assert.notEqual(pasted.parameterId, 'base-c1');
+  assert.deepEqual(drawing.parameters.map(({ name }) => name), ['c1', 'c2']);
+});
+
+test('insert renames conflicting dimensions and rewrites every inserted expression reference', () => {
+  const base = {
+    parameters: [
+      { id: 'base-d1', name: 'd1', kind: 'dimension', expression: '10', value: 10, order: 0 },
+      { id: 'base-d2', name: 'd2', kind: 'dimension', expression: '15', value: 15, order: 1 },
+      { id: 'base-width', name: 'width', kind: 'user', expression: '100', value: 100, order: 2 },
+    ],
+  };
+  const inserted = {
+    entities: [{
+      id: 'conditional-circle', type: 'circle', center: [0, 0], radius: 5,
+      appearance: { visible: false, visibleExpression: 'd1 > d2' },
+    }],
+    parameters: [
+      { id: 'insert-d1', name: 'd1', kind: 'dimension', expression: '20', value: 20, order: 0 },
+      { id: 'insert-d2', name: 'd2', kind: 'dimension', expression: '25', value: 25, order: 1 },
+      { id: 'insert-width', name: 'width', kind: 'user', expression: '200', value: 200, order: 2 },
+      { id: 'insert-result', name: 'result', kind: 'user', expression: 'd1 + d2 + width', value: 245, order: 3 },
+    ],
+    constraints: [{ id: 'insert-constraint', type: 'Distance', dimensionRef: 'insert-d1' }],
+    dimensionAnnotations: [{ id: 'insert-annotation', dimensionId: 'insert-d1', dimensionName: 'd1' }],
+  };
+
+  const merged = mergeDrawingData(base, inserted);
+  assert.deepEqual(merged.parameters.map(({ name }) => name), ['d1', 'd2', 'width', 'd3', 'd4', 'result']);
+  assert.equal(merged.parameters.find(({ name }) => name === 'width').expression, '100');
+  assert.equal(merged.parameters.find(({ name }) => name === 'result').expression, 'd3 + d4 + width');
+  const insertedDimension = merged.parameters.find(({ name }) => name === 'd3');
+  assert.equal(merged.dimensionAnnotations[0].dimensionId, insertedDimension.id);
+  assert.equal(merged.dimensionAnnotations[0].dimensionName, 'd3');
+  assert.equal(merged.constraints[0].dimensionRef, insertedDimension.id);
+  assert.equal(merged.entities[0].appearance.visibleExpression, 'd3 > d4');
 });
 
 test('insert preserves appearances and remaps composite drawing-command IDs', () => {
@@ -54,36 +333,66 @@ test('insert preserves appearances and remaps composite drawing-command IDs', ()
   assert.deepEqual(merged.entities[0].appearance, { fillColor: '#336699', strokeThickness: 2, zIndex: 1 });
 });
 
+test('insert remaps stack ownership and preserves the destination default stack', () => {
+  const base = {
+    extensions: {
+      stacks: { version: 1, activeStackId: 'stack-default', stacks: [{ id: 'stack-default', name: 'Default', visible: true }] },
+    },
+  };
+  const inserted = {
+    entities: [{ id: 'trace-line', type: 'line', start: [0, 0], end: [10, 0], stackId: 'trace-stack' }],
+    extensions: {
+      stacks: {
+        version: 1,
+        activeStackId: 'trace-stack',
+        stacks: [
+          { id: 'stack-default', name: 'Imported Default', visible: true },
+          { id: 'trace-stack', name: 'Trace', visible: false },
+        ],
+      },
+    },
+  };
+  const merged = mergeDrawingData(base, inserted);
+  const traceStack = merged.extensions.stacks.stacks.find(({ name }) => name === 'Trace');
+  assert.ok(traceStack);
+  assert.notEqual(traceStack.id, 'trace-stack');
+  assert.equal(merged.entities[0].stackId, traceStack.id);
+  assert.equal(merged.extensions.stacks.stacks.some(({ id }) => id === 'stack-default'), true);
+});
+
 test('DXF export and import round-trip supported geometry in inch units', () => {
   const source = {
     drawingUnit: 'in',
     dxfExportUnit: 'in',
     entities: [
-      { id: 'line', type: 'line', start: [0, 0], end: [1, 2] },
-      { id: 'circle', type: 'circle', center: [3, 1], radius: 0.5 },
-      { id: 'polyline', type: 'polyline', points: [[0, 0], [1, 0], [1, 1]] },
+      { id: 'line', type: 'line', start: [0, 0], end: [25.4, 50.8] },
+      { id: 'circle', type: 'circle', center: [76.2, 25.4], radius: 12.7 },
+      { id: 'polyline', type: 'polyline', points: [[0, 0], [25.4, 0], [25.4, 25.4]] },
     ],
   };
-  const dxf = serializeDxf(source);
+  const dxf = exportDxf(source);
   assert.match(dxf, /\$INSUNITS/);
   const restored = parseDxf(dxf);
   assert.equal(restored.drawingUnit, 'in');
   assert.equal(restored.dxfExportUnit, 'in');
   assert.equal(restored.entities.length, 3);
-  assert.deepEqual(restored.entities[0].start, [0, 0]);
-  near(restored.entities[0].end[0], 25.4);
-  near(restored.entities[0].end[1], 50.8);
-  near(restored.entities[1].radius, 12.7);
-  restored.entities[2].points.flat().forEach((value, index) => near(value, source.entities[2].points.flat()[index] * 25.4));
+  const restoredLine = restored.entities.find(({ type }) => type === 'line');
+  const restoredCircle = restored.entities.find(({ type }) => type === 'circle');
+  const restoredPolyline = restored.entities.find(({ type }) => type === 'polyline');
+  assert.deepEqual(restoredLine.start, [0, 0]);
+  near(restoredLine.end[0], source.entities[0].end[0]);
+  near(restoredLine.end[1], source.entities[0].end[1]);
+  near(restoredCircle.radius, source.entities[1].radius);
+  restoredPolyline.points.flat().forEach((value, index) => near(value, source.entities[2].points.flat()[index]));
 });
 
 test('DXF export converts drawing coordinates into the selected DXF unit', () => {
   const source = {
     drawingUnit: 'in',
     dxfExportUnit: 'mm',
-    entities: [{ id: 'line', type: 'line', start: [0, 0], end: [1, 2] }],
+    entities: [{ id: 'line', type: 'line', start: [0, 0], end: [25.4, 50.8] }],
   };
-  const dxf = serializeDxf(source);
+  const dxf = exportDxf(source);
   assert.match(dxf, /\$INSUNITS\n70\n4/);
   assert.match(dxf, /\n11\n25\.4\n21\n-50\.8/);
   const restored = parseDxf(dxf);
@@ -93,39 +402,126 @@ test('DXF export converts drawing coordinates into the selected DXF unit', () =>
   near(restored.entities[0].end[1], 50.8);
 });
 
-test('DXF export applies every drawing-to-export unit mismatch consistently', () => {
-  const coordinate = (drawingUnit, dxfExportUnit) => {
-    const dxf = serializeDxf({
+test('DXF export converts internal millimetres only to the export unit', () => {
+  const exported = (drawingUnit, dxfExportUnit) => {
+    const dxf = exportDxf({
       drawingUnit,
       dxfExportUnit,
-      entities: [{ id: 'line', type: 'line', start: [0, 0], end: [2, 0] }],
+      entities: [{ id: 'line', type: 'line', start: [0, 0], end: [50.8, 0] }],
     });
-    return Number(/\n11\n([^\n]+)/.exec(dxf)?.[1]);
+    return {
+      coordinate: Number(/\n11\n([^\n]+)/.exec(dxf)?.[1]),
+      headerUnit: Number(/\$INSUNITS\n70\n([^\n]+)/.exec(dxf)?.[1]),
+    };
   };
 
-  near(coordinate('in', 'mm'), 50.8);
-  near(coordinate('mm', 'in'), 2 / 25.4);
-  near(coordinate('cm', 'm'), 0.02);
-  near(coordinate('m', 'ft'), 2 * 1000 / 304.8);
-  near(coordinate('ft', 'cm'), 60.96);
-  near(coordinate('mm', 'mm'), 2);
+  const cases = [
+    ['in', 'mm', 50.8, 4],
+    ['in', 'in', 2, 1],
+    ['mm', 'in', 2, 1],
+    ['cm', 'm', 0.0508, 6],
+    ['m', 'ft', 50.8 / 304.8, 2],
+    ['ft', 'cm', 5.08, 5],
+    ['mm', 'mm', 50.8, 4],
+  ];
+  cases.forEach(([drawingUnit, dxfExportUnit, coordinate, headerUnit]) => {
+    const result = exported(drawingUnit, dxfExportUnit);
+    near(result.coordinate, coordinate);
+    assert.equal(result.headerUnit, headerUnit);
+  });
+});
+
+test('DXF header declares a compatible version and measurement system for the selected export unit', () => {
+  const metric = exportDxf({ drawingUnit: 'mm', entities: [] });
+  assert.match(metric, /\$ACADVER\n1\nAC1015/);
+  assert.match(metric, /\$INSUNITS\n70\n4/);
+  assert.match(metric, /\$MEASUREMENT\n70\n1/);
+
+  const imperial = exportDxf({ drawingUnit: 'mm', dxfExportUnit: 'ft', entities: [] });
+  assert.match(imperial, /\$INSUNITS\n70\n2/);
+  assert.match(imperial, /\$MEASUREMENT\n70\n0/);
 });
 
 test('DXF unit scaling is applied to every supported geometric coordinate and radius', () => {
-  const dxf = serializeDxf({
+  const dxf = exportDxf({
     drawingUnit: 'in',
     dxfExportUnit: 'mm',
     entities: [
-      { id: 'line', type: 'line', start: [1, 2], end: [3, 4] },
-      { id: 'circle', type: 'circle', center: [5, 6], radius: 2 },
-      { id: 'arc', type: 'arc', center: [8, 8], radius: 2, start: [10, 8], arcPoint: [8, 6], end: [6, 8] },
-      { id: 'polyline', type: 'polyline', points: [[7, 8], [9, 10]] },
+      { id: 'line', type: 'line', start: [25.4, 50.8], end: [76.2, 101.6] },
+      { id: 'circle', type: 'circle', center: [127, 152.4], radius: 50.8 },
+      { id: 'arc', type: 'arc', center: [203.2, 203.2], radius: 50.8, start: [254, 203.2], arcPoint: [203.2, 152.4], end: [152.4, 203.2] },
+      { id: 'polyline', type: 'polyline', points: [[177.8, 203.2], [228.6, 254]] },
     ],
   });
-  assert.match(dxf, /\n10\n25\.4\n20\n-50\.8\n11\n76\.19999999999999\n21\n-101\.6/);
-  assert.match(dxf, /\nCIRCLE\n[\s\S]*?\n10\n127\n20\n-152\.39999999999998\n40\n50\.8/);
+  assert.match(dxf, /\n10\n25\.4\n20\n-50\.8\n11\n76\.2\n21\n-101\.6/);
+  assert.match(dxf, /\nCIRCLE\n[\s\S]*?\n10\n127\n20\n-152\.4\n40\n50\.8/);
   assert.match(dxf, /\nARC\n[\s\S]*?\n10\n203\.2\n20\n-203\.2\n40\n50\.8/);
-  assert.match(dxf, /\nLWPOLYLINE\n[\s\S]*?\n10\n177\.79999999999998\n20\n-203\.2\n10\n228\.6\n20\n-254/);
+  assert.match(dxf, /\nLWPOLYLINE\n[\s\S]*?\n10\n177\.8\n20\n-203\.2\n10\n228\.6\n20\n-254/);
+});
+
+test('DXF export writes every physical Notch shape to its dedicated layer', () => {
+  const dxf = exportDxf({
+    drawingUnit: 'in',
+    dxfExportUnit: 'mm',
+    entities: [
+      { id: 'slit', type: 'notch', notchType: 'straight-slit', point: [0, 0], end: [0, 6.35] },
+      { id: 'vee', type: 'notch', notchType: 'v-notch', point: [20, 0], end: [20, 6.35] },
+      { id: 'u', type: 'notch', notchType: 'u-notch', point: [40, 0], end: [40, 6.35] },
+    ],
+  });
+
+  assert.match(dxf, /\nLAYER\n2\nStraight Slit Notch\n/);
+  assert.match(dxf, /\nLAYER\n2\nV-Notch\n/);
+  assert.match(dxf, /\nLAYER\n2\nU-Notch\n/);
+  assert.match(dxf, /\nLINE\n8\nStraight Slit Notch\n/);
+  assert.equal((dxf.match(/\nLINE\n8\nV-Notch\n/g) || []).length, 2);
+  assert.equal((dxf.match(/\nLINE\n8\nU-Notch\n/g) || []).length, 2);
+  assert.match(dxf, /\nARC\n8\nU-Notch\n/);
+});
+
+test('DXF export places seam geometry on a dashed Seam Lines layer', () => {
+  const dxf = exportDxf({
+    drawingUnit: 'mm',
+    dxfExportUnit: 'mm',
+    entities: [
+      { id: 'base', type: 'line', start: [0, 0], end: [50, 0] },
+      {
+        id: 'seam', type: 'line', start: [0, 10], end: [50, 10],
+        composite: { kind: 'finish-size-offset', sourceFeatures: [{ recordId: 'base', kind: 'segment', index: 0 }] },
+      },
+    ],
+  });
+
+  assert.match(dxf, /\nLTYPE\n2\nDASHED\n/);
+  assert.match(dxf, /\nLAYER\n2\nSeam Lines\n70\n0\n62\n7\n6\nDASHED\n/);
+  assert.match(dxf, /\nLINE\n8\nSeam Lines\n/);
+  assert.match(dxf, /\nLINE\n8\n0\n/);
+});
+
+test('V2 Seam Line intent remaps with inserted geometry and exports without stored seam entities', () => {
+  const inserted = {
+    drawingUnit: 'mm',
+    entities: [{ id: 'shape', type: 'rect', x: 0, y: 0, width: 100, height: 80 }],
+    extensions: {
+      seamLines: {
+        version: 2,
+        definitions: [{
+          regionId: 'shape',
+          recordIds: ['shape'],
+          defaultEnabled: false,
+          overrides: [{ sourceId: 'shape', sourceFeatureIndex: 0, boundaryRole: 'outer', kind: 'segment', enabled: true }],
+        }],
+      },
+    },
+  };
+  const { drawing, idMap } = mergeDrawingDataWithMap({}, inserted);
+  const mappedId = idMap.get('shape');
+  const definition = drawing.extensions.seamLines.definitions[0];
+  assert.equal(definition.regionId, mappedId);
+  assert.deepEqual(definition.recordIds, [mappedId]);
+  assert.equal(definition.overrides[0].sourceId, mappedId);
+  assert.equal(drawing.entities.some((entity) => entity.composite?.kind === 'finish-size-offset'), false);
+  assert.match(exportDxf(drawing), /\nLAYER\n2\nSeam Lines\n/);
 });
 
 test('insert keeps the destination drawing and DXF units', () => {
@@ -163,8 +559,34 @@ test('fillets persist in JSON, remap source references on insert, and export as 
   assert.ok(merged.entities.some(({ id }) => id === mergedFillet.sourceA.recordId));
   assert.ok(merged.entities.some(({ id }) => id === mergedFillet.sourceB.recordId));
 
-  const dxf = serializeDxf(source);
+  const dxf = exportDxf(source);
   assert.equal((dxf.match(/\nLINE\n/g) || []).length, 2);
   assert.equal((dxf.match(/\nARC\n/g) || []).length, 1);
   assert.doesNotMatch(dxf, /\n10\n0\n20\n0\n11\n3\.937/);
+});
+
+test('inserted notches retain their hidden constraints and remap their host drawing object', () => {
+  const inserted = normalizeDrawingData({
+    entities: [
+      { id: 'host-line', type: 'line', start: [0, 0], end: [100, 0] },
+      {
+        id: 'notch-1',
+        type: 'notch',
+        host: { recordId: 'host-line', kind: 'segment', index: 0 },
+        parameter: 0.5,
+        point: [50, 0],
+        end: [50, 6.35],
+        length: 6.35,
+        implicitConstraints: ['Point-on', 'Perpendicular'],
+      },
+    ],
+  });
+  const merged = mergeDrawingData(normalizeDrawingData({}), inserted);
+  const host = merged.entities.find((entity) => entity.type === 'line');
+  const notch = merged.entities.find((entity) => entity.type === 'notch');
+
+  assert.ok(host);
+  assert.ok(notch);
+  assert.equal(notch.host.recordId, host.id);
+  assert.deepEqual(notch.implicitConstraints, ['Point-on', 'Perpendicular']);
 });

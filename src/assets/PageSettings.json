@@ -1,0 +1,310 @@
+{
+  "Portrait": [
+    {
+      "label": "Letter / ANSI A",
+      "mm_width": 215.9,
+      "mm_height": 279.4,
+      "in_width": 8.5,
+      "in_height": 11,
+      "ratio_x_y": 0.772727
+    },
+    {
+      "label": "Legal",
+      "mm_width": 215.9,
+      "mm_height": 355.6,
+      "in_width": 8.5,
+      "in_height": 14,
+      "ratio_x_y": 0.607143
+    },
+    {
+      "label": "Tabloid / ANSI B",
+      "mm_width": 279.4,
+      "mm_height": 431.8,
+      "in_width": 11,
+      "in_height": 17,
+      "ratio_x_y": 0.647059
+    },
+    {
+      "label": "ANSI C",
+      "mm_width": 431.8,
+      "mm_height": 558.8,
+      "in_width": 17,
+      "in_height": 22,
+      "ratio_x_y": 0.772727
+    },
+    {
+      "label": "ANSI D",
+      "mm_width": 558.8,
+      "mm_height": 863.6,
+      "in_width": 22,
+      "in_height": 34,
+      "ratio_x_y": 0.647059
+    },
+    {
+      "label": "ANSI E",
+      "mm_width": 863.6,
+      "mm_height": 1117.6,
+      "in_width": 34,
+      "in_height": 44,
+      "ratio_x_y": 0.772727
+    },
+    {
+      "label": "ARCH A",
+      "mm_width": 228.6,
+      "mm_height": 304.8,
+      "in_width": 9,
+      "in_height": 12,
+      "ratio_x_y": 0.75
+    },
+    {
+      "label": "ARCH B",
+      "mm_width": 304.8,
+      "mm_height": 457.2,
+      "in_width": 12,
+      "in_height": 18,
+      "ratio_x_y": 0.666667
+    },
+    {
+      "label": "ARCH C",
+      "mm_width": 457.2,
+      "mm_height": 609.6,
+      "in_width": 18,
+      "in_height": 24,
+      "ratio_x_y": 0.75
+    },
+    {
+      "label": "ARCH D",
+      "mm_width": 609.6,
+      "mm_height": 914.4,
+      "in_width": 24,
+      "in_height": 36,
+      "ratio_x_y": 0.666667
+    },
+    {
+      "label": "ARCH E1",
+      "mm_width": 762,
+      "mm_height": 1066.8,
+      "in_width": 30,
+      "in_height": 42,
+      "ratio_x_y": 0.714286
+    },
+    {
+      "label": "ARCH E",
+      "mm_width": 914.4,
+      "mm_height": 1219.2,
+      "in_width": 36,
+      "in_height": 48,
+      "ratio_x_y": 0.75
+    },
+    {
+      "label": "ISO A0",
+      "mm_width": 841,
+      "mm_height": 1189,
+      "in_width": 33.11,
+      "in_height": 46.81,
+      "ratio_x_y": 0.707317
+    },
+    {
+      "label": "ISO A1",
+      "mm_width": 594,
+      "mm_height": 841,
+      "in_width": 23.39,
+      "in_height": 33.11,
+      "ratio_x_y": 0.706302
+    },
+    {
+      "label": "ISO A2",
+      "mm_width": 420,
+      "mm_height": 594,
+      "in_width": 16.54,
+      "in_height": 23.39,
+      "ratio_x_y": 0.707071
+    },
+    {
+      "label": "ISO A3",
+      "mm_width": 297,
+      "mm_height": 420,
+      "in_width": 11.69,
+      "in_height": 16.54,
+      "ratio_x_y": 0.707143
+    },
+    {
+      "label": "ISO A4",
+      "mm_width": 210,
+      "mm_height": 297,
+      "in_width": 8.27,
+      "in_height": 11.69,
+      "ratio_x_y": 0.707071
+    },
+    {
+      "label": "ISO A5",
+      "mm_width": 148,
+      "mm_height": 210,
+      "in_width": 5.83,
+      "in_height": 8.27,
+      "ratio_x_y": 0.704762
+    },
+    {
+      "label": "ISO A6",
+      "mm_width": 105,
+      "mm_height": 148,
+      "in_width": 4.13,
+      "in_height": 5.83,
+      "ratio_x_y": 0.709459
+    }
+  ],
+  "Landscape": [
+    {
+      "label": "Letter / ANSI A",
+      "mm_width": 279.4,
+      "mm_height": 215.9,
+      "in_width": 11,
+      "in_height": 8.5,
+      "ratio_x_y": 1.294118
+    },
+    {
+      "label": "Legal",
+      "mm_width": 355.6,
+      "mm_height": 215.9,
+      "in_width": 14,
+      "in_height": 8.5,
+      "ratio_x_y": 1.647059
+    },
+    {
+      "label": "Ledger / ANSI B",
+      "mm_width": 431.8,
+      "mm_height": 279.4,
+      "in_width": 17,
+      "in_height": 11,
+      "ratio_x_y": 1.545455
+    },
+    {
+      "label": "ANSI C",
+      "mm_width": 558.8,
+      "mm_height": 431.8,
+      "in_width": 22,
+      "in_height": 17,
+      "ratio_x_y": 1.294118
+    },
+    {
+      "label": "ANSI D",
+      "mm_width": 863.6,
+      "mm_height": 558.8,
+      "in_width": 34,
+      "in_height": 22,
+      "ratio_x_y": 1.545455
+    },
+    {
+      "label": "ANSI E",
+      "mm_width": 1117.6,
+      "mm_height": 863.6,
+      "in_width": 44,
+      "in_height": 34,
+      "ratio_x_y": 1.294118
+    },
+    {
+      "label": "ARCH A",
+      "mm_width": 304.8,
+      "mm_height": 228.6,
+      "in_width": 12,
+      "in_height": 9,
+      "ratio_x_y": 1.333333
+    },
+    {
+      "label": "ARCH B",
+      "mm_width": 457.2,
+      "mm_height": 304.8,
+      "in_width": 18,
+      "in_height": 12,
+      "ratio_x_y": 1.5
+    },
+    {
+      "label": "ARCH C",
+      "mm_width": 609.6,
+      "mm_height": 457.2,
+      "in_width": 24,
+      "in_height": 18,
+      "ratio_x_y": 1.333333
+    },
+    {
+      "label": "ARCH D",
+      "mm_width": 914.4,
+      "mm_height": 609.6,
+      "in_width": 36,
+      "in_height": 24,
+      "ratio_x_y": 1.5
+    },
+    {
+      "label": "ARCH E1",
+      "mm_width": 1066.8,
+      "mm_height": 762,
+      "in_width": 42,
+      "in_height": 30,
+      "ratio_x_y": 1.4
+    },
+    {
+      "label": "ARCH E",
+      "mm_width": 1219.2,
+      "mm_height": 914.4,
+      "in_width": 48,
+      "in_height": 36,
+      "ratio_x_y": 1.333333
+    },
+    {
+      "label": "ISO A0",
+      "mm_width": 1189,
+      "mm_height": 841,
+      "in_width": 46.81,
+      "in_height": 33.11,
+      "ratio_x_y": 1.413793
+    },
+    {
+      "label": "ISO A1",
+      "mm_width": 841,
+      "mm_height": 594,
+      "in_width": 33.11,
+      "in_height": 23.39,
+      "ratio_x_y": 1.415825
+    },
+    {
+      "label": "ISO A2",
+      "mm_width": 594,
+      "mm_height": 420,
+      "in_width": 23.39,
+      "in_height": 16.54,
+      "ratio_x_y": 1.414286
+    },
+    {
+      "label": "ISO A3",
+      "mm_width": 420,
+      "mm_height": 297,
+      "in_width": 16.54,
+      "in_height": 11.69,
+      "ratio_x_y": 1.414141
+    },
+    {
+      "label": "ISO A4",
+      "mm_width": 297,
+      "mm_height": 210,
+      "in_width": 11.69,
+      "in_height": 8.27,
+      "ratio_x_y": 1.414286
+    },
+    {
+      "label": "ISO A5",
+      "mm_width": 210,
+      "mm_height": 148,
+      "in_width": 8.27,
+      "in_height": 5.83,
+      "ratio_x_y": 1.418919
+    },
+    {
+      "label": "ISO A6",
+      "mm_width": 148,
+      "mm_height": 105,
+      "in_width": 5.83,
+      "in_height": 4.13,
+      "ratio_x_y": 1.409524
+    }
+  ]
+}

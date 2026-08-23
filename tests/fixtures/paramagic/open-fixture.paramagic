@@ -1,0 +1,25 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 1,
+  "name": "Open Fixture",
+  "drawingUnit": "in",
+  "dxfExportUnit": "in",
+  "filletRadius": 25.4,
+  "entities": [
+    {
+      "id": "open-fixture-line",
+      "type": "rect",
+      "x": -120,
+      "y": -70,
+      "width": 240,
+      "height": 140
+    }
+  ],
+  "constraints": [],
+  "parameters": [],
+  "dimensionAnnotations": [],
+  "documentContext": {
+    "fileName": "Open Fixture"
+  },
+  "extensions": {}
+}

@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ParameterRepository, parseExpression } from '../modules/solver/ParameterRepository.js';
-import { createSolverController } from '../modules/solver/SolverController.js';
-import { dimensionDisplayText } from '../modules/DimensionTools.js';
-import { formatDrivenDimensionValue } from '../modules/solver/Units.js';
+import { ParameterRepository, parseExpression } from '../../packages/paramagic-core/src/modules/solver/ParameterRepository.js';
+import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
+import { dimensionDisplayText } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
+import { formatDrivenDimensionValue } from '../../packages/paramagic-core/src/modules/solver/Units.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 
@@ -14,14 +14,127 @@ test('expression parser supports precedence, units, powers, functions, and degre
   near(parseExpression('sin(30) + cos(60)', () => 0), 1);
 });
 
-test('Yes/No parameters support comparisons, logical operators, and if()', () => {
+test('parameter evaluation reuses compiled expression tokens until an expression changes', () => {
   const repository = new ParameterRepository();
+  const width = repository.createUser({ name: 'width', expression: '2 + 3 * 4' });
+  const firstTokens = repository.compiledExpressions.get(width.id).tokens;
+
+  repository.evaluateAll();
+  assert.equal(repository.compiledExpressions.get(width.id).tokens, firstTokens);
+
+  repository.update(width.id, { expression: '3 + 4 * 5' }, { strict: true });
+  assert.notEqual(repository.compiledExpressions.get(width.id).tokens, firstTokens);
+  assert.equal(repository.value(width.id), 23);
+});
+
+test('dirty parameter evaluation follows reverse dependencies without evaluating disconnected branches', () => {
+  const repository = new ParameterRepository();
+  repository.restore([
+    { id: 'root-a', name: 'rootA', expression: '1', value: 0, kind: 'user', computed: false, order: 0 },
+    { id: 'leaf-a', name: 'leafA', expression: 'rootA + 1', value: 0, kind: 'user', computed: false, order: 1 },
+    { id: 'root-b', name: 'rootB', expression: '10', value: 0, kind: 'user', computed: false, order: 2 },
+    { id: 'leaf-b', name: 'leafB', expression: 'rootB + 1', value: 0, kind: 'user', computed: false, order: 3 },
+  ], { emit: false });
+  repository.evaluateAll();
+
+  repository.entries.get('root-a').expression = '4';
+  repository.markDirty('root-a');
+  const evaluated = repository.evaluateDirty({ refreshComputed: false });
+
+  assert.deepEqual([...evaluated.keys()].sort(), ['leaf-a', 'root-a']);
+  assert.equal(repository.value('leafA'), 5);
+  assert.equal(repository.value('leafB'), 11);
+  assert.deepEqual([...repository.dependencies.get('leaf-a')], ['root-a']);
+  assert.ok(repository.dependents.get('root-a').has('leaf-a'));
+});
+
+test('parameter updates snapshot only their affected dependency branch', () => {
+  const repository = new ParameterRepository();
+  repository.restore([
+    { id: 'root-a', name: 'rootA', expression: '1', value: 1, kind: 'user', computed: false, order: 0 },
+    { id: 'leaf-a', name: 'leafA', expression: 'rootA + 1', value: 2, kind: 'user', computed: false, order: 1 },
+    { id: 'root-b', name: 'rootB', expression: '10', value: 10, kind: 'user', computed: false, order: 2 },
+    { id: 'leaf-b', name: 'leafB', expression: 'rootB + 1', value: 11, kind: 'user', computed: false, order: 3 },
+  ], { emit: false });
+  repository.evaluateAll();
+  const snapshotEntries = repository.snapshotEntries.bind(repository);
+  let capturedIds = [];
+  repository.snapshotEntries = (ids) => {
+    capturedIds = [...ids].sort();
+    return snapshotEntries(ids);
+  };
+  repository.snapshot = () => { throw new Error('full parameter snapshot should not be used'); };
+
+  repository.update('root-a', { expression: '4' }, { strict: true });
+
+  assert.deepEqual(capturedIds, ['leaf-a', 'root-a']);
+  assert.equal(repository.value('leafA'), 5);
+  assert.equal(repository.value('leafB'), 11);
+});
+
+test('boolean expressions need no parameter type and support comparisons, logic, and if()', () => {
+  const repository = new ParameterRepository();
+  repository.setDefaultLengthUnit('in');
   const width = repository.createUser({ name: 'width', expression: '120 mm' });
-  const enabled = repository.createUser({ name: 'enabled', type: 'Yes/No', expression: 'width >= 100 && yes' });
+  const enabled = repository.createUser({ name: 'enabled', expression: 'TRUE' });
+  const disabled = repository.createUser({ name: 'disabled', expression: 'FALSE' });
+  const wide = repository.createUser({ name: 'wide', expression: 'width >= 4 && enabled && !disabled' });
   const result = repository.createUser({ name: 'result', expression: 'if(enabled, width / 2, 0)' });
   assert.equal(repository.value(enabled.id), true);
-  assert.equal(repository.value(result.id), 60);
-  assert.equal(repository.value(width.id), 120);
+  assert.equal(repository.value(disabled.id), false);
+  assert.equal(repository.value(wide.id), true);
+  near(repository.value(result.id), 60);
+  near(repository.value(width.id), 120);
+  assert.equal(Object.hasOwn(repository.get(enabled.id), 'type'), false);
+});
+
+test('ordinary parameters preserve quoted strings and string references', () => {
+  const repository = new ParameterRepository();
+  const bodyCover = repository.createUser({
+    name: 'BodyCover',
+    expression: '"basic/Fabric/36981_106.webp"',
+  });
+  const selectedCover = repository.createUser({
+    name: 'SelectedCover',
+    expression: 'BodyCover',
+  });
+
+  assert.equal(repository.get(bodyCover.id).value, 'basic/Fabric/36981_106.webp');
+  assert.equal(repository.get(bodyCover.id).error, null);
+  assert.equal(repository.get(selectedCover.id).value, 'basic/Fabric/36981_106.webp');
+  assert.equal(repository.evaluateExpression('SelectedCover'), 'basic/Fabric/36981_106.webp');
+});
+
+test('catalog image references can be entered without quotes', () => {
+  const repository = new ParameterRepository();
+  const fabric = repository.createUser({
+    name: 'Fabric1',
+    expression: 'basic/Fabric/linen-texture-wallpaper-2x.jpg',
+  });
+
+  assert.equal(fabric.value, 'basic/Fabric/linen-texture-wallpaper-2x.jpg');
+  assert.equal(fabric.error, null);
+  assert.equal(repository.evaluateExpression('Fabric1'), 'basic/Fabric/linen-texture-wallpaper-2x.jpg');
+});
+
+test('legacy typed parameter snapshots load as ordinary expressions', () => {
+  const repository = new ParameterRepository();
+  repository.restore([{
+    id: 'legacy-boolean',
+    name: 'enabled',
+    type: 'Yes/No',
+    expression: 'yes',
+    value: true,
+    kind: 'user',
+    driving: false,
+    computed: false,
+    unit: null,
+    error: null,
+    order: 0,
+  }]);
+  repository.evaluateAll();
+  assert.equal(repository.value('enabled'), true);
+  assert.equal(Object.hasOwn(repository.get('enabled'), 'type'), false);
 });
 
 test('renaming parameters updates dependent expression references', () => {
@@ -49,6 +162,158 @@ test('drawing parameters use the drawing unit for suffix-free arithmetic express
   assert.equal(controller.dimensions.get(width.id).expression, '41*2');
   assert.equal(controller.dimensions.get(dimension.id).expression, 'width');
   assert.equal(controller.getDimensionText(dimension.id, 'value'), '82');
+});
+
+test('controls remain unitless scalars even when legacy metadata marks them as drawing lengths', () => {
+  const controller = createSolverController();
+  controller.setDrawingProperties({ drawingUnit: 'in' });
+  const count = controller.createControlParameter({
+    name: 'c14',
+    expression: 'MinMax(0, 12, 4, 4)',
+    usesDrawingUnit: true,
+  });
+  const angle = controller.dimensions.addDimension({
+    name: 'd70',
+    expression: '360/c14',
+    value: 0,
+    driving: true,
+    unit: 'deg',
+  });
+
+  near(controller.dimensions.get(count.id).value, 4);
+  assert.equal(controller.dimensions.get(count.id).usesDrawingUnit, false);
+  near(controller.dimensions.get(angle.id).value, 90);
+  assert.equal(controller.dimensions.get(angle.id).expression, '360/c14');
+});
+
+test('scalar expression evaluation converts length dependencies to drawing-unit numbers', () => {
+  const repository = new ParameterRepository();
+  repository.setDefaultLengthUnit('in');
+  repository.createUser({ name: 'width', expression: '6 mm' });
+  repository.createControl({ name: 'choice', expression: 'width' });
+
+  near(repository.evaluateScalarExpression('width'), 6 / 25.4);
+  near(repository.value('choice'), 6 / 25.4);
+});
+
+test('an unrelated invalid parameter does not prevent adding a valid dimension', () => {
+  const repository = new ParameterRepository();
+  repository.setDefaultLengthUnit('in');
+  repository.restore([
+    {
+      id: 'control-count',
+      name: 'c14',
+      expression: 'MinMax(0, 12, 0, 4)',
+      value: 0,
+      kind: 'control',
+      driving: false,
+      computed: false,
+      unit: null,
+      error: null,
+      order: 0,
+      usesDrawingUnit: false,
+    },
+    {
+      id: 'invalid-angle',
+      name: 'd70',
+      expression: '360/c14',
+      value: 45,
+      kind: 'dimension',
+      driving: true,
+      computed: false,
+      unit: 'deg',
+      annotationId: null,
+      error: null,
+      order: 1,
+    },
+  ]);
+  repository.evaluateAll({ strict: false });
+  assert.match(repository.get('d70').error, /finite number/i);
+
+  const diameter = repository.addDimension({
+    name: 'd71',
+    expression: '3.911 in',
+    value: 3.911 * 25.4,
+    driving: true,
+    unit: 'in',
+  });
+
+  near(diameter.value, 3.911 * 25.4);
+  assert.equal(diameter.error, null);
+  assert.match(repository.get('d70').error, /finite number/i);
+});
+
+test('disabled dimensions retain their expression and last value without reporting evaluation errors', () => {
+  const repository = new ParameterRepository();
+  repository.restore([
+    {
+      id: 'control-count',
+      name: 'c14',
+      expression: '0',
+      value: 0,
+      kind: 'control',
+      driving: false,
+      computed: false,
+      unit: null,
+      error: null,
+      order: 0,
+    },
+    {
+      id: 'angle',
+      name: 'd70',
+      expression: '360/c14',
+      value: 45,
+      kind: 'dimension',
+      driving: true,
+      computed: false,
+      enabled: false,
+      unit: 'deg',
+      error: null,
+      order: 1,
+    },
+  ]);
+
+  repository.evaluateAll({ strict: false });
+  assert.equal(repository.get('d70').error, null);
+  assert.equal(repository.get('d70').value, 45);
+  assert.equal(repository.get('d70').expression, '360/c14');
+
+  repository.setEnabled('d70', true);
+  assert.match(repository.get('d70').error, /finite number/i);
+  repository.setEnabled('d70', false);
+  assert.equal(repository.get('d70').error, null);
+});
+
+test('suffix-free offsets in referenced dimension expressions use the drawing unit', () => {
+  const controller = createSolverController();
+  controller.setDrawingProperties({ drawingUnit: 'in' });
+  const height = controller.createParameter({ name: 'AHeight', expression: '24' });
+  const offset = controller.dimensions.addDimension({
+    name: 'd1',
+    expression: 'AHeight+10',
+    value: 0,
+    driving: true,
+    unit: 'in',
+  });
+  const doubled = controller.createParameter({ name: 'doubled', expression: 'AHeight*2' });
+  const mixed = controller.createParameter({ name: 'mixed', expression: 'AHeight+10 mm' });
+
+  near(controller.dimensions.get(height.id).value, 24 * 25.4);
+  near(controller.dimensions.get(offset.id).value, 34 * 25.4);
+  near(controller.dimensions.get(doubled.id).value, 48 * 25.4);
+  near(controller.dimensions.get(mixed.id).value, (24 * 25.4) + 10);
+  assert.equal(controller.dimensions.get(offset.id).expression, 'AHeight+10');
+});
+
+test('suffix-free referenced expressions follow metric drawing units too', () => {
+  const controller = createSolverController();
+  controller.setDrawingProperties({ drawingUnit: 'cm' });
+  const height = controller.createParameter({ name: 'height', expression: '20' });
+  const clearance = controller.createParameter({ name: 'clearance', expression: 'height+2.5' });
+
+  near(controller.dimensions.get(height.id).value, 200);
+  near(controller.dimensions.get(clearance.id).value, 225);
+  near(controller.evaluateDrawingLengthExpression('height+5'), 250);
 });
 
 test('cycles and missing references are retained as row errors without losing last valid values', () => {
@@ -86,6 +351,27 @@ test('computed dimension parameters can drive dependent expressions', () => {
   measured = 45;
   repository.evaluateAll({ strict: false });
   assert.equal(repository.value(doubled.id), 90);
+});
+
+test('computed dimension refresh can be scoped to an interactive constraint component', () => {
+  const repository = new ParameterRepository();
+  const first = repository.addDimension({ id: 'first', value: 10, driving: false });
+  const second = repository.addDimension({ id: 'second', value: 20, driving: false });
+  let firstRefreshes = 0;
+  let secondRefreshes = 0;
+  repository.setComputedResolver(first.id, () => { firstRefreshes += 1; return 10; });
+  repository.setComputedResolver(second.id, () => { secondRefreshes += 1; return 20; });
+  firstRefreshes = 0;
+  secondRefreshes = 0;
+
+  repository.evaluateDirty({
+    strict: false,
+    refreshComputed: true,
+    refreshComputedIds: new Set([first.id]),
+  });
+
+  assert.equal(firstRefreshes, 1);
+  assert.equal(secondRefreshes, 0);
 });
 
 test('driving and driven dimensions receive sequential parameter names and lifecycle protection', () => {
@@ -141,6 +427,74 @@ test('a driven dimension referenced by a driving dimension remains read-only', (
     controlledAfter.end[1] - controlledAfter.start[1],
   );
   assert.ok(Math.abs(controlledLength - 100) < 1e-3, `Expected controlled length 100, got ${controlledLength}`);
+});
+
+test('large control-parameter jumps continue through dependent driving dimensions', () => {
+  const controller = createSolverController({ jacobianMode: 'blocks' });
+  controller.setDrawingProperties({ drawingUnit: 'in' });
+  const control = controller.createControlParameter({
+    name: 'c1',
+    expression: 'MinMax(20, 100, 35, 1)',
+    usesDrawingUnit: false,
+  });
+  const line = controller.addEntity({
+    id: 'slider-controlled-line',
+    type: 'line',
+    start: [0, 0],
+    end: [35 * 25.4, 0],
+  });
+  const dimension = controller.addDimension({
+    type: 'dimension-line',
+    dimensionMode: 'driving',
+    subtype: 'horizontal',
+    start: [...line.start],
+    end: [...line.end],
+    measureStart: [...line.start],
+    measureEnd: [...line.end],
+    label: [35 * 12.7, -20],
+    text: '',
+    anchors: {
+      start: { type: 'segment-start', recordId: line.id, index: 0 },
+      end: { type: 'segment-end', recordId: line.id, index: 0 },
+      measureStart: { type: 'segment-start', recordId: line.id, index: 0 },
+      measureEnd: { type: 'segment-end', recordId: line.id, index: 0 },
+    },
+  });
+  const dimensionId = dimension.entity.dimensionId;
+  const linked = controller.setDimension(dimensionId, control.name);
+  assert.ok(['converged', 'unchanged'].includes(linked.status), linked.message);
+
+  const originalSolve = controller.solve.bind(controller);
+  let previousTarget = controller.dimensions.get(dimensionId).value;
+  let largestTargetJump = 0;
+  controller.solve = (options) => {
+    const target = controller.dimensions.get(dimensionId).value;
+    const targetJump = Math.abs(target - previousTarget);
+    largestTargetJump = Math.max(largestTargetJump, targetJump);
+    if (targetJump > 4 * 25.4) {
+      return {
+        status: 'max-iterations',
+        message: 'A discontinuous parameter jump did not converge.',
+        changedEntityIds: [],
+      };
+    }
+    previousTarget = target;
+    return originalSolve(options);
+  };
+
+  const outcome = controller.updateParameter(control.id, {
+    expression: 'MinMax(20, 100, 100, 1)',
+    usesDrawingUnit: false,
+  });
+
+  assert.ok(['converged', 'unchanged'].includes(outcome.result.status), outcome.result.message);
+  assert.ok(outcome.result.continuationSteps > 1);
+  assert.ok(largestTargetJump <= 4 * 25.4);
+  assert.equal(controller.dimensions.get(control.id).expression, 'MinMax(20, 100, 100, 1)');
+  assert.equal(controller.dimensions.get(control.id).value, 100);
+  assert.equal(controller.dimensions.get(dimensionId).expression, 'c1');
+  const solved = controller.getEntity(line.id);
+  assert.ok(Math.abs(Math.abs(solved.end[0] - solved.start[0]) - 100 * 25.4) < 1e-3);
 });
 
 test('dimension display text includes its parameter name without duplicating prefixes', () => {
@@ -211,6 +565,23 @@ test('only driven value-only dimensions display units using architectural symbol
   assert.equal(formatDrivenDimensionValue(914.4, 'ft'), "3'");
   assert.equal(formatDrivenDimensionValue(90, 'deg'), '90°');
   assert.equal(formatDrivenDimensionValue(250, 'mm'), '250 mm');
+});
+
+test('driven dimension display rounds inches to quarters and millimeters to whole numbers', () => {
+  assert.equal(formatDrivenDimensionValue(23.599 * 25.4, 'in'), '23.5"');
+  assert.equal(formatDrivenDimensionValue(23.63 * 25.4, 'in'), '23.75"');
+  assert.equal(formatDrivenDimensionValue(24 * 25.4, 'in'), '24"');
+  assert.equal(formatDrivenDimensionValue(250.49, 'mm'), '250 mm');
+  assert.equal(formatDrivenDimensionValue(250.5, 'mm'), '251 mm');
+  assert.equal(formatDrivenDimensionValue(250.49, 'cm'), '25.049 cm');
+
+  const controller = createSolverController();
+  controller.dimensions.restore([{
+      id: 'rounded-driven', name: 'd1', kind: 'dimension', expression: '23.599 in',
+      value: 23.599 * 25.4, unit: 'in', driving: false, computed: true, order: 0,
+  }]);
+  assert.equal(controller.getDimensionText('d1', 'named-value'), 'd1 = 23.599');
+  assert.equal(controller.getDimensionText('d1', 'value'), '23.5"');
 });
 
 test('display formatting converts internal millimetres into the requested unit', () => {

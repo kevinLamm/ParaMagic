@@ -1,18 +1,48 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  createImageEntityFromFile,
   flipImageEntity,
   imageAppearance,
   normalizeImageEntity,
   resetImageEntity,
   rotateImageFromPointer,
   scaleImageFromCorner,
-} from '../modules/ImageManipulation.js';
-import { mergeDrawingData, serializeDrawingJson } from '../modules/DrawingIO.js';
+} from '../../packages/paramagic-core/src/modules/ImageSystem.js';
+import { mergeDrawingData, serializeDrawingJson } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
 
 const source = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB';
 const warpedSource = 'data:image/png;base64,warped';
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
+
+test('inserted images keep their original file data instead of using catalog reduction', async (context) => {
+  const OriginalFileReader = globalThis.FileReader;
+  const OriginalImage = globalThis.Image;
+  context.after(() => {
+    globalThis.FileReader = OriginalFileReader;
+    globalThis.Image = OriginalImage;
+  });
+  globalThis.FileReader = class {
+    readAsDataURL() {
+      this.result = source;
+      this.onload();
+    }
+  };
+  globalThis.Image = class {
+    set src(value) {
+      this.loadedSource = value;
+      this.naturalWidth = 1200;
+      this.naturalHeight = 600;
+      this.onload();
+    }
+  };
+  const file = Object.assign(new Blob([new Uint8Array(200_000)], { type: 'image/png' }), { name: 'inserted.png' });
+  const entity = await createImageEntityFromFile(file);
+  assert.equal(entity.source, source);
+  assert.equal(entity.originalSource, source);
+  assert.equal(entity.width, 320);
+  assert.equal(entity.height, 160);
+});
 
 test('image entities normalize transform and appearance data', () => {
   const image = normalizeImageEntity({ source, x: 10, y: 20, width: 200, height: 100, rotation: 15, appearance: { fillOpacityExpression: 'fade', fillOpacity: 0.4 } });

@@ -7,12 +7,15 @@ import {
   formatWarpDimensionWithUnit,
   localPointToSourcePixel,
   moveWarpGuideCorner,
+  moveWarpGuideVector,
   normalizeWarpSettings,
   parseWarpDimensionInput,
   perspectiveTransformFromPoints,
   setWarpDimension,
   transformPerspectivePoint,
-} from '../modules/ImageWarp.js';
+  validateWarpGuideVectors,
+  warpVectorHandlePoints,
+} from '../../packages/paramagic-core/src/modules/ImageSystem.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 
@@ -21,8 +24,82 @@ test('warp settings default to an inset source-image guide and shared dimensions
   assert.equal(warp.sourceDisplayWidth, 200);
   assert.equal(warp.sourceDisplayHeight, 100);
   assert.deepEqual(warp.points, [[-70, -35], [70, -35], [70, 35], [-70, 35]]);
+  assert.deepEqual(warp.edgeVectors, [[35, 0], [0, 17.5], [-35, 0], [0, -17.5]]);
+  assert.deepEqual(warpVectorHandlePoints(warp), [null, null, null, null]);
+  assert.deepEqual(warpVectorHandlePoints(warp, 0), [[-7, -35], null, null, [-70, -3.5]]);
   assert.equal(warp.targetWidth, 140);
   assert.equal(warp.targetHeight, 70);
+});
+
+test('an outgoing edge vector preserves the selected corner and moves only the far endpoint', () => {
+  const warp = normalizeWarpSettings({}, { source: 'data:image/png;base64,a', width: 200, height: 100 });
+  const moved = moveWarpGuideVector(warp, 0, 0, [-66, -34]);
+  assert.deepEqual(moved.points[0], warp.points[0]);
+  near(moved.points[1][0], -70 + (140 * 4) / Math.sqrt(17));
+  near(moved.points[1][1], -35 + 140 / Math.sqrt(17));
+  assert.deepEqual(moved.points[2], warp.points[2]);
+  assert.deepEqual(moved.points[3], warp.points[3]);
+  near(Math.hypot(moved.points[1][0] - moved.points[0][0], moved.points[1][1] - moved.points[0][1]), 140);
+});
+
+test('an incoming edge vector also preserves the selected corner', () => {
+  const warp = normalizeWarpSettings({}, { source: 'data:image/png;base64,a', width: 200, height: 100 });
+  const moved = moveWarpGuideVector(warp, 0, 3, [-73, -31]);
+  assert.deepEqual(moved.points[0], warp.points[0]);
+  assert.deepEqual(moved.points[1], warp.points[1]);
+  assert.deepEqual(moved.points[2], warp.points[2]);
+  assert.deepEqual(moved.points[3], [-112, 21]);
+});
+
+test('a vector disconnected from the selected corner cannot change the guide', () => {
+  const warp = normalizeWarpSettings({}, { source: 'data:image/png;base64,a', width: 200, height: 100 });
+  const moved = moveWarpGuideVector(warp, 0, 1, [100, 100]);
+  assert.deepEqual(moved.points, warp.points);
+});
+
+test('direct corner manipulation takes precedence and refreshes adjacent vectors', () => {
+  const warp = normalizeWarpSettings({}, { source: 'data:image/png;base64,a', width: 200, height: 100 });
+  const vectorMoved = moveWarpGuideVector(warp, 0, 0, [-66, -32]);
+  const cornerMoved = moveWarpGuideCorner(vectorMoved, 0, [-80, -20]);
+  assert.deepEqual(cornerMoved.points[0], [-80, -20]);
+  assert.deepEqual(cornerMoved.points[1], [42, 49]);
+  assert.deepEqual(cornerMoved.edgeVectors[0], [30.5, 17.25]);
+  assert.deepEqual(cornerMoved.edgeVectors[3], [-2.5, -13.75]);
+});
+
+test('legacy four-corner guides derive four vector handles without changing their quadrilateral', () => {
+  const points = [[-100, -70], [90, -60], [120, 80], [-110, 95]];
+  const warp = normalizeWarpSettings({
+    points,
+    directionVectors: [[-92, 6], [-4, 66]],
+    edgeVectors: [[999, 999], [999, 999], [999, 999], [999, 999]],
+  }, { source: 'data:image/png;base64,a', width: 300, height: 220 });
+  assert.deepEqual(warp.points, points);
+  assert.deepEqual(warp.edgeVectors, [[47.5, 2.5], [7.5, 35], [-57.5, 3.75], [2.5, -41.25]]);
+  assert.equal(validateWarpGuideVectors(warp.points).valid, true);
+});
+
+test('a vector dropped on its selected corner leaves the guide unchanged', () => {
+  const warp = normalizeWarpSettings({}, { source: 'data:image/png;base64,a', width: 200, height: 100 });
+  const unchanged = moveWarpGuideVector(warp, 0, 0, warp.points[0]);
+  assert.deepEqual(unchanged.points, warp.points);
+});
+
+test('the warp plan refuses a concave corner guide', () => {
+  const entity = {
+    type: 'image',
+    source: 'data:image/png;base64,a',
+    width: 200,
+    height: 100,
+    warp: normalizeWarpSettings({
+      enabled: true,
+      points: [[-70, -35], [70, -35], [0, 0], [-70, 35]],
+    }, { source: 'data:image/png;base64,a', width: 200, height: 100 }),
+  };
+  assert.throws(
+    () => calculateWarpPlan(entity, { naturalWidth: 400, naturalHeight: 200 }),
+    /convex four-corner shape/,
+  );
 });
 
 test('warp corner and dimension edits preserve shared side values', () => {
@@ -66,6 +143,7 @@ test('enabling warp rebases a stale guide to the image current display size', ()
   assert.equal(rebased.sourceDisplayWidth, 760);
   assert.equal(rebased.sourceDisplayHeight, 380);
   assert.deepEqual(rebased.points, [[-190, -142.5], [95, -142.5], [95, 142.5], [-190, 142.5]]);
+  assert.deepEqual(rebased.edgeVectors, [[71.25, 0], [0, 71.25], [-71.25, 0], [0, -71.25]]);
   assert.equal(rebased.targetWidth, 16 * 25.4);
   assert.equal(rebased.targetHeight, 24 * 25.4);
   const sourceBefore = localPointToSourcePixel(entity.warp.points[0], entity.warp, 1600, 800);

@@ -1,0 +1,23 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 1,
+  "name": "Insert Fixture",
+  "drawingUnit": "in",
+  "dxfExportUnit": "in",
+  "filletRadius": 25.4,
+  "entities": [
+    {
+      "id": "insert-fixture-circle",
+      "type": "circle",
+      "center": [0, 100],
+      "radius": 45
+    }
+  ],
+  "constraints": [],
+  "parameters": [],
+  "dimensionAnnotations": [],
+  "documentContext": {
+    "fileName": "Insert Fixture"
+  },
+  "extensions": {}
+}

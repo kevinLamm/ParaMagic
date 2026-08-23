@@ -7,8 +7,11 @@ import {
   filletTopologyConstraints,
   findFilletCorner,
   findLineLineCorner,
-} from '../modules/FilletFeatures.js';
-import { findClosedGeometryCycles } from '../modules/ClosedRegionTopology.js';
+  regularFilletConstraints,
+  filletPresentationRecordIds,
+} from '../../packages/paramagic-core/src/modules/FilletSystem.js';
+import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
+import { findClosedGeometryCycles } from '../../packages/paramagic-core/src/modules/BoundaryTopology.js';
 
 const near = (actual, expected, tolerance = 1e-6) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} was not within ${tolerance} of ${expected}`);
 const lines = [
@@ -24,6 +27,24 @@ const fillet = {
   radiusExpression: '10 mm',
 };
 
+test('fillet presentation updates only changed sources and their dependent fillets', () => {
+  const records = [
+    { id: 'horizontal', recordType: 'geometry', entity: lines[0] },
+    { id: 'vertical', recordType: 'geometry', entity: lines[1] },
+    { id: 'unrelated', recordType: 'geometry', entity: { id: 'unrelated', type: 'line' } },
+    { id: 'fillet-a', recordType: 'fillet', entity: fillet },
+  ];
+
+  assert.deepEqual(
+    [...filletPresentationRecordIds(records, new Set(['horizontal']))].sort(),
+    ['fillet-a', 'horizontal', 'vertical'],
+  );
+  assert.deepEqual(
+    [...filletPresentationRecordIds(records, new Set(['unrelated']))],
+    ['unrelated'],
+  );
+});
+
 test('line-line fillet derives tangent points without changing source endpoints', () => {
   const source = structuredClone(lines);
   const evaluated = evaluateLineLineFillet(fillet, new Map(source.map((entity) => [entity.id, entity])));
@@ -34,6 +55,44 @@ test('line-line fillet derives tangent points without changing source endpoints'
   near(evaluated.tangentB[0], 0);
   near(evaluated.tangentB[1], 10);
   assert.deepEqual(source, lines);
+});
+
+test('regular fillet constraints convert a line corner into a solved arc', () => {
+  const solver = createSolverController();
+  lines.forEach((entity) => solver.addEntity(entity));
+  solver.addConstraint({
+    id: 'corner',
+    type: 'Coincident',
+    featureRefs: [
+      { kind: 'point', recordId: 'horizontal', index: 0 },
+      { kind: 'point', recordId: 'vertical', index: 0 },
+    ],
+  });
+  const evaluated = evaluateLineLineFillet(fillet, new Map(lines.map((entity) => [entity.id, entity])));
+  assert.equal(evaluated.valid, true);
+  const arc = { ...evaluated.arc, type: 'arc' };
+  solver.removeConstraint('corner');
+  solver.updateEntity({ ...lines[0], start: evaluated.tangentA });
+  solver.updateEntity({ ...lines[1], start: evaluated.tangentB });
+  solver.addEntity(arc);
+  const constraints = regularFilletConstraints({
+    arcId: arc.id,
+    firstEntity: lines[0],
+    firstRecordId: lines[0].id,
+    firstIndex: 0,
+    secondEntity: lines[1],
+    secondRecordId: lines[1].id,
+    secondIndex: 0,
+  });
+  const outcomes = constraints.map((constraint) => solver.addConstraint(constraint));
+
+  assert.equal(constraints.length, 4);
+  assert.ok(outcomes.every(({ constraint }) => constraint));
+  const solved = new Map(solver.getGeometrySnapshot().map((entity) => [entity.id, entity]));
+  near(solved.get('horizontal').start[0], 10);
+  near(solved.get('vertical').start[1], 10);
+  near(solved.get(arc.id).radius, 10);
+  assert.deepEqual(solver.constraints().map(({ type }) => type), ['Coincident', 'Coincident', 'Tangent', 'Tangent']);
 });
 
 test('evaluated fillet geometry trims display lines and adds an arc', () => {
@@ -133,6 +192,53 @@ test('line-arc fillet trims the line and arc from their shared corner', () => {
   assert.equal(evaluated.valid, true);
   assert.ok(line.start[0] > 0);
   assert.notDeepEqual(arc.start, [0, 0]);
+});
+
+test('line-arc fillet keeps the source arc internally tangent to the fillet arc', () => {
+  const entities = [
+    { id: 'line', type: 'line', start: [0, 0], end: [100, 0] },
+    { id: 'arc', type: 'arc', start: [0, 0], arcPoint: [14.64466094067263, 35.35533905932737], end: [50, 50], center: [50, 0], radius: 50, ccw: false },
+  ];
+  const filletEntity = {
+    id: 'fillet-la-constraints',
+    type: 'fillet',
+    sourceA: { recordId: 'line', index: 0 },
+    sourceB: { recordId: 'arc', index: 0 },
+    radius: 10,
+  };
+  const evaluated = evaluateFillet(
+    filletEntity,
+    new Map(entities.map((entity) => [entity.id, structuredClone(entity)])),
+  );
+  assert.equal(evaluated.valid, true);
+
+  const solver = createSolverController();
+  entities.forEach((entity) => solver.addEntity(entity));
+  const trimmedLine = { ...entities[0], start: evaluated.tangentA };
+  const trimmedArc = { ...entities[1], start: evaluated.tangentB };
+  const constraints = regularFilletConstraints({
+    arcId: evaluated.arc.id,
+    filletArc: evaluated.arc,
+    firstEntity: entities[0],
+    firstRecordId: entities[0].id,
+    firstIndex: 0,
+    secondEntity: entities[1],
+    secondRecordId: entities[1].id,
+    secondIndex: 0,
+  });
+  const outcome = solver.applyConstraintBatch({
+    entities: [trimmedLine, trimmedArc, evaluated.arc],
+    constraints,
+  });
+  const solved = new Map(outcome.snapshot.map((entity) => [entity.id, entity]));
+
+  assert.equal(constraints.length, 4);
+  assert.deepEqual(constraints.filter(({ type }) => type === 'Tangent').map(({ tangentMode }) => tangentMode), [undefined, 'internal']);
+  assert.equal(outcome.committed, true);
+  assert.equal(outcome.constraints.length, 4);
+  near(solved.get('arc').radius, 50);
+  near(solved.get(evaluated.arc.id).radius, 10);
+  assert.deepEqual(solver.constraints().map(({ type }) => type), ['Coincident', 'Coincident', 'Tangent', 'Tangent']);
 });
 
 test('curve-line fillet trims the curve endpoint along its tangent', () => {

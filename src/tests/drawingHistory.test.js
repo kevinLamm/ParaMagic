@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DrawingHistory } from '../modules/DrawingHistory.js';
+import { DrawingHistory } from '../../packages/paramagic-core/src/modules/DrawingHistory.js';
 
 test('drawing history restores complete snapshots through undo and redo', () => {
   let state = { name: '', drawing: { entities: [], parameters: [] } };
@@ -106,4 +106,22 @@ test('flushing a pending coalesced change before a discrete commit preserves bot
   assert.equal(state.value, 1);
   assert.equal(history.undo(), true);
   assert.equal(state.value, 0);
+});
+
+test('reset adopts an asynchronously loaded drawing as the new history baseline', () => {
+  let state = { extensions: {} };
+  const history = new DrawingHistory({
+    capture: () => state,
+    restore: (snapshot) => { state = snapshot; },
+  });
+
+  state = { extensions: { controls: { items: [{ id: 'control-1' }] } } };
+  history.reset();
+  state = { extensions: { controls: { items: [{ id: 'control-1', label: 'Speed' }] } } };
+  history.record();
+
+  assert.equal(history.undo(), true);
+  assert.equal(state.extensions.controls.items.length, 1);
+  assert.equal(state.extensions.controls.items[0].id, 'control-1');
+  assert.equal(history.undo(), false);
 });
