@@ -1,7 +1,17 @@
 import { sites } from '@openai/sites-vite-plugin';
 import { defineConfig } from 'vite';
 
-export default defineConfig(async () => {
+export default defineConfig(async ({ mode }) => {
+  if (mode === 'github-pages') {
+    return {
+      base: '/ParaMagic/',
+      publicDir: 'src/assets',
+      build: {
+        outDir: 'dist-pages',
+      },
+    };
+  }
+
   process.env.WRANGLER_WRITE_LOGS ??= 'false';
   process.env.WRANGLER_LOG_PATH ??= '.wrangler/logs';
   process.env.MINIFLARE_REGISTRY_PATH ??= '.wrangler/registry';

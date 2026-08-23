@@ -11,7 +11,9 @@
     "dev": "vite --host 0.0.0.0",
     "dev:legacy": "node scripts/dev-server.js",
     "build": "node scripts/validate-app.js && vite build",
+    "build:pages": "node scripts/validate-app.js && vite build --mode github-pages",
     "preview": "vite preview",
+    "preview:pages": "vite preview --mode github-pages",
     "test": "node --test src/tests/*.test.js",
     "benchmark:solver": "node scripts/benchmark-solver.js"
   },

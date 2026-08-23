@@ -1,6 +1,19 @@
+export function resolvePublicResourceUrl(
+  path,
+  {
+    baseUrl = '/',
+    origin = globalThis.location?.origin || import.meta.url,
+  } = {},
+) {
+  const publicRoot = new URL(baseUrl, origin);
+  return new URL(String(path).replace(/^\/+/, ''), publicRoot).href;
+}
+
+const publicBaseUrl = import.meta.env?.BASE_URL || '/';
+
 export const imageCatalogResources = Object.freeze({
-  manifestUrl: new URL('/BasicImageCatalog/catalog.json', globalThis.location?.origin || import.meta.url).href,
-  assetBaseUrl: new URL('/BasicImageCatalog/', globalThis.location?.origin || import.meta.url).href,
+  manifestUrl: resolvePublicResourceUrl('BasicImageCatalog/catalog.json', { baseUrl: publicBaseUrl }),
+  assetBaseUrl: resolvePublicResourceUrl('BasicImageCatalog/', { baseUrl: publicBaseUrl }),
 });
 
 export const openCvResources = Object.freeze({
