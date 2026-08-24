@@ -75,6 +75,7 @@ import {
 } from '@paramagic/core/solver';
 import { configureImageCatalogResources, configureOpenCvResources } from '@paramagic/core/images';
 import { drawingBrowserTitle, imageCatalogResources, openCvResources } from './app-config.js';
+import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
 configureOpenCvResources(openCvResources);
@@ -169,7 +170,7 @@ const iconAssets = {
 };
 
 const icon = (label) => iconAssets[label]
-  ? `<span class="tool-icon tool-icon-asset" aria-hidden="true" style="--tool-icon-asset:url('${iconAssets[label]}')"></span>`
+  ? `<span class="tool-icon tool-icon-asset" aria-hidden="true" style="${toolIconAssetStyle(iconAssets[label])}"></span>`
   : `<span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${iconPaths[label] || '<circle cx="12" cy="12" r="5"/>'}</svg></span>`;
 const iconButton = (label, attrs = '') => `<button class="icon-button" title="${label}" aria-label="${label}" ${attrs}>${icon(label)}</button>`;
 const appMenuButton = (label, attrs = '') => `<button class="app-menu-item" type="button" ${attrs}>${icon(label)}<span>${label}</span></button>`;
