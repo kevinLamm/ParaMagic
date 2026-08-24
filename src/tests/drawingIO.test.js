@@ -376,6 +376,8 @@ test('DXF export and import round-trip supported geometry in inch units', () => 
   assert.equal(restored.drawingUnit, 'in');
   assert.equal(restored.dxfExportUnit, 'in');
   assert.equal(restored.entities.length, 3);
+  assert.equal(new Set(restored.entities.map(({ id }) => id)).size, restored.entities.length);
+  restored.entities.forEach(({ id }) => assert.match(id, /^dxf-(?:line|circle|polyline)-/));
   const restoredLine = restored.entities.find(({ type }) => type === 'line');
   const restoredCircle = restored.entities.find(({ type }) => type === 'circle');
   const restoredPolyline = restored.entities.find(({ type }) => type === 'polyline');
