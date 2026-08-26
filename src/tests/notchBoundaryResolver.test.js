@@ -217,3 +217,54 @@ test('cut-boundary Notches use the remaining-material side', () => {
     [8, 3],
   );
 });
+
+test('Notch and Seam Line host resolution accepts a registered derived boundary provider', () => {
+  const feature = {
+    recordId: 'swell-piece',
+    sourceId: 'swell-source',
+    targetId: 'swell-boundary',
+    kind: 'segment',
+    index: 0,
+    sourceFeatureIndex: 2,
+    boundaryRole: 'swell-offset',
+    stableKey: 'swell-boundary:swell-piece',
+    start: [0, 0],
+    end: [20, 0],
+  };
+  const boundary = {
+    id: 'swell-boundary',
+    recordIds: ['swell-source'],
+    features: [feature],
+    polygon: [[0, 0], [20, 0], [20, 10], [0, 10]],
+  };
+  const provider = {
+    featureFromEvent: () => ({ ...feature, pickedPoint: [8, 0] }),
+    featureForHost: (host) => host.stableKey === feature.stableKey ? feature : null,
+    boundaryForHost: (host) => host.targetId === boundary.id ? boundary : null,
+    boundaryFeatures: () => boundary.features,
+    inwardTarget: () => [8, 6.35],
+    isClosedHost: () => true,
+    boundaries: () => [boundary],
+  };
+  const resolver = createNotchBoundaryResolver({
+    records: [],
+    recordSegments: () => [],
+    renderedEntityForRecord: () => null,
+    evaluateFilletedGeometry: (entities) => entities,
+    getClosedCycles: () => [],
+    getEntityFeature: () => null,
+    getSegmentFeature: () => null,
+    arcCircle: () => null,
+    screenToWorld: () => [8, 0],
+    derivedBoundaryProviders: new Set([provider]),
+  });
+  const host = { recordId: feature.recordId, targetId: boundary.id, stableKey: feature.stableKey };
+
+  assert.equal(resolver.featureFromEvent({ target: {}, clientX: 0, clientY: 0 }).recordId, feature.recordId);
+  assert.equal(resolver.featureForHost(host), feature);
+  assert.equal(resolver.boundaryForHost(host), boundary);
+  assert.deepEqual(resolver.boundaryFeatures(host), [feature]);
+  assert.deepEqual(resolver.inwardTarget(host, [8, 0], [1, 0]), [8, 6.35]);
+  assert.equal(resolver.isClosedHost(host), true);
+  assert.deepEqual(resolver.derivedBoundaries(), [boundary]);
+});

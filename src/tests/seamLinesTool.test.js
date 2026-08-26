@@ -13,8 +13,46 @@ import {
   seamLineFeatureKey,
   seamLineSourceReference,
 } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
+import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 
 const inward = (_feature, _point) => [50, 50];
+
+test('Seam Lines materialize from closed Swell offset boundaries', () => {
+  const source = withSwellDefinition({
+    id: 'swell-panel',
+    type: 'rect',
+    x: 0,
+    y: 0,
+    width: 30,
+    height: 20,
+  }, {
+    offsetExpression: '1',
+    swellOffsetExpression: '3',
+    startTransitionExpression: '4',
+    endTransitionExpression: '4',
+  });
+  const entities = materializeSeamLineEntitiesForDrawing({
+    entities: [source],
+    constraints: [],
+    extensions: {
+      seamLines: {
+        definitions: [{
+          regionId: source.composite.id,
+          recordIds: [source.id],
+          defaultEnabled: true,
+          overrides: [],
+        }],
+      },
+    },
+  }, { evaluateLength: Number });
+
+  assert.ok(entities.length > 0);
+  assert.ok(entities.every((entity) => entity.composite?.kind === 'finish-size-offset'));
+  assert.ok(entities.every((entity) => entity.composite?.sourceRecordIds?.includes(source.id)));
+  assert.ok(entities.some((entity) => entity.composite?.sourceFeatures?.some((feature) => (
+    feature.sourceId === source.id && String(feature.boundaryRole).startsWith('swell-')
+  ))));
+});
 
 test('seam-line edge keys distinguish segments on the same closed object', () => {
   assert.notEqual(

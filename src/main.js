@@ -5,6 +5,7 @@ import {
   DUPLICATE_ICON,
   OBJECT_VISIBILITY_ICON,
   SYMMETRIC_ICON,
+  SWELL_ICON,
   arrayToolTypes,
   bindDeferredColorPicker,
   bindFloatingPanelBoundary,
@@ -33,6 +34,7 @@ import {
   createParametersPanelController,
   createSmartDimensionTools,
   createStackPanel,
+  createSwellTools,
   createSubtractTools,
   createLinkedCopyTools,
   createConstraintHandlers,
@@ -65,6 +67,7 @@ import {
   createDrawingDxfSnapshot,
   createStackDxfSnapshot,
   createCanvasPresentationPng,
+  prepareDxfExportGeometry,
   serializeCanvasPresentationSvg,
 } from '@paramagic/core/export';
 import {
@@ -108,6 +111,7 @@ const iconPaths = {
   Array: ARRAY_TOOL_ICONS.Array,
   'Rectangular Array': ARRAY_TOOL_ICONS['Rectangular Array'],
   'Circular Array': ARRAY_TOOL_ICONS['Circular Array'],
+  Swell: SWELL_ICON,
   Notch: '<path d="M5 19L19 5"/><circle cx="12" cy="12" r="3" fill="#f28c18" stroke="#f28c18"/>',
   Polyline: '<path d="M4 17l5-8 5 4 6-7"/>',
   Polygon: '<path d="M12 4l7 5v8l-7 4-7-4V9z"/>',
@@ -380,6 +384,8 @@ function drawingToolbar() {
         </div>`
         : label === 'Table'
           ? ''
+        : label === 'Swell'
+          ? iconButton(label, 'data-swell-tool aria-pressed="false"')
         : iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`))
     .join('');
   return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Stacks', 'id="stacksToggle" data-preserve-feature-selection aria-controls="stackPanel" aria-pressed="false"')}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
@@ -698,11 +704,11 @@ document.getElementById('imageFileInput').addEventListener('change', async (even
 
 document.querySelectorAll('[data-export-format]').forEach((button) => {
   button.addEventListener('click', async () => {
-    const snapshot = canvasController.getDrawingData();
     const name = currentDrawingName();
     try {
       const format = button.dataset.exportFormat;
       if (format === 'json') {
+        const snapshot = canvasController.getDrawingData();
         await exportFileWithDialog({
           name,
           format,
@@ -728,6 +734,8 @@ document.querySelectorAll('[data-export-format]').forEach((button) => {
           showStorageStatus(`Exported ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
         }
       } else {
+        prepareDxfExportGeometry(canvasController.solveDrawing);
+        const snapshot = canvasController.getDrawingData();
         const dxfSnapshot = createDrawingDxfSnapshot(snapshot);
         await exportFileWithDialog({
           name,
@@ -1627,11 +1635,19 @@ updateDrawingActionState();
 const drawingHint = createDrawingHint({ canvas: canvasController });
 canvasController.setDrawingHint(drawingHint);
 
+const swellTools = createSwellTools({
+  toolbar: document.querySelector('.drawing-tools'),
+  canvas: canvasController,
+});
+
 createDrawingTools({
   toolbar: document.querySelector('.drawing-tools'),
   canvas: canvasController,
   drawingHint,
+  decorateEntity: swellTools.decorateEntity,
 });
+
+constraintController.registerConstraintOperation?.(swellTools.constraintOperation);
 
 createFilletTools({
   toolbar: document.querySelector('.drawing-tools'),
@@ -1668,7 +1684,9 @@ const drawingClipboard = createDrawingClipboard({
   pasteButton: document.getElementById('pasteButton'),
   importAsset: importPortableCatalogImage,
   stackExporters: {
-    dxf: async ({ stack, stackId, snapshot }) => {
+    dxf: async ({ stack, stackId }) => {
+      prepareDxfExportGeometry(canvasController.solveDrawing);
+      const snapshot = canvasController.getDrawingData();
       const dxfSnapshot = createStackDxfSnapshot(snapshot, stackId);
       await exportFileWithDialog({
         name: stack.name,

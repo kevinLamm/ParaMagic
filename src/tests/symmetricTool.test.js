@@ -112,6 +112,32 @@ test('notch entities are valid mirror sources while dimensions remain excluded',
 
 test('construction entities are excluded from symmetric source selection', () => {
   assert.equal(isMirrorableEntity({ id: 'construction', type: 'line', construction: true }), false);
+  assert.equal(isMirrorableEntity({
+    id: 'swell-construction',
+    type: 'line',
+    construction: true,
+    composite: { kind: 'swell-line', swell: { enabled: true } },
+  }), true);
+});
+
+test('Symmetric source selection recognizes a complete derived presentation selection set', () => {
+  const selectionSet = { dataset: { selectionRecordIds: 'line,arc,spline' } };
+  const target = { closest: (selector) => selector === '[data-selection-record-ids]' ? selectionSet : null };
+  assert.deepEqual(selectionIdsFromTarget(target), ['line', 'arc', 'spline']);
+});
+
+test('Symmetric source selection recognizes geometry through its visible point-handle layer', () => {
+  const handleGroup = { dataset: { recordId: 'swell-circle' } };
+  const target = {
+    closest(selector) {
+      if (selector === '[data-selection-record-ids]') return null;
+      if (selector === '.closed-constrained-region[data-parent-ids]') return null;
+      if (selector.includes('.canvas-handle-group[data-record-id]')) return handleGroup;
+      return null;
+    },
+  };
+
+  assert.deepEqual(selectionIdsFromTarget(target), ['swell-circle']);
 });
 
 test('symmetric centerline snapping shares vector snap and Alt bypass behavior', () => {

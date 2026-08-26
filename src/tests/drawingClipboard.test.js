@@ -8,6 +8,7 @@ import {
   retargetClipboardDrawing,
 } from '../../packages/paramagic-core/src/modules/DrawingClipboard.js';
 import { mergeDrawingDataWithMap } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 
 function fixture() {
   return {
@@ -149,6 +150,34 @@ test('copying a closed object carries Seam Line intent without generated geometr
   assert.equal(copied.entities.length, 1);
   assert.equal(copied.entities.some((entity) => entity.composite?.kind === 'finish-size-offset'), false);
   assert.equal(copied.extensions.seamLines.definitions[0].regionId, 'shape');
+});
+
+test('copying Swell geometry retains its source definition so full derived geometry regenerates on paste', () => {
+  const source = withSwellDefinition({
+    id: 'swell-source',
+    type: 'line',
+    start: [0, 0],
+    end: [100, 0],
+    stackId: 'stack-a',
+  }, {
+    enabled: true,
+    offsetExpression: '5',
+    swellOffsetExpression: '15',
+    startTransitionExpression: '20',
+    endTransitionExpression: '20',
+  });
+  const copied = createClipboardPackage({
+    drawingUnit: 'mm',
+    entities: [source],
+    constraints: [],
+    parameters: [],
+    dimensionAnnotations: [],
+  }, { entityIds: [source.id] }).drawing;
+
+  assert.equal(copied.entities.length, 1);
+  assert.equal(copied.entities[0].construction, true);
+  assert.deepEqual(copied.entities[0].composite.swell, source.composite.swell);
+  assert.equal(copied.entities.some(({ composite }) => composite?.kind === 'swell-derived-presentation'), false);
 });
 
 test('paste retargets every copied object and array to the destination stack', () => {

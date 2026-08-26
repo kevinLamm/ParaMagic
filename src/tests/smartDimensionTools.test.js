@@ -7,7 +7,10 @@ import {
   setDimensionSelectionActive,
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
+import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
 import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+
+const normalLengthTolerance = (value) => DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(value));
 
 const filletFeature = {
   kind: 'arc',
@@ -325,8 +328,12 @@ test('a driving parallel-edge dimension persists one line-to-line constraint wit
     solvedSecond.end[1] - solvedSecond.start[1],
   ];
   const restoredTarget = restored.dimensions.get(distanceConstraint.dimensionRef).value;
-  assert.ok(Math.abs(supportingLineDistance - restoredTarget) < 1e-4);
-  assert.ok(Math.abs(referenceDirection[0] * measuredDirection[1] - referenceDirection[1] * measuredDirection[0]) < 1e-4);
+  assert.ok(Math.abs(supportingLineDistance - restoredTarget) < normalLengthTolerance(restoredTarget));
+  assert.ok(
+    Math.abs(referenceDirection[0] * measuredDirection[1] - referenceDirection[1] * measuredDirection[0])
+      / (Math.hypot(...referenceDirection) * Math.hypot(...measuredDirection))
+      < DEFAULT_SOLVE_TOLERANCE,
+  );
 });
 
 test('a line-to-line driving dimension removes its controlled axis from endpoint drag locks', () => {
@@ -356,8 +363,8 @@ test('a line-to-line driving dimension removes its controlled axis from endpoint
   assert.ok(['converged', 'unchanged'].includes(committed.status), committed.message);
   const solved = controller.getEntity(measured.id);
   assert.ok(Math.abs(solved.end[0] - 140) < 1e-6);
-  assert.ok(Math.abs(solved.start[1] - baseline.start[1]) < 1e-6);
-  assert.ok(Math.abs(solved.end[1] - baseline.end[1]) < 1e-6);
+  assert.ok(Math.abs(solved.start[1] - baseline.start[1]) < normalLengthTolerance(baseline.start[1]));
+  assert.ok(Math.abs(solved.end[1] - baseline.end[1]) < normalLengthTolerance(baseline.end[1]));
   assert.ok(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]) > 100);
 });
 
@@ -410,4 +417,91 @@ test('angled dimensions use the rays selected by the user instead of the opposit
   assert.ok(Math.abs(oppositeSector.measuredValue - 45) < 1e-9);
   assert.equal(oppositeSector.firstRaySign, 1);
   assert.equal(oppositeSector.secondRaySign, 1);
+});
+
+test('every Smart Driving dimension records a normalized direction', () => {
+  const firstPoint = { kind: 'point', recordId: 'line-a', entityType: 'line', index: 0, point: [0, 0] };
+  const secondPoint = { kind: 'point', recordId: 'line-b', entityType: 'line', index: 2, point: [6, 8] };
+  const aligned = candidateFromSelections([firstPoint, secondPoint], [3, 4], 'driving');
+  const horizontal = candidateFromSelections([firstPoint, secondPoint], [3, -30], 'driving');
+  const radius = candidateFromSelections([{
+    kind: 'circle', recordId: 'circle-a', entityType: 'circle', center: [0, 0], radius: 10,
+  }], [30, 40], 'driving');
+  const firstSegment = {
+    kind: 'segment', recordId: 'edge-a', entityType: 'line', index: 0, start: [0, 0], end: [100, 0],
+  };
+  const parallelSegment = {
+    kind: 'segment', recordId: 'edge-b', entityType: 'line', index: 0, start: [0, 25], end: [100, 25],
+  };
+  const angledSegment = {
+    kind: 'segment', recordId: 'edge-c', entityType: 'line', index: 0, start: [100, 0], end: [150, 50],
+  };
+  const lineToLine = candidateFromSelections([firstSegment, parallelSegment], [50, 40], 'driving');
+  const angle = candidateFromSelections([firstSegment, angledSegment], [80, 30], 'driving');
+
+  assert.deepEqual(aligned.direction, [0.6, 0.8]);
+  assert.deepEqual(horizontal.direction, [1, 0]);
+  assert.deepEqual(radius.direction, [0.6, 0.8]);
+  assert.deepEqual(lineToLine.direction, [0, 1]);
+  for (const dimension of [aligned, horizontal, radius, lineToLine, angle]) {
+    assert.ok(Array.isArray(dimension.direction), `${dimension.type} is missing direction data.`);
+    assert.ok(Math.abs(Math.hypot(...dimension.direction) - 1) < 1e-12);
+  }
+});
+
+test('an aligned Smart Driving dimension rejects an endpoint dragged onto its mirrored branch', () => {
+  const controller = createSolverController();
+  const line = controller.addEntity({ id: 'directed-line', type: 'line', start: [0, 0], end: [10, 0] });
+  assert.ok(controller.addConstraint({
+    type: 'Fixed',
+    featureRefs: [{ kind: 'point', recordId: line.id, index: 0 }],
+  }).constraint);
+  const candidate = candidateFromSelections([{
+    kind: 'segment', recordId: line.id, entityType: 'line', index: 0, start: line.start, end: line.end,
+  }], [5, 0], 'driving');
+  const added = controller.addDimension(candidate);
+  assert.ok(['converged', 'unchanged'].includes(added.result.status), added.result.message);
+  assert.deepEqual(added.entity.direction, [1, 0]);
+
+  const update = controller.updateEntities([{
+    ...controller.getEntity(line.id),
+    end: [-10, 0],
+  }]);
+  assert.ok(['converged', 'unchanged'].includes(update.result.status), update.result.message);
+  const solved = controller.getEntity(line.id);
+  assert.ok(solved.end[0] > solved.start[0], `The line flipped to ${JSON.stringify(solved)}.`);
+  assert.ok(Math.abs(Math.hypot(
+    solved.end[0] - solved.start[0],
+    solved.end[1] - solved.start[1],
+  ) - 10) < normalLengthTolerance(10));
+
+  const resized = controller.setDimension(added.entity.dimensionId, '20 mm');
+  assert.ok(['converged', 'unchanged'].includes(resized.status), resized.message);
+  const parameterSolved = controller.getEntity(line.id);
+  assert.ok(parameterSolved.end[0] > parameterSolved.start[0]);
+  assert.ok(Math.abs(Math.hypot(
+    parameterSolved.end[0] - parameterSolved.start[0],
+    parameterSolved.end[1] - parameterSolved.start[1],
+  ) - 20) < normalLengthTolerance(20));
+});
+
+test('loading a legacy driving dimension derives and persists its current direction', () => {
+  const controller = createSolverController();
+  const line = controller.addEntity({ id: 'legacy-directed-line', type: 'line', start: [0, 0], end: [6, 8] });
+  const candidate = candidateFromSelections([{
+    kind: 'segment', recordId: line.id, entityType: 'line', index: 0, start: line.start, end: line.end,
+  }], [3, 4], 'driving');
+  assert.ok(controller.addDimension(candidate).result);
+  const legacySnapshot = controller.getSketchSnapshot();
+  legacySnapshot.dimensionAnnotations.forEach((annotation) => delete annotation.direction);
+  legacySnapshot.constraints.forEach((constraint) => delete constraint.direction);
+
+  const restored = createSolverController();
+  const loaded = restored.loadSketch(legacySnapshot);
+  assert.ok(['converged', 'unchanged'].includes(loaded.status), loaded.message);
+  const annotation = restored.getSketchSnapshot().dimensionAnnotations.find(({ dimensionMode }) => dimensionMode === 'driving');
+  const constraint = restored.constraints().find(({ source }) => source === 'dimension');
+  assert.ok(Math.abs(annotation.direction[0] - 0.6) < 1e-9);
+  assert.ok(Math.abs(annotation.direction[1] - 0.8) < 1e-9);
+  assert.deepEqual(constraint.direction, annotation.direction);
 });

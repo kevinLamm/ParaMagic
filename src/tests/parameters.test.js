@@ -426,7 +426,7 @@ test('a driven dimension referenced by a driving dimension remains read-only', (
     controlledAfter.end[0] - controlledAfter.start[0],
     controlledAfter.end[1] - controlledAfter.start[1],
   );
-  assert.ok(Math.abs(controlledLength - 100) < 1e-3, `Expected controlled length 100, got ${controlledLength}`);
+  assert.ok(Math.abs(controlledLength - 100) < 100e-3, `Expected controlled length 100, got ${controlledLength}`);
 });
 
 test('large control-parameter jumps continue through dependent driving dimensions', () => {

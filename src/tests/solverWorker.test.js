@@ -8,6 +8,12 @@ import {
   validateSolverWorkerResult,
 } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerProtocol.js';
 import { SolverWorkerRuntime } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js';
+import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
+
+const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Math.max(
+  1,
+  Math.hypot(line.end[0] - line.start[0], line.end[1] - line.start[1]),
+);
 
 test('solver worker protocol validates versioned request envelopes', () => {
   const request = createSolverWorkerRequest({
@@ -235,7 +241,7 @@ test('solver worker returns accepted and removed constraint deltas', () => {
   }));
   assert.equal(added.status, 'converged');
   assert.deepEqual(added.changedConstraints.map(({ id }) => id), ['worker-horizontal']);
-  assert.ok(Math.abs(added.changedEntities[0].start[1] - added.changedEntities[0].end[1]) < 1e-6);
+  assert.ok(horizontalResidual(added.changedEntities[0]) < DEFAULT_SOLVE_TOLERANCE);
 
   const removed = runtime.handleRequest(createSolverWorkerRequest({
     requestId: 3,
@@ -278,7 +284,7 @@ test('solver worker runtime returns directly edited unconstrained geometry in it
   assert.deepEqual(updated.changedEntities, [{ id: 'free-point', type: 'point', point: [7, 9] }]);
 });
 
-test('solver worker uses a bounded preview solve for drag and a strict final solve on commit', () => {
+test('solver worker uses a bounded preview solve for drag and a normal final solve on commit', () => {
   const runtime = new SolverWorkerRuntime({ interactiveSolveOptions: { timeBudgetMs: 0 } });
   runtime.handleRequest(createSolverWorkerRequest({
     requestId: 1,
@@ -315,7 +321,7 @@ test('solver worker uses a bounded preview solve for drag and a strict final sol
   }));
   assert.ok(['converged', 'unchanged'].includes(final.status));
   assert.equal(final.diagnostics.solveMode, 'final');
-  assert.ok(Math.abs(final.changedEntities[0].start[1] - final.changedEntities[0].end[1]) < 1e-6);
+  assert.ok(horizontalResidual(final.changedEntities[0]) < DEFAULT_SOLVE_TOLERANCE);
 });
 
 test('solver worker restores the pre-drag baseline when the strict final solve fails', () => {

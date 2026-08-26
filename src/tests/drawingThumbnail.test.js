@@ -6,6 +6,7 @@ import {
 } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
 import { configureImageCatalogResources } from '../../packages/paramagic-core/src/modules/ImageSystem.js';
 import { stackDrawing } from '../../packages/paramagic-core/src/modules/StackSystem.js';
+import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 
 test('drawing thumbnails encode a zoom-all SVG from drawing JSON', () => {
   const thumbnail = createDrawingThumbnail({
@@ -50,6 +51,41 @@ test('drawing thumbnails omit driven dimensions disabled for export', () => {
 
   assert.match(svg, /INCLUDED-THUMBNAIL-DIMENSION/);
   assert.doesNotMatch(svg, /EXCLUDED-THUMBNAIL-DIMENSION/);
+});
+
+test('Value Only thumbnails retain Swell offset geometry and its Seam Line while hiding construction parents', () => {
+  const source = withSwellDefinition({
+    id: 'swell-circle',
+    type: 'circle',
+    center: [0, 0],
+    radius: 20,
+  }, {
+    enabled: true,
+    offsetExpression: '5',
+    swellOffsetExpression: '15',
+    startTransitionExpression: '20',
+    endTransitionExpression: '20',
+  });
+  const svg = createDrawingThumbnailSvg({
+    drawingUnit: 'mm',
+    entities: [source],
+    constraints: [],
+    extensions: {
+      seamLines: {
+        version: 2,
+        definitions: [{
+          regionId: source.id,
+          recordIds: [source.id],
+          defaultEnabled: true,
+          overrides: [],
+        }],
+      },
+    },
+  }, { dimensionTextMode: 'value' });
+
+  assert.match(svg, /thumbnail-resolved-boundary/);
+  assert.match(svg, /stroke-dasharray="5 4"/);
+  assert.doesNotMatch(svg, /stroke="#dc2626"/);
 });
 
 test('thumbnail SVG can be mounted inline so catalog image resources remain visible', () => {

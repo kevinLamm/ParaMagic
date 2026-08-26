@@ -1,14 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  DXF_EXPORT_SOLVE_TOLERANCE,
   createDrawingDxfSnapshot,
   createStackDxfSnapshot,
+  prepareDxfExportGeometry,
 } from '../../packages/paramagic-core/src/modules/DxfExport.js';
 import {
   DXF_BOUNDARY_ENTITY_TYPE,
   drawingCurveToDxfSegments,
 } from '../../packages/paramagic-core/src/modules/DxfExportGeometry.js';
 import { parseDxf, resolveDrawingScene, serializeDxf } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
+import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 
 const exportDxf = (drawing) => serializeDxf(createDrawingDxfSnapshot(drawing));
 const unit = (point) => {
@@ -21,6 +25,45 @@ const perpendicular = (point) => [-point[1], point[0]];
 const closePoint = (actual, expected, tolerance = 1e-6) => {
   assert.ok(Math.hypot(actual[0] - expected[0], actual[1] - expected[1]) <= tolerance);
 };
+
+test('DXF export requires a successful full solve at 1e-8', () => {
+  let solveOptions = null;
+  const result = prepareDxfExportGeometry((options) => {
+    solveOptions = options;
+    return { status: 'converged' };
+  });
+
+  assert.equal(DXF_EXPORT_SOLVE_TOLERANCE, 1e-8);
+  assert.deepEqual(solveOptions, {
+    fullSolve: true,
+    solveMode: 'final',
+    tolerance: 1e-8,
+  });
+  assert.equal(result.status, 'converged');
+  assert.throws(
+    () => prepareDxfExportGeometry(() => ({ status: 'max-iterations', message: 'still inaccurate' })),
+    /still inaccurate/,
+  );
+});
+
+test('DXF preparation refines geometry that a normal 1e-3 solve accepts', () => {
+  const controller = createSolverController();
+  controller.addEntity({ id: 'export-line', type: 'line', start: [0, 0], end: [10, 0] });
+  assert.ok(controller.addConstraint({
+    type: 'Horizontal',
+    featureRefs: [{ kind: 'segment', recordId: 'export-line', index: 0 }],
+  }).constraint);
+  controller.model.variableById('export-line:end.y').value = 5e-4;
+
+  const normalResult = controller.solve({ fullSolve: true });
+  assert.equal(normalResult.status, 'unchanged');
+  assert.equal(controller.getEntity('export-line').end[1], 5e-4);
+
+  const exportResult = prepareDxfExportGeometry(controller.solve.bind(controller));
+  assert.equal(exportResult.status, 'converged');
+  const solved = controller.getEntity('export-line');
+  assert.ok(Math.abs(solved.end[1] - solved.start[1]) < 1e-8);
+});
 
 function arcDirection(segment, atEnd) {
   const point = atEnd ? segment.end : segment.start;
@@ -972,4 +1015,27 @@ test('per-stack DXF export includes only driven dimensions owned by that stack',
   assert.equal(entityBlocks(dxf, 'DIMENSION').length, 1);
   assert.match(dxf, /stack-a-value/);
   assert.doesNotMatch(dxf, /stack-b-value/);
+});
+
+test('DXF export includes construction parents and complete derived Swell geometry', () => {
+  const source = withSwellDefinition({
+    id: 'swell-line',
+    type: 'line',
+    start: [0, 0],
+    end: [100, 0],
+  }, {
+    enabled: true,
+    offsetExpression: '5',
+    swellOffsetExpression: '15',
+    startTransitionExpression: '20',
+    endTransitionExpression: '20',
+  });
+  const scene = resolveDrawingScene({ drawingUnit: 'mm', entities: [source], constraints: [] });
+  const derived = scene.entities.filter(({ composite }) => composite?.kind === 'swell-derived-presentation');
+  assert.equal(scene.entities.some(({ id, construction }) => id === source.id && construction === true), true);
+  assert.deepEqual(derived.map(({ type }) => type), ['arc', 'line', 'arc']);
+
+  const snapshot = createDrawingDxfSnapshot({ drawingUnit: 'mm', dxfExportUnit: 'mm', entities: [source], constraints: [] });
+  assert.equal(snapshot.entities.length, 4);
+  assert.equal(snapshot.entities.filter(({ construction }) => construction === true).length, 1);
 });

@@ -296,6 +296,7 @@ test('a scoped model solves only its selected component using authoritative vari
     model: graph.scopedModel(scope),
     registry: new ConstraintRegistry(),
     dimensions: new DimensionRepository(),
+    tolerance: 1e-8,
   });
 
   assert.equal(result.status, 'converged');
@@ -339,6 +340,7 @@ test('a free-floating component uses and releases a translation gauge during sol
     dimensions: new DimensionRepository(),
     jacobianMode: 'blocks',
     matrixFreeVariableThreshold: 0,
+    tolerance: 1e-8,
   });
 
   assert.equal(result.status, 'converged');
@@ -374,6 +376,7 @@ test('explicit drag locks take precedence over a temporary translation gauge', (
     dimensions: new DimensionRepository(),
     jacobianMode: 'blocks',
     matrixFreeVariableThreshold: 0,
+    tolerance: 1e-8,
   });
 
   assert.equal(result.status, 'converged');
@@ -403,6 +406,7 @@ test('a canvas-origin relationship takes precedence over a temporary translation
     dimensions: new DimensionRepository(),
     jacobianMode: 'blocks',
     matrixFreeVariableThreshold: 0,
+    tolerance: 1e-8,
   });
 
   assert.equal(result.status, 'converged');
@@ -431,6 +435,7 @@ test('an explicit Fixed constraint takes precedence over a temporary translation
     dimensions: new DimensionRepository(),
     jacobianMode: 'blocks',
     matrixFreeVariableThreshold: 0,
+    tolerance: 1e-8,
   });
 
   assert.equal(result.status, 'converged');
@@ -515,7 +520,7 @@ test('dimension edits snapshot and solve only their affected component', () => {
   assert.ok(['converged', 'unchanged'].includes(result.status), result.message);
   assert.equal(result.solveScope.mode, 'component');
   assert.equal(result.solveScope.entityCount, 1);
-  assert.ok(Math.abs(controller.getEntity('circle-a').radius - 20) < 1e-6);
+  assert.ok(Math.abs(controller.getEntity('circle-a').radius - 20) < 20e-3);
   assert.deepEqual(controller.getEntity('circle-b'), beforeB);
   assert.equal(fullSnapshotCount, 1, 'only the emission snapshot should clone the full drawing');
 });
@@ -539,7 +544,7 @@ test('global solves partition disconnected constrained geometry into independent
   }
   controller.model.addConstraints(constraints);
 
-  const result = controller.solve({ fullSolve: true });
+  const result = controller.solve({ fullSolve: true, tolerance: 1e-8 });
 
   assert.equal(result.status, 'converged');
   assert.equal(result.solveScope.mode, 'components');

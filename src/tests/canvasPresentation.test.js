@@ -32,6 +32,17 @@ test('canvas presentation filtering is shared by whole-drawing and per-stack sna
   assert.equal(isCanvasPresentationSourceNode(editingRegion, 'stack-a'), false);
 });
 
+test('Value Only presentation keeps derived Swell records while omitting their construction sources', () => {
+  const constructionSource = presentationNode(['canvas-record'], 'stack-a');
+  constructionSource.querySelector = (selector) => selector === '.construction' ? {} : null;
+  const derivedSwell = presentationNode(['canvas-record', 'swell-derived-group'], 'stack-a');
+  const derivedSwellFill = presentationNode(['canvas-record', 'swell-derived-fill-group'], 'stack-a');
+
+  assert.equal(isCanvasPresentationSourceNode(constructionSource, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(derivedSwell, 'stack-a'), true);
+  assert.equal(isCanvasPresentationSourceNode(derivedSwellFill, 'stack-a'), true);
+});
+
 test('canvas presentation snapshots share Value Only labels and fitted viewports', () => {
   assert.equal(valueOnlyDimensionText('d47 = 12.25'), '12.25');
   assert.equal(valueOnlyDimensionText('12.25'), '12.25');

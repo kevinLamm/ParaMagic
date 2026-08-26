@@ -89,6 +89,45 @@ test('closed-object visibility updates every boundary record and supports a pres
   assert.equal(canvasElement.classes.has('show-hidden-objects'), true);
 });
 
+test('open and construction geometry expose visibility as individual objects', () => {
+  const records = [
+    {
+      id: 'open-line',
+      recordType: 'geometry',
+      entity: { id: 'open-line', type: 'line', start: [0, 0], end: [10, 0] },
+      group: presentationNode(),
+    },
+    {
+      id: 'construction-line',
+      recordType: 'geometry',
+      entity: { id: 'construction-line', type: 'line', start: [0, 5], end: [10, 5], construction: true },
+      group: presentationNode(),
+    },
+  ];
+  const selectedIds = new Set(records.map(({ id }) => id));
+  const system = createObjectVisibilitySystem({
+    records,
+    selectedIds,
+    evaluateExpression: (expression) => ({ TRUE: true, FALSE: false })[expression],
+    updateEntityAppearances: (updates) => updates.map(({ id, appearance }) => ({
+      ...records.find((record) => record.id === id).entity,
+      appearance,
+    })),
+    applyChangedEntity: (entity) => {
+      records.find((record) => record.id === entity.id).entity = entity;
+    },
+  });
+
+  assert.equal(system.selectedProperties().canEditVisible, true);
+  assert.equal(system.setSelectedVisibility({ visibleExpression: 'FALSE' }).success, true);
+  assert.equal(records.every(({ entity }) => entity.appearance.visible === false), true);
+
+  system.syncPresentation();
+  assert.equal(records.every(({ group }) => group.classes.has('object-visibility-hidden')), true);
+  assert.equal(system.isRecordShown('open-line'), false);
+  assert.equal(system.isRecordShown('construction-line'), false);
+});
+
 test('thumbnail visibility follows source ownership for arrays, symmetry, seams, and Boolean results', () => {
   const drawing = {
     entities: [

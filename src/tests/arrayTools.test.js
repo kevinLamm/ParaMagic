@@ -10,6 +10,7 @@ import {
   arrayPlacementCount,
   arrayPlacementTransform,
   arraySelectionPropertyPatch,
+  arraySourceIdsFromSelection,
   boundsCentroid,
   circularArrayAngles,
   createArrayCenterPointEntity,
@@ -46,6 +47,46 @@ test('array definitions normalize independent row and column spacing expressions
   assert.equal(definition.columnCentroidSpacing, false);
   assert.equal(definition.rowDirection, 'up');
   assert.equal(definition.columnDirection, 'left');
+});
+
+test('Array sources mirror canonical entity and window selections', () => {
+  const entities = new Map([
+    ['rectangle-0', { id: 'rectangle-0', type: 'line' }],
+    ['rectangle-1', { id: 'rectangle-1', type: 'line' }],
+    ['rectangle-2', { id: 'rectangle-2', type: 'line' }],
+    ['rectangle-3', { id: 'rectangle-3', type: 'line' }],
+  ]);
+
+  assert.deepEqual(arraySourceIdsFromSelection(['rectangle-0'], entities), ['rectangle-0']);
+  assert.deepEqual(arraySourceIdsFromSelection([
+    'rectangle-0',
+    'rectangle-1',
+    'rectangle-2',
+    'rectangle-3',
+  ], entities), [
+    'rectangle-0',
+    'rectangle-1',
+    'rectangle-2',
+    'rectangle-3',
+  ]);
+  assert.deepEqual(arraySourceIdsFromSelection(['rectangle-3'], entities), ['rectangle-3']);
+});
+
+test('Array source selection rejects dimensions and derived-only geometry', () => {
+  const entities = new Map([
+    ['line-1', { id: 'line-1', type: 'line' }],
+    ['dimension-1', { id: 'dimension-1', type: 'dimension-line' }],
+    ['offset-1', { id: 'offset-1', type: 'line', composite: { kind: 'finish-size-offset' } }],
+    ['center-1', createArrayCenterPointEntity({ id: 'array-1' }, [0, 0], 'center-1')],
+  ]);
+
+  assert.deepEqual(arraySourceIdsFromSelection([
+    'line-1',
+    'dimension-1',
+    'offset-1',
+    'center-1',
+    'line-1',
+  ], entities), ['line-1']);
 });
 
 test('rectangular offsets follow left, center, right and up, center, down directions', () => {

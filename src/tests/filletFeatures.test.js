@@ -9,7 +9,9 @@ import {
   findLineLineCorner,
   regularFilletConstraints,
   filletPresentationRecordIds,
+  inheritSwellFilletArc,
 } from '../../packages/paramagic-core/src/modules/FilletSystem.js';
+import { isSwellEntity, withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { findClosedGeometryCycles } from '../../packages/paramagic-core/src/modules/BoundaryTopology.js';
 
@@ -113,6 +115,37 @@ test('evaluated fillet geometry preserves construction fillets as construction a
   const arc = evaluated.find(({ id }) => id === 'fillet-a');
 
   assert.equal(arc.construction, true);
+});
+
+test('a fillet touching a Swell source inherits its Swell definition', () => {
+  const source = withSwellDefinition(lines[0], {
+    offsetExpression: '0.75 in',
+    swellOffsetExpression: '2 in',
+    startTransitionExpression: '3 in',
+    endTransitionExpression: '5 in',
+  });
+  const arc = inheritSwellFilletArc({
+    id: 'fillet-swell',
+    type: 'arc',
+    center: [10, 10],
+    radius: 10,
+    start: [10, 0],
+    arcPoint: [17.071, 2.929],
+    end: [20, 10],
+  }, [lines[1], source], {
+    sourceEndpoints: [
+      { recordId: 'vertical', index: 0 },
+      { recordId: 'horizontal', index: 2 },
+    ],
+  });
+
+  assert.equal(isSwellEntity(arc), true);
+  assert.equal(arc.construction, true);
+  assert.equal(arc.composite.swell.offsetExpression, '0.75 in');
+  assert.deepEqual(arc.composite.swellFillet.sourceEndpoints, [
+    { recordId: 'vertical', index: 0 },
+    { recordId: 'horizontal', index: 2 },
+  ]);
 });
 
 test('fillet source endpoints can remain connected by their original Coincident constraint', () => {

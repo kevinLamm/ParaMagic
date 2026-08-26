@@ -9,6 +9,12 @@ import {
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { SolverWorkerClient } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerClient.js';
 import { SolverWorkerRuntime } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js';
+import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
+
+const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Math.max(
+  1,
+  Math.hypot(line.end[0] - line.start[0], line.end[1] - line.start[1]),
+);
 
 class LoopbackWorker {
   constructor(runtime = new SolverWorkerRuntime()) {
@@ -155,7 +161,7 @@ test('worker-authoritative constraint add and remove update the local replica wi
   assert.ok(added.constraint?.id);
   assert.equal(controller.constraints().some(({ id }) => id === added.constraint.id), true);
   const solvedLine = controller.getEntity('authoritative-constraint-line');
-  assert.ok(Math.abs(solvedLine.start[1] - solvedLine.end[1]) < 1e-6);
+  assert.ok(horizontalResidual(solvedLine) < DEFAULT_SOLVE_TOLERANCE);
   assert.equal(synchronousAddCount, 0);
   assert.equal((await facade.verifyWorkerParity()).matched, true);
 

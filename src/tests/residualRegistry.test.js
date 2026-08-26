@@ -113,6 +113,7 @@ test('solver applies Equal to circle circumferences', () => {
   });
 
   assert.ok(outcome.constraint, outcome.result.message);
+  assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
   assert.ok(Math.abs(controller.getEntity('circle-driver').radius - controller.getEntity('circle-follower').radius) < 1e-4);
 });
 
@@ -134,6 +135,7 @@ test('solver applies Equal to arc lengths with different sweep angles', () => {
   });
 
   assert.ok(outcome.constraint, outcome.result.message);
+  assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
   const driverLength = measuredArcLength(controller.getEntity('arc-driver'));
   const followerLength = measuredArcLength(controller.getEntity('arc-follower'));
   assert.ok(Math.abs(driverLength - followerLength) < 1e-4, `${driverLength} did not equal ${followerLength}`);
@@ -149,6 +151,7 @@ test('solver convergence keeps collinear segments on one geometric line', () => 
     featureRefs: [segment('collinear-driver'), segment('collinear-follower')],
   });
   assert.ok(outcome.constraint, outcome.result.message);
+  assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
 
   const driver = controller.getEntity('collinear-driver');
   const follower = controller.getEntity('collinear-follower');
@@ -175,6 +178,7 @@ test('solver applies arc-to-arc tangency in either selection order', () => {
       tangentMode: 'external',
     });
     assert.ok(outcome.constraint, outcome.result.message);
+    assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
     const left = controller.getEntity('arc-left');
     const right = controller.getEntity('arc-right');
     const leftCircle = circleFromThreePoints(left.start, left.arcPoint, left.end);
@@ -198,6 +202,7 @@ test('solver applies line-to-arc tangency in either selection order', () => {
     const refs = [{ kind: 'segment', recordId: 'line' }, { kind: 'arc', recordId: 'arc' }];
     const outcome = controller.addConstraint({ type: 'Tangent', featureRefs: reverse ? refs.reverse() : refs });
     assert.ok(outcome.constraint, outcome.result.message);
+    assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
     assert.equal(outcome.constraint.tangentPoint, undefined);
     assert.equal(outcome.constraint.tangentOrientation, -1);
     const arc = controller.getEntity('arc');
@@ -236,6 +241,7 @@ test('a line tangent at a coincident arc endpoint uses an endpoint-aware residua
   });
 
   assert.ok(outcome.constraint, outcome.result.message);
+  assert.equal(controller.solve({ fullSolve: true, tolerance: 1e-8 }).status, 'converged');
   assert.deepEqual(outcome.constraint.tangentPoint, { kind: 'point', recordId: arc.id, index: 0 });
   assert.equal(outcome.constraint.tangentOrientation, 1);
   assert.ok(outcome.result.iterations < 50);
@@ -409,6 +415,35 @@ test('dimension residuals support aligned, axis, radius, and angle targets', () 
     dimensionRef: 'ninety',
   }, dimensions));
   nearZero(evaluateConstraint(model, { id: 'meta', type: 'Meta', parameterRef: 'circle-a:radius', dimensionRef: 'five' }, dimensions));
+});
+
+test('aligned distance direction residuals reject mirrored point and point-to-line branches', () => {
+  const { model, dimensions } = fixture();
+  dimensions.set({ id: 'ten', name: 'ten', expression: '10' });
+  model.addEntity({ id: 'mirrored-point', type: 'line', start: [-10, 0], end: [-20, 0] });
+  model.addEntity({ id: 'reference-line', type: 'line', start: [-20, 0], end: [20, 0] });
+  model.addEntity({ id: 'mirrored-above', type: 'line', start: [0, -10], end: [5, -10] });
+
+  const distanceResiduals = evaluateConstraint(model, {
+    id: 'directed-distance',
+    type: 'Distance',
+    anchors: { start: point('horizontal', 0), end: point('mirrored-point', 0) },
+    direction: [1, 0],
+    dimensionRef: 'ten',
+  }, dimensions);
+  const pointLineResiduals = evaluateConstraint(model, {
+    id: 'directed-point-line',
+    type: 'Point Line Distance',
+    subtype: 'aligned',
+    featureRefs: [point('mirrored-above', 0), segment('reference-line')],
+    direction: [0, 1],
+    dimensionRef: 'ten',
+  }, dimensions);
+
+  assert.equal(distanceResiduals[0], 0);
+  assert.equal(distanceResiduals[1], -1);
+  assert.equal(pointLineResiduals[0], 0);
+  assert.equal(pointLineResiduals[1], -1);
 });
 
 test('model prunes constraints that reference deleted entities', () => {

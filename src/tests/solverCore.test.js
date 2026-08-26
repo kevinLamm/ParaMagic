@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  DEFAULT_SOLVE_TOLERANCE,
   DimensionRepository,
   computeJacobian,
   multiply,
@@ -16,6 +17,48 @@ import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modul
 import { evaluateFillet, regularFilletConstraints } from '../../packages/paramagic-core/src/modules/FilletSystem.js';
 
 const near = (actual, expected, tolerance = 1e-4) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} was not within ${tolerance} of ${expected}`);
+const nearNormalSolve = (actual, expected) => near(
+  actual,
+  expected,
+  DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(expected)),
+);
+
+test('normal solves use the reduced 1e-3 convergence tolerance', () => {
+  const variable = new Variable({ id: 'relaxed-x', value: 0, owner: 'relaxed-fixture' });
+  const model = { allVariables: () => [variable], activeVariables: () => [variable] };
+  const registry = {
+    evaluate: () => ({ values: [5e-4], equations: [{ constraintId: 'small-residual' }] }),
+  };
+
+  assert.equal(DEFAULT_SOLVE_TOLERANCE, 1e-3);
+  assert.equal(
+    solveLevenbergMarquardt({ model, registry, dimensions: null }).status,
+    'unchanged',
+  );
+  assert.equal(
+    solveLevenbergMarquardt({
+      model,
+      registry,
+      dimensions: null,
+      tolerance: 1e-8,
+      maxIterations: 1,
+    }).status,
+    'max-iterations',
+  );
+});
+
+test('driving-dimension solve steps use the normal reduced tolerance', () => {
+  const controller = createSolverController();
+  let solveOptions = null;
+  controller.solve = (options) => {
+    solveOptions = options;
+    return { status: 'unchanged', changedEntityIds: [] };
+  };
+
+  controller.solveDimensionStep({ seedDimensionIds: ['dimension-a'] });
+
+  assert.equal(solveOptions.tolerance, DEFAULT_SOLVE_TOLERANCE);
+});
 
 function maximumNumericDelta(first, second) {
   if (typeof first === 'number' || typeof second === 'number') {
@@ -268,12 +311,14 @@ test('point-on and tangent fixtures retain dense/block convergence parity', () =
       model: fixture(),
       registry: new ConstraintRegistry(),
       dimensions: new DimensionRepository(),
+      tolerance: 1e-8,
     });
     const blocks = solveLevenbergMarquardt({
       model: fixture(),
       registry: new ConstraintRegistry(),
       dimensions: new DimensionRepository(),
       jacobianMode: 'blocks',
+      tolerance: 1e-8,
     });
     assert.equal(dense.status, 'converged', `${fixture.name}: ${dense.message}`);
     assert.equal(blocks.status, 'converged', `${fixture.name}: ${blocks.message}`);
@@ -328,8 +373,8 @@ test('serialized mixed drawing retains dense/block geometry parity after an edit
   dense.model.variableById('top:end.y').value += 2;
   blocks.model.variableById('top:end.y').value += 2;
 
-  const denseResult = dense.solve({ fullSolve: true });
-  const blockResult = blocks.solve({ fullSolve: true });
+  const denseResult = dense.solve({ fullSolve: true, tolerance: 1e-8 });
+  const blockResult = blocks.solve({ fullSolve: true, tolerance: 1e-8 });
 
   assert.equal(denseResult.status, 'converged', denseResult.message);
   assert.equal(blockResult.status, 'converged', blockResult.message);
@@ -410,8 +455,8 @@ test('serialized arc-heavy drawing retains dense/block parity across derived fil
     blocks.model.variableById(`arc-heavy-${index}-marker:point.x`).value += 2;
   }
 
-  const denseResult = dense.solve({ fullSolve: true });
-  const blockResult = blocks.solve({ fullSolve: true });
+  const denseResult = dense.solve({ fullSolve: true, tolerance: 1e-8 });
+  const blockResult = blocks.solve({ fullSolve: true, tolerance: 1e-8 });
 
   assert.equal(denseResult.status, 'converged', denseResult.message);
   assert.equal(blockResult.status, 'converged', blockResult.message);
@@ -912,7 +957,7 @@ test('Length locks a line length while allowing its angle and position to change
   });
   assert.ok(['converged', 'unchanged'].includes(result.result.status), result.result.message);
   const solved = controller.getEntity(line.id);
-  near(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 10, 1e-4);
+  nearNormalSolve(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 10);
 });
 
 test('Length locks an arc length rather than its radius or sweep independently', () => {
@@ -965,8 +1010,8 @@ test('drag locks hold edited variables while connected geometry solves', () => {
   assert.ok(['converged', 'unchanged'].includes(update.result.status));
   assert.deepEqual(controller.getEntity(first.id).end, [30, 40]);
   const follower = controller.getEntity(second.id);
-  near(follower.start[0], 30);
-  near(follower.start[1], 40);
+  nearNormalSolve(follower.start[0], 30);
+  nearNormalSolve(follower.start[1], 40);
 });
 
 test('driving distance uses the central dimension repository', () => {
@@ -984,7 +1029,7 @@ test('driving distance uses the central dimension repository', () => {
   });
   assert.ok(added.constraint);
   const solved = controller.getEntity(line.id);
-  near(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 50, 1e-3);
+  nearNormalSolve(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 50);
 });
 
 test('a driving circle diameter sets the circle radius to half the entered value', () => {
@@ -1360,11 +1405,11 @@ test('an exact half-chord arc remains solvable when its connected chord is made 
 
   assert.ok(['converged', 'unchanged'].includes(resized.status), resized.message);
   near(resizedChord.start[1], resizedFollower.start[1], 1e-6);
-  near(Math.hypot(
+  nearNormalSolve(Math.hypot(
     resizedChord.end[0] - resizedChord.start[0],
     resizedChord.end[1] - resizedChord.start[1],
-  ), 120, 1e-6);
-  near(resizedArc.radius, 60, 1e-6);
+  ), 120);
+  nearNormalSolve(resizedArc.radius, 60);
   near(resizedArc.center[0], (resizedArc.start[0] + resizedArc.end[0]) / 2, 1e-6);
   near(resizedArc.center[1], (resizedArc.start[1] + resizedArc.end[1]) / 2, 1e-6);
 });
@@ -1444,11 +1489,11 @@ test('fillet radius migration restores a solver constraint before radius edits',
   const solvedFillet = controller.getEntity(fillet.id);
   const solvedFirst = controller.getEntity(first.id);
   assert.equal(controller.dimensionAnnotations.get(dimensionId).externalDrivingTarget, undefined);
-  near(solvedFillet.radius, 3 * 25.4, 1e-6);
-  near(Math.hypot(
+  nearNormalSolve(solvedFillet.radius, 3 * 25.4);
+  nearNormalSolve(Math.hypot(
     solvedFillet.start[0] - solvedFirst.end[0],
     solvedFillet.start[1] - solvedFirst.end[1],
-  ), 0, 1e-6);
+  ), 0);
 });
 
 test('arc-heavy dimension edits remain well-conditioned with shallow large-radius arcs', () => {
@@ -1687,7 +1732,7 @@ test('fixing a line midpoint locks only the midpoint and allows its length to ch
   const solvedMidpoint = [(solved.start[0] + solved.end[0]) / 2, (solved.start[1] + solved.end[1]) / 2];
 
   assert.ok(['converged', 'unchanged'].includes(result.status), result.message);
-  near(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 20, 1e-3);
+  nearNormalSolve(Math.hypot(solved.end[0] - solved.start[0], solved.end[1] - solved.start[1]), 20);
   near(solvedMidpoint[0], 0, 1e-6);
   near(solvedMidpoint[1], 0, 1e-6);
 });

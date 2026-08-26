@@ -3,6 +3,12 @@ import assert from 'node:assert/strict';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { SolverWorkerRuntime } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js';
 import { createSolverWorkerRequest } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerProtocol.js';
+import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
+
+const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Math.max(
+  1,
+  Math.hypot(line.end[0] - line.start[0], line.end[1] - line.start[1]),
+);
 
 test('interactive drag never presents partially satisfied constraints', () => {
   const controller = createSolverController();
@@ -44,11 +50,11 @@ test('interactive drag never presents partially satisfied constraints', () => {
   const committed = controller.endDrag();
   assert.ok(['converged', 'unchanged'].includes(committed.status), committed.message);
   const line = controller.getEntity('drag-line');
-  assert.ok(Math.abs(line.start[1] - line.end[1]) < 1e-8);
+  assert.ok(horizontalResidual(line) < DEFAULT_SOLVE_TOLERANCE);
   assert.deepEqual(line.end, [10, 10]);
 });
 
-test('worker drag finalization strictly solves the latest requested geometry', () => {
+test('worker drag finalization solves the latest requested geometry to the normal tolerance', () => {
   const runtime = new SolverWorkerRuntime({
     interactiveSolveOptions: { maxIterations: 1, timeBudgetMs: Infinity },
   });
@@ -99,7 +105,7 @@ test('worker drag finalization strictly solves the latest requested geometry', (
   assert.equal(committed.diagnostics.solveMode, 'final');
   assert.equal(committed.changedEntities.length, 1);
   const [line] = committed.changedEntities;
-  assert.ok(Math.abs(line.start[1] - line.end[1]) < 1e-8);
+  assert.ok(horizontalResidual(line) < DEFAULT_SOLVE_TOLERANCE);
   assert.deepEqual(line.end, [10, 10]);
 });
 

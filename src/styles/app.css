@@ -504,6 +504,17 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .linked-copy-group:not(.linked-copy-driving-dimension).hovered .linked-copy-content .selectable-entity:not(.hit-target):not(.segment-select-line) { stroke: #FFCE1B !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
 .linked-copy-group:not(.linked-copy-driving-dimension).selected:not(.hovered) .linked-copy-content .selectable-entity:not(.hit-target):not(.segment-select-line) { stroke: rgba(0,0,255,.7) !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
 .linked-copy-source-selected .selectable-entity:not(.hit-target) { stroke: #16a34a !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
+.swell-derived-group { pointer-events: none; }
+.swell-derived-group .swell-derived-piece { pointer-events: stroke; vector-effect: non-scaling-stroke; }
+.swell-derived-group .swell-derived-piece.closed-entity { pointer-events: all; }
+.swell-derived-fill-group { pointer-events: none; }
+.swell-derived-fill-group .swell-derived-fill { pointer-events: fill; }
+.floating-panel.swell-panel[hidden] { display: none !important; }
+.floating-panel.swell-panel { top: var(--floating-panel-min-top); right: 16px; left: auto; width: 340px; max-height: calc(100vh - var(--floating-panel-min-top) - 8px); padding: 10px; display: grid; gap: 10px; overflow-y: auto; }
+.swell-panel-header { display: flex; align-items: center; min-height: 24px; }
+.swell-panel-header h2 { margin: 0; font-size: 16px; font-weight: 650; }
+.swell-properties { display: grid; gap: 10px; }
+.swell-expression-input { font-family: ui-monospace, SFMono-Regular, Consolas, monospace !important; }
 .canvas-record:not(.linked-copy-driving-dimension):hover .construction, .canvas-record:not(.linked-copy-driving-dimension).hovered .construction { stroke: #FFCE1B !important; stroke-width: calc(var(--original-stroke-width, 1px) + 2px) !important; stroke-dasharray: 10 8; fill: none; filter: none; }
 .canvas-record.selected:not(.hovered) .construction, .construction.selected:not(.hovered) {
   stroke: #0000FF !important;
