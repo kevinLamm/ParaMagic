@@ -176,7 +176,8 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 ## 6. Document IO
 
 ### `DrawingIO.js`
-- **Description**: Document import/export and thumbnail subsystem. Handles JSON schema normalization, DXF CAD R15 serialization and parsing, drawing merging/remapped IDs, and SVG thumbnail rendering. DXF text serialization emits single-line `TEXT` and multiline `MTEXT` entities on a continuous `Text` layer with model-space heights, alignment, paragraph spacing, resolved parameter fields, and generated font styles.
+- **Description**: Document import/export and thumbnail subsystem. Handles JSON schema normalization, DXF CAD R15 serialization and parsing, drawing merging/remapped IDs, and SVG thumbnail rendering. DXF serialization emits Autodesk-compatible R2000 symbol tables, the standard `ACAD` APPID, named-object dictionaries, plot-style metadata, reciprocal model/paper layout links, and fully owned/subclassed entities with layout and lineweight data. It also emits single-line `TEXT` and multiline `MTEXT` on a continuous `Text` layer with model-space heights, alignment, paragraph spacing, resolved parameter fields, and generated font styles.
+- **Compatibility gate**: `npm run test:dxf` enforces the portable R2000 structure on every deployment; `npm run test:dxf:autodesk` generates the all-geometry fixture and requires a zero-error AutoCAD Core Console audit. See `docs/AUTODESK_DXF_COMPATIBILITY.md`.
 - **Exports**:
   - `normalizeDrawingData(input)`: Ensures standard schema structure for drawing data.
   - `serializeDrawingJson(snapshot, name)`: Serializes drawing snapshot to formatted JSON string.
@@ -189,7 +190,7 @@ This document provides a comprehensive index of all JavaScript modules in `packa
   - `drawingThumbnailEvaluators`, `materializeThumbnailDrawing`, `orderThumbnailEntities`, `createDrawingThumbnailSvg`, `createDrawingThumbnail`, `drawingThumbnailSvgFromDataUrl`
 
 ### `DxfExport.js`
-- **Description**: DXF export coordinator. Builds whole-drawing and per-stack export snapshots, retains stack-owned text, materializes Seam Lines and final Boolean subtraction contours before source IDs are replaced, suppresses Boolean operands, and flattens array and symmetric copies into physical export geometry. Derived array and symmetry geometry receives a source-scoped view of the authoritative full-drawing Boolean presentation so every child retains the source object's final outer and hole contours without importing unrelated Boolean results.
+- **Description**: DXF export coordinator. Builds whole-drawing and per-stack export snapshots, retains stack-owned text, excludes construction geometry and symmetry centerlines, materializes Seam Lines and final Boolean subtraction contours before source IDs are replaced, suppresses Boolean operands, and flattens array and symmetric copies into physical export geometry. Derived array and symmetry geometry receives a source-scoped view of the authoritative full-drawing Boolean presentation so every child retains the source object's final outer and hole contours without importing unrelated Boolean results.
 - **Exports**:
   - `createStackDxfSnapshot(drawing, stackId, options)`: Produces one stack's flattened DXF geometry snapshot.
   - `createDrawingDxfSnapshot(drawing, options)`: Combines every stack into one flattened DXF geometry snapshot.
@@ -198,13 +199,13 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 - **Description**: Pure DXF geometry preparation. Resolves ordinary and construction-only closed boundaries, replaces every Curve-tool path with globally fitted tangent biarcs that can span multiple curve-control intervals, materializes final Boolean contours, transforms export-only boundary entities, and converts analytic arcs to LWPOLYLINE bulges. Closed paths become closed LWPOLYLINE entities; otherwise Curve-tool paths become open LWPOLYLINE entities. The default curve fitting tolerance is 0.25 internal millimetres.
 
 ### `PngExport.js`
-- **Description**: PNG export coordinator. Chooses an approximately one-megapixel 1:1, 16:9, or 9:16 frame from the Value Only presentation bounds, preserves the live canvas presentation styles, applies white background and 20-pixel padding, and enforces a 1 MiB encoded-file cap.
+- **Description**: PNG export coordinator. Chooses an approximately one-megapixel 1:1, 16:9, or 9:16 frame from the Value Only presentation bounds, preserves the live canvas presentation styles, embeds every raster source before canvas rendering, applies white background and 20-pixel padding, and enforces a 1 MiB encoded-file cap.
 - **Exports**:
   - `pngExportFormatForBounds(bounds)`, `fittedPngExportViewport(bounds, width, height, paddingPixels)`
   - `createCanvasPresentationPng(objectLayer, options)`, `serializeCanvasPresentationPng(objectLayer, options)`
 
 ### `SvgExport.js`
-- **Description**: SVG export coordinator. Serializes and embeds assets into the authoritative live-canvas snapshot supplied by `CanvasPresentation.js`; it does not independently reconstruct drawing or array geometry.
+- **Description**: SVG export coordinator. Serializes the authoritative live-canvas snapshot supplied by `CanvasPresentation.js` and embeds catalog, inserted, blob, relative, and remote image sources so the file is portable and cannot taint the shared PNG raster path; it does not independently reconstruct drawing or array geometry.
 - **Exports**:
   - `serializeCanvasPresentationSvg(objectLayer, options)`: Produces a portable whole-drawing or per-stack SVG from the shared canvas presentation.
 - **Exports**:

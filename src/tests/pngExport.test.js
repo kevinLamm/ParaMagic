@@ -1,14 +1,16 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  MAXIMUM_PNG_EXPORT_BYTES,
   PNG_EXPORT_FORMATS,
   PNG_EXPORT_PADDING_PIXELS,
-  encodePngWithinLimit,
+  assertPngRasterSourcesEmbedded,
+  encodePngAtCaptureSize,
   fittedPngExportViewport,
   inlinePngPresentationStyles,
   pngBoundsIncludingStroke,
   pngExportFormatForBounds,
+  preparePngRasterMarkup,
+  rasterizePresentationSvg,
 } from '../../packages/paramagic-core/src/modules/PngExport.js';
 
 test('PNG export chooses the supported ratio requiring the least bounding-box expansion', () => {
@@ -16,13 +18,13 @@ test('PNG export chooses the supported ratio requiring the least bounding-box ex
   assert.equal(pngExportFormatForBounds({ x: 0, y: 0, width: 160, height: 90 }).ratio, '16:9');
   assert.equal(pngExportFormatForBounds({ x: 0, y: 0, width: 90, height: 160 }).ratio, '9:16');
   assert.deepEqual(PNG_EXPORT_FORMATS.map(({ ratio, width, height }) => ({ ratio, width, height })), [
-    { ratio: '1:1', width: 1024, height: 1024 },
-    { ratio: '16:9', width: 1360, height: 765 },
-    { ratio: '9:16', width: 765, height: 1360 },
+    { ratio: '1:1', width: 2048, height: 2048 },
+    { ratio: '16:9', width: 2720, height: 1530 },
+    { ratio: '9:16', width: 1530, height: 2720 },
   ]);
   PNG_EXPORT_FORMATS.forEach(({ width, height }) => {
-    assert.ok(width * height <= 1024 * 1024);
-    assert.ok(width * height >= 1024 * 1024 * 0.99);
+    assert.ok(width * height >= 4 * 1024 * 1024 * 0.99);
+    assert.ok(width * height <= 4 * 1024 * 1024);
   });
 });
 
@@ -42,18 +44,17 @@ test('PNG viewport centers the total bounds with at least 20 output pixels on ev
   assert.deepEqual(bounds, { x: -81, y: -46, width: 162, height: 92 });
 });
 
-test('PNG encoding starts at the requested resolution and preserves its ratio while enforcing 1 MiB', async () => {
+test('PNG encoding saves the full selected capture size without dimension reduction', async () => {
   const format = PNG_EXPORT_FORMATS.find(({ ratio }) => ratio === '16:9');
   const attempts = [];
-  const result = await encodePngWithinLimit(format, async (width, height) => {
+  const result = await encodePngAtCaptureSize(format, async (width, height) => {
     attempts.push({ width, height });
     return new Blob([new Uint8Array(width * height * 3)], { type: 'image/png' });
   });
-  assert.deepEqual(attempts[0], { width: 1360, height: 765 });
-  assert.ok(attempts.length > 1);
+  assert.deepEqual(attempts, [{ width: 2720, height: 1530 }]);
   assert.equal(result.ratio, '16:9');
   assert.equal(result.width / result.height, 16 / 9);
-  assert.ok(result.blob.size <= MAXIMUM_PNG_EXPORT_BYTES);
+  assert.ok(result.blob.size > 1024 * 1024);
 });
 
 test('PNG presentation inlines live geometry and dimension colors, strokes, and text styling', () => {
@@ -118,6 +119,136 @@ test('PNG presentation inlines live geometry and dimension colors, strokes, and 
   assert.equal(derivedFillStyleValues.get('stroke'), 'rgb(88, 42, 20)');
   assert.equal(derivedFillStyleValues.get('stroke-width'), '2px');
   assert.equal(derivedFillStyleValues.get('vector-effect'), 'non-scaling-stroke');
+});
+
+test('PNG raster preparation embeds every image source before loading the SVG image', async () => {
+  const steps = [];
+  const svg = {};
+  const markup = await preparePngRasterMarkup(svg, {
+    inlinePresentationStyles: (received) => {
+      assert.equal(received, svg);
+      steps.push('styles');
+    },
+    serializePresentationElement: (received) => {
+      assert.equal(received, svg);
+      steps.push('serialize');
+      return '<svg><image href="https://images.example/fabric.png"></image></svg>';
+    },
+    embedImageAssets: async (serialized) => {
+      assert.match(serialized, /images\.example/);
+      steps.push('embed');
+      return '<svg><image href="data:image/png;base64,iVBORw=="></image></svg>';
+    },
+  });
+
+  assert.deepEqual(steps, ['styles', 'serialize', 'embed']);
+  assert.match(markup, /data:image\/png/);
+});
+
+test('PNG raster preparation refuses unresolved image sources before canvas drawing', async () => {
+  assert.throws(
+    () => assertPngRasterSourcesEmbedded('<svg><image href="blob:https://app.example/unresolved"></image></svg>'),
+    /could not embed an image source/i,
+  );
+  assert.doesNotThrow(() => assertPngRasterSourcesEmbedded(
+    '<svg><image href="data:image/webp;base64,V0VCUA=="></image><use href="#shared"/></svg>',
+  ));
+  assert.throws(
+    () => assertPngRasterSourcesEmbedded('<svg><foreignObject><textarea>Text</textarea></foreignObject></svg>'),
+    /drawing text must use native SVG text/i,
+  );
+  await assert.rejects(
+    () => preparePngRasterMarkup({}, {
+      inlinePresentationStyles: () => {},
+      serializePresentationElement: () => '<svg><image href="https://images.example/fabric.png"/></svg>',
+      embedImageAssets: async (serialized) => serialized,
+    }),
+    /could not embed an image source/i,
+  );
+});
+
+test('PNG rasterization saves the full fitted capture canvas without downsampling', async () => {
+  const svg = {
+    style: {},
+    querySelectorAll: () => [],
+  };
+  const draws = [];
+  const context = {
+    fillRect() {},
+    drawImage: (...args) => draws.push(args),
+  };
+  const canvas = {
+    getContext: () => context,
+    toBlob: (resolve) => resolve(new Blob(['png'], { type: 'image/png' })),
+  };
+  let released = false;
+
+  const blob = await rasterizePresentationSvg(svg, 2720, 1530, {
+    createCanvas: () => canvas,
+    inlinePresentationStyles: () => {},
+    embedImageAssets: async (markup) => markup,
+    serializePresentationElement: () => '<svg/>',
+    loadSvgImage: async () => ({ image: { source: 'svg' }, release: () => { released = true; } }),
+  });
+
+  assert.equal(canvas.width, 2720);
+  assert.equal(canvas.height, 1530);
+  assert.deepEqual(draws[0].slice(1), [0, 0, 2720, 1530]);
+  assert.equal(blob.type, 'image/png');
+  assert.equal(released, true);
+});
+
+test('PNG export keeps its measurement host mounted while rendering one full-size fitted snapshot', async () => {
+  const presentations = [];
+  const host = {
+    style: {},
+    isConnected: false,
+    replaceChildren(svg) { this.svg = svg; },
+    remove() { this.isConnected = false; },
+  };
+  const documentRef = {
+    body: {
+      appendChild(received) {
+        assert.equal(received, host);
+        received.isConnected = true;
+      },
+    },
+    createElement() { return host; },
+  };
+  const createPresentationSvg = () => {
+    const content = {
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      getBBox: () => ({ x: 0, y: 0, width: 160, height: 90 }),
+    };
+    const svg = {
+      content,
+      querySelector: (selector) => selector === '[data-canvas-presentation-content]' ? content : null,
+      setAttribute() {},
+    };
+    presentations.push(svg);
+    return svg;
+  };
+  const rasterized = [];
+  const rasterizePresentation = async (svg, width, height) => {
+    rasterized.push({ svg, width, height });
+    await Promise.resolve();
+    assert.equal(host.isConnected, true);
+    return new Blob([new Uint8Array(2 * 1024 * 1024)], { type: 'image/png' });
+  };
+
+  const { createCanvasPresentationPng } = await import('../../packages/paramagic-core/src/modules/PngExport.js');
+  const result = await createCanvasPresentationPng({}, { documentRef }, {
+    createPresentationSvg,
+    rasterizePresentation,
+  });
+
+  assert.equal(rasterized.length, 1);
+  assert.equal(rasterized[0].width, 2720);
+  assert.equal(rasterized[0].height, 1530);
+  assert.equal(presentations.length, 2);
+  assert.equal(result.blob.size, 2 * 1024 * 1024);
+  assert.equal(host.isConnected, false);
 });
 
 test('PNG export rejects empty or non-measurable bounds', () => {

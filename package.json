@@ -15,6 +15,10 @@
     "preview": "vite preview",
     "preview:pages": "vite preview --mode github-pages",
     "test": "node --test src/tests/*.test.js",
+    "test:export": "node --test src/tests/drawingFileSystem.test.js src/tests/imageFillSystem.test.js src/tests/pngExport.test.js src/tests/portableImageAssets.test.js src/tests/svgExport.test.js",
+    "test:dxf": "node --test src/tests/drawingIO.test.js src/tests/dxfExport.test.js",
+    "test:dxf:autodesk": "node scripts/test-autodesk-dxf.mjs",
+    "fixture:dxf:autodesk": "node scripts/generate-autodesk-dxf-fixture.mjs",
     "benchmark:solver": "node scripts/benchmark-solver.js"
   },
   "dependencies": {

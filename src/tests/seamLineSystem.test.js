@@ -510,6 +510,11 @@ test('Seam Line presentation mounts inside its owner group before hit targets', 
     const root = ownerGroup.children[1];
     assert.equal(root.attributes.get('class'), 'seam-line-presentation-layer');
     assert.equal(root.dataset.ownerRecordId, 'shape');
+    const seamPath = root.children[0].children[0];
+    assert.equal(seamPath.attributes.get('stroke'), '#636363');
+    assert.equal(seamPath.attributes.get('stroke-width'), '1.5');
+    assert.equal(seamPath.attributes.get('stroke-dasharray'), '7 5');
+    assert.equal(seamPath.attributes.get('vector-effect'), 'non-scaling-stroke');
     assert.deepEqual(objectLayer.children, [ownerGroup, foregroundGroup]);
     assert.equal(system.presentationNodesForSourceIds(['shape']).length, 1);
 

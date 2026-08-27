@@ -66,8 +66,55 @@ test('portable SVG without catalog images is unchanged and does not fetch assets
   const svg = '<svg><rect fill="#ffffff"/></svg>';
   const portableSvg = await embedSvgImageAssets(svg, {
     fetchAsset: async () => assert.fail('an asset fetch was not expected'),
+    fetchSvgImage: async () => assert.fail('an SVG image fetch was not expected'),
   });
   assert.equal(portableSvg, svg);
+});
+
+test('portable SVG embeds direct image URLs before they can taint PNG rasterization', async () => {
+  const url = 'https://images.example/fabric.png?color=blue&size=large';
+  const svg = '<svg><defs><symbol id="marker"><circle r="2"/></symbol></defs>'
+    + `<image href="https://images.example/fabric.png?color=blue&amp;size=large"/>`
+    + '<use href="#marker"/></svg>';
+  const requestedUrls = [];
+  const portableSvg = await embedSvgImageAssets(svg, {
+    fetchAsset: async () => assert.fail('a catalog asset fetch was not expected'),
+    fetchSvgImage: async (requestedUrl) => {
+      requestedUrls.push(requestedUrl);
+      return { bytes: Uint8Array.from([137, 80, 78, 71]), mimeType: 'image/png; charset=binary' };
+    },
+  });
+
+  assert.deepEqual(requestedUrls, [url]);
+  assert.match(portableSvg, /<image href="data:image\/png;base64,iVBORw=="\/>/);
+  assert.match(portableSvg, /<use href="#marker"\/>/);
+  assert.doesNotMatch(portableSvg, /images\.example/);
+});
+
+test('portable SVG preserves image data URLs without fetching them', async () => {
+  const svg = '<svg><image href="data:image/png;base64,iVBORw=="/></svg>';
+  const portableSvg = await embedSvgImageAssets(svg, {
+    fetchAsset: async () => assert.fail('a catalog asset fetch was not expected'),
+    fetchSvgImage: async () => assert.fail('an SVG image fetch was not expected'),
+  });
+  assert.equal(portableSvg, svg);
+});
+
+test('portable SVG embeds explicitly closed and xlink-only image elements', async () => {
+  const url = 'https://images.example/texture.webp';
+  const svg = '<svg xmlns:ns7="http://www.w3.org/1999/xlink">'
+    + `<image width="40" height="20" ns7:href="${url}"></image>`
+    + '</svg>';
+  const portableSvg = await embedSvgImageAssets(svg, {
+    fetchAsset: async () => assert.fail('a catalog asset fetch was not expected'),
+    fetchSvgImage: async (requestedUrl) => {
+      assert.equal(requestedUrl, url);
+      return { bytes: Uint8Array.from([82, 73, 70, 70]), mimeType: 'image/webp' };
+    },
+  });
+
+  assert.match(portableSvg, /href="data:image\/webp;base64,UklGRg=="/);
+  assert.doesNotMatch(portableSvg, /ns7:href|images\.example/);
 });
 
 test('portable SVG embeds host-configured static basic images', async (context) => {

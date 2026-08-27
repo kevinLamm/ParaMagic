@@ -1,11 +1,25 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  canvasPresentationDefinitionRoots,
   fitCanvasPresentationSvg,
   fittedPresentationViewport,
   isCanvasPresentationSourceNode,
   valueOnlyDimensionText,
 } from '../../packages/paramagic-core/src/modules/CanvasPresentation.js';
+
+function svgNode(tagName, attributes = {}, children = []) {
+  const node = {
+    tagName,
+    children,
+    attributes: Object.entries(attributes).map(([name, value]) => ({ name, localName: name, value })),
+    getAttribute: (name) => attributes[name] || null,
+    querySelectorAll: (selector) => selector === '*'
+      ? children.flatMap((child) => [child, ...(child.querySelectorAll?.('*') || [])])
+      : [],
+  };
+  return node;
+}
 
 function presentationNode(classes, stackId = 'stack-default') {
   const names = new Set(classes);
@@ -69,4 +83,30 @@ test('export viewport fitting reuses the SVG dimensions when callers omit explic
 
   assert.ok(Object.values(viewport).every(Number.isFinite));
   assert.equal(attributes.get('viewBox'), '-124 -90 448 280');
+});
+
+test('canvas presentation copies only referenced definition dependencies', () => {
+  const externalImage = svgNode('image', { href: 'https://example.invalid/stale.png' });
+  const unusedPattern = svgNode('pattern', { id: 'unused-image' }, [externalImage]);
+  const gradient = svgNode('linearGradient', { id: 'used-gradient' });
+  const usedPattern = svgNode('pattern', { id: 'used-pattern', fill: 'url(#used-gradient)' });
+  const definitions = svgNode('defs', {}, [unusedPattern, gradient, usedPattern]);
+  const ownerSVGElement = svgNode('svg', {}, [definitions]);
+  const objectLayer = { ownerSVGElement };
+  const content = svgNode('g', {}, [svgNode('rect', { fill: 'url("#used-pattern")' })]);
+
+  assert.deepEqual(
+    canvasPresentationDefinitionRoots(objectLayer, content),
+    [gradient, usedPattern],
+  );
+});
+
+test('canvas presentation omits all live-canvas definitions when exported content has no references', () => {
+  const stalePattern = svgNode('pattern', { id: 'stale-image' }, [
+    svgNode('image', { href: 'https://example.invalid/stale.png' }),
+  ]);
+  const ownerSVGElement = svgNode('svg', {}, [svgNode('defs', {}, [stalePattern])]);
+  const content = svgNode('g', {}, [svgNode('path', { stroke: '#000000' })]);
+
+  assert.deepEqual(canvasPresentationDefinitionRoots({ ownerSVGElement }, content), []);
 });

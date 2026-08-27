@@ -1701,10 +1701,10 @@ const drawingClipboard = createDrawingClipboard({
         createContent: () => serializeCanvasPresentationSvg(canvasController.getObjectLayer?.(), { stackId }),
       });
     },
-    png: async ({ stackId }) => {
+    png: async ({ stack, stackId }) => {
       let png;
       const result = await exportFileWithDialog({
-        name: currentDrawingName(),
+        name: stack.name,
         format: 'png',
         createContent: async () => {
           png = await createCanvasPresentationPng(canvasController.getObjectLayer?.(), { stackId });

@@ -5,6 +5,7 @@ import {
   createNotchLocationMemory,
   createNotchSystem,
   notchDependsOnRecordIds,
+  prepareNotchValueOnlyPresentationClone,
 } from '../../packages/paramagic-core/src/modules/NotchSystem.js';
 
 const node = () => ({
@@ -21,6 +22,32 @@ test('notch presentation refreshes only for its own dependency records', () => {
   assert.equal(notchDependsOnRecordIds(notch, new Set(['host-edge'])), true);
   assert.equal(notchDependsOnRecordIds(notch, new Set(['source-edge'])), true);
   assert.equal(notchDependsOnRecordIds(notch, new Set(['unrelated-edge'])), false);
+});
+
+test('Value Only Notch presentation keeps the physical notch and removes editing markers', () => {
+  const attributes = new Map();
+  const line = { setAttribute: (name, value) => attributes.set(name, value) };
+  let dotRemoved = false;
+  let hitRemoved = false;
+  const clone = {
+    querySelectorAll(selector) {
+      if (selector === '.notch-dot, .notch-hit') {
+        return [
+          { remove: () => { dotRemoved = true; } },
+          { remove: () => { hitRemoved = true; } },
+        ];
+      }
+      if (selector === '.notch-line') return [line];
+      return [];
+    },
+  };
+
+  assert.equal(prepareNotchValueOnlyPresentationClone(clone), clone);
+  assert.equal(dotRemoved, true);
+  assert.equal(hitRemoved, true);
+  assert.equal(attributes.get('stroke'), '#000000');
+  assert.equal(attributes.get('stroke-width'), '1.5');
+  assert.equal(attributes.get('vector-effect'), 'non-scaling-stroke');
 });
 
 function createSystem(features, records = []) {

@@ -103,6 +103,36 @@ test('catalog preparation caches a capped runtime Blob URL without changing the 
   });
 });
 
+test('catalog preparation isolates small cross-origin images behind runtime Blob URLs', async (context) => {
+  const originalFetch = globalThis.fetch;
+  context.after(() => {
+    globalThis.fetch = originalFetch;
+    configureImageCatalogResources();
+  });
+  let sourceFetches = 0;
+  globalThis.fetch = async () => {
+    sourceFetches += 1;
+    return {
+      ok: true,
+      blob: async () => new Blob([Uint8Array.from([137, 80, 78, 71])], { type: 'image/png' }),
+    };
+  };
+  configureImageCatalogResources({
+    manifestUrl: 'https://cdn.example/catalog.json',
+    assetBaseUrl: 'https://cdn.example/images',
+  });
+  const reference = 'basic/Fabric/small.png';
+  const staticUrl = imageFillContentUrl(reference);
+  const runtimeUrl = await prepareImageFillContentUrl(reference);
+
+  assert.equal(sourceFetches, 1);
+  assert.notEqual(runtimeUrl, staticUrl);
+  assert.match(runtimeUrl, /^blob:/);
+  assert.equal(imageFillReferenceFromContentUrl(runtimeUrl), reference);
+  const runtimeBlob = await originalFetch(runtimeUrl).then((response) => response.blob());
+  assert.deepEqual([...new Uint8Array(await runtimeBlob.arrayBuffer())], [137, 80, 78, 71]);
+});
+
 test('image fill mode control defaults to Tiled without exposing a Mixed option', () => {
   const markup = imageFillPropertiesMarkup();
   assert.match(markup, /<option value="tile" selected>Tiled<\/option>/);

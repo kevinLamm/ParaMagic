@@ -8,6 +8,37 @@ import { createDrawingDxfSnapshot } from '../../packages/paramagic-core/src/modu
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 const exportDxf = (drawing) => serializeDxf(createDrawingDxfSnapshot(drawing));
 
+function dxfRecordBlocks(dxf, recordType) {
+  const pairs = dxf.replace(/\r/g, '').split('\n').reduce((result, value, index, values) => {
+    if (index % 2 === 0 && index + 1 < values.length) result.push([value, values[index + 1]]);
+    return result;
+  }, []);
+  const blocks = [];
+  for (let index = 0; index < pairs.length; index += 1) {
+    if (pairs[index][0] !== '0' || pairs[index][1] !== recordType) continue;
+    let end = index + 1;
+    while (end < pairs.length && pairs[end][0] !== '0') end += 1;
+    blocks.push(pairs.slice(index, end));
+    index = end - 1;
+  }
+  return blocks;
+}
+
+const dxfRecordValues = (record, code) => record
+  .filter(([groupCode]) => groupCode === String(code))
+  .map(([, value]) => value);
+
+const namedDxfRecord = (dxf, recordType, name) => dxfRecordBlocks(dxf, recordType)
+  .find((record) => dxfRecordValues(record, 2).includes(name));
+
+const dxfDictionaryEntries = (record) => {
+  const entries = new Map();
+  record.forEach(([code, value], index) => {
+    if (code === '3' && record[index + 1]?.[0] === '350') entries.set(value, record[index + 1][1]);
+  });
+  return entries;
+};
+
 test('drawing normalization upgrades Classes to root-level data and migrates legacy geometry into X', () => {
   const drawing = normalizeDrawingData({
     entities: [{
@@ -411,8 +442,9 @@ test('DXF export converts internal millimetres only to the export unit', () => {
       dxfExportUnit,
       entities: [{ id: 'line', type: 'line', start: [0, 0], end: [50.8, 0] }],
     });
+    const line = dxfRecordBlocks(dxf, 'LINE')[0];
     return {
-      coordinate: Number(/\n11\n([^\n]+)/.exec(dxf)?.[1]),
+      coordinate: Number(dxfRecordValues(line, 11)[0]),
       headerUnit: Number(/\$INSUNITS\n70\n([^\n]+)/.exec(dxf)?.[1]),
     };
   };
@@ -444,6 +476,67 @@ test('DXF header declares a compatible version and measurement system for the se
   assert.match(imperial, /\$MEASUREMENT\n70\n0/);
 });
 
+test('DXF R2000 export writes Autodesk-compatible symbol tables, dictionaries, layouts, and common entity data', () => {
+  const dxf = exportDxf({
+    drawingUnit: 'mm',
+    entities: [{ id: 'line', type: 'line', start: [0, 0], end: [10, 0] }],
+  });
+  const tableNames = dxfRecordBlocks(dxf, 'TABLE').map((record) => dxfRecordValues(record, 2)[0]);
+  assert.deepEqual(tableNames, [
+    'VPORT', 'LTYPE', 'LAYER', 'STYLE', 'VIEW', 'UCS', 'APPID', 'DIMSTYLE', 'BLOCK_RECORD',
+  ]);
+  dxfRecordBlocks(dxf, 'TABLE').forEach((record) => {
+    assert.equal(dxfRecordValues(record, 5).length, 1);
+    assert.deepEqual(dxfRecordValues(record, 330), ['0']);
+    assert.equal(dxfRecordValues(record, 100).includes('AcDbSymbolTable'), true);
+  });
+
+  const appId = namedDxfRecord(dxf, 'APPID', 'ACAD');
+  assert.ok(appId);
+  assert.equal(dxfRecordValues(appId, 5).length, 1);
+  assert.equal(dxfRecordValues(appId, 100).includes('AcDbRegAppTableRecord'), true);
+  assert.ok(namedDxfRecord(dxf, 'STYLE', 'STANDARD'));
+  const modelBlockRecord = namedDxfRecord(dxf, 'BLOCK_RECORD', '*Model_Space');
+  const paperBlockRecord = namedDxfRecord(dxf, 'BLOCK_RECORD', '*Paper_Space');
+  assert.ok(modelBlockRecord);
+  assert.ok(paperBlockRecord);
+
+  const rootDictionary = dxfRecordBlocks(dxf, 'DICTIONARY')
+    .find((record) => dxfRecordValues(record, 330)[0] === '0');
+  assert.ok(rootDictionary);
+  const rootEntries = dxfDictionaryEntries(rootDictionary);
+  assert.deepEqual([...rootEntries.keys()], [
+    'ACAD_GROUP', 'ACAD_LAYOUT', 'ACAD_MLINESTYLE', 'ACAD_PLOTSETTINGS', 'ACAD_PLOTSTYLENAME',
+  ]);
+  const layoutDictionary = dxfRecordBlocks(dxf, 'DICTIONARY')
+    .find((record) => dxfRecordValues(record, 5)[0] === rootEntries.get('ACAD_LAYOUT'));
+  assert.ok(layoutDictionary);
+  const layoutEntries = dxfDictionaryEntries(layoutDictionary);
+  assert.deepEqual([...layoutEntries.keys()], ['Layout1', 'Model']);
+
+  const modelLayout = dxfRecordBlocks(dxf, 'LAYOUT')
+    .find((record) => dxfRecordValues(record, 1).includes('Model'));
+  const paperLayout = dxfRecordBlocks(dxf, 'LAYOUT')
+    .find((record) => dxfRecordValues(record, 1).includes('Layout1'));
+  assert.ok(modelLayout);
+  assert.ok(paperLayout);
+  assert.equal(dxfRecordValues(modelLayout, 330).at(-1), dxfRecordValues(modelBlockRecord, 5)[0]);
+  assert.equal(dxfRecordValues(paperLayout, 330).at(-1), dxfRecordValues(paperBlockRecord, 5)[0]);
+  assert.deepEqual(dxfRecordValues(modelBlockRecord, 340), dxfRecordValues(modelLayout, 5));
+  assert.deepEqual(dxfRecordValues(paperBlockRecord, 340), dxfRecordValues(paperLayout, 5));
+
+  const normalPlotStyle = dxfRecordBlocks(dxf, 'ACDBPLACEHOLDER')[0];
+  assert.ok(normalPlotStyle);
+  dxfRecordBlocks(dxf, 'LAYER').forEach((record) => {
+    assert.deepEqual(dxfRecordValues(record, 370), ['-3']);
+    assert.deepEqual(dxfRecordValues(record, 390), dxfRecordValues(normalPlotStyle, 5));
+  });
+  const line = dxfRecordBlocks(dxf, 'LINE')[0];
+  assert.deepEqual(dxfRecordValues(line, 410), ['Model']);
+  assert.deepEqual(dxfRecordValues(line, 370), ['-1']);
+  assert.match(dxf, /\$HANDSEED\n5\n[0-9A-F]+/);
+});
+
 test('DXF unit scaling is applied to every supported geometric coordinate and radius', () => {
   const dxf = exportDxf({
     drawingUnit: 'in',
@@ -472,13 +565,15 @@ test('DXF export writes every physical Notch shape to its dedicated layer', () =
     ],
   });
 
-  assert.match(dxf, /\nLAYER\n2\nStraight Slit Notch\n/);
-  assert.match(dxf, /\nLAYER\n2\nV-Notch\n/);
-  assert.match(dxf, /\nLAYER\n2\nU-Notch\n/);
-  assert.match(dxf, /\nLINE\n8\nStraight Slit Notch\n/);
-  assert.equal((dxf.match(/\nLINE\n8\nV-Notch\n/g) || []).length, 2);
-  assert.equal((dxf.match(/\nLINE\n8\nU-Notch\n/g) || []).length, 2);
-  assert.match(dxf, /\nARC\n8\nU-Notch\n/);
+  assert.ok(namedDxfRecord(dxf, 'LAYER', 'Straight Slit Notch'));
+  assert.ok(namedDxfRecord(dxf, 'LAYER', 'V-Notch'));
+  assert.ok(namedDxfRecord(dxf, 'LAYER', 'U-Notch'));
+  const lineLayers = dxfRecordBlocks(dxf, 'LINE').flatMap((record) => dxfRecordValues(record, 8));
+  const arcLayers = dxfRecordBlocks(dxf, 'ARC').flatMap((record) => dxfRecordValues(record, 8));
+  assert.equal(lineLayers.filter((layer) => layer === 'Straight Slit Notch').length, 1);
+  assert.equal(lineLayers.filter((layer) => layer === 'V-Notch').length, 2);
+  assert.equal(lineLayers.filter((layer) => layer === 'U-Notch').length, 2);
+  assert.equal(arcLayers.filter((layer) => layer === 'U-Notch').length, 1);
 });
 
 test('DXF export places seam geometry on a dashed Seam Lines layer', () => {
@@ -494,10 +589,13 @@ test('DXF export places seam geometry on a dashed Seam Lines layer', () => {
     ],
   });
 
-  assert.match(dxf, /\nLTYPE\n2\nDASHED\n/);
-  assert.match(dxf, /\nLAYER\n2\nSeam Lines\n70\n0\n62\n7\n6\nDASHED\n/);
-  assert.match(dxf, /\nLINE\n8\nSeam Lines\n/);
-  assert.match(dxf, /\nLINE\n8\n0\n/);
+  assert.ok(namedDxfRecord(dxf, 'LTYPE', 'DASHED'));
+  const seamLayerRecord = namedDxfRecord(dxf, 'LAYER', 'Seam Lines');
+  assert.ok(seamLayerRecord);
+  assert.deepEqual(dxfRecordValues(seamLayerRecord, 6), ['DASHED']);
+  const lineLayers = dxfRecordBlocks(dxf, 'LINE').flatMap((record) => dxfRecordValues(record, 8));
+  assert.equal(lineLayers.includes('Seam Lines'), true);
+  assert.equal(lineLayers.includes('0'), true);
 });
 
 test('V2 Seam Line intent remaps with inserted geometry and exports without stored seam entities', () => {
@@ -523,7 +621,7 @@ test('V2 Seam Line intent remaps with inserted geometry and exports without stor
   assert.deepEqual(definition.recordIds, [mappedId]);
   assert.equal(definition.overrides[0].sourceId, mappedId);
   assert.equal(drawing.entities.some((entity) => entity.composite?.kind === 'finish-size-offset'), false);
-  assert.match(exportDxf(drawing), /\nLAYER\n2\nSeam Lines\n/);
+  assert.ok(namedDxfRecord(exportDxf(drawing), 'LAYER', 'Seam Lines'));
 });
 
 test('insert keeps the destination drawing and DXF units', () => {

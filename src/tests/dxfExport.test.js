@@ -11,6 +11,7 @@ import {
   drawingCurveToDxfSegments,
 } from '../../packages/paramagic-core/src/modules/DxfExportGeometry.js';
 import { parseDxf, resolveDrawingScene, serializeDxf } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { DXF_DIMENSION_STYLE } from '../../packages/paramagic-core/src/modules/DxfDimensionExport.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
 
@@ -124,6 +125,9 @@ function entityBlocks(dxf, entityType) {
   }
   return blocks;
 }
+
+const namedEntityBlock = (dxf, entityType, name) => entityBlocks(dxf, entityType)
+  .find((block) => block.includes(`\n2\n${name}\n`));
 
 function bulges(block) {
   return [...block.matchAll(/\n42\n([^\n]+)/g)].map((match) => Number(match[1]));
@@ -257,14 +261,14 @@ test('array and symmetric copies retain separate closed boundaries with reflecte
     },
   });
 
-  assert.equal(snapshot.entities.length, 4);
+  assert.equal(snapshot.entities.length, 3);
   assert.equal(
     snapshot.entities.filter(({ type }) => type === DXF_BOUNDARY_ENTITY_TYPE).length,
     3,
   );
   assert.equal(
     snapshot.entities.some((entity) => entity.composite?.kind === 'symmetric-centerline'),
-    true,
+    false,
   );
   const blocks = lwPolylineBlocks(serializeDxf(snapshot));
   assert.equal(blocks.length, 3);
@@ -364,7 +368,7 @@ test('fillets become bulged members of their closed LWPOLYLINE instead of separa
   assert.equal((dxf.match(/\nLINE\n/g) || []).length, 0);
 });
 
-test('per-stack DXF snapshots flatten derived copies and retain the symmetry construction line', () => {
+test('per-stack DXF snapshots flatten derived copies and exclude the symmetry construction line', () => {
   const arraySnapshot = {
     drawingUnit: 'mm',
     entities: [{ id: 'source', type: 'line', start: [0, 0], end: [10, 0], stackId: 'source-stack' }],
@@ -396,7 +400,7 @@ test('per-stack DXF snapshots flatten derived copies and retain the symmetry con
       },
     ],
   }, 'mirror-stack');
-  assert.equal(mirrorExport.entities.length, 2);
+  assert.equal(mirrorExport.entities.length, 1);
   const mirrored = mirrorExport.entities.find(
     (entity) => entity.composite?.kind !== 'symmetric-centerline',
   );
@@ -473,7 +477,7 @@ test('DXF and thumbnail scenes share unit-aware dimensional array counts', () =>
   assert.equal(snapshot.entities.filter(({ type }) => type === 'line').length, 10);
 });
 
-test('construction and symmetry lines share a red dashed Construction layer', () => {
+test('DXF snapshots exclude construction geometry and symmetry centerlines', () => {
   const snapshot = createDrawingDxfSnapshot({
     drawingUnit: 'mm',
     entities: [
@@ -494,12 +498,11 @@ test('construction and symmetry lines share a red dashed Construction layer', ()
   });
   const dxf = serializeDxf(snapshot);
 
-  assert.match(
-    dxf,
-    /\nLAYER\n2\nConstruction\n70\n0\n62\n1\n6\nDASHED\n/,
-  );
-  assert.equal((dxf.match(/\nLINE\n8\nConstruction\n/g) || []).length, 2);
-  assert.equal((dxf.match(/\nLINE\n8\n0\n/g) || []).length, 2);
+  const constructionLayer = namedEntityBlock(dxf, 'LAYER', 'Construction');
+  assert.equal(constructionLayer, undefined);
+  const lineBlocks = entityBlocks(dxf, 'LINE');
+  assert.equal(lineBlocks.filter((block) => block.includes('\n8\nConstruction\n')).length, 0);
+  assert.equal(lineBlocks.filter((block) => block.includes('\n8\n0\n')).length, 2);
 });
 
 test('standalone drawing-tool curves export as open tangent-arc LWPOLYLINE entities', () => {
@@ -519,7 +522,7 @@ test('standalone drawing-tool curves export as open tangent-arc LWPOLYLINE entit
   assert.equal((dxf.match(/\nARC\n/g) || []).length, 0);
 });
 
-test('construction curves and closed construction cycles export as bulged Construction LWPOLYLINE entities', () => {
+test('DXF snapshots exclude construction curves and closed construction cycles', () => {
   const composite = { id: 'construction-loop', kind: 'polyline', closed: true, count: 2 };
   const dxf = exportDxf({
     drawingUnit: 'mm',
@@ -543,10 +546,8 @@ test('construction curves and closed construction cycles export as bulged Constr
   });
   const blocks = lwPolylineBlocks(dxf);
 
-  assert.equal(blocks.length, 1);
-  assert.match(blocks[0], /\n8\nConstruction\n/);
-  assert.match(blocks[0], /\n70\n1\n/);
-  assert.ok(bulges(blocks[0]).some((value) => Math.abs(value) > 1e-8));
+  assert.equal(blocks.length, 0);
+  assert.doesNotMatch(dxf, /\nConstruction\n/);
   assert.equal((dxf.match(/\nLINE\n/g) || []).length, 0);
 });
 
@@ -679,7 +680,7 @@ test('symmetric children reuse the reflected final Boolean outer and hole contou
   );
   assert.equal(
     snapshot.entities.some((entity) => entity.composite?.kind === 'symmetric-centerline'),
-    true,
+    false,
   );
   assert.equal(lwPolylineBlocks(serializeDxf(snapshot)).length, 4);
 });
@@ -778,10 +779,15 @@ test('single-line text exports as aligned TEXT on a continuous Text layer with p
   assert.equal(blocks.length, 1);
   assert.match(blocks[0], /\n8\nText\n/);
   assert.match(blocks[0], /\n10\n1\n20\n-2\n40\n1\n1\nPattern label\n/);
-  assert.match(blocks[0], /\n72\n1\n73\n3\n/);
+  assert.match(blocks[0], /\n72\n1\n/);
+  assert.match(blocks[0], /\n100\nAcDbText\n73\n3$/);
   assert.equal(entityBlocks(dxf, 'MTEXT').length, 0);
-  assert.match(dxf, /\nLAYER\n2\nText\n70\n0\n62\n7\n6\nCONTINUOUS\n/);
-  assert.match(dxf, /\nSTYLE\n2\nTIMES_NEW_ROMAN[\s\S]*\n3\ntimes\.ttf\n/);
+  const textLayer = namedEntityBlock(dxf, 'LAYER', 'Text');
+  assert.ok(textLayer);
+  assert.match(textLayer, /\n62\n7\n6\nCONTINUOUS\n370\n-3\n390\n[0-9A-F]+$/);
+  const timesStyle = namedEntityBlock(dxf, 'STYLE', 'TIMES_NEW_ROMAN');
+  assert.ok(timesStyle);
+  assert.match(timesStyle, /\n3\ntimes\.ttf\n/);
 });
 
 test('multiline text exports as MTEXT with explicit height, paragraphs, fields, and top-right attachment', () => {
@@ -928,10 +934,12 @@ test('driven dimensions export as native DXF dimensions on the Dimensions layer'
   assert.equal(dimensions.filter((block) => block.includes('\n70\n165\n')).length, 1);
   assert.equal(dimensions.filter((block) => block.includes('\n100\nAcDbDiametricDimension\n')).length, 1);
   assert.equal(dimensions.filter((block) => block.includes('\n100\nAcDb3PointAngularDimension\n')).length, 1);
-  assert.match(dxf, /\nLAYER\n2\nDimensions\n70\n0\n62\n5\n6\nCONTINUOUS\n/);
-  assert.match(dxf, /\nTABLE\n2\nDIMSTYLE\n70\n1\n0\nDIMSTYLE\n2\nPARAMAGIC\n/);
+  const dimensionsLayer = namedEntityBlock(dxf, 'LAYER', 'Dimensions');
+  assert.ok(dimensionsLayer);
+  assert.match(dimensionsLayer, /\n62\n5\n6\nCONTINUOUS\n370\n-3\n390\n[0-9A-F]+$/);
+  assert.ok(namedEntityBlock(dxf, 'DIMSTYLE', DXF_DIMENSION_STYLE));
   assert.match(dxf, /\n78\n0\n79\n0\n179\n3\n271\n3\n/);
-  assert.equal(entityBlocks(dxf, 'BLOCK').length, 6);
+  assert.equal(entityBlocks(dxf, 'BLOCK').filter((block) => /\n2\n\*D\d+\n/.test(block)).length, 6);
   assert.match(dxf, /\n1\nPERIM 125\.000\n/);
   assert.doesNotMatch(dxf, /\n1\nPERIM 125\.000 mm\n/);
   assert.doesNotMatch(dxf, /driving-only/);
@@ -1017,7 +1025,7 @@ test('per-stack DXF export includes only driven dimensions owned by that stack',
   assert.doesNotMatch(dxf, /stack-b-value/);
 });
 
-test('DXF export includes construction parents and complete derived Swell geometry', () => {
+test('DXF export excludes construction parents and retains complete derived Swell geometry', () => {
   const source = withSwellDefinition({
     id: 'swell-line',
     type: 'line',
@@ -1036,6 +1044,6 @@ test('DXF export includes construction parents and complete derived Swell geomet
   assert.deepEqual(derived.map(({ type }) => type), ['arc', 'line', 'arc']);
 
   const snapshot = createDrawingDxfSnapshot({ drawingUnit: 'mm', dxfExportUnit: 'mm', entities: [source], constraints: [] });
-  assert.equal(snapshot.entities.length, 4);
-  assert.equal(snapshot.entities.filter(({ construction }) => construction === true).length, 1);
+  assert.equal(snapshot.entities.length, 3);
+  assert.equal(snapshot.entities.filter(({ construction }) => construction === true).length, 0);
 });
