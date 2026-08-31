@@ -1,37 +1,103 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  createDrivenDimensionExportPersistence,
+  applyValueOnlyExportDimensionAppearance,
+  createDimensionValueOnlyPersistence,
+  DRIVEN_DIMENSION_PRESENTATION_COLOR,
   dimensionExcludedFromExport,
   dimensionHiddenInTextMode,
+  dimensionIncludedInValueOnly,
+  setDimensionIncludedInValueOnly,
+  dimensionTextEditable,
+  prepareDimensionPresentationClone,
   mclDimensionLayout,
   moveDimensionLine,
   radiusDimensionLayout,
+  updateDimensionPresentationScale,
   uprightDimensionControlPoint,
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
 
-test('only driven dimensions explicitly disabled for export are excluded', () => {
+function attributeNode() {
+  const attributes = new Map();
+  return {
+    style: {},
+    textContent: '',
+    setAttribute(name, value) { attributes.set(name, String(value)); },
+    getAttribute(name) { return attributes.get(name) || ''; },
+  };
+}
+
+test('Value Only inclusion defaults to driven dimensions and can be enabled for driving dimensions', () => {
   assert.equal(dimensionExcludedFromExport({ dimensionMode: 'driven', excludeFromExport: true }), true);
   assert.equal(dimensionExcludedFromExport({ dimensionMode: 'driven', excludeFromExport: false }), false);
-  assert.equal(dimensionExcludedFromExport({ dimensionMode: 'driving', excludeFromExport: true }), false);
+  assert.equal(dimensionExcludedFromExport({ dimensionMode: 'driving' }), true);
+  assert.equal(dimensionExcludedFromExport({ dimensionMode: 'driving', includeInValueOnly: true }), false);
+  assert.equal(dimensionIncludedInValueOnly({ dimensionMode: 'driving', includeInValueOnly: true }), true);
+
+  const legacyDriving = {};
+  assert.equal(dimensionIncludedInValueOnly(legacyDriving), true);
+  setDimensionIncludedInValueOnly(legacyDriving, false);
+  assert.equal(dimensionIncludedInValueOnly(legacyDriving), false);
 });
 
-test('value-only view hides driving and no-export driven dimensions only', () => {
+test('Value Only view hides dimensions not included in that presentation', () => {
   const driving = { dimensionMode: 'driving' };
+  const includedDriving = { dimensionMode: 'driving', includeInValueOnly: true };
   const includedDriven = { dimensionMode: 'driven', excludeFromExport: false };
   const excludedDriven = { dimensionMode: 'driven', excludeFromExport: true };
 
   assert.equal(dimensionHiddenInTextMode(driving, 'value'), true);
+  assert.equal(dimensionHiddenInTextMode(includedDriving, 'value'), false);
   assert.equal(dimensionHiddenInTextMode(includedDriven, 'value'), false);
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'value'), true);
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'named-value'), false);
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'expression'), false);
 });
 
-test('driven dimension export preference persists through the solver annotation', () => {
+test('Driving Dimension text becomes read-only when shown in Value Only view', () => {
+  const driving = { dimensionMode: 'driving', includeInValueOnly: true };
+
+  assert.equal(dimensionTextEditable(driving, 'named-value'), true);
+  assert.equal(dimensionTextEditable(driving, 'expression'), true);
+  assert.equal(dimensionTextEditable(driving, 'value'), false);
+  assert.equal(dimensionTextEditable({ dimensionMode: 'driven' }, 'named-value'), false);
+});
+
+test('SVG and PNG presentation paint Driving and Driven Dimensions with the Driven color', () => {
+  const painted = [];
+  const drawable = (name) => ({
+    name,
+    style: { setProperty(property, value) { painted.push({ name, property, value }); } },
+  });
+  const path = drawable('path');
+  const extension = drawable('extension');
+  const arrow = drawable('arrow');
+  const text = drawable('text');
+  const group = {
+    querySelectorAll(selector) {
+      if (selector === '.dimension-path, .dimension-extension, .dimension-arrow') {
+        return [path, extension, arrow];
+      }
+      if (selector === '.dimension-arrow, .dimension-text') return [arrow, text];
+      return [];
+    },
+  };
+  const root = { querySelectorAll: () => [group] };
+
+  assert.equal(applyValueOnlyExportDimensionAppearance(root), root);
+  assert.deepEqual(painted, [
+    { name: 'path', property: 'stroke', value: DRIVEN_DIMENSION_PRESENTATION_COLOR },
+    { name: 'extension', property: 'stroke', value: DRIVEN_DIMENSION_PRESENTATION_COLOR },
+    { name: 'arrow', property: 'stroke', value: DRIVEN_DIMENSION_PRESENTATION_COLOR },
+    { name: 'arrow', property: 'fill', value: DRIVEN_DIMENSION_PRESENTATION_COLOR },
+    { name: 'text', property: 'fill', value: DRIVEN_DIMENSION_PRESENTATION_COLOR },
+  ]);
+});
+
+test('dimension Value Only preference persists through the solver annotation', () => {
   const updates = [];
   const changes = [];
-  const persist = createDrivenDimensionExportPersistence({
+  const persist = createDimensionValueOnlyPersistence({
     solver: {
       updateDimensionAnnotation(dimensionId, entity) {
         updates.push({ dimensionId, entity: structuredClone(entity) });
@@ -49,6 +115,15 @@ test('driven dimension export preference persists through the solver annotation'
   assert.equal(persist(entity), true);
   assert.deepEqual(updates, [{ dimensionId: 'dimension-width', entity }]);
   assert.deepEqual(changes, ['dimension-width']);
+
+  const driving = {
+    dimensionId: 'dimension-height',
+    dimensionMode: 'driving',
+    includeInValueOnly: true,
+  };
+  assert.equal(persist(driving), true);
+  assert.deepEqual(updates[1], { dimensionId: 'dimension-height', entity: driving });
+  assert.deepEqual(changes, ['dimension-width', 'dimension-height']);
 });
 
 test('driven dimension export control follows rotated text without rotating itself', () => {
@@ -116,6 +191,60 @@ test('multi-length dimension text ends at the horizontal leader endpoint on the 
 
   assert.deepEqual(layout.label, layout.landingEnd);
   assert.equal(layout.textAnchor, 'end');
+});
+
+test('dimension presentation snapshots recompute arrows, labels, and offsets at the fitted scale', () => {
+  const path = attributeNode();
+  const extensionA = attributeNode();
+  const extensionB = attributeNode();
+  const arrowA = attributeNode();
+  const arrowB = attributeNode();
+  const text = attributeNode();
+  text.textContent = '100.013';
+  const cloneGroup = {
+    querySelector(selector) {
+      if (selector === '.dimension-text') return text;
+      if (selector === '.dimension-path:not(.hit-target)') return path;
+      return null;
+    },
+    querySelectorAll(selector) {
+      if (selector === '.dimension-extension:not(.hit-target)') return [extensionA, extensionB];
+      if (selector === '.dimension-arrow') return [arrowA, arrowB];
+      if (selector === '.dimension-record') return [];
+      return [];
+    },
+  };
+  prepareDimensionPresentationClone(null, cloneGroup, {
+    entity: {
+      type: 'dimension-line',
+      subtype: 'horizontal',
+      dimensionMode: 'driven',
+      start: [0, 0],
+      end: [100, 0],
+      measureStart: [0, 0],
+      measureEnd: [100, 0],
+      label: [50, 30],
+      text: 'Width = 100.013',
+    },
+  });
+
+  const exportScale = 5;
+  assert.equal(updateDimensionPresentationScale(cloneGroup, exportScale), 1);
+  assert.equal(Number(text.getAttribute('font-size')) * exportScale, 14);
+  assert.equal(text.textContent, '100.013');
+
+  const pathValues = path.getAttribute('d').match(/[-+]?(?:\d+\.?\d*|\.\d+)/g).map(Number);
+  const textOffsetPixels = Math.abs(Number(text.getAttribute('y')) - pathValues[1]) * exportScale;
+  assert.ok(Math.abs(textOffsetPixels - 14) < 1e-9);
+
+  const arrowValues = arrowA.getAttribute('d').match(/[-+]?(?:\d+\.?\d*|\.\d+)/g).map(Number);
+  const tip = arrowValues.slice(0, 2);
+  const baseCenter = [
+    (arrowValues[2] + arrowValues[4]) / 2,
+    (arrowValues[3] + arrowValues[5]) / 2,
+  ];
+  const arrowLengthPixels = Math.hypot(baseCenter[0] - tip[0], baseCenter[1] - tip[1]) * exportScale;
+  assert.ok(Math.abs(arrowLengthPixels - 12) < 1e-9);
 });
 
 test('dragging a radius dimension keeps its text attached to the leader landing', () => {

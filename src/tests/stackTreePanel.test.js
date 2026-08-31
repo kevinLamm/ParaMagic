@@ -1,0 +1,84 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+
+import { createStackTreeIndex } from '../../packages/paramagic-core/src/modules/StackArchitecture.js';
+import {
+  STACK_ENABLE_EXPRESSION_PLACEHOLDER,
+  stackDisclosureLabel,
+  stackIdForCanvasHover,
+  stackIdForRowHover,
+  stackStatusText,
+  stackToolbarAvailable,
+  stackVisibilityAvailable,
+  visibleStackIds,
+} from '../../packages/paramagic-core/src/modules/StackTreePanel.js';
+import { fixtureUuid } from './helpers/fixtureUuid.js';
+
+const stackId = (name) => fixtureUuid(`stack-tree-panel:${name}`);
+
+test('collapsed Stack descendants are absent from the visible tree order', () => {
+  const defaultId = stackId('default');
+  const parentId = stackId('parent');
+  const childId = stackId('child');
+  const grandchildId = stackId('grandchild');
+  const siblingId = stackId('sibling');
+  const index = createStackTreeIndex({ version: 3, stacks: [
+    { id: defaultId, name: 'Default', systemRole: 'default-stack' },
+    { id: parentId, name: 'Parent' },
+    { id: childId, name: 'Child', parentStackId: parentId },
+    { id: grandchildId, name: 'Grandchild', parentStackId: childId },
+    { id: siblingId, name: 'Sibling' },
+  ] });
+
+  assert.deepEqual(
+    visibleStackIds(index, new Set([defaultId, parentId, childId])),
+    [defaultId, parentId, childId, grandchildId, siblingId],
+  );
+  assert.deepEqual(
+    visibleStackIds(index, new Set([defaultId, childId])),
+    [defaultId, parentId, siblingId],
+  );
+});
+
+test('visibility control is available only while a Stack is effectively enabled', () => {
+  assert.equal(stackVisibilityAvailable({ enabled: true, effectiveEnabled: true }), true);
+  assert.equal(stackVisibilityAvailable({ enabled: false, enabledExpression: '1 < 2', effectiveEnabled: true }), true);
+  assert.equal(stackVisibilityAvailable({ enabled: false, enabledExpression: '', effectiveEnabled: false }), false);
+  assert.equal(stackVisibilityAvailable({ enabled: true, effectiveEnabled: false }), false);
+});
+
+test('Stack row status reserves its marker for activation errors', () => {
+  assert.equal(stackStatusText('Expression failed'), '!');
+  assert.equal(stackStatusText(''), '');
+  assert.equal(stackStatusText(null), '');
+});
+
+test('blank Stack enable expressions show the FALSE hint', () => {
+  assert.equal(STACK_ENABLE_EXPRESSION_PLACEHOLDER, 'FALSE');
+});
+
+test('Stack disclosure controls clearly label both tree states', () => {
+  assert.equal(stackDisclosureLabel(false, 'Frame'), 'Expand Frame');
+  assert.equal(stackDisclosureLabel(true, 'Frame'), 'Collapse Frame');
+});
+
+test('Stack toolbar is available to active Stacks and drawing containers, not the permanent drawing row', () => {
+  assert.equal(stackToolbarAvailable({ active: true }), true);
+  assert.equal(stackToolbarAvailable({ active: false }), false);
+  assert.equal(stackToolbarAvailable({ drawingContainer: true }), true);
+  assert.equal(stackToolbarAvailable({ drawingRoot: true }), false);
+});
+
+test('canvas geometry hover resolves the owning Stack for tree highlighting', () => {
+  assert.equal(stackIdForCanvasHover({ stackId: 'stack-b', recordId: 'line-b' }), 'stack-b');
+  assert.equal(stackIdForCanvasHover({ recordId: 'line-a' }, () => 'stack-a'), 'stack-a');
+  assert.equal(stackIdForCanvasHover({}, () => 'stack-a'), null);
+  assert.equal(stackIdForCanvasHover({ stackId: 'stack-a' }, () => null, 'stack-a'), null);
+  assert.equal(stackIdForCanvasHover({ stackId: 'stack-b' }, () => null, 'stack-a'), 'stack-b');
+});
+
+test('Stack row hover previews only non-active Stacks on the canvas', () => {
+  assert.equal(stackIdForRowHover('stack-b', 'stack-a'), 'stack-b');
+  assert.equal(stackIdForRowHover('stack-a', 'stack-a'), null);
+  assert.equal(stackIdForRowHover('stack-a', null), 'stack-a');
+});

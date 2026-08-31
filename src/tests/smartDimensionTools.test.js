@@ -8,9 +8,16 @@ import {
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
-import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 
 const normalLengthTolerance = (value) => DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(value));
+
+function semanticVariableKeys(controller, variableIds) {
+  return variableIds.map((id) => {
+    const variable = controller.model.variableById(id);
+    return `${variable.ownerId}:${variable.parameterKey}`;
+  });
+}
 
 const filletFeature = {
   kind: 'arc',
@@ -70,13 +77,7 @@ test('circle Smart Dimensions measure diameter while arc dimensions continue to 
 });
 
 test('Smart Dimensions retain the built-in origin as a point anchor', () => {
-  const origin = {
-    kind: 'point',
-    recordId: CANVAS_ORIGIN_RECORD_ID,
-    entityType: 'canvas-origin',
-    index: 0,
-    point: [0, 0],
-  };
+  const origin = canvasOriginPointFeature();
   const point = {
     kind: 'point',
     recordId: 'line-a',
@@ -87,7 +88,8 @@ test('Smart Dimensions retain the built-in origin as a point anchor', () => {
   const candidate = candidateFromSelections([origin, point], [8, -10], 'driving');
 
   assert.equal(candidate.type, 'dimension-line');
-  assert.equal(candidate.anchors.measureStart.recordId, CANVAS_ORIGIN_RECORD_ID);
+  assert.equal(candidate.anchors.measureStart.referenceRole, 'canvas-origin');
+  assert.equal(Object.hasOwn(candidate.anchors.measureStart, 'recordId'), false);
   assert.deepEqual(candidate.anchors.measureEnd, { type: 'point', recordId: 'line-a', index: 2 });
   assert.deepEqual([...dimensionAnchorRecordIds(candidate)], ['line-a']);
 });
@@ -239,7 +241,7 @@ test('linked-position routing forces a deterministic axis and blocks unsupported
   assert.equal(candidateFromSelections([{ ...derived, linkedPositionBlocked: true }, reference], [22, 45], 'driving'), null);
   assert.equal(candidateFromSelections([derived, { ...derived, linkedCopyId: 'copy-b' }], [22, 45], 'driving'), null);
   assert.equal(candidateFromSelections([derived, { kind: 'segment', recordId: 'line-b', entityType: 'line', index: 0, start: [0, 0], end: [10, 0] }], [22, 45], 'driving'), null);
-  assert.equal(candidateFromSelections([derived, { ...reference, recordId: CANVAS_ORIGIN_RECORD_ID }], [22, 45], 'driving'), null);
+  assert.equal(candidateFromSelections([derived, canvasOriginPointFeature()], [22, 45], 'driving'), null);
 });
 
 test('parallel edge dimensions use a cursor-independent perpendicular supporting-line distance', () => {
@@ -349,10 +351,11 @@ test('a line-to-line driving dimension removes its controlled axis from endpoint
 
   const endpoint = { kind: 'point', recordId: measured.id, index: 2 };
   const dragVariables = controller.dragVariableIdsForFeature(endpoint);
-  assert.ok(dragVariables.includes('drag-measured:end.x'));
-  assert.equal(dragVariables.includes('drag-measured:end.y'), false);
-  assert.ok(dragVariables.includes('drag-reference:start.y'));
-  assert.ok(dragVariables.includes('drag-reference:end.y'));
+  const dragVariableKeys = semanticVariableKeys(controller, dragVariables);
+  assert.ok(dragVariableKeys.includes('drag-measured:end.x'));
+  assert.equal(dragVariableKeys.includes('drag-measured:end.y'), false);
+  assert.ok(dragVariableKeys.includes('drag-reference:start.y'));
+  assert.ok(dragVariableKeys.includes('drag-reference:end.y'));
   controller.beginDrag(dragVariables);
   const preview = controller.updateEntities([{
     ...baseline,
@@ -378,7 +381,10 @@ test('axis dimensions stored with point anchors hold the opposite anchor during 
   ], [70, 10], 'driving');
   assert.ok(controller.addDimension(candidate).result);
 
-  const dragVariables = controller.dragVariableIdsForFeature({ kind: 'point', recordId: measured.id, index: 2 });
+  const dragVariables = semanticVariableKeys(
+    controller,
+    controller.dragVariableIdsForFeature({ kind: 'point', recordId: measured.id, index: 2 }),
+  );
   assert.ok(dragVariables.includes('anchor-measured:end.x'));
   assert.equal(dragVariables.includes('anchor-measured:end.y'), false);
   assert.ok(dragVariables.includes('anchor-reference:start.y'));

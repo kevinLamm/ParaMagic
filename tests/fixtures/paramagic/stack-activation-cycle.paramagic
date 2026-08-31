@@ -1,0 +1,80 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 1,
+  "name": "Stack Activation Cycle",
+  "drawingId": "20000000-0000-4000-8000-000000000001",
+  "identityArchitectureVersion": 1,
+  "stackArchitectureVersion": 3,
+  "drawingUnit": "mm",
+  "dxfExportUnit": "mm",
+  "filletRadius": 1,
+  "entities": [],
+  "constraints": [],
+  "parameters": [
+    {
+      "id": "20000000-0000-4000-8000-000000000201",
+      "kind": "dimension",
+      "name": "d1",
+      "stackId": "20000000-0000-4000-8000-000000000011",
+      "expression": "20 mm",
+      "value": 20,
+      "unit": "mm",
+      "computed": true,
+      "driving": false,
+      "order": 0
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000202",
+      "kind": "dimension",
+      "name": "d1",
+      "stackId": "20000000-0000-4000-8000-000000000012",
+      "expression": "20 mm",
+      "value": 20,
+      "unit": "mm",
+      "computed": true,
+      "driving": false,
+      "order": 1
+    }
+  ],
+  "dimensionAnnotations": [],
+  "classes": [
+    {
+      "id": "20000000-0000-4000-8000-000000000020",
+      "name": "X",
+      "systemRole": "default-class",
+      "removable": false
+    }
+  ],
+  "activeClassId": "20000000-0000-4000-8000-000000000020",
+  "extensions": {
+    "stacks": {
+      "version": 3,
+      "activeStackId": "20000000-0000-4000-8000-000000000010",
+      "stacks": [
+        {
+          "id": "20000000-0000-4000-8000-000000000010",
+          "parentStackId": null,
+          "order": 0,
+          "name": "Default",
+          "enabledExpression": "TRUE",
+          "systemRole": "default-stack"
+        },
+        {
+          "id": "20000000-0000-4000-8000-000000000011",
+          "parentStackId": null,
+          "order": 1,
+          "name": "Support A",
+          "enabledExpression": "d1@Support B > 10 mm"
+        },
+        {
+          "id": "20000000-0000-4000-8000-000000000012",
+          "parentStackId": null,
+          "order": 2,
+          "name": "Support B",
+          "enabledExpression": "d1@Support A > 10 mm"
+        }
+      ]
+    }
+  },
+  "documentContext": { "fileName": "Stack Activation Cycle" }
+}

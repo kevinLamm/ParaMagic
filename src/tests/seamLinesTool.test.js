@@ -14,6 +14,7 @@ import {
   seamLineSourceReference,
 } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
 import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 const inward = (_feature, _point) => [50, 50];
 
@@ -361,7 +362,7 @@ test('a circular seam offsets outward when the host interior is outward', () => 
 
 test('Seam Line V2 normalizes durable intent without generated geometry', () => {
   const feature = { recordId: 'shape', sourceId: 'shape', kind: 'segment', index: 2 };
-  assert.deepEqual(normalizeSeamLineExtension({
+  const normalized = normalizeSeamLineExtension({
     definitions: [{
       regionId: 'shape',
       recordIds: ['shape'],
@@ -371,9 +372,12 @@ test('Seam Line V2 normalizes durable intent without generated geometry', () => 
         { ...seamLineEdgeReference(feature), enabled: true },
       ],
     }],
-  }), {
+  });
+  assert.equal(isUuid(normalized.definitions[0].id), true);
+  assert.deepEqual(normalized, {
     version: 2,
     definitions: [{
+      id: normalized.definitions[0].id,
       regionId: 'shape',
       recordIds: ['shape'],
       defaultEnabled: false,

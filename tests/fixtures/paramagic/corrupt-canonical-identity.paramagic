@@ -1,0 +1,46 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 4,
+  "identityArchitectureVersion": 1,
+  "drawingId": "53f0eca8-f09d-4e31-b9ad-69d12d2cb7de",
+  "name": "Corrupt Canonical Identity",
+  "drawingUnit": "in",
+  "dxfExportUnit": "in",
+  "filletRadius": 25.4,
+  "entities": [
+    {
+      "id": "malformed-canonical-id",
+      "type": "line",
+      "start": [0, 0],
+      "end": [100, 0],
+      "stackId": "b2537951-8ddf-4ce4-8e56-e3cd2d7e7f5e",
+      "classId": "4fd30d4e-a2a7-4e30-9070-eb53a6eb6b56"
+    }
+  ],
+  "constraints": [],
+  "parameters": [],
+  "dimensionAnnotations": [],
+  "classes": [
+    {
+      "id": "4fd30d4e-a2a7-4e30-9070-eb53a6eb6b56",
+      "name": "X",
+      "systemRole": "default-class",
+      "removable": false
+    }
+  ],
+  "activeClassId": "4fd30d4e-a2a7-4e30-9070-eb53a6eb6b56",
+  "extensions": {
+    "stacks": {
+      "version": 2,
+      "activeStackId": "b2537951-8ddf-4ce4-8e56-e3cd2d7e7f5e",
+      "stacks": [
+        {
+          "id": "b2537951-8ddf-4ce4-8e56-e3cd2d7e7f5e",
+          "name": "Default",
+          "systemRole": "default-stack",
+          "removable": false
+        }
+      ]
+    }
+  }
+}

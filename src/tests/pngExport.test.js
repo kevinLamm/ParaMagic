@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   PNG_EXPORT_FORMATS,
+  PNG_EXPORT_CAPTURE_DENSITY,
   PNG_EXPORT_PADDING_PIXELS,
+  applyPngValueOnlyDimensionText,
   assertPngRasterSourcesEmbedded,
   encodePngAtCaptureSize,
   fittedPngExportViewport,
@@ -14,6 +16,7 @@ import {
 } from '../../packages/paramagic-core/src/modules/PngExport.js';
 
 test('PNG export chooses the supported ratio requiring the least bounding-box expansion', () => {
+  assert.equal(PNG_EXPORT_CAPTURE_DENSITY, 2);
   assert.equal(pngExportFormatForBounds({ x: 0, y: 0, width: 100, height: 90 }).ratio, '1:1');
   assert.equal(pngExportFormatForBounds({ x: 0, y: 0, width: 160, height: 90 }).ratio, '16:9');
   assert.equal(pngExportFormatForBounds({ x: 0, y: 0, width: 90, height: 160 }).ratio, '9:16');
@@ -28,7 +31,8 @@ test('PNG export chooses the supported ratio requiring the least bounding-box ex
   });
 });
 
-test('PNG viewport centers the total bounds with at least 20 output pixels on every side', () => {
+test('PNG viewport centers the total bounds with at least 50 output pixels on every side', () => {
+  assert.equal(PNG_EXPORT_PADDING_PIXELS, 50);
   const format = PNG_EXPORT_FORMATS.find(({ ratio }) => ratio === '16:9');
   const bounds = pngBoundsIncludingStroke({ x: -80, y: -45, width: 160, height: 90 }, 2);
   const viewport = fittedPngExportViewport(bounds, format.width, format.height);
@@ -42,6 +46,26 @@ test('PNG viewport centers the total bounds with at least 20 output pixels on ev
   assert.ok(Math.abs(viewport.paddingTop - bottomPadding) < 1e-9);
   assert.ok(Math.abs((viewport.width / viewport.height) - (16 / 9)) < 1e-12);
   assert.deepEqual(bounds, { x: -81, y: -46, width: 162, height: 92 });
+});
+
+test('PNG export requests exact Value Only dimension text independently of the live label', () => {
+  let appliedText = '';
+  let requestedId = '';
+  const textNode = { textContent: 'd1 = 100.013' };
+  const group = {
+    getAttribute: (name) => name === 'data-dimension-id' ? 'dimension-1' : null,
+    querySelector: (selector) => selector === '.dimension-text' ? textNode : null,
+  };
+  const root = { querySelectorAll: () => [group] };
+
+  applyPngValueOnlyDimensionText(root, (dimensionId) => {
+    requestedId = dimensionId;
+    return '100"';
+  });
+  appliedText = textNode.textContent;
+
+  assert.equal(requestedId, 'dimension-1');
+  assert.equal(appliedText, '100"');
 });
 
 test('PNG encoding saves the full selected capture size without dimension reduction', async () => {

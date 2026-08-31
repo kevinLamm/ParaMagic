@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import { ParameterRepository, parseExpression } from '../../packages/paramagic-core/src/modules/solver/ParameterRepository.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { dimensionDisplayText } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
-import { formatDrivenDimensionValue } from '../../packages/paramagic-core/src/modules/solver/Units.js';
+import {
+  formatDxfDimensionValue,
+  formatValueOnlyDimensionValue,
+} from '../../packages/paramagic-core/src/modules/solver/Units.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 
@@ -346,11 +349,123 @@ test('computed dimension parameters can drive dependent expressions', () => {
   let measured = 30;
   const dimension = repository.addDimension({ value: measured, driving: false });
   repository.setComputedResolver(dimension.id, () => measured);
-  const doubled = repository.createUser({ name: 'double_length', expression: 'd1 * 2' });
+  const doubled = repository.createUser({ name: 'double_length', expression: 'd1@Stack 1 * 2' });
   assert.equal(repository.value(doubled.id), 60);
   measured = 45;
   repository.evaluateAll({ strict: false });
   assert.equal(repository.value(doubled.id), 90);
+});
+
+test('dimensions are numbered per Stack and qualified references are case-insensitive', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({
+    activeStackId: 'front',
+    stacks: [
+      { id: 'front', name: 'Front Panel' },
+      { id: 'back', name: 'Back Panel' },
+    ],
+  }, { emit: false });
+  const front = repository.addDimension({ stackId: 'front', value: 10, driving: false });
+  const back = repository.addDimension({ stackId: 'back', value: 20, driving: false });
+  assert.equal(front.name, 'd1');
+  assert.equal(back.name, 'd1');
+  assert.equal(repository.evaluateExpression('d1@front panel + d1@BACK PANEL'), 30);
+  assert.throws(() => repository.evaluateExpression('d1'), /Unknown parameter/);
+  assert.equal(repository.evaluateExpression('d1', { stackId: 'front' }), 10);
+  assert.throws(() => repository.update(front.id, { name: 'width' }, { strict: true }), /d1, d2, d3/);
+  assert.equal(repository.get(front.id).name, 'd1');
+});
+
+test('the live dimension repository rejects legacy descriptive handles at every entry point', () => {
+  assert.throws(
+    () => new ParameterRepository().addDimension({ name: 'width', driving: true, expression: '10' }),
+    /d1, d2, d3/,
+  );
+  assert.throws(
+    () => new ParameterRepository().set({ id: 'legacy-width', name: 'width', expression: '10' }),
+    /d1, d2, d3/,
+  );
+  assert.throws(
+    () => new ParameterRepository().restore([{
+      id: 'legacy-width', name: 'width', kind: 'dimension', expression: '10', driving: true,
+    }]),
+    /d1, d2, d3/,
+  );
+});
+
+test('spaced user parameter names resolve by longest registered name without quotes', () => {
+  const repository = new ParameterRepository();
+  repository.createUser({ name: 'Waist', expression: '10' });
+  repository.createUser({ name: 'Waist Ease', expression: '2' });
+  const result = repository.createUser({ name: 'Adjusted Waist', expression: 'Waist + Waist Ease' });
+  assert.equal(repository.value(result.id), 12);
+});
+
+test('renaming a spaced parameter updates only its exact symbol and preserves longer parameter names', () => {
+  const repository = new ParameterRepository();
+  const waist = repository.createUser({ name: 'Waist', expression: '10' });
+  repository.createUser({ name: 'Waist Ease', expression: '2' });
+  const result = repository.createUser({ name: 'Adjusted Waist', expression: 'Waist + Waist Ease' });
+
+  repository.update(waist.id, { name: 'Body Waist' }, { strict: true });
+
+  assert.equal(repository.get(result.id).expression, 'Body Waist + Waist Ease');
+  assert.equal(repository.value(result.id), 12);
+});
+
+test('expression lookup exposes qualified dimension names and keeps local aliases optional', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({
+    activeStackId: 'stack-a',
+    stacks: [
+      { id: 'stack-default', name: 'Default' },
+      { id: 'stack-a', name: 'Front Panel' },
+      { id: 'stack-b', name: 'Back Panel' },
+    ],
+  });
+  repository.addDimension({ id: 'front-d1', name: 'd1', stackId: 'stack-a', driving: true, expression: '10', unit: 'mm' });
+  repository.addDimension({ id: 'back-d1', name: 'd1', stackId: 'stack-b', driving: true, expression: '20', unit: 'mm' });
+  const qualified = repository.expressionSymbols({ stackId: 'stack-a' });
+  assert.ok(qualified.some(({ name }) => name === 'd1@Front Panel'));
+  assert.ok(qualified.some(({ name }) => name === 'd1@Back Panel'));
+  assert.equal(qualified.some(({ name }) => name === 'd1'), false);
+  assert.ok(repository.expressionSymbols({ stackId: 'stack-a', includeLocalAliases: true })
+    .some(({ name, alias }) => name === 'd1' && alias));
+});
+
+test('global expressions report a disabled dimension source by qualified Stack name', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({ stacks: [
+    { id: 'stack-default', name: 'Default', systemRole: 'default-stack' },
+    { id: 'stack-structure', name: 'Structure' },
+  ] }, { emit: false });
+  const length = repository.addDimension({
+    id: 'structure-length', name: 'd1', stackId: 'stack-structure', value: 120,
+    driving: false, computed: true,
+  });
+  const result = repository.createUser({ name: 'Support Required', expression: 'd1@Structure >= 100' });
+
+  repository.setEnabledStackIds(['stack-default'], { emit: false });
+
+  assert.match(repository.get(result.id).error, /d1@Structure/);
+  assert.match(repository.get(result.id).error, /Stack "Structure" is disabled/);
+  assert.throws(() => repository.evaluateExpression('d1@Structure > 0'), /unavailable.*Structure.*disabled/i);
+
+  repository.setEnabledStackIds(['stack-default', 'stack-structure'], { emit: false });
+  assert.equal(repository.get(result.id).error, null);
+  assert.equal(repository.value(result.id), true);
+  assert.equal(repository.get(length.id).id, length.id);
+});
+
+test('renaming a Stack rewrites qualified expressions and preserves dimension identity', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({ stacks: [{ id: 'front', name: 'Front Panel' }] }, { emit: false });
+  const dimension = repository.addDimension({ stackId: 'front', value: 15, driving: false });
+  const global = repository.createUser({ name: 'Result', expression: 'd1@Front Panel * 2' });
+  repository.setStackState({ stacks: [{ id: 'front', name: 'Bodice Front' }] }, { emit: false });
+  assert.equal(repository.get(global.id).expression, 'd1@Bodice Front * 2');
+  assert.equal(repository.value(global.id), 30);
+  assert.equal(repository.get(dimension.id).stackId, 'front');
 });
 
 test('computed dimension refresh can be scoped to an interactive constraint component', () => {
@@ -532,14 +647,20 @@ test('drawing dimensions default to inches and support all three display modes',
   assert.equal(controller.getDimensionText(id, 'value'), '10');
   assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = 10');
 
+  assert.equal(controller.updateDimensionAnnotation(id, {
+    ...added.entity,
+    includeInValueOnly: true,
+  }), true);
+  assert.equal(controller.getDimensionText(id, 'value'), '10"');
+
   const result = controller.setDimension(id, 'if(yes, 12 in, 4 in)');
   assert.ok(['converged', 'unchanged'].includes(result.status));
   assert.equal(controller.getDimensionText(id, 'expression'), 'd1 = if(yes, 12, 4)');
   assert.equal(controller.getDimensionText(id, 'named-value'), 'd1 = 12');
-  assert.equal(controller.getDimensionText(id, 'value'), '12');
+  assert.equal(controller.getDimensionText(id, 'value'), '12"');
 });
 
-test('only driven value-only dimensions display units using architectural symbols', () => {
+test('Driven-format Value Only dimensions display units using architectural symbols', () => {
   const controller = createSolverController();
   controller.loadSketch({
     drawingUnit: 'in',
@@ -562,18 +683,18 @@ test('only driven value-only dimensions display units using architectural symbol
   assert.equal(controller.getDimensionText('d1', 'expression'), 'd1 = 82');
   assert.equal(controller.getDimensionText('d1', 'named-value'), 'd1 = 82');
   assert.equal(controller.getDimensionText('d1', 'value'), '82"');
-  assert.equal(formatDrivenDimensionValue(914.4, 'ft'), "3'");
-  assert.equal(formatDrivenDimensionValue(90, 'deg'), '90°');
-  assert.equal(formatDrivenDimensionValue(250, 'mm'), '250 mm');
+  assert.equal(formatDxfDimensionValue(914.4, 'ft'), "3'");
+  assert.equal(formatDxfDimensionValue(90, 'deg'), '90°');
+  assert.equal(formatDxfDimensionValue(250, 'mm'), '250 mm');
 });
 
-test('driven dimension display rounds inches to quarters and millimeters to whole numbers', () => {
-  assert.equal(formatDrivenDimensionValue(23.599 * 25.4, 'in'), '23.5"');
-  assert.equal(formatDrivenDimensionValue(23.63 * 25.4, 'in'), '23.75"');
-  assert.equal(formatDrivenDimensionValue(24 * 25.4, 'in'), '24"');
-  assert.equal(formatDrivenDimensionValue(250.49, 'mm'), '250 mm');
-  assert.equal(formatDrivenDimensionValue(250.5, 'mm'), '251 mm');
-  assert.equal(formatDrivenDimensionValue(250.49, 'cm'), '25.049 cm');
+test('DXF dimension display rounds inches to thirty-seconds and millimeters to whole numbers', () => {
+  assert.equal(formatDxfDimensionValue(1.109 * 25.4, 'in'), '1.09375"');
+  assert.equal(formatDxfDimensionValue(1.11 * 25.4, 'in'), '1.125"');
+  assert.equal(formatDxfDimensionValue(24 * 25.4, 'in'), '24"');
+  assert.equal(formatDxfDimensionValue(250.49, 'mm'), '250 mm');
+  assert.equal(formatDxfDimensionValue(250.5, 'mm'), '251 mm');
+  assert.equal(formatDxfDimensionValue(250.49, 'cm'), '25.049 cm');
 
   const controller = createSolverController();
   controller.dimensions.restore([{
@@ -581,7 +702,15 @@ test('driven dimension display rounds inches to quarters and millimeters to whol
       value: 23.599 * 25.4, unit: 'in', driving: false, computed: true, order: 0,
   }]);
   assert.equal(controller.getDimensionText('d1', 'named-value'), 'd1 = 23.599');
-  assert.equal(controller.getDimensionText('d1', 'value'), '23.5"');
+  assert.equal(controller.getDimensionText('d1', 'value'), '23.625"');
+});
+
+test('Value Only presentation rounds inches to the nearest eighth', () => {
+  assert.equal(formatValueOnlyDimensionValue(1.0624 * 25.4, 'in'), '1"');
+  assert.equal(formatValueOnlyDimensionValue(1.0626 * 25.4, 'in'), '1.125"');
+  assert.equal(formatValueOnlyDimensionValue(1.1874 * 25.4, 'in'), '1.125"');
+  assert.equal(formatValueOnlyDimensionValue(1.1876 * 25.4, 'in'), '1.25"');
+  assert.equal(formatValueOnlyDimensionValue(24 * 25.4, 'in'), '24"');
 });
 
 test('display formatting converts internal millimetres into the requested unit', () => {

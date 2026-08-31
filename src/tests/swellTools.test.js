@@ -211,9 +211,18 @@ test('external entity point constraints retain a reactive Swell-derived target',
       swellSourceId: 'line',
     },
     { kind: 'point', recordId: 'external-line', index: 2 },
-  ], { id: 'constraint-1', type: 'Point-on Line' });
+  ], {
+    id: 'constraint-1',
+    type: 'Point-on Line',
+    stackId: 'stack-a',
+    participantStackIds: ['stack-b'],
+    sourceRelationshipId: 'source-constraint-1',
+  });
 
   assert.equal(request.id, 'constraint-1');
+  assert.equal(request.stackId, 'stack-a');
+  assert.deepEqual(request.participantStackIds, ['stack-b']);
+  assert.equal(request.sourceRelationshipId, 'source-constraint-1');
   assert.deepEqual(request.externalTarget, {
     type: 'swell-derived',
     derivedRef: { kind: 'segment', recordId: 'swell-derived::line::0::swell-1', index: 0 },

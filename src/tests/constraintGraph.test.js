@@ -6,10 +6,10 @@ import { ConstraintRegistry } from '../../packages/paramagic-core/src/modules/so
 import { DimensionRepository, solveLevenbergMarquardt } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { SketchModel } from '../../packages/paramagic-core/src/modules/solver/SolverModel.js';
-import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 
-function addHorizontalLine(model, id, xOffset = 0) {
-  model.addEntity({ id, type: 'line', start: [xOffset, 0], end: [xOffset + 10, 3] });
+function addHorizontalLine(model, id, xOffset = 0, stackId = null) {
+  model.addEntity({ id, type: 'line', ...(stackId ? { stackId } : {}), start: [xOffset, 0], end: [xOffset + 10, 3] });
   model.addConstraint({
     id: `horizontal-${id}`,
     type: 'Horizontal',
@@ -21,6 +21,14 @@ function componentSignature(graph) {
   return [...graph.components.values()]
     .map((component) => [...component.variableIds].sort().join('|'))
     .sort();
+}
+
+function variableFor(model, ownerId, parameterKey) {
+  return model.binding(ownerId)?.variables.get(parameterKey) || null;
+}
+
+function variableIdFor(model, ownerId, parameterKey) {
+  return variableFor(model, ownerId, parameterKey)?.id || null;
 }
 
 test('constraint graph separates disconnected geometry and merges bridged components', () => {
@@ -80,8 +88,9 @@ test('an active Stack solve includes inactive geometry only through transitive c
 
 test('interactive updates return only the edited dependency component for presentation', () => {
   const controller = createSolverController();
-  addHorizontalLine(controller.model, 'active-line', 0);
-  addHorizontalLine(controller.model, 'inactive-unrelated-line', 30);
+  controller.setStackState({ stacks: [{ id: 'stack-a', name: 'A' }, { id: 'stack-b', name: 'B' }] });
+  addHorizontalLine(controller.model, 'active-line', 0, 'stack-a');
+  addHorizontalLine(controller.model, 'inactive-unrelated-line', 30, 'stack-b');
 
   const outcome = controller.updateEntities([{
     ...controller.getEntity('active-line'),
@@ -118,7 +127,7 @@ test('entity removal incrementally deletes its variables and splits only the tou
     ],
   });
   const graph = controller.getConstraintGraph();
-  const untouchedComponentId = graph.componentForVariable.get('line-c:start.x');
+  const untouchedComponentId = graph.componentForVariable.get(variableIdFor(controller.model, 'line-c', 'start.x'));
   const untouchedComponent = graph.components.get(untouchedComponentId);
   graph.rebuild = () => {
     throw new Error('entity removal should not rebuild the full graph');
@@ -158,7 +167,7 @@ test('curve point insertion remaps indexed constraints without rebuilding unrela
   });
   const unrelatedAnnotation = controller.dimensionAnnotations.get('unrelated-dimension');
   const graph = controller.getConstraintGraph();
-  const unrelatedComponentId = graph.componentForVariable.get('line-unrelated:start.x');
+  const unrelatedComponentId = graph.componentForVariable.get(variableIdFor(controller.model, 'line-unrelated', 'start.x'));
   const unrelatedComponent = graph.components.get(unrelatedComponentId);
   graph.rebuild = () => {
     throw new Error('curve remapping should not rebuild the full graph');
@@ -173,9 +182,11 @@ test('curve point insertion remaps indexed constraints without rebuilding unrela
   const constraint = controller.model.constraints.get('curve-point-link');
   assert.equal(constraint.featureRefs[0].index, 3);
   assert.equal(controller.constraintGraph, graph);
-  assert.equal(graph.variablesById.has('curve-a:p3.x'), true);
-  assert.equal(graph.constraintVariables.get('constraint:curve-point-link').has('curve-a:p3.x'), true);
-  assert.equal(graph.constraintVariables.get('constraint:curve-point-link').has('curve-a:p2.x'), false);
+  const insertedVariableId = variableIdFor(controller.model, 'curve-a', 'p3.x');
+  const precedingVariableId = variableIdFor(controller.model, 'curve-a', 'p2.x');
+  assert.equal(graph.variablesById.has(insertedVariableId), true);
+  assert.equal(graph.constraintVariables.get('constraint:curve-point-link').has(insertedVariableId), true);
+  assert.equal(graph.constraintVariables.get('constraint:curve-point-link').has(precedingVariableId), false);
   assert.equal(graph.components.get(unrelatedComponentId), unrelatedComponent);
   assert.equal(controller.dimensionAnnotations.get('curve-dimension').anchors.start.index, 3);
   assert.equal(controller.dimensionAnnotations.get('unrelated-dimension'), unrelatedAnnotation);
@@ -187,7 +198,7 @@ test('curve point insertion remaps indexed constraints without rebuilding unrela
     { type: 'delete', index: 1 },
   );
   assert.equal(controller.model.constraints.get('curve-point-link').featureRefs[0].index, 2);
-  assert.equal(graph.variablesById.has('curve-a:p3.x'), false);
+  assert.equal(graph.variablesById.has(insertedVariableId), false);
   assert.deepEqual(componentSignature(graph), componentSignature(new ConstraintGraph(controller.model)));
 });
 
@@ -226,7 +237,7 @@ test('derived feature source changes reconnect only constraints that reference t
   });
 
   const linkedOwners = new Set([...graph.scopeForSeeds({ constraintIds: ['fillet-link'] }).variableIds]
-    .map((id) => graph.variablesById.get(id)?.owner));
+    .map((id) => graph.variablesById.get(id)?.ownerId));
   assert.deepEqual(linkedOwners, new Set(['source-a', 'source-c', 'marker']));
   assert.equal(graph.hasDerivedDependency('source-b'), false);
   assert.equal(graph.hasDerivedDependency('source-c'), true);
@@ -346,8 +357,8 @@ test('a free-floating component uses and releases a translation gauge during sol
   assert.equal(result.status, 'converged');
   assert.equal(result.jacobianStats.mode, 'matrix-free');
   assert.deepEqual(result.translationGaugeVariableIds, [
-    'gauge-line-a:start.x',
-    'gauge-line-a:start.y',
+    variableIdFor(model, 'gauge-line-a', 'start.x'),
+    variableIdFor(model, 'gauge-line-a', 'start.y'),
   ]);
   assert.deepEqual(model.entity('gauge-line-a').start, anchoredPoint);
   assert.ok(model.allVariables().every((variable) => variable.locked === false));
@@ -367,8 +378,8 @@ test('explicit drag locks take precedence over a temporary translation gauge', (
       { kind: 'point', recordId: 'moving-point', index: 0 },
     ],
   });
-  model.variableById('locked-point:point.x').locked = true;
-  model.variableById('locked-point:point.y').locked = true;
+  variableFor(model, 'locked-point', 'point.x').locked = true;
+  variableFor(model, 'locked-point', 'point.y').locked = true;
   const graph = new ConstraintGraph(model);
   const result = solveConstraintScope({
     model: graph.scopedModel(graph.scopeForSeeds({ constraintIds: ['locked-coincident'] })),
@@ -384,8 +395,8 @@ test('explicit drag locks take precedence over a temporary translation gauge', (
   assert.deepEqual(model.entity('locked-point').point, [10, 20]);
   assert.ok(Math.abs(model.entity('moving-point').point[0] - 10) < 1e-8);
   assert.ok(Math.abs(model.entity('moving-point').point[1] - 20) < 1e-8);
-  assert.equal(model.variableById('locked-point:point.x').locked, true);
-  assert.equal(model.variableById('locked-point:point.y').locked, true);
+  assert.equal(variableFor(model, 'locked-point', 'point.x').locked, true);
+  assert.equal(variableFor(model, 'locked-point', 'point.y').locked, true);
 });
 
 test('a canvas-origin relationship takes precedence over a temporary translation gauge', () => {
@@ -395,7 +406,7 @@ test('a canvas-origin relationship takes precedence over a temporary translation
     id: 'origin-coincident',
     type: 'Coincident',
     featureRefs: [
-      { kind: 'point', recordId: CANVAS_ORIGIN_RECORD_ID, index: 0 },
+      canvasOriginPointFeature(),
       { kind: 'point', recordId: 'origin-point', index: 0 },
     ],
   });
@@ -446,8 +457,9 @@ test('an explicit Fixed constraint takes precedence over a temporary translation
 
 test('controller entity updates solve only the seeded connected component', () => {
   const controller = createSolverController();
-  controller.addEntity({ id: 'line-a', type: 'line', start: [0, 0], end: [10, 0] });
-  controller.addEntity({ id: 'line-b', type: 'line', start: [30, 0], end: [40, 0] });
+  controller.setStackState({ stacks: [{ id: 'stack-a', name: 'A' }, { id: 'stack-b', name: 'B' }] });
+  controller.addEntity({ id: 'line-a', type: 'line', stackId: 'stack-a', start: [0, 0], end: [10, 0] });
+  controller.addEntity({ id: 'line-b', type: 'line', stackId: 'stack-b', start: [30, 0], end: [40, 0] });
   controller.addConstraint({
     id: 'horizontal-a',
     type: 'Horizontal',
@@ -472,17 +484,19 @@ test('controller entity updates solve only the seeded connected component', () =
   ]);
 
   assert.equal(result.status, 'converged');
-  assert.equal(result.solveScope.mode, 'component');
+  assert.equal(result.solveScope.mode, 'stack-set');
+  assert.deepEqual(result.solveScope.stackIds, ['stack-a']);
   assert.equal(result.solveScope.variableCount, 4);
   assert.deepEqual(result.changedEntityIds, ['line-a']);
   assert.deepEqual(controller.getEntity('line-b'), beforeB);
-  assert.equal(fullSnapshotCount, 1, 'interactive output should use a delta; only emission may clone the full drawing');
+  assert.equal(fullSnapshotCount, 0, 'interactive solving and emission should avoid cloning unrelated Stacks');
 });
 
 test('dimension edits snapshot and solve only their affected component', () => {
   const controller = createSolverController();
-  controller.addEntity({ id: 'circle-a', type: 'circle', center: [0, 0], radius: 10 });
-  controller.addEntity({ id: 'circle-b', type: 'circle', center: [50, 0], radius: 12 });
+  controller.setStackState({ stacks: [{ id: 'stack-a', name: 'A' }, { id: 'stack-b', name: 'B' }] });
+  controller.addEntity({ id: 'circle-a', type: 'circle', stackId: 'stack-a', center: [0, 0], radius: 10 });
+  controller.addEntity({ id: 'circle-b', type: 'circle', stackId: 'stack-b', center: [50, 0], radius: 12 });
   const dimensionA = controller.addDimension({
     type: 'radius-dimension',
     subtype: 'diameter',
@@ -490,6 +504,7 @@ test('dimension edits snapshot and solve only their affected component', () => {
     center: [0, 0],
     radius: 10,
     measuredValue: 20,
+    stackId: 'stack-a',
     anchors: {
       center: { type: 'center', recordId: 'circle-a' },
       radius: { type: 'radius', recordId: 'circle-a' },
@@ -502,6 +517,7 @@ test('dimension edits snapshot and solve only their affected component', () => {
     center: [50, 0],
     radius: 12,
     measuredValue: 24,
+    stackId: 'stack-b',
     anchors: {
       center: { type: 'center', recordId: 'circle-b' },
       radius: { type: 'radius', recordId: 'circle-b' },
@@ -518,7 +534,8 @@ test('dimension edits snapshot and solve only their affected component', () => {
   const result = controller.setDimension(dimensionA.entity.dimensionId, '40 mm');
 
   assert.ok(['converged', 'unchanged'].includes(result.status), result.message);
-  assert.equal(result.solveScope.mode, 'component');
+  assert.equal(result.solveScope.mode, 'stack-set');
+  assert.deepEqual(result.solveScope.stackIds, ['stack-a']);
   assert.equal(result.solveScope.entityCount, 1);
   assert.ok(Math.abs(controller.getEntity('circle-a').radius - 20) < 20e-3);
   assert.deepEqual(controller.getEntity('circle-b'), beforeB);
@@ -547,7 +564,7 @@ test('global solves partition disconnected constrained geometry into independent
   const result = controller.solve({ fullSolve: true, tolerance: 1e-8 });
 
   assert.equal(result.status, 'converged');
-  assert.equal(result.solveScope.mode, 'components');
+  assert.equal(result.solveScope.mode, 'stack-partitions');
   assert.equal(result.solveScope.constrainedComponentCount, 80);
   assert.equal(result.solveScope.largestVariableCount, 4);
   assert.equal(result.jacobianStats.mode, 'blocks');
@@ -595,7 +612,7 @@ test('global component solving rolls back earlier components when a later compon
   assert.equal(result.status, 'failed');
   assert.deepEqual(result.changedEntityIds, []);
   assert.deepEqual(controller.getGeometrySnapshot(), before);
-  assert.equal(result.solveScope.mode, 'components');
+  assert.equal(result.solveScope.mode, 'stack-partitions');
   assert.equal(result.solveScope.solvedComponentCount, 2);
 });
 
@@ -622,23 +639,24 @@ test('drawing load restores constraints in bulk and indexes variables directly',
   const result = controller.loadSketch({ entities, constraints });
 
   assert.equal(result.status, 'unchanged');
-  assert.equal(result.solveScope.mode, 'components');
+  assert.equal(result.solveScope.mode, 'stack-partitions');
   assert.equal(result.solveScope.constrainedComponentCount, 200);
   assert.equal(refreshCount, 1);
-  assert.equal(controller.model.variableById('loaded-fixed-point-199:point.x')?.owner, 'loaded-fixed-point-199');
+  assert.equal(variableFor(controller.model, 'loaded-fixed-point-199', 'point.x')?.ownerId, 'loaded-fixed-point-199');
 });
 
 test('the sketch model variable index tracks geometry variable additions and removals', () => {
   const model = new SketchModel();
   model.addEntity({ id: 'indexed-curve', type: 'curve', points: [[0, 0], [5, 5], [10, 0]] });
-  const stableVariable = model.variableById('indexed-curve:p2.x');
+  const stableVariable = variableFor(model, 'indexed-curve', 'p2.x');
 
   model.updateEntity({ id: 'indexed-curve', type: 'curve', points: [[0, 0], [2, 3], [5, 5], [10, 0]] });
-  assert.equal(model.variableById('indexed-curve:p2.x'), stableVariable);
-  assert.equal(model.variableById('indexed-curve:p3.y')?.owner, 'indexed-curve');
+  assert.equal(variableFor(model, 'indexed-curve', 'p2.x'), stableVariable);
+  const removedVariableId = variableIdFor(model, 'indexed-curve', 'p3.y');
+  assert.equal(variableFor(model, 'indexed-curve', 'p3.y')?.ownerId, 'indexed-curve');
 
   model.updateEntity({ id: 'indexed-curve', type: 'curve', points: [[0, 0], [10, 0]] });
-  assert.equal(model.variableById('indexed-curve:p3.y'), null);
+  assert.equal(model.variableById(removedVariableId), null);
   model.removeEntity('indexed-curve');
-  assert.equal(model.variableById('indexed-curve:p0.x'), null);
+  assert.equal(model.variablesById.has(stableVariable.id), false);
 });

@@ -128,6 +128,38 @@ test('open and construction geometry expose visibility as individual objects', (
   assert.equal(system.isRecordShown('construction-line'), false);
 });
 
+test('additional tool-owned records expose expression-driven visibility', () => {
+  const record = {
+    id: 'text-label',
+    recordType: 'text',
+    entity: { id: 'text-label', type: 'text', text: 'Label' },
+    group: presentationNode(),
+  };
+  const system = createObjectVisibilitySystem({
+    records: [record],
+    selectedIds: new Set([record.id]),
+    additionalVisibilityRecord: (candidate) => candidate.recordType === 'text',
+    evaluateExpression: (expression) => ({ TRUE: true, FALSE: false, showLabel: false })[expression],
+    updateEntity: (entity) => entity,
+    applyChangedEntity: (entity) => { record.entity = entity; },
+  });
+
+  assert.deepEqual(system.selectedProperties(), {
+    canEditVisible: true,
+    visible: true,
+    mixedVisible: false,
+    visibleExpression: 'TRUE',
+    errors: { visible: null },
+  });
+  assert.equal(system.setSelectedVisibility({ visibleExpression: 'showLabel' }).success, true);
+  assert.equal(record.entity.appearance.visibleExpression, 'showLabel');
+  assert.equal(record.entity.appearance.visible, false);
+
+  system.syncPresentation();
+  assert.equal(record.group.classes.has('object-visibility-hidden'), true);
+  assert.equal(system.isRecordShown(record.id), false);
+});
+
 test('thumbnail visibility follows source ownership for arrays, symmetry, seams, and Boolean results', () => {
   const drawing = {
     entities: [

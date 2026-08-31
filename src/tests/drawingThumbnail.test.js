@@ -784,7 +784,7 @@ test('thumbnail callers can retain filled geometry while explicitly omitting dim
   assert.doesNotMatch(svg, />80<\/text>/);
 });
 
-test('thumbnail defaults match Value Only presentation by hiding driving dimensions and formatting driven values', () => {
+test('thumbnail Value Only presentation includes opted-in Driving Dimensions with Driven formatting', () => {
   const svg = createDrawingThumbnailSvg({
     parameters: [
       {
@@ -794,6 +794,10 @@ test('thumbnail defaults match Value Only presentation by hiding driving dimensi
       {
         id: 'driving-height', name: 'd2', kind: 'dimension', expression: '10 in',
         value: 254, unit: 'in', driving: true, computed: false, order: 1,
+      },
+      {
+        id: 'included-driving-height', name: 'd3', kind: 'dimension', expression: '12.5 in',
+        value: 317.5, unit: 'in', driving: true, computed: false, order: 2,
       },
     ],
     dimensionAnnotations: [
@@ -805,6 +809,11 @@ test('thumbnail defaults match Value Only presentation by hiding driving dimensi
         id: 'driving', dimensionId: 'driving-height', dimensionMode: 'driving',
         type: 'dimension-text', label: [20, 20], text: 'd2 = 10',
       },
+      {
+        id: 'included-driving', dimensionId: 'included-driving-height', dimensionMode: 'driving',
+        includeInValueOnly: true,
+        type: 'dimension-text', label: [30, 30], text: 'd3 = 12.5',
+      },
     ],
   });
 
@@ -812,6 +821,8 @@ test('thumbnail defaults match Value Only presentation by hiding driving dimensi
   assert.doesNotMatch(svg, /d1\s*=/);
   assert.doesNotMatch(svg, /d2\s*=/);
   assert.doesNotMatch(svg, />10<\/text>/);
+  assert.match(svg, />12\.5&quot;<\/text>/);
+  assert.doesNotMatch(svg, /d3\s*=/);
 });
 
 test('Value Only text identifies multi-curve length dimensions as perimeter measurements', () => {
@@ -835,6 +846,27 @@ test('Value Only text identifies multi-curve length dimensions as perimeter meas
     dimensionId: 'perimeter',
     text: 'MCL = 125 mm',
   }), 'PERIM 125 mm');
+});
+
+test('thumbnail Value Only text uses eighth-inch rounding while DXF text uses thirty-seconds', () => {
+  const evaluators = drawingThumbnailEvaluators({
+    drawingUnit: 'in',
+    parameters: [{
+      id: 'visual-value',
+      name: 'd1',
+      kind: 'dimension',
+      expression: '1.1 in',
+      value: 1.1 * 25.4,
+      unit: 'in',
+      driving: false,
+      computed: true,
+      order: 0,
+    }],
+  });
+  const annotation = { dimensionId: 'visual-value', type: 'dimension-text', text: 'd1 = 1.1' };
+
+  assert.equal(evaluators.dimensionValueText(annotation), '1.125"');
+  assert.equal(evaluators.dimensionDxfValueText(annotation), '1.09375"');
 });
 
 test('dimension thumbnails use the rendered offset line instead of connecting measured points', () => {

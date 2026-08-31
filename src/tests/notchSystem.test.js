@@ -5,6 +5,7 @@ import {
   createNotchLocationMemory,
   createNotchSystem,
   notchDependsOnRecordIds,
+  prepareNotchDerivativePresentationClone,
   prepareNotchValueOnlyPresentationClone,
 } from '../../packages/paramagic-core/src/modules/NotchSystem.js';
 
@@ -48,6 +49,24 @@ test('Value Only Notch presentation keeps the physical notch and removes editing
   assert.equal(attributes.get('stroke'), '#000000');
   assert.equal(attributes.get('stroke-width'), '1.5');
   assert.equal(attributes.get('vector-effect'), 'non-scaling-stroke');
+});
+
+test('derived Notch presentation removes the non-editable orange position handle', () => {
+  let dotRemoved = false;
+  let hitRemoved = false;
+  const clone = {
+    querySelectorAll(selector) {
+      if (selector !== '.notch-dot, .notch-hit') return [];
+      return [
+        { remove: () => { dotRemoved = true; } },
+        { remove: () => { hitRemoved = true; } },
+      ];
+    },
+  };
+
+  assert.equal(prepareNotchDerivativePresentationClone(clone), clone);
+  assert.equal(dotRemoved, true);
+  assert.equal(hitRemoved, true);
 });
 
 function createSystem(features, records = []) {

@@ -22,8 +22,9 @@ test('Stack thumbnail sources include only owned canvas, array, and symmetric pr
   assert.equal(isStackThumbnailSourceNode(node({ classes: ['closed-constrained-region'], stackId }), stackId), false);
 });
 
-test('Value Only Stack thumbnails omit driving and construction presentation', () => {
-  assert.equal(isStackThumbnailSourceNode(node({ classes: ['canvas-record', 'dimension-driving'] }), 'stack-default'), false);
+test('Value Only Stack thumbnails include opted-in Driving Dimensions and omit excluded presentation', () => {
+  assert.equal(isStackThumbnailSourceNode(node({ classes: ['canvas-record', 'dimension-driving', 'dimension-export-excluded'] }), 'stack-default'), false);
+  assert.equal(isStackThumbnailSourceNode(node({ classes: ['canvas-record', 'dimension-driving'] }), 'stack-default'), true);
   assert.equal(isStackThumbnailSourceNode(node({ classes: ['canvas-record'], construction: true }), 'stack-default'), false);
   assert.equal(isStackThumbnailSourceNode(node({ classes: ['array-group'], construction: true }), 'stack-default'), true);
   assert.equal(isStackThumbnailSourceNode(node({ classes: ['canvas-record', 'dimension-driven'] }), 'stack-default'), true);

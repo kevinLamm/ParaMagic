@@ -13,8 +13,9 @@ import {
 import { SketchModel, Variable, createGeometryBinding } from '../../packages/paramagic-core/src/modules/solver/SolverModel.js';
 import { ConstraintRegistry } from '../../packages/paramagic-core/src/modules/solver/ConstraintRegistry.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
-import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 import { evaluateFillet, regularFilletConstraints } from '../../packages/paramagic-core/src/modules/FilletSystem.js';
+import { fixtureUuid } from './helpers/fixtureUuid.js';
 
 const near = (actual, expected, tolerance = 1e-4) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} was not within ${tolerance} of ${expected}`);
 const nearNormalSolve = (actual, expected) => near(
@@ -23,8 +24,12 @@ const nearNormalSolve = (actual, expected) => near(
   DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(expected)),
 );
 
+const variableFor = (model, ownerId, parameterKey) => (
+  model.binding(ownerId)?.variables.get(parameterKey) || null
+);
+
 test('normal solves use the reduced 1e-3 convergence tolerance', () => {
-  const variable = new Variable({ id: 'relaxed-x', value: 0, owner: 'relaxed-fixture' });
+  const variable = new Variable({ id: fixtureUuid('solver-relaxed-x'), value: 0, ownerId: fixtureUuid('solver-relaxed-owner') });
   const model = { allVariables: () => [variable], activeVariables: () => [variable] };
   const registry = {
     evaluate: () => ({ values: [5e-4], equations: [{ constraintId: 'small-residual' }] }),
@@ -370,8 +375,8 @@ test('serialized mixed drawing retains dense/block geometry parity after an edit
   const blocks = createSolverController({ jacobianMode: 'blocks' });
   assert.equal(dense.loadSketch(snapshot).status, 'unchanged');
   assert.equal(blocks.loadSketch(snapshot).status, 'unchanged');
-  dense.model.variableById('top:end.y').value += 2;
-  blocks.model.variableById('top:end.y').value += 2;
+  variableFor(dense.model, 'top', 'end.y').value += 2;
+  variableFor(blocks.model, 'top', 'end.y').value += 2;
 
   const denseResult = dense.solve({ fullSolve: true, tolerance: 1e-8 });
   const blockResult = blocks.solve({ fullSolve: true, tolerance: 1e-8 });
@@ -438,7 +443,7 @@ test('serialized arc-heavy drawing retains dense/block parity across derived fil
         id: `arc-heavy-${index}-marker-x`,
         type: 'Horizontal Distance',
         featureRefs: [
-          { kind: 'point', recordId: CANVAS_ORIGIN_RECORD_ID, index: 0 },
+          canvasOriginPointFeature(),
           { kind: 'point', recordId: marker.id, index: 0 },
         ],
         value: marker.point[0],
@@ -451,8 +456,8 @@ test('serialized arc-heavy drawing retains dense/block parity across derived fil
   assert.equal(dense.loadSketch(snapshot).status, 'unchanged');
   assert.equal(blocks.loadSketch(snapshot).status, 'unchanged');
   for (let index = 0; index < 12; index += 1) {
-    dense.model.variableById(`arc-heavy-${index}-marker:point.x`).value += 2;
-    blocks.model.variableById(`arc-heavy-${index}-marker:point.x`).value += 2;
+    variableFor(dense.model, `arc-heavy-${index}-marker`, 'point.x').value += 2;
+    variableFor(blocks.model, `arc-heavy-${index}-marker`, 'point.x').value += 2;
   }
 
   const denseResult = dense.solve({ fullSolve: true, tolerance: 1e-8 });
@@ -471,21 +476,13 @@ test('the built-in canvas origin resolves as an immutable solver point', () => {
   const controller = createSolverController();
   controller.addEntity({ id: 'point-a', type: 'point', point: [18, -11] });
 
-  assert.deepEqual(controller.model.resolvePoint({
-    kind: 'point',
-    recordId: CANVAS_ORIGIN_RECORD_ID,
-    index: 0,
-  }), [0, 0]);
-  assert.deepEqual(controller.variableIdsForFeature({
-    kind: 'point',
-    recordId: CANVAS_ORIGIN_RECORD_ID,
-    index: 0,
-  }), []);
+  assert.deepEqual(controller.model.resolvePoint(canvasOriginPointFeature()), [0, 0]);
+  assert.deepEqual(controller.variableIdsForFeature(canvasOriginPointFeature()), []);
 
   const outcome = controller.addConstraint({
     type: 'Coincident',
     featureRefs: [
-      { kind: 'point', recordId: CANVAS_ORIGIN_RECORD_ID, index: 0 },
+      canvasOriginPointFeature(),
       { kind: 'point', recordId: 'point-a', index: 0 },
     ],
   });
@@ -495,10 +492,11 @@ test('the built-in canvas origin resolves as an immutable solver point', () => {
   near(point.point[1], 0);
 
   const saved = controller.getSketchSnapshot();
-  assert.equal(saved.entities.some((entity) => entity.id === CANVAS_ORIGIN_RECORD_ID), false);
+  assert.equal(saved.entities.some((entity) => entity.entityType === 'canvas-origin'), false);
   const restored = createSolverController();
   assert.doesNotThrow(() => restored.loadSketch(saved));
-  assert.equal(restored.constraints()[0].featureRefs[0].recordId, CANVAS_ORIGIN_RECORD_ID);
+  assert.equal(restored.constraints()[0].featureRefs[0].referenceRole, 'canvas-origin');
+  assert.equal(Object.hasOwn(restored.constraints()[0].featureRefs[0], 'recordId'), false);
 });
 
 test('table solver bindings preserve rectangular corners when constrained', () => {
@@ -509,7 +507,7 @@ test('table solver bindings preserve rectangular corners when constrained', () =
     type: 'Coincident',
     featureRefs: [
       { kind: 'point', recordId: 'table-a', index: 0 },
-      { kind: 'point', recordId: CANVAS_ORIGIN_RECORD_ID, index: 0 },
+      canvasOriginPointFeature(),
     ],
   });
   assert.ok(outcome.constraint);
@@ -560,7 +558,7 @@ test('unsatisfiable interactive geometry previews restore the last valid compone
   assert.ok(controller.addConstraint({
     type: 'Coincident',
     featureRefs: [
-      { kind: 'point', recordId: CANVAS_ORIGIN_RECORD_ID, index: 0 },
+      canvasOriginPointFeature(),
       { kind: 'point', recordId: 'constrained-anchor', index: 0 },
     ],
   }).constraint);
@@ -803,10 +801,10 @@ test('LM cooperatively cancels during numerical work and restores strict final s
 
 test('dimension repository evaluates units and dependency expressions', () => {
   const dimensions = new DimensionRepository();
-  dimensions.set({ id: 'width', name: 'width', expression: '40 mm' });
-  dimensions.set({ id: 'pitch', name: 'pitch', expression: 'width / 2 + 1 cm' });
+  dimensions.set({ id: 'width', name: 'd1', expression: '40 mm' });
+  dimensions.set({ id: 'pitch', name: 'd2', expression: 'd1 / 2 + 1 cm' });
   assert.equal(dimensions.value('pitch'), 30);
-  assert.throws(() => dimensions.set({ id: 'width', name: 'width', expression: 'pitch' }), /cycle/i);
+  assert.throws(() => dimensions.set({ id: 'width', name: 'd1', expression: 'd2' }), /cycle/i);
 });
 
 test('geometry bindings round-trip current primitives with stable IDs', () => {
@@ -1017,7 +1015,7 @@ test('drag locks hold edited variables while connected geometry solves', () => {
 test('driving distance uses the central dimension repository', () => {
   const controller = createSolverController();
   const line = controller.addEntity({ id: 'line-a', type: 'line', start: [0, 0], end: [10, 0] });
-  controller.dimensions.set({ id: 'length', name: 'length', expression: '50 mm' });
+  controller.dimensions.set({ id: 'length', name: 'd1', expression: '50 mm' });
   const added = controller.addConstraint({
     type: 'Distance',
     anchors: {
@@ -1358,7 +1356,7 @@ test('an exact half-chord arc remains solvable when its connected chord is made 
       }).constraint);
     }
   }
-  controller.dimensions.set({ id: 'chord-length', name: 'chordLength', expression: '100 mm' });
+  controller.dimensions.set({ id: 'chord-length', name: 'd1', expression: '100 mm' });
   assert.ok(controller.addConstraint({
     type: 'Distance',
     anchors: {
@@ -1368,7 +1366,7 @@ test('an exact half-chord arc remains solvable when its connected chord is made 
     featureRefs: [],
     dimensionRef: 'chord-length',
   }).constraint);
-  controller.dimensions.set({ id: 'arc-radius', name: 'arcRadius', expression: 'chordLength/2' });
+  controller.dimensions.set({ id: 'arc-radius', name: 'd2', expression: 'd1/2' });
   assert.ok(controller.addConstraint({
     type: 'Radius',
     featureRefs: [{ kind: 'circle', recordId: arc.id }],

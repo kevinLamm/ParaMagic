@@ -9,8 +9,13 @@
     main { max-width: 900px; margin: auto; padding: 24px; background: white; border: 1px solid #d0d0d0; }
     #status[data-state="passed"] { color: #126b2d; }
     #status[data-state="failed"] { color: #a21d1d; }
-    #result { display: block; max-width: 100%; margin-top: 20px; border: 1px solid #d0d0d0; }
+    #result, #svg-result svg { display: block; max-width: 100%; margin-top: 20px; border: 1px solid #d0d0d0; }
     #source { position: fixed; left: -100000px; top: 0; visibility: hidden; }
+    .dimension-path, .dimension-extension { stroke: #06402b; stroke-width: .9; vector-effect: non-scaling-stroke; fill: none; }
+    .dimension-extension { stroke-width: .6; }
+    .dimension-arrow { stroke: #06402b; stroke-width: .7; vector-effect: non-scaling-stroke; fill: #06402b; }
+    .dimension-text { fill: #06402b; stroke: none; font: 14px Arial, sans-serif; }
+    .table-cell-editor { display: block; box-sizing: border-box; width: 100%; height: 100%; margin: 0; padding: 4px 3px 2px; border: 0; overflow: hidden; font: 14px/16.1px Arial, sans-serif; color: #202020; background: transparent; }
   </style>
 </head>
 <body>
@@ -18,6 +23,7 @@
     <h1>PNG export browser test</h1>
     <p id="status" data-state="running">Running the real browser rasterization path…</p>
     <pre id="details"></pre>
+    <div id="svg-result" aria-label="Generated SVG export"></div>
     <img id="result" alt="Generated PNG export" hidden />
   </main>
   <svg id="source" xmlns="http://www.w3.org/2000/svg" width="600" height="300">
@@ -32,14 +38,54 @@
         <rect class="entity" x="20" y="30" width="320" height="150"
           fill="url(#browser-test-image-fill)" stroke="#202020" stroke-width="2"></rect>
       </g>
+      <g class="canvas-record entity-record geometry-record subtract-source-record" data-stack-id="stack-a">
+        <path class="subtract-result-boundary" data-subtract-result="solid-target"
+          d="M 20 300 H 180 V 390 H 20 Z M 70 300 A 30 30 0 1 1 130 300 A 30 30 0 1 1 70 300 Z M 75 345 H 125 V 375 H 75 Z"
+          fill="#b95f4b" fill-rule="evenodd" stroke="#202020" stroke-width="2"></path>
+        <path class="resolved-boundary-visual" d="M 20 300 H 180 V 390 H 20 Z"
+          fill="#b95f4b" stroke="#202020" stroke-width="2"></path>
+        <rect class="entity closed-entity selectable-entity" x="20" y="300" width="160" height="90"
+          fill="transparent" fill-opacity="0" stroke="#202020" stroke-width="2"></rect>
+      </g>
+      <g class="linked-copy-group duplicate-group" data-stack-id="stack-a" transform="translate(200 0)">
+        <g class="linked-copy-template">
+          <g class="entity-record geometry-record subtract-source-record linked-copy-content duplicate-copy-content">
+            <path class="subtract-result-boundary" data-subtract-result="solid-target"
+              d="M 20 300 H 180 V 390 H 20 Z M 70 300 A 30 30 0 1 1 130 300 A 30 30 0 1 1 70 300 Z M 75 345 H 125 V 375 H 75 Z"
+              fill="#b95f4b" fill-rule="evenodd" stroke="#202020" stroke-width="2"></path>
+            <path class="resolved-boundary-visual" d="M 20 300 H 180 V 390 H 20 Z"
+              fill="#b95f4b" stroke="#202020" stroke-width="2"></path>
+            <rect class="entity closed-entity selectable-entity" x="20" y="300" width="160" height="90"
+              fill="transparent" fill-opacity="0" stroke="#202020" stroke-width="2"></rect>
+          </g>
+        </g>
+      </g>
+      <g class="canvas-record entity-record geometry-record subtract-source-record" data-stack-id="stack-a">
+        <path class="subtract-result-boundary" data-subtract-result="image-target"
+          d="M 20 430 H 180 V 520 H 20 Z M 70 430 A 30 30 0 1 1 130 430 A 30 30 0 1 1 70 430 Z M 75 475 H 125 V 505 H 75 Z"
+          fill="url(#browser-test-image-fill)" fill-rule="evenodd" stroke="#202020" stroke-width="2"></path>
+        <path class="resolved-boundary-visual" d="M 20 430 H 180 V 520 H 20 Z"
+          fill="url(#browser-test-image-fill)" stroke="#202020" stroke-width="2"></path>
+        <rect class="entity closed-entity selectable-entity" x="20" y="430" width="160" height="90"
+          fill="transparent" fill-opacity="0" stroke="#202020" stroke-width="2"></rect>
+      </g>
+      <g class="linked-copy-group duplicate-group" data-stack-id="stack-a" transform="translate(200 0)">
+        <g class="linked-copy-template">
+          <g class="entity-record geometry-record subtract-source-record linked-copy-content duplicate-copy-content">
+            <path class="subtract-result-boundary" data-subtract-result="image-target"
+              d="M 20 430 H 180 V 520 H 20 Z M 70 430 A 30 30 0 1 1 130 430 A 30 30 0 1 1 70 430 Z M 75 475 H 125 V 505 H 75 Z"
+              fill="url(#browser-test-image-fill)" fill-rule="evenodd" stroke="#202020" stroke-width="2"></path>
+            <path class="resolved-boundary-visual" d="M 20 430 H 180 V 520 H 20 Z"
+              fill="url(#browser-test-image-fill)" stroke="#202020" stroke-width="2"></path>
+            <rect class="entity closed-entity selectable-entity" x="20" y="430" width="160" height="90"
+              fill="transparent" fill-opacity="0" stroke="#202020" stroke-width="2"></rect>
+          </g>
+        </g>
+      </g>
       <g class="array-group" data-stack-id="stack-a">
         <g class="array-item-content">
           <circle cx="420" cy="105" r="55" fill="#f2c94c" stroke="#202020" stroke-width="2"></circle>
         </g>
-      </g>
-      <g class="canvas-record dimension-driven" data-stack-id="stack-a">
-        <line class="dimension-path" x1="20" y1="220" x2="340" y2="220" stroke="#06402b" stroke-width="1"></line>
-        <text class="dimension-text" x="180" y="215" text-anchor="middle" fill="#06402b">Width = 320</text>
       </g>
       <g class="canvas-record text-record" data-stack-id="stack-a">
         <foreignObject class="selectable-entity text-foreign-object" x="365" y="190" width="120" height="44">
@@ -52,6 +98,22 @@
         <path class="notch-hit selectable-entity hit-target" d="M 365 165 L 375 175 L 385 165" fill="none"></path>
         <circle class="notch-dot selectable-entity" cx="375" cy="165" r="12" fill="#f28c18"></circle>
       </g>
+      <g class="canvas-record table-record" data-record-id="png-table" data-entity-type="table" data-stack-id="stack-a">
+        <g class="table-content">
+          <g class="table-cell" data-table-cell="0:0">
+            <rect class="table-cell-background" x="20" y="200" width="100" height="34" fill="#ffffff" stroke="#202020" stroke-width="1"></rect>
+            <foreignObject class="table-cell-editor-host" x="23" y="202" width="94" height="30">
+              <textarea xmlns="http://www.w3.org/1999/xhtml" class="table-cell-editor" readonly>Table A</textarea>
+            </foreignObject>
+          </g>
+          <g class="table-cell" data-table-cell="0:1">
+            <rect class="table-cell-background" x="120" y="200" width="100" height="34" fill="#ffffff" stroke="#202020" stroke-width="1"></rect>
+            <foreignObject class="table-cell-editor-host" x="123" y="202" width="94" height="30">
+              <textarea xmlns="http://www.w3.org/1999/xhtml" class="table-cell-editor" readonly style="text-align:center">Table B</textarea>
+            </foreignObject>
+          </g>
+        </g>
+      </g>
       <g class="canvas-record entity-record geometry-record" data-stack-id="stack-a">
         <g class="seam-line-presentation-layer">
           <g class="seam-line-presentation">
@@ -60,7 +122,7 @@
           </g>
         </g>
       </g>
-      <g class="canvas-record dimension-driving" data-stack-id="stack-a">
+      <g class="canvas-record dimension-driving dimension-export-excluded" data-stack-id="stack-a">
         <text class="dimension-text" x="180" y="260">Driving = 999</text>
       </g>
       <g class="canvas-record object-visibility-hidden" data-stack-id="stack-a">

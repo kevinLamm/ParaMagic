@@ -69,6 +69,19 @@ test('control parameter names show their assigned Control label as non-editable 
   assert.doesNotMatch(markup, /data-control-label/);
 });
 
+test('dimension parameter names show their Stack qualifier as non-editable context', () => {
+  const markup = parameterNameEditorMarkup({ id: 'dimension-1', name: 'd1', kind: 'dimension', stackId: 'stack-2' }, {
+    stackState: {
+      activeStackId: 'stack-2',
+      stacks: [{ id: 'stack-default', name: 'Default' }, { id: 'stack-2', name: 'Front Panel' }],
+    },
+  });
+  assert.match(markup, /class="parameter-name"[^>]*value="d1"/);
+  assert.match(markup, /class="parameter-stack-name-ghost"/);
+  assert.match(markup, /aria-label="Stack name: Front Panel"/);
+  assert.match(markup, />@Front Panel</);
+});
+
 test('parameter name rows omit the label ghost when no Control label is assigned', () => {
   const userMarkup = parameterNameEditorMarkup({ id: 'parameter-1', name: 'width', kind: 'user' }, {
     controlItems: [{ parameterName: 'width', label: 'Not a control' }],

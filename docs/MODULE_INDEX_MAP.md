@@ -6,6 +6,15 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 
 ## 1. Application Core & Viewport
 
+### `IdentitySystem.js`
+- **Description**: Sole generic UUID authority. It creates secure independent UUID-v4 identities, validates and normalizes canonical UUIDs, reserves transaction UUIDs, and derives opaque UUID-v5 values for stable runtime or presentation records without encoding semantic data in the UUID text.
+- **Exports**: `createUuid`, `createUuidAllocator`, `deriveUuid`, `deriveUuidForKey`, `isUuid`, `normalizeUuid`, `assertUuid`.
+
+### `DrawingIdentitySystem.js`
+- **Description**: Schema-aware drawing identity graph coordinator. It indexes declarations, delegates extension identity fields to registered owner descriptors, migrates legacy identities, validates live and lineage references, remaps complete copy/Insert transactions, and clones independent Save As graphs.
+- **Exports**: `IDENTITY_ARCHITECTURE_VERSION`, `registerIdentitySchema`, `migrateDrawingIdentities`, `remapDrawingIdentityGraph`, `cloneDrawingIdentityGraph`, `createDrawingIdentityIndex`, `registeredIdentitySchemaKeys`, `identityAudit`, `validateDrawingIdentityGraph`.
+- **Architecture contract**: [`GENERIC_UUID_IDENTITY_MIGRATION_PLAN.md`](GENERIC_UUID_IDENTITY_MIGRATION_PLAN.md) defines the universal UUID taxonomy, legacy boundary, copy semantics, validation gates, and acceptance requirements.
+
 ### `CanvasViewport.js`
 - **Description**: Consolidated canvas viewport subsystem managing zoom bounds, scale clamping, overlap selection cycling (Alt-click cycling through stacked entities and handles), and floating drawing hint tooltips.
 - **Exports**:
@@ -116,7 +125,7 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 ## 4. Layer Stacking & Image System
 
 ### `CanvasPresentation.js`
-- **Description**: Shared live-canvas presentation snapshot subsystem. It filters and sanitizes the authoritative rendered object layer, fits a portable SVG viewport, and supplies the exact same geometry to Stack thumbnails and SVG export.
+- **Description**: Shared live-canvas presentation snapshot subsystem. It filters hidden objects and effectively disabled Stacks from the authoritative rendered object layer, fits a portable SVG viewport, and supplies the same geometry to SVG/PNG export.
 - **Exports**:
   - `isCanvasPresentationSourceNode(node, stackId)`: Applies whole-drawing or per-stack Value Only presentation filtering.
   - `createCanvasPresentationSvg(options)`, `mountCanvasPresentationSvg(host, options)`: Build or mount a sanitized SVG snapshot from the live canvas object layer.
@@ -124,11 +133,47 @@ This document provides a comprehensive index of all JavaScript modules in `packa
   - `serializeCanvasPresentationElement(svg)`: Serializes the shared presentation SVG without reconstructing geometry.
 
 ### `StackSystem.js`
-- **Description**: Consolidated multi-stack CAD layer organization subsystem managing stack definitions, entity ordering, and stack UI panels. Stack preview geometry is supplied by `CanvasPresentation.js`.
+- **Description**: Live Stack-tree state manager. It owns selected-versus-active Stack state, child/sibling creation, reparenting, sibling order, visibility, expression storage, effective ancestor state, record presentation, and subtree lifecycle queries while delegating pure hierarchy rules to `StackArchitecture.js`.
 - **Exports**:
-  - `DEFAULT_STACK_ID`, `entityStackId`, `normalizeStackState`
-  - `createStackPanel(options)`: Factory for stack management UI panel.
+  - `STACK_EXTENSION_VERSION`, `STACK_INACTIVE_CLASS`, `STACK_DISABLED_CLASS`, `createDefaultStack`, `entityStackId`, `normalizeStackState`
   - `createStackSystem(options)`: Factory initializing canvas stack state and layer ordering controller.
+
+### `StackTreePanel.js`
+- **Description**: Permanent docked Stack-tree UI. It owns keyed semantic tree rows, selection, expansion, keyboard navigation, literal and formula activation controls, rename, subtree actions, cycle-safe before/inside/after drag targets, deletion confirmation, and sidebar resizing without subscribing to object-geometry changes.
+- **Exports**:
+  - `createStackTreePanel(options)`
+
+### `StackActivationSystem.js`
+- **Description**: DOM-independent Stack activation graph and transaction coordinator. It compiles Stack expressions through the shared parameter engine, maintains stable reverse dependencies, derives local/effective enablement, detects unavailable driven sources, static cycles and runtime oscillation, and owns repeated solve/evaluate/activate stabilization plus rollback.
+- **Exports**:
+  - `effectiveEnabledStackIds(stackState, localStates)`
+  - `createStackActivationSystem(options)`
+  - `createStackActivationCoordinator(options)`
+
+### `StackArchitecture.js`
+- **Description**: Version-4 persistent Stack-tree hierarchy and ownership architecture and the sole legacy-drawing conversion boundary. It distinguishes drawable Stack nodes from non-drawable imported-drawing containers, preserves nullable activation independently from enablement, normalizes parent/order/expression fields, rejects invalid graphs, supplies indexed ancestor/descendant/subtree operations, validates reparenting, migrates legacy drawings, assigns ownership to geometry/dimensions/constraints and extension relationships, and preserves portable lineage.
+- **Upgrade contract**: [`STACK_TREE_ACTIVATION_PLAN.md`](STACK_TREE_ACTIVATION_PLAN.md) defines the shipped tree, subtree lifecycle, expression activation, stabilization, presentation, and sidebar behavior.
+- **Identity prerequisite**: Implemented by `IdentitySystem.js` and `DrawingIdentitySystem.js`; Stack records and all ownership references use raw UUIDs resolved by role rather than name or sentinel value.
+- **Exports**:
+  - `STACK_ARCHITECTURE_VERSION`, `DEFAULT_STACK_ROLE`, `STACK_NODE_KIND`, `DRAWING_NODE_KIND`, `createStackId`, `isDrawableStack`, `isDrawingContainer`, `normalizeStackArchitectureState`, `createStackTreeIndex`, `ancestorStackIds`, `descendantStackIds`, `subtreeStackIds`, `validateStackReparent`, `reparentStack`, `reorderStack`, `nextActiveStackId`, `defaultStackId`, `migrateStackArchitecture`, `collectRecordReferences`, `participantStackIds`
+
+### `NamingSystem.js`
+- **Description**: Single source of truth for Stack, dimension, user-parameter, and Control naming. It owns validation, whitespace normalization, case rules, Stack suffixes, local `dN` allocation, qualified `dN@Stack Name` display names, and exact expression-symbol rewriting for every creation, rename, migration, insert, relationship, and clipboard workflow.
+- **Exports**:
+  - `stackNameError`, `normalizedStackName`, `uniqueStackName`, `userParameterNameError`, `dimensionParameterNameError`, `dimensionParameterIndex`, `dimensionCollectionNameError`, `parameterNameError`, `parameterNameKey`
+  - `qualifiedDimensionName`, `dimensionDisplayName`, `stackNameById`
+  - `nextIndexedParameterName`, `nextAvailableParameterName`, `nextDimensionNameForStack`
+  - `replaceExpressionSymbolReference`, `rewriteExpressionSymbolReferences`, `rewriteQualifiedDimensionReferences`
+
+### `StackClipboardSystem.js`
+- **Description**: Stack-aware clipboard context subsystem. It records the stable identities of referenced-but-uncopied dimensions, converts local references to portable qualified references, restores bare references when pasted into the owner Stack, and retargets copied qualified references. It delegates every naming rule to `NamingSystem.js`.
+- **Exports**:
+  - `prepareStackClipboardDimensions`, `retargetStackClipboardDimensions`
+
+### `StackRelationshipSystem.js`
+- **Description**: Portable cross-Stack relationship lifecycle subsystem. It records dormant relationship templates when only part of a relationship is copied, binds templates to inserted Stack instances, reactivates complete relationships for every compatible insertion set, and prunes relationships after source Stack removal.
+- **Exports**:
+  - `createDormantStackRelationships`, `reconcileDormantStackRelationships`, `pruneDormantStackRelationships`
 
 ### `ImageSystem.js`
 - **Description**: Consolidated image subsystem managing image manipulation transforms (scaling, rotation, flips), perspective warping geometry math, image catalog management with 128 KiB runtime fill/stroke assets, image fill patterns/controllers, and portable Base64 asset embedding.
@@ -181,7 +226,7 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 - **Exports**:
   - `normalizeDrawingData(input)`: Ensures standard schema structure for drawing data.
   - `serializeDrawingJson(snapshot, name)`: Serializes drawing snapshot to formatted JSON string.
-  - `mergeDrawingDataWithMap(base, inserted, options)`: Merges two drawings with remapped IDs and deduplicated parameter names.
+  - `mergeDrawingDataWithMap(base, inserted, options)`: Merges Stack exports directly or wraps full drawings in non-drawable drawing containers, with remapped IDs and deduplicated parameter names.
   - `mergeDrawingData(base, inserted)`: Convenience wrapper returning merged drawing object.
   - `parseDxf(text)`: Parses DXF CAD text into ParaMagic drawing data.
   - `serializeDxf(snapshot)`: Exports drawing snapshot to DXF R15 text format.
@@ -199,9 +244,10 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 - **Description**: Pure DXF geometry preparation. Resolves ordinary and construction-only closed boundaries, replaces every Curve-tool path with globally fitted tangent biarcs that can span multiple curve-control intervals, materializes final Boolean contours, transforms export-only boundary entities, and converts analytic arcs to LWPOLYLINE bulges. Closed paths become closed LWPOLYLINE entities; otherwise Curve-tool paths become open LWPOLYLINE entities. The default curve fitting tolerance is 0.25 internal millimetres.
 
 ### `PngExport.js`
-- **Description**: PNG export coordinator. Chooses an approximately one-megapixel 1:1, 16:9, or 9:16 frame from the Value Only presentation bounds, preserves the live canvas presentation styles, embeds every raster source before canvas rendering, applies white background and 20-pixel padding, and enforces a 1 MiB encoded-file cap.
+- **Description**: PNG export coordinator. Chooses an approximately four-megapixel 1:1, 16:9, or 9:16 frame from the Value Only presentation bounds, requests exact Value Only dimension labels from the solver regardless of the live view mode, preserves the live canvas presentation styles, embeds every raster source before canvas rendering, and applies a white background with at least 50 pixels of fitted padding on every side.
 - **Exports**:
   - `pngExportFormatForBounds(bounds)`, `fittedPngExportViewport(bounds, width, height, paddingPixels)`
+  - `applyPngValueOnlyDimensionText(root, resolveValueOnlyDimensionText)`
   - `createCanvasPresentationPng(objectLayer, options)`, `serializeCanvasPresentationPng(objectLayer, options)`
 
 ### `SvgExport.js`
@@ -220,14 +266,19 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 ## 7. Constraint Solver & Parameters (`packages/paramagic-core/src/modules/solver/`)
 
 ### `SolverController.js`
-- **Description**: High-level solver coordinator integrating Planar System Solver, parameter expressions, geometry bindings, and constraint handlers.
+- **Description**: High-level Stack-aware solver coordinator integrating Planar System Solver, parameter expressions, geometry bindings, constraint handlers, scoped rollback, transitive participant solving, and offender diagnostics.
 - **Exports**:
   - `createSolverController(options)`: Instantiates constraint solver controller.
 
 ### `ParameterRepository.js`
-- **Description**: Parameter data store handling expression evaluation, unit conversions, parameter dependency topological sorting, and computed value caching.
+- **Description**: Parameter data store handling expression evaluation, unit conversions, dependency sorting, computed-value caching, Stack-local dimension namespaces, qualified case-insensitive `dN@Stack Name` references, and longest-symbol matching for unquoted user parameter names containing spaces.
 - **Exports**:
   - `ParameterRepository`: Class managing drawing parameters and mathematical expression evaluation.
+
+### `StackSolveSystem.js`
+- **Description**: Pure Stack solve partitioning subsystem. It builds the participant graph, expands edited Stacks to their full transitive relationship set, partitions independent solve groups, and aggregates affected-set results without forcing unrelated Stacks through the solver.
+- **Exports**:
+  - `buildStackParticipationGraph`, `expandParticipantStackIds`, `partitionStackSolveGroups`, `aggregateStackSolveResults`
 
 ### `Units.js`
 - **Description**: Length unit definitions, unit conversion factors (mm, cm, m, in, ft), unit normalization, and formatted dimension string parsing/formatting, including quarter-inch and whole-millimeter precision in Value Only driven-dimension display.
@@ -249,7 +300,7 @@ This document provides a comprehensive index of all JavaScript modules in `packa
 - **Description**: Solver variable data model and unique variable ID generator.
 - **Exports**:
   - `createVariable(name, value, options)`: Creates solver variable object.
-  - `createStableId(prefix)`: Generates unique stable string IDs.
+  - Runtime and persistent identities are allocated through `IdentitySystem.js`; solver variables retain separate owner and parameter metadata.
 
 ---
 

@@ -14,6 +14,7 @@ import { SketchModel } from '../packages/paramagic-core/src/modules/solver/Solve
 import { SolverWorkerRuntime } from '../packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js';
 import { SolverWorkerClient } from '../packages/paramagic-core/src/modules/solver/SolverWorkerClient.js';
 import { createSolverWorkerRequest } from '../packages/paramagic-core/src/modules/solver/SolverWorkerProtocol.js';
+import { createSolverController } from '../packages/paramagic-core/src/modules/solver/SolverController.js';
 
 const profiles = {
   quick: {
@@ -23,6 +24,7 @@ const profiles = {
     arcs: 8,
     snapshotEntities: 2_000,
     dragUpdates: 60,
+    stackCounts: [10, 100, 500],
     samples: 3,
   },
   standard: {
@@ -32,6 +34,7 @@ const profiles = {
     arcs: 20,
     snapshotEntities: 10_000,
     dragUpdates: 300,
+    stackCounts: [10, 250, 1_000],
     samples: 5,
   },
   stress: {
@@ -41,6 +44,7 @@ const profiles = {
     arcs: 60,
     snapshotEntities: 50_000,
     dragUpdates: 300,
+    stackCounts: [100, 1_000, 5_000],
     samples: 3,
   },
 };
@@ -624,7 +628,8 @@ function constraintGraphCurveRemapBenchmark(count, sampleCount) {
           points: [[0, 20], [2, 23], [5, 25], [10, 20]],
         });
         graph.updateEntity('benchmark-curve', variableIds, constraintIds);
-        return { status: graph.variablesById.has('benchmark-curve:p3.x') ? 'completed' : 'failed' };
+        const insertedVariable = fixture.model.binding('benchmark-curve')?.variables.get('p3.x');
+        return { status: insertedVariable && graph.variablesById.has(insertedVariable.id) ? 'completed' : 'failed' };
       };
     },
     {
@@ -697,6 +702,53 @@ function snapshotBenchmark(config) {
   );
 }
 
+function stackScopedEditBenchmarks(config) {
+  return config.stackCounts.map((stackCount) => runTimedSamples(
+    `stack-scoped-edit-${stackCount}`,
+    config.samples,
+    () => {
+      const controller = createSolverController({ jacobianMode: config.jacobianMode });
+      const stacks = Array.from({ length: stackCount }, (_, index) => ({
+        id: `benchmark-stack-${index}`,
+        name: `Stack ${index + 1}`,
+      }));
+      const entities = stacks.map((stack, index) => ({
+        id: `benchmark-stack-line-${index}`,
+        type: 'line',
+        stackId: stack.id,
+        start: [index * 20, 0],
+        end: [index * 20 + 10, 0],
+      }));
+      const constraints = stacks.map((stack, index) => ({
+        id: `benchmark-stack-horizontal-${index}`,
+        type: 'Horizontal',
+        stackId: stack.id,
+        participantStackIds: [],
+        featureRefs: [{ kind: 'segment', recordId: `benchmark-stack-line-${index}`, index: 0 }],
+      }));
+      controller.loadSketch({
+        stackState: { activeStackId: stacks[0].id, stacks },
+        entities,
+        constraints,
+        parameters: [],
+        dimensionAnnotations: [],
+      });
+      return () => controller.updateEntities([{
+        ...controller.getEntity('benchmark-stack-line-0'),
+        end: [10, 3],
+      }]).result;
+    },
+    {
+      stacks: stackCount,
+      unrelatedStacks: stackCount - 1,
+      entities: stackCount,
+      variables: 4,
+      constraints: 1,
+      residuals: 1,
+    },
+  ));
+}
+
 async function dragStreamBenchmark(config) {
   const registry = new ConstraintRegistry();
   const fixtureForCounts = connectedLineFixture(config.connectedLines);
@@ -731,7 +783,7 @@ async function dragStreamBenchmark(config) {
         end: [baseline.end[0] + phase * 12, baseline.end[1] + Math.sin(phase * Math.PI * 2) * 4],
       }];
       const payloadSample = createSolverWorkerRequest({
-        requestId: updateIndex + 2,
+        requestToken: updateIndex + 2,
         generation: updateIndex + 1,
         type: 'drag-update',
         payload: { entities, lockedVariableIds },
@@ -793,6 +845,7 @@ function printSummary(report) {
     entities: result.entities ?? '',
     variables: result.variables ?? '',
     constraints: result.constraints ?? '',
+    stacks: result.stacks ?? '',
     residuals: result.residuals ?? '',
     iterations: result.iterations,
     'elapsed ms': result.elapsedMs,
@@ -851,6 +904,7 @@ async function main() {
       constraintGraphCurveRemapBenchmark(config.disconnectedLines, config.samples),
       constraintGraphDerivedRemapBenchmark(config.disconnectedLines, config.samples),
       localDisconnectedSolverBenchmark(config.disconnectedLines, config.samples, jacobianMode),
+      ...stackScopedEditBenchmarks(config),
       solverBenchmark('connected-line-chain', config.connectedLines, config.samples, connectedLineFixture, jacobianMode),
       solverBenchmark('fixed-endpoint-arcs', config.arcs, config.samples, arcFixture, jacobianMode),
       await dragStreamBenchmark(config),

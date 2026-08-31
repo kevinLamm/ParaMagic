@@ -14,6 +14,7 @@ import { parseDxf, resolveDrawingScene, serializeDxf } from '../../packages/para
 import { DXF_DIMENSION_STYLE } from '../../packages/paramagic-core/src/modules/DxfDimensionExport.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { withSwellDefinition } from '../../packages/paramagic-core/src/modules/SwellGeometry.js';
+import { fixtureUuid } from './helpers/fixtureUuid.js';
 
 const exportDxf = (drawing) => serializeDxf(createDrawingDxfSnapshot(drawing));
 const unit = (point) => {
@@ -54,7 +55,7 @@ test('DXF preparation refines geometry that a normal 1e-3 solve accepts', () => 
     type: 'Horizontal',
     featureRefs: [{ kind: 'segment', recordId: 'export-line', index: 0 }],
   }).constraint);
-  controller.model.variableById('export-line:end.y').value = 5e-4;
+  controller.model.binding('export-line').variables.get('end.y').value = 5e-4;
 
   const normalResult = controller.solve({ fullSolve: true });
   assert.equal(normalResult.status, 'unchanged');
@@ -369,14 +370,17 @@ test('fillets become bulged members of their closed LWPOLYLINE instead of separa
 });
 
 test('per-stack DXF snapshots flatten derived copies and exclude the symmetry construction line', () => {
+  const sourceStackId = fixtureUuid('dxf-source-stack');
+  const arrayStackId = fixtureUuid('dxf-array-stack');
+  const mirrorStackId = fixtureUuid('dxf-mirror-stack');
   const arraySnapshot = {
     drawingUnit: 'mm',
-    entities: [{ id: 'source', type: 'line', start: [0, 0], end: [10, 0], stackId: 'source-stack' }],
+    entities: [{ id: 'source', type: 'line', start: [0, 0], end: [10, 0], stackId: sourceStackId }],
     extensions: {
       arrayTools: {
         version: 4,
         arrays: [{
-          id: 'array', stackId: 'array-stack', arrayType: 'rectangular', sourceIds: ['source'],
+          id: 'array', stackId: arrayStackId, arrayType: 'rectangular', sourceIds: ['source'],
           rowCountExpression: '1', columnCountExpression: '2',
           rowSpacingExpression: '0', columnSpacingExpression: '10',
           rowDirection: 'down', columnDirection: 'right',
@@ -384,7 +388,7 @@ test('per-stack DXF snapshots flatten derived copies and exclude the symmetry co
       },
     },
   };
-  const arrayExport = createStackDxfSnapshot(arraySnapshot, 'array-stack');
+  const arrayExport = createStackDxfSnapshot(arraySnapshot, arrayStackId);
   assert.equal(arrayExport.entities.length, 1);
   assert.deepEqual(arrayExport.entities[0].start, [20, 0]);
   assert.deepEqual(arrayExport.entities[0].end, [30, 0]);
@@ -394,12 +398,12 @@ test('per-stack DXF snapshots flatten derived copies and exclude the symmetry co
     entities: [
       ...arraySnapshot.entities,
       {
-        id: 'centerline', type: 'line', construction: true, stackId: 'mirror-stack',
+        id: 'centerline', type: 'line', construction: true, stackId: mirrorStackId,
         start: [20, -10], end: [20, 10],
         composite: { kind: 'symmetric-centerline', sourceIds: ['source'] },
       },
     ],
-  }, 'mirror-stack');
+  }, mirrorStackId);
   assert.equal(mirrorExport.entities.length, 1);
   const mirrored = mirrorExport.entities.find(
     (entity) => entity.composite?.kind !== 'symmetric-centerline',
@@ -790,6 +794,35 @@ test('single-line text exports as aligned TEXT on a continuous Text layer with p
   assert.match(timesStyle, /\n3\ntimes\.ttf\n/);
 });
 
+test('tables export as unique DXF grid lines and resolved cell text', () => {
+  const snapshot = createDrawingDxfSnapshot({
+    drawingUnit: 'mm',
+    dxfExportUnit: 'mm',
+    parameters: [{ id: 'width', name: 'width', kind: 'user', value: 42, expression: '42' }],
+    entities: [{
+      id: 'table-export',
+      type: 'table',
+      stackId: 'stack-default',
+      x: 10,
+      y: 20,
+      columns: [{ width: 50 }, { width: 70 }],
+      rows: [{ height: 30 }, { height: 40 }],
+      cells: [
+        [{ text: 'Width [width]' }, { text: 'B' }],
+        [{ text: 'C' }, { text: 'D' }],
+      ],
+    }],
+  });
+  const dxf = serializeDxf(snapshot);
+
+  assert.equal(snapshot.entities.some(({ type }) => type === 'table'), false);
+  assert.equal(snapshot.entities.filter(({ type }) => type === 'line').length, 6);
+  assert.equal(snapshot.entities.filter(({ type }) => type === 'text').length, 4);
+  assert.equal(entityBlocks(dxf, 'LINE').length, 6);
+  assert.equal(entityBlocks(dxf, 'TEXT').length, 4);
+  assert.match(dxf, /\n1\nWidth 42\n/);
+});
+
 test('multiline text exports as MTEXT with explicit height, paragraphs, fields, and top-right attachment', () => {
   const snapshot = createDrawingDxfSnapshot({
     drawingUnit: 'mm',
@@ -945,7 +978,45 @@ test('driven dimensions export as native DXF dimensions on the Dimensions layer'
   assert.doesNotMatch(dxf, /driving-only/);
 });
 
-test('DXF export omits driven dimensions disabled for export', () => {
+test('inch DXF dimensions round to thirty-seconds with five-decimal precision', () => {
+  const dxf = exportDxf({
+    drawingUnit: 'in',
+    dxfExportUnit: 'in',
+    entities: [],
+    parameters: [{
+      id: 'inch-dimension-value',
+      name: 'd1',
+      kind: 'dimension',
+      expression: '1.1 in',
+      value: 1.1 * 25.4,
+      unit: 'in',
+      driving: false,
+      computed: true,
+      order: 0,
+    }],
+    dimensionAnnotations: [{
+      id: 'inch-dimension',
+      type: 'dimension-line',
+      subtype: 'horizontal',
+      dimensionMode: 'driven',
+      dimensionId: 'inch-dimension-value',
+      start: [0, 0],
+      end: [1.1 * 25.4, 0],
+      measureStart: [0, 0],
+      measureEnd: [1.1 * 25.4, 0],
+      label: [0.55 * 25.4, -20],
+      text: 'd1 = 1.1',
+    }],
+  });
+  const dimensionStyle = namedEntityBlock(dxf, 'DIMSTYLE', DXF_DIMENSION_STYLE);
+
+  assert.ok(dimensionStyle);
+  assert.match(dimensionStyle, /\n45\n0\.03125\n/);
+  assert.match(dimensionStyle, /\n271\n5\n/);
+  assert.match(dxf, /\n1\n1\.09375"\n/);
+});
+
+test('DXF export includes opted-in Driving Dimensions and omits excluded dimensions', () => {
   const dxf = exportDxf({
     drawingUnit: 'mm',
     dxfExportUnit: 'mm',
@@ -976,27 +1047,56 @@ test('DXF export omits driven dimensions disabled for export', () => {
         label: [37.5, 50],
         text: 'excluded-dimension',
       },
+      {
+        id: 'default-driving-dimension',
+        type: 'dimension-line',
+        subtype: 'horizontal',
+        dimensionMode: 'driving',
+        start: [0, 40],
+        end: [60, 40],
+        measureStart: [0, 40],
+        measureEnd: [60, 40],
+        label: [30, 70],
+        text: 'default-driving-dimension',
+      },
+      {
+        id: 'included-driving-dimension',
+        type: 'dimension-line',
+        subtype: 'horizontal',
+        dimensionMode: 'driving',
+        includeInValueOnly: true,
+        start: [0, 60],
+        end: [42, 60],
+        measureStart: [0, 60],
+        measureEnd: [42, 60],
+        label: [21, 90],
+        text: 'included-driving-dimension',
+      },
     ],
   });
 
-  assert.equal(entityBlocks(dxf, 'DIMENSION').length, 1);
+  assert.equal(entityBlocks(dxf, 'DIMENSION').length, 2);
   assert.match(dxf, /included-dimension/);
+  assert.match(dxf, /included-driving-dimension/);
   assert.doesNotMatch(dxf, /excluded-dimension/);
+  assert.doesNotMatch(dxf, /default-driving-dimension/);
 });
 
 test('per-stack DXF export includes only driven dimensions owned by that stack', () => {
+  const stackAId = fixtureUuid('dxf-dimension-stack-a');
+  const stackBId = fixtureUuid('dxf-dimension-stack-b');
   const snapshot = createStackDxfSnapshot({
     drawingUnit: 'mm',
     entities: [
-      { id: 'line-a', type: 'line', stackId: 'stack-a', start: [0, 0], end: [50, 0] },
-      { id: 'line-b', type: 'line', stackId: 'stack-b', start: [0, 20], end: [75, 20] },
+      { id: 'line-a', type: 'line', stackId: stackAId, start: [0, 0], end: [50, 0] },
+      { id: 'line-b', type: 'line', stackId: stackBId, start: [0, 20], end: [75, 20] },
     ],
     dimensionAnnotations: [
       {
         id: 'dimension-a',
         type: 'dimension-line',
         dimensionMode: 'driven',
-        stackId: 'stack-a',
+        stackId: stackAId,
         start: [0, 0],
         end: [50, 0],
         measureStart: [0, 0],
@@ -1008,7 +1108,7 @@ test('per-stack DXF export includes only driven dimensions owned by that stack',
         id: 'dimension-b',
         type: 'dimension-line',
         dimensionMode: 'driven',
-        stackId: 'stack-b',
+        stackId: stackBId,
         start: [0, 20],
         end: [75, 20],
         measureStart: [0, 20],
@@ -1017,12 +1117,45 @@ test('per-stack DXF export includes only driven dimensions owned by that stack',
         text: 'stack-b-value',
       },
     ],
-  }, 'stack-a');
+  }, stackAId);
   const dxf = serializeDxf(snapshot);
 
   assert.equal(entityBlocks(dxf, 'DIMENSION').length, 1);
   assert.match(dxf, /stack-a-value/);
   assert.doesNotMatch(dxf, /stack-b-value/);
+});
+
+test('Stack DXF export includes enabled descendants and omits effectively disabled subtree records', () => {
+  const defaultId = fixtureUuid('dxf-tree-default');
+  const parentId = fixtureUuid('dxf-tree-parent');
+  const childId = fixtureUuid('dxf-tree-child');
+  const disabledId = fixtureUuid('dxf-tree-disabled');
+  const parentLineId = fixtureUuid('dxf-tree-parent-line');
+  const childLineId = fixtureUuid('dxf-tree-child-line');
+  const disabledLineId = fixtureUuid('dxf-tree-disabled-line');
+  const drawing = {
+    stackArchitectureVersion: 3,
+    drawingUnit: 'mm',
+    entities: [
+      { id: parentLineId, type: 'line', stackId: parentId, start: [0, 0], end: [10, 0] },
+      { id: childLineId, type: 'line', stackId: childId, start: [0, 10], end: [10, 10] },
+      { id: disabledLineId, type: 'line', stackId: disabledId, start: [0, 20], end: [10, 20] },
+    ],
+    extensions: { stacks: { version: 3, activeStackId: parentId, stacks: [
+      { id: defaultId, name: 'Default', systemRole: 'default-stack' },
+      { id: parentId, name: 'Parent' },
+      { id: childId, name: 'Child', parentStackId: parentId },
+      { id: disabledId, name: 'Disabled Child', parentStackId: parentId, enabledExpression: 'FALSE' },
+    ] } },
+  };
+
+  const snapshot = createStackDxfSnapshot(drawing, parentId, {
+    effectiveEnabledStackIds: [defaultId, parentId, childId],
+  });
+
+  assert.equal(snapshot.entities.length, 2);
+  assert.deepEqual(new Set(snapshot.entities.map(({ stackId }) => stackId)), new Set([parentId, childId]));
+  assert.deepEqual(snapshot.entities.map(({ start }) => start), [[0, 0], [0, 10]]);
 });
 
 test('DXF export excludes construction parents and retains complete derived Swell geometry', () => {

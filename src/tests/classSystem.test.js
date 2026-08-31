@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  DEFAULT_CLASS_ID,
   createClassSystem,
+  defaultClassId,
   materializeDrawingClassAppearances,
   normalizeClassState,
   normalizeEntityClass,
@@ -15,6 +15,7 @@ import {
   classListPanelMarkup,
   classPropertiesModalMarkup,
 } from '../../packages/paramagic-core/src/modules/ClassTools.js';
+import { fixtureUuid } from './helpers/fixtureUuid.js';
 
 function geometryRecord(id, entity = {}) {
   return {
@@ -31,19 +32,20 @@ function geometryRecord(id, entity = {}) {
 }
 
 test('every class state contains the protected default class X', () => {
+  const defaultId = fixtureUuid('class-system-default');
   const state = normalizeClassState({
     activeClassId: 'missing',
     classes: [
-      { id: DEFAULT_CLASS_ID, name: 'Renamed X', removable: true },
+      { id: defaultId, name: 'Renamed X', systemRole: 'default-class', removable: true },
       { id: 'class-a', name: 'Cut', properties: { strokeThickness: 3 } },
       { id: 'class-b', name: 'cut' },
       { id: 'class-c', name: 'X' },
     ],
   });
 
-  assert.equal(state.activeClassId, DEFAULT_CLASS_ID);
+  assert.equal(state.activeClassId, defaultId);
   assert.deepEqual(state.classes.map(({ id, name }) => ({ id, name })), [
-    { id: DEFAULT_CLASS_ID, name: 'X' },
+    { id: defaultId, name: 'X' },
     { id: 'class-a', name: 'Cut' },
   ]);
   assert.equal(state.classes[0].removable, false);
@@ -52,13 +54,14 @@ test('every class state contains the protected default class X', () => {
 
 test('class names are required and unique while X cannot be renamed, duplicated, or removed', () => {
   const system = createClassSystem();
+  const defaultId = defaultClassId(system.getState());
   const cut = system.addClass('Cut');
   assert.equal(cut.success, true);
   assert.equal(system.addClass(' cut ').success, false);
   assert.equal(system.renameClass(cut.class.id, 'X').success, false);
-  assert.equal(system.renameClass(DEFAULT_CLASS_ID, 'Base').success, false);
-  assert.equal(system.duplicateClass(DEFAULT_CLASS_ID).success, false);
-  assert.equal(system.removeClass(DEFAULT_CLASS_ID).success, false);
+  assert.equal(system.renameClass(defaultId, 'Base').success, false);
+  assert.equal(system.duplicateClass(defaultId).success, false);
+  assert.equal(system.removeClass(defaultId).success, false);
   assert.equal(system.renameClass(cut.class.id, 'Shell').success, true);
   assert.equal(system.getState().classes.find(({ id }) => id === cut.class.id).name, 'Shell');
 });
@@ -73,6 +76,7 @@ test('classes can be added, duplicated with their properties, and deleted with e
       return entity;
     },
   });
+  const defaultId = defaultClassId(system.getState());
   const cut = system.addClass('Cut').class;
   system.updateClassProperties(cut.id, { strokeExpression: '#ff0000', strokeThickness: 4 });
   const duplicate = system.duplicateClass(cut.id);
@@ -85,7 +89,7 @@ test('classes can be added, duplicated with their properties, and deleted with e
   assert.equal(records[0].entity.classId, cut.id);
   const removed = system.removeClass(cut.id);
   assert.equal(removed.success, true);
-  assert.equal(records[0].entity.classId, DEFAULT_CLASS_ID);
+  assert.equal(records[0].entity.classId, defaultId);
   assert.deepEqual(persisted, ['edge-a', 'edge-a']);
 });
 
@@ -93,7 +97,8 @@ test('new geometry receives the active class and activating a class leaves selec
   const selectedIds = new Set(['edge-a']);
   const records = [geometryRecord('edge-a')];
   const system = createClassSystem({ records, selectedIds });
-  records[0].entity = system.assignEntity(records[0].entity, DEFAULT_CLASS_ID, { fresh: true });
+  const defaultId = defaultClassId(system.getState());
+  records[0].entity = system.assignEntity(records[0].entity, defaultId, { fresh: true });
   const cut = system.addClass('Cut').class;
 
   assert.equal(system.assignEntity({ id: 'edge-new', type: 'line' }).classId, cut.id);
@@ -102,7 +107,7 @@ test('new geometry receives the active class and activating a class leaves selec
 
   assert.equal(result.success, true);
   assert.deepEqual(result.recordIds, []);
-  assert.equal(records[0].entity.classId, DEFAULT_CLASS_ID);
+  assert.equal(records[0].entity.classId, defaultId);
   assert.deepEqual(system.recordIdsForClass(shell.id), []);
 });
 
@@ -140,13 +145,14 @@ test('entity property overrides survive class changes while inherited properties
 });
 
 test('legacy geometry migrates to X with its existing appearance preserved as overrides', () => {
+  const state = normalizeClassState();
   const entity = normalizeEntityClass({
     id: 'legacy',
     type: 'line',
     appearance: { fillColor: '#123456', strokeThickness: 6, zIndex: 8 },
-  }, null, { legacy: true });
+  }, state, { legacy: true });
 
-  assert.equal(entity.classId, DEFAULT_CLASS_ID);
+  assert.equal(entity.classId, defaultClassId(state));
   assert.deepEqual(entity.classPropertyOverrides.sort(), ['fill', 'strokeThickness']);
   assert.equal(resolveClassAppearance(entity).fillColor, '#123456');
   assert.equal(resolveClassAppearance(entity).strokeThickness, 6);
@@ -191,7 +197,9 @@ test('text properties inherit from classes while construction remains entity-onl
     textAlign: 'center',
     textVerticalAlign: 'middle',
   });
-  assert.equal(Object.hasOwn(system.getState().classes.find(({ id }) => id === notes.id).properties, 'construction'), false);
+  const normalizedNotes = system.getState().classes.find(({ id }) => id === notes.id).properties;
+  assert.equal(Object.hasOwn(normalizedNotes, 'construction'), false);
+  assert.equal(Object.hasOwn(normalizedNotes, 'scaleWithZoom'), false);
 
   const text = system.assignEntity({ id: 'label', type: 'text' }, notes.id, { fresh: true });
   assert.deepEqual(resolveClassEntityProperties(text, system.getState()), {
@@ -199,7 +207,6 @@ test('text properties inherit from classes while construction remains entity-onl
     fontSize: 36,
     textHeight: 9.525,
     fontColor: '#884422',
-    scaleWithZoom: false,
     multiline: false,
     textAlign: 'center',
     textVerticalAlign: 'middle',
@@ -247,7 +254,8 @@ test('opening a class-aware drawing materializes text properties without throwin
 });
 
 test('the Class List uses icon-only actions and protects X controls', () => {
-  const markup = classListPanelMarkup(normalizeClassState(), DEFAULT_CLASS_ID);
+  const state = normalizeClassState();
+  const markup = classListPanelMarkup(state, defaultClassId(state));
   assert.match(markup, /<h2>Classes<\/h2>/);
   assert.match(markup, /data-class-add[^>]*aria-label="Add Class"/);
   assert.match(markup, /data-class-edit[^>]*aria-label="Edit Class"/);
@@ -258,7 +266,8 @@ test('the Class List uses icon-only actions and protects X controls', () => {
 });
 
 test('Class Properties duplicates the geometry appearance controls in modal form', () => {
-  const markup = classPropertiesModalMarkup(normalizeClassState(), DEFAULT_CLASS_ID);
+  const state = normalizeClassState();
+  const markup = classPropertiesModalMarkup(state, defaultClassId(state));
   assert.match(markup, /Class Properties/);
   assert.match(markup, /name="name"[^>]*disabled/);
   assert.match(markup, /data-class-fill-color/);
@@ -279,7 +288,7 @@ test('Class Properties duplicates the geometry appearance controls in modal form
   assert.match(markup, /name="fontName"/);
   assert.match(markup, /name="fontSize"/);
   assert.match(markup, /name="fontColor"/);
-  assert.match(markup, /data-class-scale-with-zoom/);
+  assert.doesNotMatch(markup, /data-class-scale-with-zoom|Scale with Zoom/);
   assert.match(markup, /data-class-multiline/);
   assert.match(markup, /data-class-text-align="center"/);
   assert.match(markup, /data-class-text-vertical-align="middle"/);

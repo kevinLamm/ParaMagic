@@ -1,0 +1,132 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 1,
+  "name": "Nested Stack Activation",
+  "drawingId": "10000000-0000-4000-8000-000000000001",
+  "identityArchitectureVersion": 1,
+  "stackArchitectureVersion": 3,
+  "drawingUnit": "mm",
+  "dxfExportUnit": "mm",
+  "filletRadius": 1,
+  "entities": [
+    {
+      "id": "10000000-0000-4000-8000-000000000101",
+      "type": "line",
+      "stackId": "10000000-0000-4000-8000-000000000011",
+      "classId": "10000000-0000-4000-8000-000000000020",
+      "start": [0, 0],
+      "end": [120, 0]
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000102",
+      "type": "line",
+      "stackId": "10000000-0000-4000-8000-000000000012",
+      "classId": "10000000-0000-4000-8000-000000000020",
+      "start": [0, 20],
+      "end": [120, 20]
+    }
+  ],
+  "constraints": [],
+  "parameters": [
+    {
+      "id": "10000000-0000-4000-8000-000000000201",
+      "kind": "dimension",
+      "name": "d1",
+      "stackId": "10000000-0000-4000-8000-000000000011",
+      "expression": "120 mm",
+      "value": 120,
+      "unit": "mm",
+      "computed": true,
+      "driving": false,
+      "order": 0
+    },
+    {
+      "id": "10000000-0000-4000-8000-000000000202",
+      "kind": "user",
+      "name": "Rail Threshold",
+      "expression": "100 mm",
+      "value": 100,
+      "unit": "mm",
+      "computed": false,
+      "order": 1
+    }
+  ],
+  "dimensionAnnotations": [
+    {
+      "id": "10000000-0000-4000-8000-000000000301",
+      "dimensionId": "10000000-0000-4000-8000-000000000201",
+      "type": "dimension-line",
+      "dimensionMode": "driven",
+      "subtype": "aligned",
+      "stackId": "10000000-0000-4000-8000-000000000011",
+      "start": [0, 0],
+      "end": [120, 0],
+      "measureStart": [0, 0],
+      "measureEnd": [120, 0],
+      "label": [60, -20],
+      "anchors": {
+        "start": { "kind": "point", "recordId": "10000000-0000-4000-8000-000000000101", "index": 0 },
+        "end": { "kind": "point", "recordId": "10000000-0000-4000-8000-000000000101", "index": 2 }
+      }
+    }
+  ],
+  "classes": [
+    {
+      "id": "10000000-0000-4000-8000-000000000020",
+      "name": "X",
+      "systemRole": "default-class",
+      "removable": false
+    }
+  ],
+  "activeClassId": "10000000-0000-4000-8000-000000000020",
+  "extensions": {
+    "stacks": {
+      "version": 3,
+      "activeStackId": "10000000-0000-4000-8000-000000000011",
+      "stacks": [
+        {
+          "id": "10000000-0000-4000-8000-000000000010",
+          "sourceStackId": null,
+          "parentStackId": null,
+          "order": 0,
+          "name": "Default",
+          "visible": true,
+          "enabledExpression": "TRUE",
+          "removable": false,
+          "systemRole": "default-stack"
+        },
+        {
+          "id": "10000000-0000-4000-8000-000000000011",
+          "sourceStackId": null,
+          "parentStackId": null,
+          "order": 1,
+          "name": "Structure",
+          "visible": true,
+          "enabledExpression": "TRUE",
+          "removable": true
+        },
+        {
+          "id": "10000000-0000-4000-8000-000000000012",
+          "sourceStackId": null,
+          "parentStackId": "10000000-0000-4000-8000-000000000011",
+          "order": 0,
+          "name": "Support Rail",
+          "visible": true,
+          "enabledExpression": "d1@Structure >= Rail Threshold",
+          "removable": true
+        },
+        {
+          "id": "10000000-0000-4000-8000-000000000013",
+          "sourceStackId": null,
+          "parentStackId": "10000000-0000-4000-8000-000000000012",
+          "order": 0,
+          "name": "Rail Detail",
+          "visible": true,
+          "enabledExpression": "FALSE",
+          "removable": true
+        }
+      ]
+    }
+  },
+  "documentContext": { "fileName": "Nested Stack Activation" }
+}

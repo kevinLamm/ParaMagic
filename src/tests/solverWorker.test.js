@@ -9,6 +9,7 @@ import {
 } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerProtocol.js';
 import { SolverWorkerRuntime } from '../../packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js';
 import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Math.max(
   1,
@@ -17,7 +18,7 @@ const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Mat
 
 test('solver worker protocol validates versioned request envelopes', () => {
   const request = createSolverWorkerRequest({
-    requestId: 4,
+    requestToken: 4,
     generation: 7,
     type: 'solve',
     payload: { options: { fullSolve: true } },
@@ -32,18 +33,30 @@ test('solver worker protocol validates versioned request envelopes', () => {
     /Unsupported solver worker command/,
   );
   assert.throws(
-    () => createSolverWorkerRequest({ requestId: 5, generation: 7, type: 'drag-update', payload: {} }),
+    () => createSolverWorkerRequest({ requestToken: 5, generation: 7, type: 'drag-update', payload: {} }),
     /requires an entities array/,
   );
   assert.throws(
     () => createSolverWorkerRequest({
-      requestId: 6,
+      requestToken: 6,
       generation: 7,
       type: 'drag-update',
       payload: { entities: [], previewConstraintTolerance: -1 },
     }),
     /previewConstraintTolerance must be a non-negative finite number/,
   );
+  assert.doesNotThrow(() => createSolverWorkerRequest({
+    requestToken: 7,
+    generation: 7,
+    type: 'set-enabled-stack-ids',
+    payload: { stackIds: ['stack-a'] },
+  }));
+  assert.throws(() => createSolverWorkerRequest({
+    requestToken: 8,
+    generation: 7,
+    type: 'set-enabled-stack-ids',
+    payload: { stackIds: 'stack-a' },
+  }), /stackIds array or null/);
 
   const result = createSolverWorkerResult(request, {
     status: 'completed',
@@ -72,7 +85,7 @@ test('solver worker protocol validates versioned request envelopes', () => {
 test('worker runtime applies guarded block Jacobians and returns usage diagnostics', () => {
   const runtime = new SolverWorkerRuntime({ jacobianMode: 'blocks' });
   const result = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -116,7 +129,7 @@ test('browser worker client forwards block mode through the Worker module URL', 
 test('solver worker returns every affected parameter after a rename', () => {
   const runtime = new SolverWorkerRuntime();
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -153,7 +166,7 @@ test('solver worker returns every affected parameter after a rename', () => {
   }));
 
   const updated = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 0,
     type: 'update-parameter',
     payload: {
@@ -174,7 +187,7 @@ test('solver worker returns every affected parameter after a rename', () => {
 test('solver worker runtime owns sketch state and returns changed-entity deltas', () => {
   const runtime = new SolverWorkerRuntime();
   const loaded = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -193,7 +206,7 @@ test('solver worker runtime owns sketch state and returns changed-entity deltas'
   assert.ok(['converged', 'unchanged'].includes(loaded.status), loaded.message);
 
   const updated = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'update-entities',
     payload: {
@@ -203,10 +216,12 @@ test('solver worker runtime owns sketch state and returns changed-entity deltas'
   assert.equal(updated.status, 'converged');
   assert.deepEqual(updated.changedEntities.map((entity) => entity.id), ['worker-line-a']);
   assert.equal(Object.hasOwn(updated, 'snapshot'), false);
-  assert.equal(updated.diagnostics.solveScope.mode, 'component');
+  assert.equal(updated.diagnostics.solveScope.mode, 'stack-set');
+  assert.deepEqual(updated.diagnostics.solveScope.stackIds, [runtime.controller.defaultStackId()]);
+  assert.equal(isUuid(updated.diagnostics.solveScope.stackIds[0]), true);
 
   const snapshot = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 3,
+    requestToken: 3,
     generation: 1,
     type: 'get-snapshot',
     payload: {},
@@ -217,7 +232,7 @@ test('solver worker runtime owns sketch state and returns changed-entity deltas'
 test('solver worker returns accepted and removed constraint deltas', () => {
   const runtime = new SolverWorkerRuntime();
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -228,7 +243,7 @@ test('solver worker returns accepted and removed constraint deltas', () => {
   }));
 
   const added = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 0,
     type: 'add-constraint',
     payload: {
@@ -244,7 +259,7 @@ test('solver worker returns accepted and removed constraint deltas', () => {
   assert.ok(horizontalResidual(added.changedEntities[0]) < DEFAULT_SOLVE_TOLERANCE);
 
   const removed = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 3,
+    requestToken: 3,
     generation: 0,
     type: 'remove-constraint',
     payload: { constraintId: 'worker-horizontal' },
@@ -258,7 +273,7 @@ test('solver worker runtime rejects older interactive generations', () => {
   const runtime = new SolverWorkerRuntime();
   runtime.latestInteractiveGeneration = 8;
   const result = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 9,
+    requestToken: 9,
     generation: 7,
     type: 'drag-update',
     payload: { entities: [] },
@@ -269,13 +284,13 @@ test('solver worker runtime rejects older interactive generations', () => {
 test('solver worker runtime returns directly edited unconstrained geometry in its delta', () => {
   const runtime = new SolverWorkerRuntime();
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: { snapshot: { entities: [{ id: 'free-point', type: 'point', point: [0, 0] }] } },
   }));
   const updated = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'drag-update',
     payload: { entities: [{ id: 'free-point', type: 'point', point: [7, 9] }] },
@@ -287,7 +302,7 @@ test('solver worker runtime returns directly edited unconstrained geometry in it
 test('solver worker uses a bounded preview solve for drag and a normal final solve on commit', () => {
   const runtime = new SolverWorkerRuntime({ interactiveSolveOptions: { timeBudgetMs: 0 } });
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -302,7 +317,7 @@ test('solver worker uses a bounded preview solve for drag and a normal final sol
     },
   }));
   const preview = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'drag-update',
     payload: { entities: [{ id: 'budget-line', type: 'line', start: [0, 0], end: [10, 5] }] },
@@ -314,7 +329,7 @@ test('solver worker uses a bounded preview solve for drag and a normal final sol
   assert.deepEqual(preview.changedEntities[0].end, [10, 0]);
 
   const final = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 3,
+    requestToken: 3,
     generation: 1,
     type: 'solve',
     payload: { options: { seedEntityIds: ['budget-line'] } },
@@ -338,13 +353,13 @@ test('solver worker restores the pre-drag baseline when the strict final solve f
   };
   const runtime = new SolverWorkerRuntime({ controller });
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 1,
     type: 'drag-update',
     payload: { entities: [{ ...entity, end: [10, 8] }] },
   }));
   const final = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'solve',
     payload: { options: {} },
@@ -372,13 +387,13 @@ test('solver worker final result resynchronizes every entity from the affected d
   };
   const runtime = new SolverWorkerRuntime({ controller });
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 1,
     type: 'drag-update',
     payload: { entities: [{ id: 'direct-final', type: 'point', point: [2, 0] }] },
   }));
   const final = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'solve',
     payload: { options: {} },

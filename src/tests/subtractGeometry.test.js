@@ -10,6 +10,7 @@ import {
   subtractParentIds,
   subtractPlan,
   subtractPresentationDependsOn,
+  prepareSubtractPresentationClone,
 } from '../../packages/paramagic-core/src/modules/SubtractSystem.js';
 import { createGeometryBinding } from '../../packages/paramagic-core/src/modules/solver/SolverModel.js';
 import { createSubtractSystem, subtractDrawingOwners, subtractDrawingResults } from '../../packages/paramagic-core/src/modules/SubtractSystem.js';
@@ -28,6 +29,26 @@ test('subtract presentation skips records outside its cached dependency set', ()
   assert.equal(subtractPresentationDependsOn(dependencies, new Set(['target-edge'])), true);
   assert.equal(subtractPresentationDependsOn(dependencies, new Set(['unrelated-edge'])), false);
   assert.equal(subtractPresentationDependsOn(dependencies), true);
+});
+
+test('standalone export keeps the authoritative subtract result and removes stylesheet-hidden source drawings', () => {
+  const removed = [];
+  const sourceFill = { remove: () => removed.push('source-fill') };
+  const sourceGeometry = { remove: () => removed.push('source-geometry') };
+  const subtractResult = { remove: () => removed.push('result') };
+  let selector = '';
+  const root = {
+    querySelectorAll(value) {
+      selector = value;
+      return [sourceFill, sourceGeometry];
+    },
+  };
+
+  assert.equal(prepareSubtractPresentationClone(root), root);
+  assert.match(selector, /subtract-source-record \.resolved-boundary-visual/);
+  assert.match(selector, /entity-record\.subtract-source-record \.selectable-entity/);
+  assert.deepEqual(removed, ['source-fill', 'source-geometry']);
+  assert.equal(removed.includes(subtractResult), false);
 });
 
 function closedCurvedCycle(kind, prefix, { subtract = false } = {}) {

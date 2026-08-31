@@ -7,11 +7,13 @@ import {
   deferTextEditUntilPlacementClick,
   drawingTextPresentationModel,
   drawingTextSvgLayout,
+  isTextVisibilityRecord,
   normalizeTextEntity,
   normalizeTextVerticalAlign,
   rememberTextDefaults,
   resolveTextFields,
 } from '../../packages/paramagic-core/src/modules/TextTools.js';
+import { formatParameterFieldValue } from '../../packages/paramagic-core/src/modules/solver/Units.js';
 
 function interactionTarget() {
   const listeners = new Map();
@@ -47,6 +49,12 @@ test('text fields resolve parameter names while leaving unknown fields editable'
   assert.equal(rendered, 'Width: 82\nMissing: [Unknown]');
 });
 
+test('Text records opt into the shared Visible and Visible Expression properties', () => {
+  assert.equal(isTextVisibilityRecord({ recordType: 'text', entity: { type: 'text' } }), true);
+  assert.equal(isTextVisibilityRecord({ recordType: 'geometry', entity: { type: 'text' } }), false);
+  assert.equal(isTextVisibilityRecord({ recordType: 'text', entity: { type: 'line' } }), false);
+});
+
 test('text fields resolve bracketed expressions without changing unresolved fields', () => {
   const rendered = resolveTextFields(
     '[OverallWidth / 2] / [Unknown + 1]',
@@ -60,12 +68,25 @@ test('text fields resolve bracketed expressions without changing unresolved fiel
   assert.equal(rendered, '41 / [Unknown + 1]');
 });
 
+test('text fields preserve unitless Control values while converting length parameters', () => {
+  const rendered = resolveTextFields(
+    'Control: [c1]; Length: [d1]',
+    [
+      { name: 'c1', value: 100, kind: 'control', usesDrawingUnit: false },
+      { name: 'd1', value: 100, kind: 'dimension', usesDrawingUnit: true },
+    ],
+    (entry) => formatParameterFieldValue(entry, 'in'),
+  );
+
+  assert.equal(rendered, 'Control: 100; Length: 3.937');
+});
+
 test('text entities default to Arial 28 and inherit the last edited text properties', () => {
   const initial = normalizeTextEntity({ x: 4, y: 8 });
   assert.equal(initial.fontName, 'Arial');
   assert.equal(initial.fontSize, 28);
   assert.ok(Math.abs(initial.textHeight - (28 * 25.4 / 96)) < 1e-12);
-  assert.equal(initial.scaleWithZoom, true);
+  assert.equal(Object.hasOwn(initial, 'scaleWithZoom'), false);
   assert.equal(initial.multiline, true);
   assert.equal(initial.textAlign, 'left');
   assert.equal(initial.textVerticalAlign, 'top');
@@ -90,7 +111,7 @@ test('text entities default to Arial 28 and inherit the last edited text propert
   assert.equal(next.fontSize, 20);
   assert.ok(Math.abs(next.textHeight - (20 * 25.4 / 96)) < 1e-12);
   assert.equal(next.fontColor, '#123456');
-  assert.equal(next.scaleWithZoom, false);
+  assert.equal(Object.hasOwn(next, 'scaleWithZoom'), false);
   assert.equal(next.multiline, false);
   assert.equal(next.textAlign, 'right');
 });
@@ -103,6 +124,11 @@ test('text normalization preserves class metadata needed by appearance resolutio
   });
   assert.equal(entity.classId, 'class-notes');
   assert.deepEqual(entity.classPropertyOverrides, ['fillOpacity', 'strokeOpacity']);
+});
+
+test('legacy text scale-with-zoom state is removed during normalization', () => {
+  assert.equal(Object.hasOwn(normalizeTextEntity({ scaleWithZoom: true }), 'scaleWithZoom'), false);
+  assert.equal(Object.hasOwn(normalizeTextEntity({ scaleWithZoom: false }), 'scaleWithZoom'), false);
 });
 
 test('text interaction owns selection, drag, double-click editing, and click suppression', () => {
@@ -143,6 +169,19 @@ test('text interaction owns selection, drag, double-click editing, and click sup
   editing = false;
   foreignObject.dispatch('click', { ctrlKey: true });
   assert.deepEqual(actions.at(-1), ['toggle']);
+});
+
+test('text double-click does not enter editing when its Stack is not interactive', () => {
+  const foreignObject = interactionTarget();
+  const record = { id: 'inactive-label', foreignObject };
+  let editCount = 0;
+  bindTextRecordInteractions(record, {
+    canInteract: () => false,
+    beginEdit: () => { editCount += 1; },
+  });
+
+  foreignObject.dispatch('dblclick', { detail: 2 });
+  assert.equal(editCount, 0);
 });
 
 test('new text editing waits for the placement click to finish', () => {

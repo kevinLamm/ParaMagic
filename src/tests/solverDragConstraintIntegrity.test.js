@@ -59,7 +59,7 @@ test('worker drag finalization solves the latest requested geometry to the norma
     interactiveSolveOptions: { maxIterations: 1, timeBudgetMs: Infinity },
   });
   runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 1,
+    requestToken: 1,
     generation: 0,
     type: 'load-sketch',
     payload: {
@@ -73,12 +73,13 @@ test('worker drag finalization solves the latest requested geometry to the norma
       },
     },
   }));
-  const lockedVariableIds = [
-    'worker-drag-line:end.x',
-    'worker-drag-line:end.y',
-  ];
+  const lockedVariableIds = runtime.controller.variableIdsForFeature({
+    kind: 'point',
+    recordId: 'worker-drag-line',
+    index: 2,
+  });
   const preview = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 2,
+    requestToken: 2,
     generation: 1,
     type: 'drag-update',
     payload: {
@@ -96,7 +97,7 @@ test('worker drag finalization solves the latest requested geometry to the norma
   assert.deepEqual(previewLine.end, [10, 10]);
 
   const committed = runtime.handleRequest(createSolverWorkerRequest({
-    requestId: 3,
+    requestToken: 3,
     generation: 1,
     type: 'solve',
     payload: { options: { seedVariableIds: lockedVariableIds } },

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  directClosedRegionNodesForSourceIds,
   organizeDerivedPaintNodes,
   splitDerivedPresentationNodes,
 } from '../../packages/paramagic-core/src/modules/CanvasPaintOrder.js';
@@ -26,4 +27,20 @@ test('copy and array templates place derived fills before source geometry', () =
 
   assert.deepEqual(result.before, [fill]);
   assert.deepEqual(result.after, [outline]);
+});
+
+test('derivative templates only clone canonical top-level closed regions', () => {
+  const matching = node({ parentIds: 'shape-a, shape-b' });
+  const unrelated = node({ parentIds: 'shape-a, shape-c' });
+  const objectLayer = {
+    querySelectorAll(selector) {
+      assert.equal(selector, ':scope > .closed-constrained-region[data-parent-ids]');
+      return [matching, unrelated];
+    },
+  };
+
+  assert.deepEqual(
+    directClosedRegionNodesForSourceIds(objectLayer, ['shape-a', 'shape-b']),
+    [matching],
+  );
 });

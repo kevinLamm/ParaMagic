@@ -8,6 +8,7 @@ import {
   seamLineSplineLineTrim,
 } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
 import { seamLineEdgeReference, seamLineSourceReference } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 test('seam-line presentation skips unrelated record changes', () => {
   const definitions = [{
@@ -192,9 +193,11 @@ test('a click inside the fill does not expose region-wide Seam Line editing', ()
   assert.equal(system.setPropertyFeatureFromEvent({ target }), null);
   assert.equal(system.properties().canEditSeamLine, false);
   assert.equal(system.setSelectedSeamLine(false), false);
-  assert.deepEqual(system.extensionProvider.serialize(), {
+  const serialized = system.extensionProvider.serialize();
+  assert.equal(isUuid(serialized.definitions[0].id), true);
+  assert.deepEqual(serialized, {
     version: 2,
-    definitions: [{ regionId: 'shape', recordIds: ['shape'], defaultEnabled: true, overrides: [] }],
+    definitions: [{ id: serialized.definitions[0].id, regionId: 'shape', recordIds: ['shape'], defaultEnabled: true, overrides: [] }],
   });
 });
 
@@ -226,9 +229,12 @@ test('a click near a circle edge keeps Seam Line properties scoped to that indiv
   };
   assert.deepEqual(system.setPropertyFeatureFromEvent({ target, clientX: 100, clientY: 0 }), outer);
   assert.equal(system.setSelectedSeamLine(false), true);
-  assert.deepEqual(system.extensionProvider.serialize(), {
+  const serialized = system.extensionProvider.serialize();
+  assert.equal(isUuid(serialized.definitions[0].id), true);
+  assert.deepEqual(serialized, {
     version: 2,
     definitions: [{
+      id: serialized.definitions[0].id,
       regionId: 'shape',
       recordIds: ['shape'],
       defaultEnabled: false,
@@ -255,9 +261,12 @@ test('disabling an explicit segment converts default-on intent to stable enabled
   const target = { closest: (selector) => selector === '.segment-select-line' ? target : null };
   assert.deepEqual(system.setPropertyFeatureFromEvent({ target }), first);
   assert.equal(system.setSelectedSeamLine(false), true);
-  assert.deepEqual(system.extensionProvider.serialize(), {
+  const serialized = system.extensionProvider.serialize();
+  assert.equal(isUuid(serialized.definitions[0].id), true);
+  assert.deepEqual(serialized, {
     version: 2,
     definitions: [{
+      id: serialized.definitions[0].id,
       regionId: 'shape',
       recordIds: ['shape'],
       defaultEnabled: false,

@@ -32,7 +32,7 @@ test('constraint blocks map touched variables into component-local columns', () 
   });
 
   assert.deepEqual([...contract.columnByVariableId], [[endY.id, 0], [startY.id, 1]]);
-  const intrinsic = contract.blocks.find((block) => block.id === 'intrinsic:arc');
+  const intrinsic = contract.blocks.find((block) => block.runtimeKey === 'intrinsic:arc');
   assert.ok(intrinsic);
   assert.deepEqual(intrinsic.variableIds, []);
   const horizontal = contract.blocks.find((block) => block.constraintId === 'horizontal-line');
@@ -457,7 +457,7 @@ test('native point-on, tangent, and intrinsic arc blocks match central differenc
   constraints.forEach((constraint) => model.addConstraint(constraint));
   const blocks = new ConstraintRegistry().blocks(model, new DimensionRepository()).blocks;
 
-  const intrinsic = blocks.find(({ id }) => id === 'intrinsic:arc');
+  const intrinsic = blocks.find(({ runtimeKey }) => runtimeKey === 'intrinsic:arc');
   assert.equal(verifyJacobianBlock(intrinsic).valid, true);
   constraints.forEach((constraint) => {
     const block = blocks.find(({ constraintId }) => constraintId === constraint.id);

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  BROWSER_AUTOSAVE_FILE_ID,
+  BROWSER_AUTOSAVE_SLOT_KEY,
   createBrowserAutosaveController,
   normalizeBrowserAutosaveFile,
 } from '../../packages/paramagic-core/src/modules/BrowserAutosave.js';
@@ -13,7 +13,7 @@ test('browser autosave files retain one active drawing identity and filename', (
     content: '{"drawing":true}',
     updatedAt: 123,
   }), {
-    id: BROWSER_AUTOSAVE_FILE_ID,
+    slotKey: BROWSER_AUTOSAVE_SLOT_KEY,
     name: 'Bodice Block',
     content: '{"drawing":true}',
     mimeType: 'application/vnd.paramagic+json',
@@ -62,8 +62,8 @@ test('saving a new drawing replaces the same browser-local file', async () => {
   const records = new Map();
   let drawing = { name: 'Existing Drawing', content: 'old', updatedAt: 1 };
   const store = {
-    load: async () => records.get(BROWSER_AUTOSAVE_FILE_ID) || null,
-    save: async (file) => { records.set(file.id, file); return file; },
+    load: async () => records.get(BROWSER_AUTOSAVE_SLOT_KEY) || null,
+    save: async (file) => { records.set(file.slotKey, file); return file; },
   };
   const controller = createBrowserAutosaveController({ store, capture: () => drawing });
 

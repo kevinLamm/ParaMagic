@@ -34,16 +34,24 @@ test('canvas presentation filtering is shared by whole-drawing and per-stack sna
   const source = presentationNode(['canvas-record'], 'stack-a');
   const array = presentationNode(['array-group'], 'stack-a');
   const otherStack = presentationNode(['canvas-record'], 'stack-b');
-  const drivingDimension = presentationNode(['canvas-record', 'dimension-driving'], 'stack-a');
+  const excludedDrivingDimension = presentationNode([
+    'canvas-record',
+    'dimension-driving',
+    'dimension-export-excluded',
+  ], 'stack-a');
+  const includedDrivingDimension = presentationNode(['canvas-record', 'dimension-driving'], 'stack-a');
   const editingRegion = presentationNode(['canvas-record', 'closed-constrained-region'], 'stack-a');
+  const disabledStack = presentationNode(['canvas-record', 'stack-disabled'], 'stack-a');
 
   assert.equal(isCanvasPresentationSourceNode(source), true);
   assert.equal(isCanvasPresentationSourceNode(array), true);
   assert.equal(isCanvasPresentationSourceNode(otherStack), true);
   assert.equal(isCanvasPresentationSourceNode(source, 'stack-a'), true);
   assert.equal(isCanvasPresentationSourceNode(otherStack, 'stack-a'), false);
-  assert.equal(isCanvasPresentationSourceNode(drivingDimension, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(excludedDrivingDimension, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(includedDrivingDimension, 'stack-a'), true);
   assert.equal(isCanvasPresentationSourceNode(editingRegion, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(disabledStack, 'stack-a'), false);
 });
 
 test('Value Only presentation keeps derived Swell records while omitting their construction sources', () => {

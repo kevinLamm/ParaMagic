@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   constraintFeatureFromEvent,
+  constraintHelpersVisible,
   constraintRecordVisible,
   constraintReferencesActiveStack,
   constraintReferencesAnyRecord,
@@ -12,7 +13,7 @@ import {
   setConstraintPointAffordances,
   setConstraintSelectionActive,
 } from '../../packages/paramagic-core/src/modules/ConstraintSystem.js';
-import { CANVAS_ORIGIN_RECORD_ID } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 
 test('constraint helpers require every referenced record to be visible', () => {
   const constraint = {
@@ -51,7 +52,7 @@ test('constraint helper visibility handles duplicate and missing feature referen
 test('the built-in origin does not make a constraint helper appear hidden', () => {
   assert.equal(constraintReferencesVisible({
     featureRefs: [
-      { recordId: CANVAS_ORIGIN_RECORD_ID, kind: 'point', index: 0 },
+      canvasOriginPointFeature(),
       { recordId: 'shape-a', kind: 'point', index: 0 },
     ],
 }, (recordId) => recordId === 'shape-a'), true);
@@ -75,8 +76,15 @@ test('constraint helpers appear only when their constraint touches the active St
   assert.equal(constraintReferencesActiveStack(crossStackConstraint, (recordId) => recordId === 'active-shape'), true);
   assert.equal(constraintReferencesActiveStack({ featureRefs: [] }, () => false), true);
   assert.equal(constraintReferencesActiveStack({
-    featureRefs: [{ recordId: CANVAS_ORIGIN_RECORD_ID, kind: 'point', index: 0 }],
+    featureRefs: [canvasOriginPointFeature()],
   }, () => false), true);
+});
+
+test('constraint helper overlay is hidden whenever no Stack is active', () => {
+  assert.equal(constraintHelpersVisible({ requested: true, scale: 1, activeStackId: 'stack-a' }), true);
+  assert.equal(constraintHelpersVisible({ requested: true, scale: 1, activeStackId: null }), false);
+  assert.equal(constraintHelpersVisible({ requested: false, scale: 1, activeStackId: 'stack-a' }), false);
+  assert.equal(constraintHelpersVisible({ requested: true, scale: 0.01, activeStackId: 'stack-a' }), false);
 });
 
 test('incremental constraint-helper refresh identifies only constraints touching changed records', () => {

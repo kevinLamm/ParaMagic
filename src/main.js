@@ -28,17 +28,17 @@ import {
   createImageFillPropertyController,
   createImageStrokePropertyController,
   createIndexedDbBrowserFileStore,
-  exportTextFileWithPicker,
   createInfiniteCanvas,
   createNotchTools,
   createParametersPanelController,
   createSmartDimensionTools,
-  createStackPanel,
+  createStackTreePanel,
   createSwellTools,
   createSubtractTools,
   createLinkedCopyTools,
   createConstraintHandlers,
   dimensionTools,
+  drawingIdentity,
   drawingTools,
   imageFillPropertiesMarkup,
   imageStrokePropertiesMarkup,
@@ -53,12 +53,13 @@ import {
   positionHeaderToolMenu,
   rememberRepeatableTool,
   sampleEntities,
+  saveFileAsWithPicker,
   serializePortableDrawingJson,
-  serializePortablePackageJson,
 } from '@paramagic/core/editor';
 import {
   PARAMAGIC_DOCUMENT_EXTENSION,
   PARAMAGIC_DOCUMENT_MIME_TYPE,
+  createIndependentDrawingSave,
   parseParamagicDocument,
   serializeDxf,
   serializeParamagicDocument,
@@ -192,34 +193,26 @@ app.innerHTML = `
           ${appMenuButton('Open', 'id="openButton"')}
           ${appMenuButton('Save', 'id="saveButton" data-requires-drawing')}
           ${appMenuButton('Save As', 'id="saveAsButton" data-requires-drawing disabled')}
-          ${appMenuButton('Import', 'id="importButton"')}
           ${appMenuButton('Insert', 'id="insertButton" data-requires-drawing disabled')}
           ${appMenuButton('Duplicate Drawing')}
           ${appMenuButton('Insert Image', 'id="insertImageButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
-          ${appMenuButton('Export', 'id="exportButton" data-app-export-toggle aria-controls="appMenuExportOptions" aria-expanded="false" data-requires-drawing disabled')}
-          <div class="app-menu-export-options" id="appMenuExportOptions" hidden>
-            ${appMenuButton('DXF', 'data-export-format="dxf" data-requires-drawing disabled')}
-            ${appMenuButton('SVG', 'data-export-format="svg" data-requires-drawing disabled')}
-            ${appMenuButton('PNG', 'data-export-format="png" data-requires-drawing disabled')}
-            ${appMenuButton('JSON', 'data-export-format="json" data-requires-drawing disabled')}
-          </div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
         </nav>
       </section>
       <div class="unified-toolbar" aria-label="Drawing toolbar">${drawingToolbar()}</div>
       <div class="app-header-vertical-rail" id="appHeaderVerticalRail" aria-label="Vertical drawing tools" hidden></div>
     </header>
+    <aside id="stackTreeSidebar"></aside>
     <main class="canvas" id="canvas" data-canvas="true">
       <div class="grid" id="grid" data-canvas="true"></div>
       <svg class="drawing-plane" id="drawingPlane" data-canvas="true"></svg>
       <div class="canvas-brand-stamp" aria-hidden="true">ParaMagic</div>
       <div class="solver-status" id="solverStatus" role="status" hidden></div>
     </main>
-    <input type="file" id="openParamagicFileInput" accept=".paramagic,application/vnd.paramagic+json,application/json" hidden />
+    <input type="file" id="openDrawingFileInput" accept=".paramagic,.dxf,.json,application/vnd.paramagic+json,application/dxf,application/json" hidden />
     <input type="file" id="insertParamagicFileInput" accept=".paramagic,application/vnd.paramagic+json,application/json" hidden />
-    <input type="file" id="importFileInput" accept=".json,.dxf,application/json,application/dxf" hidden />
     <input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml" hidden />
     ${propertiesPanel()}
   </div>`;
@@ -229,8 +222,6 @@ const appHeaderVerticalRail = document.getElementById('appHeaderVerticalRail');
 const appMenuShell = document.querySelector('.app-menu-shell');
 const appMenuToggle = document.getElementById('appMenuToggle');
 const appMenu = document.getElementById('appMenu');
-const appMenuExportToggle = document.getElementById('exportButton');
-const appMenuExportOptions = document.getElementById('appMenuExportOptions');
 let browserAutosaveController = null;
 let currentDrawingFileHandle = null;
 bindResponsiveToolHeader(appHeader, {
@@ -242,21 +233,12 @@ function setAppMenuOpen(open) {
   appMenu.hidden = !open;
   appMenuToggle.setAttribute('aria-expanded', String(open));
   appMenuToggle.classList.toggle('active', open);
-  if (!open) {
-    appMenuExportOptions.hidden = true;
-    appMenuExportToggle.setAttribute('aria-expanded', 'false');
-  }
 }
 
 appMenuToggle.addEventListener('click', () => setAppMenuOpen(appMenu.hidden));
 appMenu.addEventListener('click', (event) => {
   const button = event.target.closest('button:not(:disabled)');
   if (!button) return;
-  if (button === appMenuExportToggle) {
-    appMenuExportOptions.hidden = !appMenuExportOptions.hidden;
-    appMenuExportToggle.setAttribute('aria-expanded', String(!appMenuExportOptions.hidden));
-    return;
-  }
   setAppMenuOpen(false);
 });
 document.addEventListener('pointerdown', (event) => {
@@ -267,6 +249,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 let activeDrawingName = 'Untitled Drawing';
+let stackTreePanelController = null;
 const currentDrawingName = () => activeDrawingName;
 const constraintTool = document.querySelector('.constraint-tool');
 const constraintMenu = constraintTool.querySelector('.constraint-menu');
@@ -333,6 +316,7 @@ textTableMenu?.querySelectorAll('[data-drawing-tool]')?.forEach((button) => butt
   hideTextTableMenu();
 }));
 let constraintController = null;
+let drawingCreationAvailable = true;
 
 function updateDrawingActionState() {
   const hasName = currentDrawingName().length > 0;
@@ -342,6 +326,14 @@ function updateDrawingActionState() {
     button.disabled = !shouldEnable;
   });
   document.querySelector('.export-dropdown')?.classList.toggle('disabled', !shouldEnable);
+  const canCreate = Boolean(canvasController?.getActiveStackId?.());
+  document.querySelectorAll('[data-drawing-tool]').forEach((button) => {
+    button.disabled = !canCreate;
+  });
+  if (drawingCreationAvailable && !canCreate) {
+    window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'stack-activation' } }));
+  }
+  drawingCreationAvailable = canCreate;
 }
 
 function panel(body, attrs = '') {
@@ -388,14 +380,14 @@ function drawingToolbar() {
           ? iconButton(label, 'data-swell-tool aria-pressed="false"')
         : iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`))
     .join('');
-  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Stacks', 'id="stacksToggle" data-preserve-feature-selection aria-controls="stackPanel" aria-pressed="false"')}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
+  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
 }
 
 function classToolbar() {
   return `<div class="toolbar-section class-toolbar" aria-label="Classes">
     ${iconButton('Class Properties', 'id="classPropertiesButton" data-preserve-feature-selection aria-pressed="false"')}
     <label class="sr-only" for="activeClassSelect">Active Class</label>
-    <select id="activeClassSelect" class="active-class-select" data-preserve-feature-selection aria-label="Active Class"><option value="class-x">X</option></select>
+    <select id="activeClassSelect" class="active-class-select" data-preserve-feature-selection aria-label="Active Class"><option value="">X</option></select>
     ${iconButton('Select All Class', 'id="selectAllClassButton" data-preserve-feature-selection')}
   </div>`;
 }
@@ -423,7 +415,7 @@ function controlToolbar() {
 function propertiesPanel() {
   return panel(`<div class="properties-panel-header"><h2>Properties</h2><button type="button" class="panel-close-button properties-panel-close" id="propertiesPanelClose" aria-label="Close Properties" title="Close">&times;</button></div>
     <p class="properties-selection-status" id="propertiesSelectionStatus">No objects selected</p>
-    <label class="property-row" for="classProperty"><span>Class</span><select id="classProperty" aria-label="Class for selected geometry" disabled><option value="class-x">X</option></select></label>
+    <label class="property-row" for="classProperty"><span>Class</span><select id="classProperty" aria-label="Class for selected geometry" disabled><option value="">X</option></select></label>
     <div class="property-row"><span>Fill Color</span><div class="property-inline property-color-controls"><input id="fillColorProperty" aria-label="Fill color picker" type="color" value="#ffffff" disabled /><button type="button" id="imageFillProperty" class="property-image-fill-button" aria-label="Choose image fill" title="Choose image fill" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/></svg></button><input id="fillExpressionProperty" aria-label="Fill hex, expression, or image path" type="text" value="#ffffff" spellcheck="false" disabled /></div></div>
     ${imageFillPropertiesMarkup()}
     <div class="property-row"><span>Fill Opacity</span><div class="property-inline opacity-controls"><input id="fillOpacitySlider" aria-label="Fill opacity slider" type="range" min="0" max="100" step="1" value="100" disabled /><input id="fillOpacityExpression" aria-label="Fill opacity expression" type="text" value="100" spellcheck="false" disabled /></div></div>
@@ -445,7 +437,6 @@ function propertiesPanel() {
     </select></label>
     <label class="property-row text-property-row" for="fontSizeProperty" hidden><span>Font Size</span><input id="fontSizeProperty" type="number" min="1" step="1" value="28" disabled /></label>
     <label class="property-row text-property-row" for="fontColorProperty" hidden><span>Font Color</span><input id="fontColorProperty" type="color" value="#202020" disabled /></label>
-    <label class="property-row text-property-row text-layout-property-row" for="scaleTextWithZoomProperty" hidden><span>Scale with Zoom</span><input id="scaleTextWithZoomProperty" type="checkbox" checked disabled /></label>
     <label class="property-row text-property-row text-layout-property-row" for="multilineTextProperty" hidden><span>Multiline</span><input id="multilineTextProperty" type="checkbox" checked disabled /></label>
     <div class="property-row text-property-row text-layout-property-row" id="textAlignmentPropertyRow" hidden><span>Alignment</span><div class="text-alignment-options" role="group" aria-label="Text alignment">
       <button type="button" data-text-align="left" aria-label="Left alignment" title="Left alignment" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 10h10M4 14h16M4 18h12"/></svg></button>
@@ -490,42 +481,37 @@ function downloadText(content, fileName, type) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-const exportFileTypes = {
-  dxf: { description: 'DXF Drawing', extension: 'dxf', mimeType: 'application/dxf' },
-  png: { description: 'PNG Image', extension: 'png', mimeType: 'image/png' },
-  svg: { description: 'SVG Drawing', extension: 'svg', mimeType: 'image/svg+xml' },
-  json: { description: 'JSON File', extension: 'json', mimeType: 'application/json' },
-};
+const saveAsFormats = [
+  {
+    key: 'paramagic',
+    description: 'ParaMagic Drawing',
+    extension: PARAMAGIC_DOCUMENT_EXTENSION,
+    mimeType: PARAMAGIC_DOCUMENT_MIME_TYPE,
+  },
+  { key: 'dxf', description: 'DXF Drawing', extension: '.dxf', mimeType: 'application/dxf' },
+  { key: 'svg', description: 'SVG Drawing', extension: '.svg', mimeType: 'image/svg+xml' },
+  { key: 'png', description: 'PNG Image', extension: '.png', mimeType: 'image/png' },
+  { key: 'json', description: 'JSON Drawing', extension: '.json', mimeType: 'application/json' },
+];
 
-function exportFileWithDialog({ name, format, createContent }) {
-  const fileType = exportFileTypes[format];
-  if (!fileType) throw new Error(`Unsupported export format: ${format}`);
-  return exportTextFileWithPicker({
-    createContent,
-    description: fileType.description,
-    download: downloadText,
-    extension: fileType.extension,
-    mimeType: fileType.mimeType,
-    pickerId: `paramagic-export-${format}`,
-    showSaveFilePicker: window.showSaveFilePicker?.bind(window),
-    suggestedName: safeFileName(name, fileType.extension),
-  });
+function safeBaseName(name) {
+  return drawingName(name || 'Untitled Drawing').replace(/[<>:"/\\|?*]+/g, '-').trim() || 'Untitled Drawing';
 }
 
-async function readDrawingFile(file) {
+async function readDrawingFile(file, fileHandle = null) {
   if (!file) return;
   try {
     const drawing = await parsePortableDrawingText(file.name, await file.text(), {
       importAsset: importPortableCatalogImage,
     });
     canvasController.loadDrawingData(drawing);
-    currentDrawingFileHandle = null;
+    currentDrawingFileHandle = /\.paramagic$/i.test(file.name) ? fileHandle : null;
     setDrawingName(file.name);
     drawingHistory.reset();
     browserAutosaveController?.saveNow();
     updateDrawingActionState();
   } catch (error) {
-    modal(`<h2>Import failed</h2><p>${escapeHtml(error.message)}</p>`);
+    modal(`<h2>Open failed</h2><p>${escapeHtml(error.message)}</p>`);
   }
 }
 
@@ -533,6 +519,7 @@ function setDrawingName(name) {
   activeDrawingName = drawingName(name).trim() || 'Untitled Drawing';
   document.title = drawingBrowserTitle(activeDrawingName);
   canvasController.setDocumentContext({ fileName: currentDrawingName() });
+  stackTreePanelController?.setDrawingName(currentDrawingName());
   updateDrawingActionState();
 }
 
@@ -560,28 +547,48 @@ function paramagicFilePickerOptions(name) {
   };
 }
 
-function paramagicOpenPickerOptions() {
-  const { suggestedName, ...options } = paramagicFilePickerOptions(currentDrawingName());
-  return { ...options, multiple: false };
+function drawingOpenPickerOptions() {
+  return {
+    id: 'paramagic-open-drawing',
+    multiple: false,
+    excludeAcceptAllOption: true,
+    types: [
+      {
+        description: 'ParaMagic Drawing',
+        accept: { [PARAMAGIC_DOCUMENT_MIME_TYPE]: [PARAMAGIC_DOCUMENT_EXTENSION] },
+      },
+      { description: 'DXF Drawing', accept: { 'application/dxf': ['.dxf'] } },
+      { description: 'JSON Drawing', accept: { 'application/json': ['.json'] } },
+    ],
+  };
 }
 
-function chooseDrawingName(initialName = currentDrawingName()) {
+function chooseSaveAsTarget({
+  initialName = currentDrawingName(),
+  title = 'Save Drawing As',
+  formats = saveAsFormats,
+  defaultFormat = 'paramagic',
+} = {}) {
   return new Promise((resolve) => {
+    const showFormat = formats.length > 1;
+    const formatOptions = formats.map((format) => `<option value="${escapeHtml(format.key)}"${format.key === defaultFormat ? ' selected' : ''}>${escapeHtml(format.description)} (${escapeHtml(format.extension)})</option>`).join('');
     document.body.insertAdjacentHTML('beforeend', `<div class="modal-backdrop save-as-backdrop">
       <form class="modal save-as-modal" role="dialog" aria-modal="true" aria-labelledby="saveAsTitle">
         <button type="button" class="close save-as-close" aria-label="Close" title="Close">x</button>
-        <h2 id="saveAsTitle">Save Drawing As</h2>
-        <label class="save-as-field"><span>Drawing name</span><input class="save-as-name" value="${escapeHtml(initialName)}" autocomplete="off" /></label>
-        <p class="save-as-error" role="alert" hidden>Enter a drawing name.</p>
+        <h2 id="saveAsTitle">${escapeHtml(title)}</h2>
+        <label class="save-as-field"><span>File name</span><input class="save-as-name" value="${escapeHtml(initialName)}" autocomplete="off" /></label>
+        ${showFormat ? `<label class="save-as-field"><span>File type</span><select class="save-as-format">${formatOptions}</select></label>` : ''}
+        <p class="save-as-error" role="alert" hidden>Enter a file name.</p>
         <div class="save-as-actions"><button type="button" class="save-as-cancel">Cancel</button><button type="submit" class="save-as-confirm">Save As</button></div>
       </form>
     </div>`);
     const backdrop = [...document.querySelectorAll('.save-as-backdrop')].at(-1);
     const form = backdrop.querySelector('.save-as-modal');
     const input = backdrop.querySelector('.save-as-name');
-    const finish = (name) => {
+    const formatSelect = backdrop.querySelector('.save-as-format');
+    const finish = (target) => {
       backdrop.remove();
-      resolve(name);
+      resolve(target);
     };
     backdrop.querySelector('.save-as-close').addEventListener('click', () => finish(null));
     backdrop.querySelector('.save-as-cancel').addEventListener('click', () => finish(null));
@@ -595,11 +602,19 @@ function chooseDrawingName(initialName = currentDrawingName()) {
         input.focus();
         return;
       }
-      finish(name);
+      finish({ name, format: formatSelect?.value || defaultFormat });
     });
     input.focus();
     input.select();
   });
+}
+
+async function chooseDrawingName(initialName = currentDrawingName()) {
+  const target = await chooseSaveAsTarget({
+    initialName,
+    formats: saveAsFormats.filter(({ key }) => key === 'paramagic'),
+  });
+  return target?.name || null;
 }
 
 const drawingFileController = createDrawingFileController({
@@ -608,7 +623,7 @@ const drawingFileController = createDrawingFileController({
   showOpenFilePicker: window.showOpenFilePicker?.bind(window),
   showSaveFilePicker: window.showSaveFilePicker?.bind(window),
   normalizeName: (name) => drawingName(name).trim() || 'Untitled Drawing',
-  openPickerOptions: paramagicOpenPickerOptions,
+  openPickerOptions: drawingOpenPickerOptions,
   pickerOptions: paramagicFilePickerOptions,
   serialize: serializeCurrentDrawing,
   download: (content, name) => downloadText(
@@ -619,9 +634,9 @@ const drawingFileController = createDrawingFileController({
   chooseFallbackName: chooseDrawingName,
 });
 
-async function saveDrawing(saveAs = false) {
+async function saveDrawing() {
   try {
-    const result = await drawingFileController[saveAs ? 'saveAs' : 'save'](currentDrawingName());
+    const result = await drawingFileController.save(currentDrawingName());
     if (result.status !== 'saved') return;
     setDrawingName(result.name);
     drawingHistory.recordSoon();
@@ -631,32 +646,78 @@ async function saveDrawing(saveAs = false) {
   }
 }
 
-async function readParamagicFile(file, mode, fileHandle = null) {
-  if (!file) return;
+async function saveDrawingAs() {
+  let png = null;
+  let independentSave = null;
   try {
-    const drawing = parseParamagicDocument(await file.text());
-    if (mode === 'insert') {
-      canvasController.insertDrawingData(drawing);
-    } else {
-      canvasController.loadDrawingData(drawing);
-      currentDrawingFileHandle = fileHandle;
-      setDrawingName(file.name.replace(/\.paramagic$/i, ''));
+    const result = await saveFileAsWithPicker({
+      formats: saveAsFormats,
+      defaultFormat: 'paramagic',
+      suggestedBaseName: safeBaseName(currentDrawingName()),
+      pickerKey: 'paramagic-drawing-save-as',
+      showSaveFilePicker: window.showSaveFilePicker?.bind(window),
+      chooseFallbackTarget: ({ suggestedBaseName, defaultFormat, formats }) => chooseSaveAsTarget({
+        initialName: suggestedBaseName,
+        formats,
+        defaultFormat,
+      }),
+      createContent: async (format, fileName) => {
+        const name = drawingName(fileName);
+        if (format === 'paramagic') {
+          independentSave = createIndependentDrawingSave(
+            drawingSnapshotForFile(name),
+            name,
+          );
+          return independentSave.content;
+        }
+        if (format === 'json') return serializePortableDrawingJson(canvasController.getDrawingData(), name);
+        if (format === 'svg') return serializeCanvasPresentationSvg(canvasController.getObjectLayer?.(), {
+          resolveValueOnlyDimensionText: (dimensionId) => canvasController.getDimensionText?.(dimensionId, 'value'),
+        });
+        if (format === 'png') {
+          png = await createCanvasPresentationPng(canvasController.getObjectLayer?.(), {
+            resolveValueOnlyDimensionText: (dimensionId) => canvasController.getDimensionText?.(dimensionId, 'value'),
+          });
+          return png.blob;
+        }
+        prepareDxfExportGeometry(canvasController.solveDrawing);
+        return serializeDxf(createDrawingDxfSnapshot(canvasController.getDrawingData(), {
+          effectiveEnabledStackIds: canvasController.getEffectiveEnabledStackIds(),
+        }));
+      },
+      download: downloadText,
+    });
+    if (result.status !== 'saved') return;
+    if (result.format === 'paramagic') {
+      if (!independentSave) throw new Error('The independent drawing graph was not created.');
+      currentDrawingFileHandle = result.handle;
+      canvasController.loadDrawingData(independentSave.drawing, { zoomToFit: false, history: 'coalesce' });
+      setDrawingName(result.name);
       drawingHistory.reset();
-      browserAutosaveController?.saveNow();
+      await browserAutosaveController?.saveNow();
+    } else if (png) {
+      showStorageStatus(`Saved ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
+    } else {
+      showStorageStatus(`Saved ${result.name}.`);
     }
-    updateDrawingActionState();
   } catch (error) {
-    modal(`<h2>${mode === 'insert' ? 'Insert' : 'Open'} failed</h2><p>${escapeHtml(error.message)}</p>`);
+    modal(`<h2>Save As failed</h2><p>${escapeHtml(error.message)}</p>`);
   }
 }
 
-document.getElementById('importButton').addEventListener('click', () => document.getElementById('importFileInput').click());
-document.getElementById('importFileInput').addEventListener('change', async (event) => {
-  await readDrawingFile(event.target.files[0]);
-  event.target.value = '';
-});
+async function insertParamagicFile(file) {
+  if (!file) return;
+  try {
+    const drawing = parseParamagicDocument(await file.text());
+    canvasController.insertDrawingData(drawing);
+    updateDrawingActionState();
+  } catch (error) {
+    modal(`<h2>Insert failed</h2><p>${escapeHtml(error.message)}</p>`);
+  }
+}
+
 document.getElementById('openButton').addEventListener('click', () => {
-  const fallbackInput = document.getElementById('openParamagicFileInput');
+  const fallbackInput = document.getElementById('openDrawingFileInput');
   if (typeof window.showOpenFilePicker !== 'function') {
     fallbackInput.click();
     return;
@@ -664,24 +725,24 @@ document.getElementById('openButton').addEventListener('click', () => {
   (async () => {
     try {
       const result = await drawingFileController.open();
-      if (result.status === 'opened') await readParamagicFile(result.file, 'open', result.handle);
+      if (result.status === 'opened') await readDrawingFile(result.file, result.handle);
       else if (result.status === 'fallback') fallbackInput.click();
     } catch (error) {
       modal(`<h2>Open failed</h2><p>${escapeHtml(error.message)}</p>`);
     }
   })();
 });
-document.getElementById('openParamagicFileInput').addEventListener('change', async (event) => {
-  await readParamagicFile(event.target.files[0], 'open');
+document.getElementById('openDrawingFileInput').addEventListener('change', async (event) => {
+  await readDrawingFile(event.target.files[0]);
   event.target.value = '';
 });
 document.getElementById('insertButton').addEventListener('click', () => document.getElementById('insertParamagicFileInput').click());
 document.getElementById('insertParamagicFileInput').addEventListener('change', async (event) => {
-  await readParamagicFile(event.target.files[0], 'insert');
+  await insertParamagicFile(event.target.files[0]);
   event.target.value = '';
 });
 document.getElementById('saveButton').addEventListener('click', () => saveDrawing());
-document.getElementById('saveAsButton').addEventListener('click', () => saveDrawing(true));
+document.getElementById('saveAsButton').addEventListener('click', saveDrawingAs);
 document.getElementById('insertImageButton').addEventListener('click', () => {
   window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'image' } }));
   document.getElementById('imageFileInput').click();
@@ -700,53 +761,6 @@ document.getElementById('imageFileInput').addEventListener('change', async (even
   } catch (error) {
     modal(`<h2>Insert image failed</h2><p>${escapeHtml(error.message)}</p>`);
   }
-});
-
-document.querySelectorAll('[data-export-format]').forEach((button) => {
-  button.addEventListener('click', async () => {
-    const name = currentDrawingName();
-    try {
-      const format = button.dataset.exportFormat;
-      if (format === 'json') {
-        const snapshot = canvasController.getDrawingData();
-        await exportFileWithDialog({
-          name,
-          format,
-          createContent: () => serializePortableDrawingJson(snapshot, name),
-        });
-      } else if (format === 'svg') {
-        await exportFileWithDialog({
-          name,
-          format,
-          createContent: () => serializeCanvasPresentationSvg(canvasController.getObjectLayer?.()),
-        });
-      } else if (format === 'png') {
-        let png;
-        const result = await exportFileWithDialog({
-          name,
-          format,
-          createContent: async () => {
-            png = await createCanvasPresentationPng(canvasController.getObjectLayer?.());
-            return png.blob;
-          },
-        });
-        if (result.status === 'saved') {
-          showStorageStatus(`Exported ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
-        }
-      } else {
-        prepareDxfExportGeometry(canvasController.solveDrawing);
-        const snapshot = canvasController.getDrawingData();
-        const dxfSnapshot = createDrawingDxfSnapshot(snapshot);
-        await exportFileWithDialog({
-          name,
-          format,
-          createContent: () => serializeDxf(dxfSnapshot),
-        });
-      }
-    } catch (error) {
-      modal(`<h2>Export failed</h2><p>${escapeHtml(error.message)}</p>`);
-    }
-  });
 });
 
 function escapeHtml(value) {
@@ -858,7 +872,7 @@ function openParametersModal(solver, canvas, drawingName = 'Untitled Drawing', c
   modal(`<div class="parameters-modal-content">
     <div class="parameters-heading"><h2>Parameters</h2>${parametersPanelHeaderActionsMarkup()}</div>
     <div class="parameters-description">
-      <p class="parameters-note">Local to this drawing. Dimensions are added automatically as d1, d2, d3, and Controls as c1, c2, c3. Both can be referenced from expressions.</p>
+      <p class="parameters-note">Local to this drawing. Dimensions are local to their Stack and displayed as d1@Stack Name. Use bare d1 inside the same Stack, or d1@Stack Name from another Stack or a global parameter.</p>
       <p class="parameters-import-status" role="status" hidden></p>
     </div>
     <div class="parameters-table-scroll" tabindex="0" aria-label="Scrollable drawing parameters">
@@ -891,6 +905,9 @@ function openParametersModal(solver, canvas, drawingName = 'Untitled Drawing', c
     closeButton: backdrop.querySelector('.parameters-modal > .close'),
     drawingName,
     expressionForEntry,
+    nameForEntry: (entry) => entry.kind === 'dimension'
+      ? solver.parameterExpressionSymbols().find(({ parameterId }) => parameterId === entry.id)?.name || entry.name
+      : entry.name,
     onViewChange: () => render(),
     onHelp: openExpressionHelpModal,
     onRender: () => render(),
@@ -900,10 +917,11 @@ function openParametersModal(solver, canvas, drawingName = 'Untitled Drawing', c
     const dimension = entry.kind === 'dimension';
     const computed = dimension && !entry.driving;
     const control = entry.kind === 'control';
-    const rowClass = [dimension ? 'dimension-parameter-row' : '', computed ? 'computed-parameter-row' : '', entry.error ? 'invalid-parameter-row' : '', entry.id === selectedId ? 'selected-parameter-row' : ''].filter(Boolean).join(' ');
+    const solveOffender = solver.lastResult?.offender?.dimensionId === entry.id;
+    const rowClass = [dimension ? 'dimension-parameter-row' : '', computed ? 'computed-parameter-row' : '', entry.error ? 'invalid-parameter-row' : '', solveOffender ? 'solve-offender-parameter-row' : '', entry.id === selectedId ? 'selected-parameter-row' : ''].filter(Boolean).join(' ');
     const valueText = parameterValueText(entry);
     return `<tr tabindex="0" class="${rowClass}" data-parameter-id="${escapeHtml(entry.id)}" title="${escapeHtml(entry.error || `Value: ${valueText}`)}">
-      <td><input type="hidden" value="${escapeHtml(entry.id)}" /><span class="row-drag-handle" draggable="true" aria-hidden="true" title="Drag to reorder">&#8942;&#8942;</span>${parameterNameEditorMarkup(entry, { controlItems })}</td>
+      <td><input type="hidden" value="${escapeHtml(entry.id)}" /><span class="row-drag-handle" draggable="true" aria-hidden="true" title="Drag to reorder">&#8942;&#8942;</span>${parameterNameEditorMarkup(entry, { controlItems, stackState: canvas.getStackState?.() })}</td>
       <td><input class="parameter-expression" aria-label="Parameter expression" value="${escapeHtml(expressionForEntry(entry))}" ${computed || control ? 'readonly' : ''} aria-invalid="${entry.error ? 'true' : 'false'}" /></td>
     </tr>`;
   }
@@ -1068,7 +1086,7 @@ function openExpressionHelpModal() {
       <button class="close expression-help-close" aria-label="Close" title="Close">x</button>
       <h2 id="expressionHelpTitle">Expression examples</h2>
       <section><h3>Conditional values</h3><p><code>if(condition, value_when_true, value_when_false)</code></p><pre>enabled = TRUE</pre><pre>if(enabled, 600, 50)</pre><p>If <code>enabled</code> evaluates to <code>TRUE</code>, the result is 600; otherwise it is 50.</p></section>
-      <section><h3>Parameter references and arithmetic</h3><pre>plate_width / 2 + 10</pre><pre>d1 - 25</pre></section>
+      <section><h3>Parameter references and arithmetic</h3><pre>plate width / 2 + 10</pre><pre>d1 - 25</pre><pre>d1@Stack Name + 10</pre><p>Dimension names are local to each Stack. A global Parameter or Control must use the qualified form, such as <code>d1@Stack Name</code>. Parameter and Stack names may contain spaces without quotes.</p></section>
       <section><h3>Comparisons and logic</h3><pre>width &gt;= 100</pre><pre>enabled &amp;&amp; width &lt; 500</pre><pre>!disabled</pre></section>
       <section><h3>Functions</h3><pre>max(25, width / 4)</pre><pre>clamp(width, 100, 600)</pre><pre>round(sqrt(area))</pre><pre>sin(30) * 100</pre><pre>MinMax(minimum, maximum, initial, step)</pre></section>
       <section><h3>Text values</h3><p>Wrap text in single or double quotes to create a string parameter.</p><pre>BodyCover = "basic/Fabric/36981_106.webp"</pre></section>
@@ -1263,6 +1281,7 @@ solverController.subscribeExecution?.(({ mode, state, jacobianMode }) => {
   document.documentElement.dataset.solverJacobianMode = jacobianMode;
 });
 solverController.subscribe((_snapshot, result) => {
+  canvasController?.refreshStackActivation?.();
   const failed = result && !['converged', 'unchanged', 'preview'].includes(result.status);
   const loadWarnings = result?.loadWarnings || [];
   solverStatus.hidden = !failed && !loadWarnings.length;
@@ -1272,6 +1291,7 @@ solverController.subscribe((_snapshot, result) => {
     : loadWarnings.length
       ? `${loadWarnings.length} saved constraint${loadWarnings.length === 1 ? '' : 's'} was disabled while opening because it is invalid.`
       : '';
+  canvasController?.setSolverFailure?.(failed ? result : null);
 });
 const canvasController = createInfiniteCanvas({
   canvas: document.getElementById('canvas'),
@@ -1339,7 +1359,6 @@ const textPropertyRows = [...document.querySelectorAll('.text-property-row')];
 const fontNameProperty = document.getElementById('fontNameProperty');
 const fontSizeProperty = document.getElementById('fontSizeProperty');
 const fontColorProperty = document.getElementById('fontColorProperty');
-const scaleTextWithZoomProperty = document.getElementById('scaleTextWithZoomProperty');
 const multilineTextProperty = document.getElementById('multilineTextProperty');
 const textAlignmentButtons = [...document.querySelectorAll('[data-text-align]')];
 const textVerticalAlignmentButtons = [...document.querySelectorAll('[data-text-vertical-align]')];
@@ -1387,15 +1406,16 @@ canvasController.onSelectionChange((properties) => {
   [strokeColorProperty, strokeExpressionProperty, strokeThicknessProperty, strokeOpacitySlider, strokeOpacityExpression].forEach((control) => { control.disabled = !properties.canEditStroke; });
   imageStrokeProperty.disabled = !properties.canEditImageStroke;
   imageStrokePropertyController.update(properties);
-  zIndexProperty.disabled = !editable;
+  zIndexProperty.disabled = !(editable || properties.canArrange === true);
   constructionProperty.disabled = !properties.canEditConstruction;
   textPropertyRows.forEach((row) => { row.hidden = !properties.canEditText; });
   document.querySelectorAll('.text-layout-property-row').forEach((row) => { row.hidden = !properties.canEditText; });
-  scaleTextWithZoomProperty.disabled = !properties.canEditText || properties.canEditScaleWithZoom === false;
   [fontNameProperty, fontSizeProperty, fontColorProperty, multilineTextProperty, ...textAlignmentButtons, ...textVerticalAlignmentButtons]
     .forEach((control) => { control.disabled = !properties.canEditText; });
   if (properties.canEditSeamLine) propertiesSelectionStatus.textContent = 'Stroke selected';
   else if (properties.arrayCount === 1) propertiesSelectionStatus.textContent = 'Array selected';
+  else if (properties.linkedCopyCount === 1) propertiesSelectionStatus.textContent = 'Duplicate/Symmetric object selected';
+  else if (properties.linkedCopyCount > 1) propertiesSelectionStatus.textContent = `${properties.linkedCopyCount} Duplicate/Symmetric objects selected`;
   else if (!properties.selectionCount) propertiesSelectionStatus.textContent = 'No objects selected';
   else if (properties.imageCount === 1 && !properties.geometryCount && !properties.textCount) propertiesSelectionStatus.textContent = `Image selected${properties.locked ? ' (locked)' : ''}`;
   else if (properties.textCount === 1 && properties.selectionCount === 1) propertiesSelectionStatus.textContent = 'Text selected';
@@ -1438,8 +1458,6 @@ canvasController.onSelectionChange((properties) => {
   if (document.activeElement !== fontSizeProperty) fontSizeProperty.value = properties.fontSize ?? '';
   fontSizeProperty.placeholder = properties.fontSize === null ? 'Mixed' : '28';
   fontColorProperty.value = properties.fontColor || '#202020';
-  scaleTextWithZoomProperty.checked = properties.scaleWithZoom !== false;
-  scaleTextWithZoomProperty.indeterminate = properties.scaleWithZoom === null;
   multilineTextProperty.checked = properties.multiline !== false;
   multilineTextProperty.indeterminate = properties.multiline === null;
   textAlignmentButtons.forEach((button) => {
@@ -1531,10 +1549,6 @@ fontSizeProperty.addEventListener('input', () => {
   if (fontSizeProperty.value) canvasController.setSelectedTextProperties({ fontSize: Number(fontSizeProperty.value) });
 });
 fontColorProperty.addEventListener('input', () => canvasController.setSelectedTextProperties({ fontColor: fontColorProperty.value }));
-scaleTextWithZoomProperty.addEventListener('change', () => {
-  scaleTextWithZoomProperty.indeterminate = false;
-  canvasController.setSelectedTextProperties({ scaleWithZoom: scaleTextWithZoomProperty.checked });
-});
 multilineTextProperty.addEventListener('change', () => {
   multilineTextProperty.indeterminate = false;
   canvasController.setSelectedTextProperties({ multiline: multilineTextProperty.checked });
@@ -1554,7 +1568,7 @@ const dimensionTextModes = [
 dimensionTextModeButton.addEventListener('click', () => {
   const current = dimensionTextModes.findIndex(({ mode }) => mode === dimensionTextModeButton.dataset.dimensionTextMode);
   const next = dimensionTextModes[(current + 1) % dimensionTextModes.length];
-  const accessibleLabel = next.mode === 'value' ? 'Dimension Text: Value Only (Hide Driving)' : next.label;
+  const accessibleLabel = next.label;
   dimensionTextModeButton.dataset.dimensionTextMode = next.mode;
   dimensionTextModeButton.title = accessibleLabel;
   dimensionTextModeButton.setAttribute('aria-label', accessibleLabel);
@@ -1630,6 +1644,7 @@ canvasController.onObjectsChange((change = {}) => {
   else if (change.history !== 'none') drawingHistory.recordSoon();
   if (change.history !== 'none') browserAutosaveController?.schedule();
 });
+canvasController.onStackChange(updateDrawingActionState);
 updateDrawingActionState();
 
 const drawingHint = createDrawingHint({ canvas: canvasController });
@@ -1671,6 +1686,8 @@ const arrayTools = createArrayTools({
 
 canvasController.registerDerivedDimensionFeatureProvider?.(linkedCopyTools.derivedDimensionProvider);
 canvasController.registerDerivedDimensionFeatureProvider?.(arrayTools.derivedDimensionProvider);
+canvasController.registerDerivedSelectionProvider?.(linkedCopyTools.selectionProvider);
+canvasController.registerSelectionPropertyProvider?.(linkedCopyTools.selectionPropertyProvider);
 constraintController.registerConstraintOperation?.(linkedCopyTools.constraintOperation);
 canvasController.registerSubtractOperandProvider?.(arrayTools.subtractOperandProvider);
 canvasController.registerSelectionPropertyProvider?.(arrayTools.selectionPropertyProvider);
@@ -1683,65 +1700,75 @@ const drawingClipboard = createDrawingClipboard({
   copyButton: document.getElementById('copyButton'),
   pasteButton: document.getElementById('pasteButton'),
   importAsset: importPortableCatalogImage,
-  stackExporters: {
-    dxf: async ({ stack, stackId }) => {
-      prepareDxfExportGeometry(canvasController.solveDrawing);
-      const snapshot = canvasController.getDrawingData();
-      const dxfSnapshot = createStackDxfSnapshot(snapshot, stackId);
-      await exportFileWithDialog({
-        name: stack.name,
-        format: 'dxf',
-        createContent: () => serializeDxf(dxfSnapshot),
-      });
-    },
-    svg: async ({ stack, stackId, snapshot }) => {
-      await exportFileWithDialog({
-        name: stack.name,
-        format: 'svg',
-        createContent: () => serializeCanvasPresentationSvg(canvasController.getObjectLayer?.(), { stackId }),
-      });
-    },
-    png: async ({ stack, stackId }) => {
-      let png;
-      const result = await exportFileWithDialog({
-        name: stack.name,
-        format: 'png',
-        createContent: async () => {
-          png = await createCanvasPresentationPng(canvasController.getObjectLayer?.(), { stackId });
-          return png.blob;
-        },
-      });
-      if (result.status === 'saved') {
-        showStorageStatus(`Exported ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
-      }
-    },
-    json: async ({ stack, packageValue }) => {
-      await exportFileWithDialog({
-        name: stack.name,
-        format: 'json',
-        createContent: () => serializePortablePackageJson(packageValue),
-      });
-    },
-  },
   onStatus: showStorageStatus,
 });
 
-createStackPanel({
-  toggle: document.getElementById('stacksToggle'),
+async function saveStackAs(stackId) {
+  try {
+    const stack = canvasController.getStackState().stacks.find(({ id }) => id === stackId);
+    if (!stack) return;
+    const nodeType = stack.kind === 'drawing' ? 'Drawing' : 'Stack';
+    const packageValue = drawingClipboard.packageForStack(stackId);
+    const standaloneDrawing = drawingIdentity.cloneDrawingIdentityGraph(packageValue.drawing).drawing;
+    const enabledStackIds = new Set(canvasController.getEffectiveEnabledStackIds());
+    const exportedStackIds = canvasController.getStackSubtreeIds(stackId)
+      .filter((id) => enabledStackIds.has(id));
+    const baseName = safeBaseName(`${currentDrawingName()} - ${stack.name}`);
+    let png = null;
+    const result = await saveFileAsWithPicker({
+      formats: saveAsFormats,
+      defaultFormat: 'paramagic',
+      suggestedBaseName: baseName,
+      pickerKey: 'paramagic-stack-save-as',
+      showSaveFilePicker: window.showSaveFilePicker?.bind(window),
+      chooseFallbackTarget: ({ suggestedBaseName, defaultFormat, formats }) => chooseSaveAsTarget({
+        initialName: suggestedBaseName,
+        title: `${nodeType} Save As`,
+        formats,
+        defaultFormat,
+      }),
+      createContent: async (format, fileName) => {
+        const name = drawingName(fileName);
+        if (format === 'paramagic') return serializeParamagicDocument(standaloneDrawing, name);
+        if (format === 'json') return serializePortableDrawingJson(standaloneDrawing, name);
+        if (format === 'svg') {
+          return serializeCanvasPresentationSvg(canvasController.getObjectLayer?.(), {
+            stackIds: exportedStackIds,
+            resolveValueOnlyDimensionText: (dimensionId) => canvasController.getDimensionText?.(dimensionId, 'value'),
+          });
+        }
+        if (format === 'png') {
+          png = await createCanvasPresentationPng(canvasController.getObjectLayer?.(), {
+            stackIds: exportedStackIds,
+            resolveValueOnlyDimensionText: (dimensionId) => canvasController.getDimensionText?.(dimensionId, 'value'),
+          });
+          return png.blob;
+        }
+        prepareDxfExportGeometry(canvasController.solveDrawing);
+        return serializeDxf(createStackDxfSnapshot(canvasController.getDrawingData(), stackId, {
+          effectiveEnabledStackIds: enabledStackIds,
+        }));
+      },
+      download: downloadText,
+    });
+    if (result.status !== 'saved') return;
+    if (png) {
+      showStorageStatus(`Saved ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
+    } else {
+      showStorageStatus(`Saved ${result.name}.`);
+    }
+  } catch (error) {
+    modal(`<h2>Stack or Drawing Save As failed</h2><p>${escapeHtml(error.message)}</p>`);
+  }
+}
+
+stackTreePanelController = createStackTreePanel({
+  host: document.getElementById('stackTreeSidebar'),
   canvas: canvasController,
-  onExport: drawingClipboard.exportStack,
+  getDrawingName: currentDrawingName,
+  onSaveAs: saveStackAs,
   onImport: drawingClipboard.importStack,
-  onMoveSelection: (stackId) => {
-    const recordIds = canvasController.getSelectedRecordIds();
-    const selectedLinkedCopy = linkedCopyTools.selectedDefinition?.();
-    const selectedArray = arrayTools.selectedDefinition?.();
-    if (recordIds.length) canvasController.setRecordStackIds(drawingClipboard.expandedRecordIds(recordIds), stackId);
-    if (selectedLinkedCopy?.id) linkedCopyTools.setDefinitionStack(selectedLinkedCopy.id, stackId);
-    if (selectedArray?.id) arrayTools.setDefinitionStack(selectedArray.id, stackId);
-  },
   onRemove: (stackId) => {
-    linkedCopyTools.reassignStack(stackId, 'stack-default');
-    arrayTools.reassignStack(stackId, 'stack-default');
     canvasController.removeStack(stackId);
   },
 });

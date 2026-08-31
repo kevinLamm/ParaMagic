@@ -5,6 +5,7 @@ import {
   hydratePortableImageAssets, imageFillContentUrl, parsePortableDrawingText,
   serializePortableDrawingJson, serializePortablePackageJson,
 } from '../../packages/paramagic-core/src/modules/ImageSystem.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 const drawing = {
   entities: [
@@ -60,6 +61,23 @@ test('portable stack packages embed and hydrate image references inside their dr
   });
   assert.equal(hydrated.drawing.entities[0].appearance.fillExpression, 'imported/stack-image');
   assert.equal('embeddedAssets' in hydrated, false);
+});
+
+test('Open accepts legacy Stack JSON packages as drawings', async () => {
+  const imported = await parsePortableDrawingText('Legacy Stack.json', JSON.stringify({
+    format: 'ParaMagic Clipboard',
+    version: 1,
+    label: 'Legacy Stack',
+    drawing: {
+      drawingUnit: 'mm',
+      entities: [{ id: 'line-a', type: 'line', x1: 0, y1: 0, x2: 10, y2: 0 }],
+    },
+  }));
+
+  assert.equal(imported.drawingUnit, 'mm');
+  assert.equal(imported.entities.length, 1);
+  assert.equal(isUuid(imported.entities[0].id), true);
+  assert.notEqual(imported.entities[0].id, 'line-a');
 });
 
 test('portable SVG without catalog images is unchanged and does not fetch assets', async () => {

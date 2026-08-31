@@ -10,11 +10,18 @@ import {
   isDerivedSeamEntity,
   isSymmetricCenterline,
   linkedCopyDefinitionFromMatrix,
+  linkedCopyIdsFromWindow,
+  linkedCopyPaintKey,
+  linkedCopyUsesOutlineHit,
+  linkedCopySelectionPropertyPatch,
+  linkedCopyVisibilityState,
+  linkedCopyOutsideClickAction,
   linkedCopyMatrix,
   linkedPositionAnchorUpdate,
   nearestLinkedHoverSource,
-  parseDuplicateDerivedRecordId,
-  parseSymmetricDerivedRecordId,
+  moveLinkedCopyDefinitions,
+  normalizeLinkedCopyDefinition,
+  normalizeLinkedPositionConstraint,
   reflectPoint,
   reflectionMatrix,
   seamDependsOnSelectedSources,
@@ -22,6 +29,7 @@ import {
   symmetricDerivedRecordId,
 } from '../../packages/paramagic-core/src/modules/SymmetricTool.js';
 import { resolveVectorDrawingPoint } from '../../packages/paramagic-core/src/modules/DrawingTools.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 function reflect(matrix, point) {
   return [
@@ -40,10 +48,7 @@ test('reflectionMatrix mirrors points across an arbitrary line', () => {
 
 test('symmetric dimension identities preserve the centerline and source feature owner', () => {
   const recordId = symmetricDerivedRecordId('center:one', 'shape/one');
-  assert.deepEqual(parseSymmetricDerivedRecordId(recordId), {
-    centerlineId: 'center:one',
-    sourceId: 'shape/one',
-  });
+  assert.equal(isUuid(recordId), true);
   assert.deepEqual(reflectPoint(reflectionMatrix([0, 0], [0, 10]), [4, 3]), [-4, 3]);
 });
 
@@ -171,6 +176,113 @@ test('linked duplicates retain their own absolute anchor when the parent moves',
   assert.deepEqual(applyMatrix(movedParentMatrix, [115, 123]), [55, 63]);
 });
 
+test('window-selected Duplicate and Symmetric definitions move together from their saved anchors', () => {
+  const groups = [
+    { dataset: { linkedCopyId: 'duplicate-a' }, selectedByWindow: true },
+    { dataset: { linkedCopyId: 'symmetric-a' }, selectedByWindow: true },
+    { dataset: { linkedCopyId: 'outside' }, selectedByWindow: false },
+  ];
+  const selectedIds = linkedCopyIdsFromWindow(groups, (group) => group.selectedByWindow);
+  const definitions = [
+    { id: 'duplicate-a', type: 'duplicate', anchor: [20, 30] },
+    { id: 'symmetric-a', type: 'symmetric', anchor: [-40, 50] },
+  ];
+  const startAnchors = new Map(definitions.map(({ id, anchor }) => [id, [...anchor]]));
+
+  assert.deepEqual(selectedIds, ['duplicate-a', 'symmetric-a']);
+  moveLinkedCopyDefinitions(definitions, startAnchors, [12, -7]);
+  assert.deepEqual(definitions.map(({ anchor }) => anchor), [[32, 23], [-28, 43]]);
+});
+
+test('Duplicate and Symmetric definitions persist independent visibility and z-index properties', () => {
+  const defaults = normalizeLinkedCopyDefinition({ id: 'copy-default', sourceIds: ['table-a'] });
+  assert.equal(defaults.visible, true);
+  assert.equal(defaults.visibleExpression, 'TRUE');
+  assert.equal(defaults.zIndex, null);
+  assert.equal(defaults.sourceDefinitionId, 'copy-default');
+  assert.equal(defaults.sourceStackId, null);
+
+  const configured = normalizeLinkedCopyDefinition({
+    id: 'copy-configured',
+    sourceIds: ['table-a'],
+    visible: false,
+    visibleExpression: 'showCopy',
+    zIndex: 7,
+  });
+  assert.equal(configured.visible, false);
+  assert.equal(configured.visibleExpression, 'showCopy');
+  assert.equal(configured.zIndex, 7);
+  assert.equal(linkedCopyPaintKey(configured.id), 'linked-copy:copy-configured');
+  assert.deepEqual(linkedCopyVisibilityState(configured, (expression) => expression === 'showCopy'), {
+    value: true,
+    expression: 'showCopy',
+    error: null,
+  });
+});
+
+test('Linked Copy constraints retain owner, participant, and portable relationship identities', () => {
+  const constraint = normalizeLinkedPositionConstraint({
+    id: 'linked-cross',
+    sourceRelationshipId: 'source-linked-cross',
+    stackRelationshipBindingKey: 'binding-a-b',
+    stackId: 'stack-a',
+    participantStackIds: ['stack-b', 'stack-a', 'stack-b'],
+    featureRefs: [{ kind: 'point', recordId: 'line-b', index: 0 }],
+    externalDrivingTarget: {
+      recordId: duplicateDerivedRecordId('copy-a', 'line-a'),
+      copyId: 'copy-a',
+      sourceId: 'line-a',
+      pointIndex: 2,
+      otherAnchor: { recordId: 'line-b', index: 0 },
+    },
+  });
+
+  assert.equal(constraint.stackId, 'stack-a');
+  assert.deepEqual(constraint.participantStackIds, ['stack-b']);
+  assert.equal(constraint.sourceRelationshipId, 'source-linked-cross');
+  assert.equal(constraint.stackRelationshipBindingKey, 'binding-a-b');
+});
+
+test('linked-copy property selection exposes its own Visible expression and paint controls', () => {
+  const patch = linkedCopySelectionPropertyPatch([
+    { id: 'duplicate-a', sourceIds: ['table-a'], visibleExpression: 'TRUE' },
+    { id: 'symmetric-a', sourceIds: ['table-a'], visibleExpression: 'FALSE' },
+  ], (expression) => expression === 'TRUE', { selectionCount: 0, supportedCount: 0 });
+
+  assert.equal(patch.selectionCount, 2);
+  assert.equal(patch.supportedCount, 2);
+  assert.equal(patch.linkedCopyCount, 2);
+  assert.equal(patch.canArrange, true);
+  assert.equal(patch.canEditVisible, true);
+  assert.equal(patch.mixedVisible, true);
+  assert.equal(patch.visibleExpression, null);
+});
+
+test('linked table copies use outline-only hits so they cannot block source cell editors', () => {
+  const entities = new Map([
+    ['table-1', { id: 'table-1', type: 'table' }],
+    ['line-1', { id: 'line-1', type: 'line' }],
+  ]);
+  assert.equal(linkedCopyUsesOutlineHit({ sourceIds: ['table-1'] }, entities), true);
+  assert.equal(linkedCopyUsesOutlineHit({ sourceIds: ['line-1'] }, entities), false);
+});
+
+test('the click generated after a Symmetric window selection preserves the derived selection', () => {
+  assert.deepEqual(linkedCopyOutsideClickAction({
+    suppressNextOutsideClick: true,
+    hasSelection: true,
+  }), {
+    suppressNextOutsideClick: false,
+    clearSelection: false,
+  });
+  assert.deepEqual(linkedCopyOutsideClickAction({
+    hasSelection: true,
+  }), {
+    suppressNextOutsideClick: false,
+    clearSelection: true,
+  });
+});
+
 test('linked symmetry stores the reflected result location independently of its axis', () => {
   const matrix = reflectionMatrix([0, -10], [0, 10]);
   const definition = linkedCopyDefinitionFromMatrix({
@@ -188,7 +300,7 @@ test('linked symmetry stores the reflected result location independently of its 
 
 test('duplicate identities and source eligibility exclude dimensions but retain construction geometry', () => {
   const recordId = duplicateDerivedRecordId('copy:one', 'shape/one');
-  assert.deepEqual(parseDuplicateDerivedRecordId(recordId), { copyId: 'copy:one', sourceId: 'shape/one' });
+  assert.equal(isUuid(recordId), true);
   assert.equal(isDuplicableEntity({ id: 'construction', type: 'line', construction: true }), true);
   assert.equal(isDuplicableEntity({ id: 'dimension', type: 'dimension-line' }), false);
   assert.equal(isDuplicableEntity({ id: 'seam', type: 'line', composite: { kind: 'finish-size-offset' } }), false);
@@ -269,6 +381,14 @@ test('linked constraint helpers hide on inactive Stacks unless tied to active ge
     isStackVisible: () => false,
     isStackActive: () => true,
     isObjectVisible: () => true,
+  }), false);
+  assert.equal(linkedConstraintHelperVisible({
+    definition: { ...definition, visible: false, visibleExpression: 'FALSE' },
+    constraint,
+    isStackVisible: () => true,
+    isStackActive: () => true,
+    isObjectVisible: () => true,
+    isDefinitionVisible: () => false,
   }), false);
 });
 

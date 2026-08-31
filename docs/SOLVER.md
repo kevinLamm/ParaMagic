@@ -50,6 +50,14 @@ Solver calls return a structured result with status, iteration and error counts,
 
 Successful statuses are `converged` and `unchanged`. Invalid, failed, and maximum-iteration results do not commit partial geometry.
 
+## Stack-scoped activation and stabilization
+
+The version-3 Stack tree does not create solver edges. `StackSolveSystem` partitions only by explicit geometry constraints, dimensions, and extension-owned relationships. `SolverController` filters entities and residuals by the current effectively enabled Stack-ID set; a relationship is active only when its owner and every `participantStackIds` entry are enabled.
+
+`StackActivationSystem` compiles each Stack's `enabledExpression` with the same symbols and unit semantics as `ParameterRepository`. It tracks reverse dependents by stable parameter/dimension ID and reevaluates only dirty Stack expressions. A dimension whose owner Stack is disabled is unavailable, and diagnostics report its qualified name and owner Stack rather than treating it as an unknown symbol.
+
+Driven-dimension activation uses a bounded transaction owned by `StackActivationSystem`: evaluate dirty expressions, delta-update enabled Stack IDs, solve newly enabled explicit participation groups, refresh changed parameters, and repeat until both activation and geometry are stable. Repeated state signatures, static cycles, solve failures, and maximum-round exhaustion restore the last accepted solver geometry and effective Stack state. Runtime activation state is never serialized; native drawings retain every disabled Stack and record.
+
 ## Parameters and dimensions
 
 Parameters are local to the active drawing and live in `ParameterRepository` (exposed through the compatibility `DimensionRepository` class). Every row contains a name and an expression; expressions may evaluate to either a number or a boolean. The expression language supports arithmetic, powers, comparisons, boolean operators, named dependencies, common math/conditional functions, degree-based trigonometry, and `mm`, `cm`, `m`, `in`, and `deg` units. Expressions are parsed without `eval`; missing names and dependency cycles are retained as row-level validation errors without corrupting the last valid solve.

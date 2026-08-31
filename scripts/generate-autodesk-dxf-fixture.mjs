@@ -36,6 +36,15 @@ export const autodeskDxfFixtureDrawing = {
       text: 'Multiline MTEXT\nSecond line with braces {OK}',
       multiline: true, fontName: 'Times New Roman', fontSize: 12, textHeight: 5, textAlign: 'center',
     },
+    {
+      id: 'table', type: 'table', x: 0, y: 220,
+      columns: [{ width: 70 }, { width: 90 }],
+      rows: [{ height: 24 }, { height: 30 }],
+      cells: [
+        [{ text: 'Table heading', textAlign: 'center' }, { text: 'Value', textAlign: 'center' }],
+        [{ text: 'DXF linework' }, { text: 'Autodesk TEXT' }],
+      ],
+    },
   ],
   dimensionAnnotations: [
     {

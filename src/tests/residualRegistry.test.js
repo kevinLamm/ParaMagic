@@ -397,9 +397,9 @@ test('Point-on Fillet constraints restore with their derived fillet definition',
 
 test('dimension residuals support aligned, axis, radius, and angle targets', () => {
   const { model, dimensions } = fixture();
-  dimensions.set({ id: 'ten', name: 'ten', expression: '10' });
-  dimensions.set({ id: 'five', name: 'five', expression: '5' });
-  dimensions.set({ id: 'ninety', name: 'ninety', expression: '90' });
+  dimensions.set({ id: 'ten', name: 'd1', expression: '10' });
+  dimensions.set({ id: 'five', name: 'd2', expression: '5' });
+  dimensions.set({ id: 'ninety', name: 'd3', expression: '90' });
   nearZero(evaluateConstraint(model, { id: 'distance', type: 'Distance', anchors: { start: { type: 'segment-start', recordId: 'horizontal' }, end: { type: 'segment-end', recordId: 'horizontal' } }, featureRefs: [], dimensionRef: 'ten' }, dimensions));
   nearZero(evaluateConstraint(model, { id: 'horizontal-distance', type: 'Horizontal Distance', anchors: { start: { type: 'segment-start', recordId: 'horizontal' }, end: { type: 'segment-end', recordId: 'horizontal' } }, featureRefs: [], dimensionRef: 'ten' }, dimensions));
   nearZero(evaluateConstraint(model, { id: 'vertical-distance', type: 'Vertical Distance', anchors: { start: { type: 'segment-start', recordId: 'vertical' }, end: { type: 'segment-end', recordId: 'vertical' } }, featureRefs: [], dimensionRef: 'ten' }, dimensions));
@@ -414,12 +414,17 @@ test('dimension residuals support aligned, axis, radius, and angle targets', () 
     angleOrientation: -1,
     dimensionRef: 'ninety',
   }, dimensions));
-  nearZero(evaluateConstraint(model, { id: 'meta', type: 'Meta', parameterRef: 'circle-a:radius', dimensionRef: 'five' }, dimensions));
+  nearZero(evaluateConstraint(model, {
+    id: 'meta',
+    type: 'Meta',
+    parameterRef: model.binding('circle-a').variables.get('radius').id,
+    dimensionRef: 'five',
+  }, dimensions));
 });
 
 test('aligned distance direction residuals reject mirrored point and point-to-line branches', () => {
   const { model, dimensions } = fixture();
-  dimensions.set({ id: 'ten', name: 'ten', expression: '10' });
+  dimensions.set({ id: 'ten', name: 'd1', expression: '10' });
   model.addEntity({ id: 'mirrored-point', type: 'line', start: [-10, 0], end: [-20, 0] });
   model.addEntity({ id: 'reference-line', type: 'line', start: [-20, 0], end: [20, 0] });
   model.addEntity({ id: 'mirrored-above', type: 'line', start: [0, -10], end: [5, -10] });

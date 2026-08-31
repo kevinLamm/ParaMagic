@@ -156,6 +156,21 @@ test('slider runtime markup uses a numeric value textbox', () => {
   assert.doesNotMatch(markup, /<output/);
 });
 
+test('editing controls uses a wrapping expression area and a Visible button before Delete', () => {
+  const solver = new SolverController();
+  const item = createControlItem('Slider Control', { parameterName: 'c1' });
+  const markup = controlRowMarkup(item, controlPanelState(item, solver), true);
+  const hiddenItem = { ...item, visible: false };
+  const hiddenMarkup = controlRowMarkup(hiddenItem, controlPanelState(hiddenItem, solver), true);
+
+  assert.match(markup, /<textarea[^>]*data-control-expression[^>]*rows="2"[^>]*wrap="soft"/);
+  assert.match(markup, />MinMax\(0, 100, 50, 1\)<\/textarea>/);
+  assert.match(markup, /data-control-visibility[^>]*aria-pressed="true"/);
+  assert.ok(markup.indexOf('data-control-visibility') < markup.indexOf('data-control-remove'));
+  assert.match(hiddenMarkup, /data-control-visibility[^>]*aria-pressed="false"/);
+  assert.doesNotMatch(hiddenMarkup, /control-hidden|\sdisabled(?:=|\s|>)/);
+});
+
 test('control panel mutations can use an asynchronous parameter updater', async () => {
   const solver = new SolverController();
   const updates = [];
@@ -327,17 +342,22 @@ test('control panel serialization preserves labels and row order', () => {
   const first = model.add('Checkbox');
   const second = model.add('Numeric Textbox');
   model.setLabel(second.id, 'Quantity');
+  model.setItemVisible(second.id, false);
   model.reorder(second.id, 0);
 
   const serialized = model.serialize();
+  assert.equal(serialized.version, 2);
   assert.deepEqual(serialized.items.map(({ id }) => id), [second.id, first.id]);
   assert.equal(serialized.items[0].label, 'Quantity');
+  assert.equal(serialized.items[0].visible, false);
   assert.equal(serialized.items.every((item) => !('x' in item)), true);
 
   model.clear();
   model.restore(serialized);
   assert.deepEqual(model.list().map(({ id }) => id), [second.id, first.id]);
   assert.equal(model.list()[0].parameterName, 'c2');
+  assert.equal(model.list()[0].visible, false);
+  assert.equal(normalizeControlItem({ controlType: 'Checkbox' }).visible, true);
 });
 
 test('renaming a referenced parameter updates stored control expressions', () => {

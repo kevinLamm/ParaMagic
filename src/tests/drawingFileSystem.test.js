@@ -4,8 +4,18 @@ import {
   createDrawingFileController,
   ensureFileHandleWritePermission,
   exportTextFileWithPicker,
+  saveFileAsWithPicker,
+  saveFormatForFileName,
   writeTextToFileHandle,
 } from '../../packages/paramagic-core/src/modules/DrawingFileSystem.js';
+
+const saveFormats = [
+  { key: 'paramagic', description: 'ParaMagic Drawing', extension: '.paramagic', mimeType: 'application/vnd.paramagic+json' },
+  { key: 'dxf', description: 'DXF Drawing', extension: '.dxf', mimeType: 'application/dxf' },
+  { key: 'svg', description: 'SVG Drawing', extension: '.svg', mimeType: 'image/svg+xml' },
+  { key: 'png', description: 'PNG Image', extension: '.png', mimeType: 'image/png' },
+  { key: 'json', description: 'JSON Drawing', extension: '.json', mimeType: 'application/json' },
+];
 
 function fakeFileHandle(name, { permission = 'granted' } = {}) {
   const writes = [];
@@ -230,4 +240,62 @@ test('cancelling an export picker does not serialize or download', async () => {
   assert.deepEqual(result, { status: 'cancelled' });
   assert.equal(serialized, false);
   assert.equal(downloaded, false);
+});
+
+test('multi-format Save As defaults to ParaMagic and writes the format selected by extension', async () => {
+  const events = [];
+  const handle = fakeFileHandle('Pattern.png');
+  const result = await saveFileAsWithPicker({
+    formats: saveFormats,
+    defaultFormat: 'paramagic',
+    suggestedBaseName: 'Pattern',
+    createContent: async (format, name) => {
+      events.push(['serialize', format, name]);
+      return `content:${format}`;
+    },
+    download: () => events.push(['download']),
+    showSaveFilePicker: async (options) => {
+      events.push(['picker']);
+      assert.equal(options.suggestedName, 'Pattern.paramagic');
+      assert.equal(options.excludeAcceptAllOption, true);
+      assert.deepEqual(options.types.map(({ accept }) => Object.values(accept)[0][0]), [
+        '.paramagic', '.dxf', '.svg', '.png', '.json',
+      ]);
+      return handle;
+    },
+  });
+
+  assert.deepEqual(events, [
+    ['picker'],
+    ['serialize', 'png', 'Pattern.png'],
+  ]);
+  assert.deepEqual(handle.writes, ['content:png', 'closed']);
+  assert.equal(result.format, 'png');
+  assert.equal(result.name, 'Pattern.png');
+});
+
+test('multi-format Save As fallback uses the chosen format, extension, and MIME type', async () => {
+  const downloads = [];
+  const result = await saveFileAsWithPicker({
+    formats: saveFormats,
+    defaultFormat: 'paramagic',
+    suggestedBaseName: 'Pattern',
+    showSaveFilePicker: undefined,
+    chooseFallbackTarget: async ({ defaultFormat, formats }) => {
+      assert.equal(defaultFormat, 'paramagic');
+      assert.deepEqual(formats.map(({ key }) => key), ['paramagic', 'dxf', 'svg', 'png', 'json']);
+      return { name: 'Pattern Copy.paramagic', format: 'json' };
+    },
+    createContent: async (format, name) => `content:${format}:${name}`,
+    download: (content, name, mimeType) => downloads.push({ content, name, mimeType }),
+  });
+
+  assert.equal(result.format, 'json');
+  assert.equal(result.name, 'Pattern Copy.json');
+  assert.deepEqual(downloads, [{
+    content: 'content:json:Pattern Copy.json',
+    name: 'Pattern Copy.json',
+    mimeType: 'application/json',
+  }]);
+  assert.equal(saveFormatForFileName('example.DXF', saveFormats, 'paramagic').key, 'dxf');
 });

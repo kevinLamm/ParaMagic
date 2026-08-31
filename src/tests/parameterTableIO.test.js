@@ -22,6 +22,15 @@ test('parameter table exports include Parameters, Dimensions, and Controls with 
   ]);
 });
 
+test('parameter table exports can use Stack-qualified dimension display names', () => {
+  const rows = parameterTableExportRows([
+    { id: 'dimension-1', name: 'd1', expression: '10', kind: 'dimension' },
+  ], {
+    nameForEntry: (entry) => entry.kind === 'dimension' ? `${entry.name}@Front Panel` : entry.name,
+  });
+  assert.deepEqual(rows[1], ['d1@Front Panel', '10', 'Dimension']);
+});
+
 test('JSON exports preserve the three parameter types', async () => {
   const output = await createParameterTableExport([
     { name: 'width', expression: '100', kind: 'user' },

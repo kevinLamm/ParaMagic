@@ -2,7 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  arrayCenterRecordId,
   arrayDerivedRecordId,
   arrayDerivedOwnerId,
   arrayParentVisibilityExpression,
@@ -22,6 +21,7 @@ import {
   parseArrayDerivedRecordId,
   rectangularArrayOffsets,
 } from '../../packages/paramagic-core/src/modules/ArrayTools.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 import { mergeDrawingData, normalizeDrawingData } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
 import { ParameterRepository } from '../../packages/paramagic-core/src/modules/solver/ParameterRepository.js';
 import { SolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
@@ -40,6 +40,8 @@ test('array definitions normalize independent row and column spacing expressions
   });
 
   assert.equal(definition.arrayType, 'rectangular');
+  assert.equal(definition.sourceDefinitionId, 'array-1');
+  assert.equal(definition.sourceStackId, null);
   assert.deepEqual(definition.sourceIds, ['shape-1', 'shape-2']);
   assert.equal(definition.rowSpacingExpression, 'width + 2');
   assert.equal(definition.columnSpacingExpression, 'height / 2');
@@ -194,7 +196,8 @@ test('circular angles distribute a full circle without duplicating 360 degrees',
 
 test('array dimension identities remain stable and placement transforms match rendered copies', () => {
   const recordId = arrayDerivedRecordId('array:one', 3, 'shape/one');
-  assert.deepEqual(parseArrayDerivedRecordId(recordId), {
+  assert.equal(isUuid(recordId), true);
+  assert.deepEqual(parseArrayDerivedRecordId('array-derived:array%3Aone:3:shape%2Fone'), {
     arrayId: 'array:one',
     placementIndex: 3,
     sourceId: 'shape/one',
@@ -393,14 +396,13 @@ test('array paint order follows its highest-positioned source object', () => {
 test('a circular array center is a persistent solver point that accepts point constraints', () => {
   const definition = normalizeArrayDefinition({
     id: 'array-with-center',
-    stackId: 'stack-a',
     arrayType: 'circular',
     sourceIds: ['shape-1'],
     centerPoint: [30, 40],
   });
   const center = createArrayCenterPointEntity(definition, definition.centerPoint);
 
-  assert.equal(center.id, arrayCenterRecordId(definition.id));
+  assert.equal(isUuid(center.id), true);
   assert.equal(isArrayCenterPointEntity(center, definition.id), true);
   assert.equal(center.composite.kind, 'array-center');
 
@@ -635,5 +637,7 @@ test('drawing I/O preserves, remaps, and merges array extension data', () => {
   assert.notEqual(insertedArray.id, 'inserted-array');
   assert.notEqual(insertedArray.sourceIds[0], 'inserted-shape');
   assert.equal(insertedArray.sourceIds[0], merged.entities[1].id);
-  assert.equal(insertedArray.rowSpacingExpression, 'd2 * 2');
+  assert.equal(insertedArray.rowSpacingExpression, 'd1 * 2');
+  assert.equal(insertedArray.stackId, merged.entities[1].stackId);
+  assert.notEqual(insertedArray.stackId, merged.entities[0].stackId);
 });

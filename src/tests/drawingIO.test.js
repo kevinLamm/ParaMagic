@@ -1,12 +1,83 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  mergeDrawingData, mergeDrawingDataWithMap, normalizeDrawingData, parseDxf, serializeDxf, serializeDrawingJson,
+  mergeDrawingData, mergeDrawingDataWithMap, normalizeDrawingData,
+  parseDxf, serializeDxf, serializeDrawingJson,
 } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
 import { createDrawingDxfSnapshot } from '../../packages/paramagic-core/src/modules/DxfExport.js';
+import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
+import { fixtureUuid } from './helpers/fixtureUuid.js';
 
 const near = (actual, expected, tolerance = 1e-8) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 const exportDxf = (drawing) => serializeDxf(createDrawingDxfSnapshot(drawing));
+const stackFixtureId = (label) => fixtureUuid(`drawing-io-stack-tree:${label}`);
+
+test('subtree insertion remaps every Stack identity, parent edge, name, and qualified expression', () => {
+  const baseDefaultId = stackFixtureId('base-default');
+  const existingParentId = stackFixtureId('existing-parent');
+  const existingChildId = stackFixtureId('existing-child');
+  const sourceRootId = stackFixtureId('source-root');
+  const sourceChildId = stackFixtureId('source-child');
+  const sourceDimensionId = stackFixtureId('source-dimension');
+  const base = {
+    extensions: { stacks: { version: 3, activeStackId: existingParentId, stacks: [
+      { id: baseDefaultId, name: 'Default', systemRole: 'default-stack' },
+      { id: existingParentId, name: 'Assembly' },
+      { id: existingChildId, name: 'Support' },
+    ] } },
+  };
+  const inserted = {
+    parameters: [{
+      id: sourceDimensionId, kind: 'dimension', name: 'd1', stackId: sourceChildId,
+      expression: '10', value: 10, driving: true,
+    }],
+    extensions: { stacks: { version: 3, activeStackId: sourceRootId, stacks: [
+      {
+        id: sourceRootId, name: 'Assembly', systemRole: 'default-stack',
+        enabledExpression: 'd1@Support > 5',
+      },
+      { id: sourceChildId, name: 'Support', parentStackId: sourceRootId },
+    ] } },
+  };
+  const { drawing, idMap } = mergeDrawingDataWithMap(base, inserted);
+  const mappedRootId = idMap.get(sourceRootId);
+  const mappedChildId = idMap.get(sourceChildId);
+  const mappedRoot = drawing.extensions.stacks.stacks.find(({ id }) => id === mappedRootId);
+  const mappedChild = drawing.extensions.stacks.stacks.find(({ id }) => id === mappedChildId);
+
+  assert.notEqual(mappedRootId, sourceRootId);
+  assert.notEqual(mappedChildId, sourceChildId);
+  assert.equal(mappedRoot.name, 'Assembly(1)');
+  assert.equal(mappedRoot.enabledExpression, 'd1@Support(1) > 5');
+  assert.equal(mappedChild.name, 'Support(1)');
+  assert.equal(mappedChild.parentStackId, mappedRootId);
+  assert.equal(drawing.parameters.find(({ kind }) => kind === 'dimension').stackId, mappedChildId);
+});
+
+test('full drawing insertion creates a non-drawable container above every inserted root Stack', () => {
+  const sourceDrawingId = stackFixtureId('source-drawing');
+  const sourceRootId = stackFixtureId('full-source-root');
+  const sourceChildId = stackFixtureId('full-source-child');
+  const { drawing, idMap, insertedRootNodeIds } = mergeDrawingDataWithMap({}, {
+    drawingId: sourceDrawingId,
+    documentContext: { displayName: 'Support Assembly' },
+    extensions: { stacks: { version: 3, activeStackId: sourceRootId, stacks: [
+      { id: sourceRootId, name: 'Default', systemRole: 'default-stack' },
+      { id: sourceChildId, name: 'Rail', parentStackId: sourceRootId },
+    ] } },
+  }, { insertAsDrawing: true, drawingContainerName: 'Support Assembly' });
+  const container = drawing.extensions.stacks.stacks.find(({ id }) => id === insertedRootNodeIds[0]);
+  const mappedRoot = drawing.extensions.stacks.stacks.find(({ id }) => id === idMap.get(sourceRootId));
+  const mappedChild = drawing.extensions.stacks.stacks.find(({ id }) => id === idMap.get(sourceChildId));
+  assert.equal(container.kind, 'drawing');
+  assert.equal(container.name, 'Support Assembly');
+  assert.equal(container.sourceDrawingId, sourceDrawingId);
+  assert.equal(mappedRoot.parentStackId, container.id);
+  assert.equal(mappedRoot.systemRole, undefined);
+  assert.equal(mappedChild.parentStackId, mappedRoot.id);
+  assert.equal(drawing.extensions.stacks.activeStackId, drawing.extensions.stacks.stacks
+    .find(({ systemRole }) => systemRole === 'default-stack').id);
+});
 
 function dxfRecordBlocks(dxf, recordType) {
   const pairs = dxf.replace(/\r/g, '').split('\n').reduce((result, value, index, values) => {
@@ -50,11 +121,14 @@ test('drawing normalization upgrades Classes to root-level data and migrates leg
     }],
   });
 
-  assert.equal(drawing.activeClassId, 'class-x');
-  assert.deepEqual(drawing.classes.map(({ id, name }) => ({ id, name })), [{ id: 'class-x', name: 'X' }]);
-  assert.equal(drawing.entities[0].classId, 'class-x');
+  const defaultClass = drawing.classes.find(({ systemRole }) => systemRole === 'default-class');
+  assert.ok(defaultClass);
+  assert.equal(isUuid(defaultClass.id), true);
+  assert.equal(drawing.activeClassId, defaultClass.id);
+  assert.deepEqual(drawing.classes.map(({ name }) => name), ['X']);
+  assert.equal(drawing.entities[0].classId, defaultClass.id);
   assert.deepEqual(drawing.entities[0].classPropertyOverrides, ['stroke']);
-  assert.equal(JSON.parse(serializeDrawingJson(drawing)).version, 2);
+  assert.equal(JSON.parse(serializeDrawingJson(drawing)).version, 4);
 });
 
 test('drawing normalization upgrades legacy parallel-edge dimensions to live supporting-line distance semantics', () => {
@@ -98,16 +172,16 @@ test('drawing normalization upgrades legacy parallel-edge dimensions to live sup
   assert.deepEqual(annotation.measureStart, [25, 0]);
   assert.deepEqual(annotation.measureEnd, [25, 5]);
   assert.deepEqual(annotation.anchors.lineToLine, {
-    reference: { kind: 'segment', recordId: 'reference', index: 0 },
-    measured: { kind: 'segment', recordId: 'measured', index: 0 },
+    reference: { kind: 'segment', recordId: drawing.entities[0].id, index: 0 },
+    measured: { kind: 'segment', recordId: drawing.entities[1].id, index: 0 },
   });
   const constraint = drawing.constraints[0];
   assert.equal(constraint.type, 'Line Line Distance');
   assert.equal(constraint.subtype, 'aligned');
   assert.equal(constraint.anchors, undefined);
   assert.deepEqual(constraint.featureRefs, [
-    { kind: 'segment', recordId: 'reference', index: 0 },
-    { kind: 'segment', recordId: 'measured', index: 0 },
+    { kind: 'segment', recordId: drawing.entities[0].id, index: 0 },
+    { kind: 'segment', recordId: drawing.entities[1].id, index: 0 },
   ]);
 });
 
@@ -153,8 +227,8 @@ test('drawing normalization upgrades point-to-line parallel dimensions to line-t
   });
   assert.equal(drawing.constraints[0].type, 'Line Line Distance');
   assert.deepEqual(drawing.dimensionAnnotations[0].anchors.lineToLine, {
-    reference: { kind: 'segment', recordId: 'reference', index: 0 },
-    measured: { kind: 'segment', recordId: 'measured', index: 0 },
+    reference: { kind: 'segment', recordId: drawing.entities[0].id, index: 0 },
+    measured: { kind: 'segment', recordId: drawing.entities[1].id, index: 0 },
   });
 });
 
@@ -173,12 +247,12 @@ test('insert merges same-named classes and preserves unique inserted class defin
       { id: 'shell-edge', type: 'line', start: [0, 0], end: [0, 1], classId: 'class-shell' },
     ],
   });
-  const { drawing, idMap } = mergeDrawingDataWithMap(base, inserted);
+  const { drawing } = mergeDrawingDataWithMap(base, inserted);
 
   assert.deepEqual(drawing.classes.map(({ name }) => name), ['X', 'Cut', 'Shell']);
-  assert.equal(drawing.entities.find(({ id }) => id === idMap.get('cut-edge')).classId, 'class-cut-a');
+  assert.equal(drawing.entities[0].classId, drawing.classes.find(({ name }) => name === 'Cut').id);
   assert.equal(
-    drawing.entities.find(({ id }) => id === idMap.get('shell-edge')).classId,
+    drawing.entities[1].classId,
     drawing.classes.find(({ name }) => name === 'Shell').id,
   );
 });
@@ -259,9 +333,10 @@ test('insert remaps primitive and cycle Subtract parent relationships', () => {
   };
   const { drawing, idMap } = mergeDrawingDataWithMap({}, inserted);
   const cutter = drawing.entities.find((entity) => entity.id === idMap.get('cutter'));
-  const remappedCycle = `cycle:${[idMap.get('edge-a'), idMap.get('edge-b')].sort().join('|')}`;
-
-  assert.deepEqual(cutter.subtractFrom, [remappedCycle, idMap.get('primitive-parent')]);
+  assert.deepEqual(cutter.subtractFrom, [{
+    kind: 'boundary-cycle',
+    memberRecordIds: [idMap.get('edge-a'), idMap.get('edge-b')],
+  }, idMap.get('primitive-parent')]);
 });
 
 test('insert remaps control parameters and expressions without losing control metadata', () => {
@@ -290,7 +365,7 @@ test('insert remaps control parameters and expressions without losing control me
   );
   const control = merged.entities[0];
   assert.equal(control.type, 'control');
-  assert.equal(control.parameterId, 'base-c1');
+  assert.equal(control.parameterId, merged.parameters.find(({ name }) => name === 'c1').id);
   assert.equal(control.parameterName, 'c1');
   assert.equal(control.maxExpression, 'result');
   assert.equal(control.initialExpression, 'c1');
@@ -340,14 +415,34 @@ test('insert renames conflicting dimensions and rewrites every inserted expressi
   };
 
   const merged = mergeDrawingData(base, inserted);
-  assert.deepEqual(merged.parameters.map(({ name }) => name), ['d1', 'd2', 'width', 'd3', 'd4', 'result']);
+  assert.deepEqual(merged.parameters.map(({ name }) => name), ['d1', 'd2', 'width', 'd1', 'd2', 'result']);
   assert.equal(merged.parameters.find(({ name }) => name === 'width').expression, '100');
-  assert.equal(merged.parameters.find(({ name }) => name === 'result').expression, 'd3 + d4 + width');
-  const insertedDimension = merged.parameters.find(({ name }) => name === 'd3');
+  assert.equal(merged.parameters.find(({ name }) => name === 'result').expression, 'd1@Default(1) + d2@Default(1) + width');
+  const insertedDimension = merged.parameters.find(({ id }) => id === merged.dimensionAnnotations[0].dimensionId);
+  assert.equal(insertedDimension.name, 'd1');
   assert.equal(merged.dimensionAnnotations[0].dimensionId, insertedDimension.id);
-  assert.equal(merged.dimensionAnnotations[0].dimensionName, 'd3');
+  assert.equal(merged.dimensionAnnotations[0].dimensionName, 'd1');
   assert.equal(merged.constraints[0].dimensionRef, insertedDimension.id);
-  assert.equal(merged.entities[0].appearance.visibleExpression, 'd3 > d4');
+  assert.equal(merged.entities[0].appearance.visibleExpression, 'd1 > d2');
+});
+
+test('every inserted dimension uses the destination Stack sequence instead of preserving source gaps', () => {
+  const merged = mergeDrawingData({}, {
+    entities: [{ id: 'line', type: 'line', start: [0, 0], end: [10, 0], visibleExpression: 'd20 > d16' }],
+    parameters: [
+      { id: 'insert-d16', name: 'd16', kind: 'dimension', expression: '10', stackId: 'stack-default' },
+      { id: 'insert-d20', name: 'd20', kind: 'dimension', expression: 'd16 + 5', stackId: 'stack-default' },
+    ],
+    dimensionAnnotations: [
+      { id: 'annotation-d16', dimensionId: 'insert-d16', dimensionName: 'd16', stackId: 'stack-default' },
+      { id: 'annotation-d20', dimensionId: 'insert-d20', dimensionName: 'd20', stackId: 'stack-default' },
+    ],
+  });
+
+  assert.deepEqual(merged.parameters.map(({ name }) => name), ['d1', 'd2']);
+  assert.equal(merged.parameters.find(({ name }) => name === 'd2').expression, 'd1 + 5');
+  assert.equal(merged.entities[0].visibleExpression, 'd2 > d1');
+  assert.deepEqual(merged.dimensionAnnotations.map(({ dimensionName }) => dimensionName), ['d1', 'd2']);
 });
 
 test('insert preserves appearances and remaps composite drawing-command IDs', () => {
@@ -388,7 +483,9 @@ test('insert remaps stack ownership and preserves the destination default stack'
   assert.ok(traceStack);
   assert.notEqual(traceStack.id, 'trace-stack');
   assert.equal(merged.entities[0].stackId, traceStack.id);
-  assert.equal(merged.extensions.stacks.stacks.some(({ id }) => id === 'stack-default'), true);
+  const defaultStack = merged.extensions.stacks.stacks.find(({ systemRole }) => systemRole === 'default-stack');
+  assert.ok(defaultStack);
+  assert.equal(isUuid(defaultStack.id), true);
 });
 
 test('DXF export and import round-trip supported geometry in inch units', () => {
@@ -408,7 +505,7 @@ test('DXF export and import round-trip supported geometry in inch units', () => 
   assert.equal(restored.dxfExportUnit, 'in');
   assert.equal(restored.entities.length, 3);
   assert.equal(new Set(restored.entities.map(({ id }) => id)).size, restored.entities.length);
-  restored.entities.forEach(({ id }) => assert.match(id, /^dxf-(?:line|circle|polyline)-/));
+  restored.entities.forEach(({ id }) => assert.equal(isUuid(id), true));
   const restoredLine = restored.entities.find(({ type }) => type === 'line');
   const restoredCircle = restored.entities.find(({ type }) => type === 'circle');
   const restoredPolyline = restored.entities.find(({ type }) => type === 'polyline');

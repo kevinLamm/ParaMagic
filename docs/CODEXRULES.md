@@ -10,6 +10,10 @@ Patches are considered illigal and banned. Only root level updates or upgrades a
 
 Partial evidence is not proof of completion in attaining of a goal. Proof must be validated 100%. Completion may not be claimed until every stated acceptance criterion is tested end-to-end in the user-visible workflow, using the supplied repro fixture when provided. Stored data, unit tests, or partial UI evidence cannot substitute for rendered behavior. If any criterion is untested, the task must be reported as unconfirmed—not complete.
 
+## Undoable actions
+
+Actions covered by drawing history must execute immediately. Do not add warning or confirmation modals before an action that Undo/Redo can reverse. Use status or error UI only when the action fails, cannot be reversed through history, or requires information the user has not supplied.
+
 ## Solver nullspace gauges
 
 Drawings and connected constraint components are allowed to remain free-floating. The application must never add a persistent `Fixed` constraint or origin relationship merely to make a numerical solve well-conditioned.
