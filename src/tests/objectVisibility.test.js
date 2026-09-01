@@ -160,6 +160,37 @@ test('additional tool-owned records expose expression-driven visibility', () => 
   assert.equal(system.isRecordShown(record.id), false);
 });
 
+test('disabled Stack records stay out of visibility expression processing', () => {
+  const enabled = {
+    id: 'enabled-line',
+    recordType: 'geometry',
+    entity: { id: 'enabled-line', type: 'line', stackId: 'stack-enabled', appearance: { visibleExpression: 'TRUE' } },
+    group: presentationNode(),
+  };
+  const disabled = {
+    id: 'disabled-line',
+    recordType: 'geometry',
+    entity: { id: 'disabled-line', type: 'line', stackId: 'stack-disabled', appearance: { visibleExpression: 'FALSE' } },
+    group: presentationNode(),
+  };
+  const evaluatedRecordIds = [];
+  const system = createObjectVisibilitySystem({
+    records: [enabled, disabled],
+    isRecordProcessingEnabled: (record) => record.entity.stackId === 'stack-enabled',
+    evaluateExpression: (expression, entity) => {
+      evaluatedRecordIds.push(entity.id);
+      return expression === 'TRUE';
+    },
+  });
+
+  system.syncPresentation();
+
+  assert.deepEqual(evaluatedRecordIds, ['enabled-line']);
+  assert.equal(system.isRecordVisible(enabled.id), true);
+  assert.equal(system.isRecordVisible(disabled.id), true);
+  assert.equal(disabled.group.attributes.has('data-object-visible'), false);
+});
+
 test('thumbnail visibility follows source ownership for arrays, symmetry, seams, and Boolean results', () => {
   const drawing = {
     entities: [

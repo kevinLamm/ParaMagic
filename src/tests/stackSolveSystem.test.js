@@ -154,6 +154,135 @@ test('controller excludes disabled Stack variables and cross-Stack residuals fro
   assert.deepEqual(result.stackResults.map(({ stackIds }) => stackIds), [['stack-a']]);
 });
 
+test('controller derives cross-Stack constraint participation from referenced entities when cached metadata is missing', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    stackState: {
+      activeStackId: 'stack-a',
+      stacks: [{ id: 'stack-a', name: 'Stack A' }, { id: 'stack-b', name: 'Stack B' }],
+    },
+    entities: [
+      { id: 'point-a', type: 'point', stackId: 'stack-a', point: [0, 0] },
+      { id: 'point-b', type: 'point', stackId: 'stack-b', point: [10, 0] },
+    ],
+    constraints: [{
+      id: 'cross-ab', type: 'Coincident', stackId: 'stack-a',
+      featureRefs: [{ kind: 'point', recordId: 'point-a', index: 0 }, { kind: 'point', recordId: 'point-b', index: 0 }],
+    }],
+  });
+  controller.model.constraints.get('cross-ab').participantStackIds = [];
+
+  controller.setEnabledStackIds(['stack-a']);
+  const result = controller.solve({ fullSolve: true });
+
+  assert.equal(controller.relationshipIsEnabled(controller.model.constraints.get('cross-ab')), false);
+  assert.equal(result.solveScope.constraintCount, 0);
+  assert.equal(result.solveScope.entityCount, 1);
+});
+
+test('cross-Stack dimension parameters inherit live participants and become unavailable with either Stack disabled', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    stackState: {
+      activeStackId: 'stack-a',
+      stacks: [{ id: 'stack-a', name: 'Stack A' }, { id: 'stack-b', name: 'Stack B' }],
+    },
+    entities: [
+      { id: 'point-a', type: 'point', stackId: 'stack-a', point: [0, 0] },
+      { id: 'point-b', type: 'point', stackId: 'stack-b', point: [10, 0] },
+    ],
+    parameters: [{
+      id: 'dimension-ab', name: 'd1', kind: 'dimension', stackId: 'stack-a',
+      value: 10, expression: '10', driving: false, computed: true,
+    }],
+    dimensionAnnotations: [{
+      id: 'annotation-ab', dimensionId: 'dimension-ab', dimensionName: 'd1',
+      stackId: 'stack-a', type: 'dimension-line',
+      anchors: {
+        start: { kind: 'point', recordId: 'point-a', index: 0 },
+        end: { kind: 'point', recordId: 'point-b', index: 0 },
+      },
+    }],
+  });
+
+  assert.deepEqual(controller.dimensions.get('dimension-ab').participantStackIds, ['stack-b']);
+  controller.setEnabledStackIds(['stack-a']);
+  assert.equal(controller.dimensions.isEntryAvailable(controller.dimensions.get('dimension-ab')), false);
+  controller.setDimensionEnabledStates(new Map([['dimension-ab', true]]));
+  assert.equal(controller.dimensions.get('dimension-ab').enabled, false);
+  controller.setEnabledStackIds(['stack-a', 'stack-b']);
+  assert.equal(controller.dimensions.isEntryAvailable(controller.dimensions.get('dimension-ab')), true);
+  controller.setDimensionEnabledStates(new Map([['dimension-ab', true]]));
+  assert.equal(controller.dimensions.get('dimension-ab').enabled, true);
+});
+
+test('full solves do not refresh driven dimensions owned by disabled Stacks', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    stackState: {
+      activeStackId: 'stack-a',
+      stacks: [{ id: 'stack-a', name: 'Stack A' }, { id: 'stack-b', name: 'Stack B' }],
+    },
+    entities: [
+      { id: 'point-a', type: 'point', stackId: 'stack-a', point: [0, 0] },
+      { id: 'point-b', type: 'point', stackId: 'stack-b', point: [10, 0] },
+    ],
+    parameters: [{
+      id: 'dimension-b', name: 'd1', kind: 'dimension', stackId: 'stack-b',
+      value: 10, expression: '10', driving: false, computed: true,
+    }],
+    dimensionAnnotations: [{
+      id: 'annotation-b', dimensionId: 'dimension-b', dimensionName: 'd1',
+      stackId: 'stack-b', type: 'dimension-line',
+      anchors: {
+        start: { kind: 'point', recordId: 'point-b', index: 0 },
+        end: { kind: 'point', recordId: 'point-b', index: 0 },
+      },
+    }],
+  });
+  let resolverCalls = 0;
+  controller.dimensions.setComputedResolver('dimension-b', () => {
+    resolverCalls += 1;
+    return 10;
+  });
+  resolverCalls = 0;
+
+  controller.setEnabledStackIds(['stack-a']);
+  controller.solve({ fullSolve: true });
+  assert.equal(resolverCalls, 0);
+
+  controller.setEnabledStackIds(['stack-a', 'stack-b']);
+  assert.equal(resolverCalls, 1);
+});
+
+test('incremental solves refresh driven dimensions only in the affected Stack set', () => {
+  const controller = createSolverController();
+  controller.loadSketch({
+    stackState: {
+      activeStackId: 'stack-a',
+      stacks: [{ id: 'stack-a', name: 'Stack A' }, { id: 'stack-b', name: 'Stack B' }],
+    },
+    entities: [
+      { id: 'point-a', type: 'point', stackId: 'stack-a', point: [0, 0] },
+      { id: 'point-b', type: 'point', stackId: 'stack-b', point: [10, 0] },
+    ],
+    parameters: [
+      { id: 'dimension-a', name: 'd1', kind: 'dimension', stackId: 'stack-a', value: 0, expression: '0', driving: false, computed: true },
+      { id: 'dimension-b', name: 'd1', kind: 'dimension', stackId: 'stack-b', value: 10, expression: '10', driving: false, computed: true },
+    ],
+  });
+  let callsA = 0;
+  let callsB = 0;
+  controller.dimensions.setComputedResolver('dimension-a', () => { callsA += 1; return 0; });
+  controller.dimensions.setComputedResolver('dimension-b', () => { callsB += 1; return 10; });
+  callsA = 0;
+  callsB = 0;
+
+  controller.updateEntities([{ id: 'point-a', type: 'point', stackId: 'stack-a', point: [2, 3] }]);
+  assert.equal(callsA, 1);
+  assert.equal(callsB, 0);
+});
+
 test('subtree data removal accepts multiple owner Stacks as one operation', () => {
   const controller = createSolverController();
   controller.loadSketch({

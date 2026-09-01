@@ -71,3 +71,22 @@ test('document metadata persists through solver snapshots', () => {
   assert.equal(restored.getDocumentMetadata().projectionStandard, 'First angle');
   assert.equal(restored.documentVariables().find((entry) => entry.name === 'FileName').value, 'Mounting Plate');
 });
+
+test('disabled Stack geometry is excluded from drawing bounding variables', () => {
+  const solver = new SolverController();
+  solver.loadSketch({
+    stackState: {
+      activeStackId: 'stack-a',
+      stacks: [{ id: 'stack-a', name: 'Stack A' }, { id: 'stack-b', name: 'Stack B' }],
+    },
+    entities: [
+      { id: 'line-a', type: 'line', stackId: 'stack-a', start: [0, 0], end: [10, 5] },
+      { id: 'line-b', type: 'line', stackId: 'stack-b', start: [0, 0], end: [1000, 500] },
+    ],
+  });
+  solver.setEnabledStackIds(['stack-a']);
+  const byName = new Map(solver.documentVariables().map((entry) => [entry.name, entry.value]));
+
+  assert.equal(byName.get('BoundingBoxWidth'), 10);
+  assert.equal(byName.get('BoundingBoxHeight'), 5);
+});

@@ -457,6 +457,75 @@ test('global expressions report a disabled dimension source by qualified Stack n
   assert.equal(repository.get(length.id).id, length.id);
 });
 
+test('disabled Stack dimensions remain dormant until their Stack is re-enabled', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({
+    activeStackId: 'stack-a',
+    stacks: [
+      { id: 'stack-a', name: 'Stack A' },
+      { id: 'stack-b', name: 'Stack B' },
+    ],
+  }, { emit: false });
+  const dimension = repository.addDimension({
+    id: 'dimension-b',
+    name: 'd1',
+    stackId: 'stack-b',
+    value: 25,
+    driving: false,
+  });
+  let resolverCalls = 0;
+  repository.setComputedResolver(dimension.id, () => {
+    resolverCalls += 1;
+    return 25;
+  });
+  resolverCalls = 0;
+
+  repository.setEnabledStackIds(['stack-a'], { emit: false });
+  assert.equal(repository.setComputedValue(dimension.id, 99), false);
+  assert.equal(repository.get(dimension.id).value, 25);
+  repository.evaluateAll({ strict: false });
+  assert.equal(resolverCalls, 0);
+
+  repository.setEnabledStackIds(['stack-a', 'stack-b'], { emit: false });
+  assert.equal(resolverCalls, 1);
+});
+
+test('cross-Stack dimensions are dormant while any participant Stack is disabled', () => {
+  const repository = new ParameterRepository();
+  repository.setStackState({
+    activeStackId: 'stack-a',
+    stacks: [
+      { id: 'stack-a', name: 'Stack A' },
+      { id: 'stack-b', name: 'Stack B' },
+    ],
+  }, { emit: false });
+  const dimension = repository.addDimension({
+    id: 'dimension-ab',
+    name: 'd1',
+    stackId: 'stack-a',
+    participantStackIds: ['stack-b'],
+    value: 25,
+    driving: false,
+  });
+  let resolverCalls = 0;
+  repository.setComputedResolver(dimension.id, () => {
+    resolverCalls += 1;
+    return 25;
+  });
+  resolverCalls = 0;
+
+  repository.setEnabledStackIds(['stack-a'], { emit: false });
+  repository.evaluateDirty({ strict: false, refreshComputed: true });
+  assert.equal(resolverCalls, 0);
+  assert.throws(
+    () => repository.evaluateExpression('d1@Stack A'),
+    /Stack "Stack B" is disabled/,
+  );
+
+  repository.setEnabledStackIds(['stack-a', 'stack-b'], { emit: false });
+  assert.equal(resolverCalls, 1);
+});
+
 test('renaming a Stack rewrites qualified expressions and preserves dimension identity', () => {
   const repository = new ParameterRepository();
   repository.setStackState({ stacks: [{ id: 'front', name: 'Front Panel' }] }, { emit: false });

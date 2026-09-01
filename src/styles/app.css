@@ -962,7 +962,7 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .stack-disabled { display: none !important; pointer-events: none !important; }
 .stack-inactive { opacity: .46; }
 .stack-inactive.stack-hovered { opacity: .62; }
-.canvas:not(.dimension-selection-active):not(.constraint-selection-active) .closed-constrained-region.stack-inactive {
+.canvas:not(.inactive-stack-hit-test-blocked):not(.dimension-selection-active):not(.constraint-selection-active) .closed-constrained-region.stack-inactive {
   pointer-events: fill !important;
 }
 .canvas:not(.dimension-selection-active):not(.constraint-selection-active) .stack-inactive .point-handle,
@@ -1282,6 +1282,13 @@ pre { white-space: pre-wrap; background: #fff; border-radius: 0; border: 1px sol
 .parameters-table .parameter-name-editor .parameter-name { flex: 1 1 auto; width: auto; min-width: 0; }
 .parameter-control-label-ghost,
 .parameter-stack-name-ghost { flex: 0 1 45%; min-width: 0; overflow: hidden; color: #777; font-size: 12px; font-style: italic; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; opacity: .72; pointer-events: none; user-select: none; }
+
+/* Tool pointer-through applies only to inactive Stack presentations. Active
+   Stack geometry and its drawing handles keep their normal hit behavior. */
+.canvas.inactive-stack-hit-test-blocked .stack-inactive,
+.canvas.inactive-stack-hit-test-blocked .stack-inactive * {
+  pointer-events: none !important;
+}
 .parameter-stack-name-ghost { color: #6d28d9; font-style: normal; }
 .row-drag-handle { flex: 0 0 18px; color: #777; cursor: grab; text-align: center; letter-spacing: -3px; }
 .row-drag-handle:active { cursor: grabbing; }

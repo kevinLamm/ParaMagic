@@ -8,6 +8,8 @@ import {
   inactiveStackInteractionAllowed,
   normalizeStackState,
   renderStackHoverOverlay,
+  shouldBlockInactiveStackHitTesting,
+  syncInactiveStackHitTesting,
   stackIdForCanvasInteractionTarget,
 } from '../../packages/paramagic-core/src/modules/StackSystem.js';
 import { defaultStackId } from '../../packages/paramagic-core/src/modules/StackArchitecture.js';
@@ -166,6 +168,7 @@ test('separate clicks do not activate an inactive Stack outside the double-click
 test('cross-Stack dimension and constraint tool clicks remain owned by the active tool', () => {
   const canvas = interactionCanvas();
   let selectedStackId = 'stack-a';
+  let ownershipResolutionCount = 0;
   bindCanvasStackInteractions({
     canvasElement: canvas,
     getActiveStackId: () => 'stack-a',
@@ -173,11 +176,38 @@ test('cross-Stack dimension and constraint tool clicks remain owned by the activ
     selectStack: (stackId) => { selectedStackId = stackId; return true; },
     activateStack: () => true,
     isToolInteractionActive: () => true,
+    resolveInteractionStackId: () => {
+      ownershipResolutionCount += 1;
+      return 'stack-b';
+    },
   });
 
+  const pointerDown = canvas.dispatch('pointerdown', 'stack-b', { button: 0 });
   const click = canvas.dispatch('click', 'stack-b');
+  const doubleClick = canvas.dispatch('dblclick', 'stack-b');
   assert.equal(selectedStackId, 'stack-a');
+  assert.equal(pointerDown.defaultPrevented, false);
   assert.equal(click.defaultPrevented, false);
+  assert.equal(doubleClick.defaultPrevented, false);
+  assert.equal(ownershipResolutionCount, 0);
+});
+
+test('inactive Stack hit testing is blocked for drawing and ordinary feature tools only', () => {
+  const crossStackTool = { allowInactiveStackInteraction: true };
+  const ordinaryFeatureTool = { pointerDown() {} };
+
+  assert.equal(shouldBlockInactiveStackHitTesting({ drawingMode: true }), true);
+  assert.equal(shouldBlockInactiveStackHitTesting({ featureCommandDelegate: ordinaryFeatureTool }), true);
+  assert.equal(shouldBlockInactiveStackHitTesting({ featureCommandDelegate: crossStackTool }), false);
+  assert.equal(shouldBlockInactiveStackHitTesting({ smartDimensionDelegate: crossStackTool }), false);
+  assert.equal(shouldBlockInactiveStackHitTesting({ explicitBlockerCount: 1 }), true);
+  assert.equal(shouldBlockInactiveStackHitTesting(), false);
+
+  const classList = trackedClassList();
+  assert.equal(syncInactiveStackHitTesting({ classList }, { drawingMode: true }), true);
+  assert.equal(classList.classes.has('inactive-stack-hit-test-blocked'), true);
+  assert.equal(syncInactiveStackHitTesting({ classList }, { smartDimensionDelegate: crossStackTool }), false);
+  assert.equal(classList.classes.has('inactive-stack-hit-test-blocked'), false);
 });
 
 test('Stack hover overlay mounts foreground clones and clears them with the hover state', () => {
@@ -338,6 +368,48 @@ test('inactive Stack records are dimmed and disabled until a dimension or constr
 
   system.setStackVisible('stack-b', false);
   assert.equal(system.isRecordEnabled(inactiveRecord), false);
+});
+
+test('a relationship record owned by an enabled Stack is disabled when any participant Stack is disabled', () => {
+  const dimensionGroup = presentationNode();
+  const dimensionRecord = {
+    id: 'dimension-ab',
+    recordType: 'dimension',
+    entity: {
+      id: 'dimension-ab',
+      stackId: 'stack-a',
+      participantStackIds: [],
+    },
+    group: dimensionGroup,
+  };
+  const system = createStackSystem({
+    records: [dimensionRecord],
+    selectedIds: new Set(),
+    resolveRelationshipStackIds: () => ['stack-a', 'stack-b'],
+  });
+  system.restore({
+    activeStackId: 'stack-a',
+    stacks: [
+      { id: 'stack-a', name: 'A', visible: true },
+      { id: 'stack-b', name: 'B', visible: true },
+    ],
+  });
+  system.setActivationStates({
+    'stack-a': { localEnabled: true, effectiveEnabled: true },
+    'stack-b': { localEnabled: false, effectiveEnabled: false },
+  });
+
+  system.syncPresentation();
+  assert.equal(system.isRecordEnabled(dimensionRecord), false);
+  assert.equal(dimensionGroup.classList.classes.has('stack-disabled'), true);
+
+  system.setActivationStates({
+    'stack-a': { localEnabled: true, effectiveEnabled: true },
+    'stack-b': { localEnabled: true, effectiveEnabled: true },
+  });
+  system.syncPresentation();
+  assert.equal(system.isRecordEnabled(dimensionRecord), true);
+  assert.equal(dimensionGroup.classList.classes.has('stack-disabled'), false);
 });
 
 test('no active Stack keeps all visible geometry at full opacity while leaving it non-editable', () => {
