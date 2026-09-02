@@ -65,6 +65,29 @@ test('Value Only presentation keeps derived Swell records while omitting their c
   assert.equal(isCanvasPresentationSourceNode(derivedSwellFill, 'stack-a'), true);
 });
 
+test('print presentation modes include construction and excluded dimensions outside Value Only', () => {
+  const constructionSource = presentationNode(['canvas-record'], 'stack-a');
+  constructionSource.querySelector = (selector) => selector === '.construction' ? {} : null;
+  const excludedDimension = presentationNode([
+    'canvas-record',
+    'dimension-driving',
+    'dimension-export-excluded',
+  ], 'stack-a');
+
+  assert.equal(isCanvasPresentationSourceNode(constructionSource, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(excludedDimension, 'stack-a'), false);
+  assert.equal(isCanvasPresentationSourceNode(
+    constructionSource,
+    'stack-a',
+    { dimensionTextMode: 'named-value' },
+  ), true);
+  assert.equal(isCanvasPresentationSourceNode(
+    excludedDimension,
+    'stack-a',
+    { dimensionTextMode: 'expression' },
+  ), true);
+});
+
 test('canvas presentation snapshots share Value Only labels and fitted viewports', () => {
   assert.equal(valueOnlyDimensionText('d47 = 12.25'), '12.25');
   assert.equal(valueOnlyDimensionText('12.25'), '12.25');

@@ -573,6 +573,29 @@ test('Stack Save As package contains only the selected Stack and its dependencie
   }
 });
 
+test('disabled Cut and Copy commands do not inspect or mutate the canvas selection', async () => {
+  const previousDocument = globalThis.document;
+  globalThis.document = { addEventListener() {} };
+  const disabledButton = { disabled: true, addEventListener() {} };
+  const canvas = {
+    getSelectedRecordIds() {
+      throw new Error('Disabled clipboard commands must not inspect the canvas selection.');
+    },
+  };
+  try {
+    const clipboard = createDrawingClipboard({
+      canvas,
+      cutButton: disabledButton,
+      copyButton: disabledButton,
+    });
+    assert.equal(await clipboard.cut(), false);
+    assert.equal(await clipboard.copy(), false);
+  } finally {
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
+});
+
 test('Drawing container Save As exports its child Stack tree without the container wrapper', () => {
   const containerId = cid('export-container');
   const rootId = cid('export-container-root');

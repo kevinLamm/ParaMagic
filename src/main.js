@@ -54,6 +54,7 @@ import {
   rememberRepeatableTool,
   sampleEntities,
   saveFileAsWithPicker,
+  setActiveStackToolAvailability,
   serializePortableDrawingJson,
 } from '@paramagic/core/editor';
 import {
@@ -79,6 +80,7 @@ import {
 } from '@paramagic/core/solver';
 import { configureImageCatalogResources, configureOpenCvResources } from '@paramagic/core/images';
 import { drawingBrowserTitle, imageCatalogResources, openCvResources } from './app-config.js';
+import { createPrintDialog } from './PrintDialog.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
@@ -95,8 +97,6 @@ const iconPaths = {
   Open: '<path d="M4 8h6l2 2h8v8H4z"/><path d="M4 8v-2h6l2 2"/>',
   'Save As': '<path d="M5 4h12l3 3v13H5z"/><path d="M8 4v6h8V4M8 20v-7h9v7"/><path d="M18 11h4M20 9v4"/>',
   Import: '<path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M5 19h14"/>',
-  Insert: '<path d="M12 5v14M5 12h14"/><path d="M4 4h5M4 4v5M20 20h-5M20 20v-5"/>',
-  'Duplicate Drawing': '<rect x="8" y="8" width="11" height="11"/><path d="M5 16V5h11"/>',
   Parameters: '<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16M4 15h16M10 5v14M16 5v14"/>',
   Export: '<path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/>',
   Print: '<path d="M7 8V4h10v4"/><path d="M6 17H4v-7h16v7h-2"/><path d="M7 14h10v6H7z"/>',
@@ -193,8 +193,6 @@ app.innerHTML = `
           ${appMenuButton('Open', 'id="openButton"')}
           ${appMenuButton('Save', 'id="saveButton" data-requires-drawing')}
           ${appMenuButton('Save As', 'id="saveAsButton" data-requires-drawing disabled')}
-          ${appMenuButton('Insert', 'id="insertButton" data-requires-drawing disabled')}
-          ${appMenuButton('Duplicate Drawing')}
           ${appMenuButton('Insert Image', 'id="insertImageButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
@@ -212,13 +210,13 @@ app.innerHTML = `
       <div class="solver-status" id="solverStatus" role="status" hidden></div>
     </main>
     <input type="file" id="openDrawingFileInput" accept=".paramagic,.dxf,.json,application/vnd.paramagic+json,application/dxf,application/json" hidden />
-    <input type="file" id="insertParamagicFileInput" accept=".paramagic,application/vnd.paramagic+json,application/json" hidden />
     <input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml" hidden />
     ${propertiesPanel()}
   </div>`;
 
 const appHeader = document.getElementById('appHeader');
 const appHeaderVerticalRail = document.getElementById('appHeaderVerticalRail');
+const stackTreeSidebar = document.getElementById('stackTreeSidebar');
 const appMenuShell = document.querySelector('.app-menu-shell');
 const appMenuToggle = document.getElementById('appMenuToggle');
 const appMenu = document.getElementById('appMenu');
@@ -227,7 +225,10 @@ let currentDrawingFileHandle = null;
 bindResponsiveToolHeader(appHeader, {
   rail: appHeaderVerticalRail,
 });
-bindFloatingPanelBoundary(appHeader, { rightRail: appHeaderVerticalRail });
+bindFloatingPanelBoundary(appHeader, {
+  leftSidebar: stackTreeSidebar,
+  rightRail: appHeaderVerticalRail,
+});
 
 function setAppMenuOpen(open) {
   appMenu.hidden = !open;
@@ -280,6 +281,10 @@ setSelectedTextTableTool(textTableToggle?.dataset.selectedDrawingTool || 'Text')
 
 function showTextTableMenu() {
   if (!textTableToggle || !textTableMenu) return;
+  if (textTableToggle.disabled) {
+    hideTextTableMenu();
+    return;
+  }
   clearTimeout(textTableMenuCloseTimer);
   textTableTool.classList.add('open');
   textTableMenu.classList.add('open');
@@ -326,11 +331,11 @@ function updateDrawingActionState() {
     button.disabled = !shouldEnable;
   });
   document.querySelector('.export-dropdown')?.classList.toggle('disabled', !shouldEnable);
-  const canCreate = Boolean(canvasController?.getActiveStackId?.());
-  document.querySelectorAll('[data-drawing-tool]').forEach((button) => {
-    button.disabled = !canCreate;
-  });
+  const activeStackId = canvasController?.getActiveStackId?.() || null;
+  const canCreate = Boolean(activeStackId);
+  setActiveStackToolAvailability(document, activeStackId);
   if (drawingCreationAvailable && !canCreate) {
+    rememberRepeatableTool(null);
     window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'stack-activation' } }));
   }
   drawingCreationAvailable = canCreate;
@@ -346,29 +351,29 @@ function drawingToolbar() {
     .filter((label) => label !== 'Select')
     .map((label) => label === 'Notch'
       ? `<div class="menu-tool edge-tool">
-        <button class="icon-button menu-toggle" title="Notch" aria-label="Notch" aria-expanded="false" aria-pressed="false" data-selected-edge-tool="Notch">${icon('Notch')}</button>
+        <button class="icon-button menu-toggle" title="Notch" aria-label="Notch" aria-expanded="false" aria-pressed="false" data-selected-edge-tool="Notch" data-requires-active-stack>${icon('Notch')}</button>
         <div class="constraint-menu edge-tool-menu">
-          ${iconButton('Notch', 'data-edge-tool="Notch" aria-current="true"')}
+          ${iconButton('Notch', 'data-edge-tool="Notch" data-requires-active-stack aria-current="true"')}
         </div>
       </div>`
       : label === 'Fillet'
-      ? iconButton(label, 'data-fillet-tool aria-pressed="false"')
+      ? iconButton(label, 'data-fillet-tool data-requires-active-stack aria-pressed="false"')
       : label === 'Subtract'
       ? `<span class="toolbar-divider tool-section-divider" aria-hidden="true"></span>${iconButton(label, 'data-subtract-tool aria-pressed="false" disabled')}`
       : label === 'Duplicate'
-        ? iconButton(label, 'data-duplicate-tool aria-pressed="false"')
+        ? iconButton(label, 'data-duplicate-tool data-requires-active-stack aria-pressed="false"')
       : label === 'Symmetric'
-        ? iconButton(label, 'data-symmetric-tool aria-pressed="false"')
+        ? iconButton(label, 'data-symmetric-tool data-requires-active-stack aria-pressed="false"')
       : label === 'Array'
         ? `<div class="menu-tool array-tool">
-          <button class="icon-button menu-toggle" title="Array" aria-label="Array" aria-expanded="false" aria-pressed="false" data-array-toggle data-selected-array="Rectangular Array">${icon('Array')}</button>
+          <button class="icon-button menu-toggle" title="Array" aria-label="Array" aria-expanded="false" aria-pressed="false" data-array-toggle data-requires-active-stack data-selected-array="Rectangular Array">${icon('Array')}</button>
           <div class="constraint-menu array-tool-menu" data-array-menu>
-            ${arrayToolTypes.map((item, index) => iconButton(item, `data-array-tool="${item}"${index === 0 ? ' aria-current="true"' : ''}`)).join('')}
+            ${arrayToolTypes.map((item, index) => iconButton(item, `data-array-tool="${item}" data-requires-active-stack${index === 0 ? ' aria-current="true"' : ''}`)).join('')}
           </div>
         </div>`
         : label === 'Text'
           ? `<div class="menu-tool text-table-tool">
-          <button class="icon-button menu-toggle" title="Text" aria-label="Text and Table" aria-expanded="false" aria-pressed="false" data-text-table-toggle>${icon('Text')}</button>
+          <button class="icon-button menu-toggle" title="Text" aria-label="Text and Table" aria-expanded="false" aria-pressed="false" data-text-table-toggle data-requires-active-stack>${icon('Text')}</button>
           <div class="constraint-menu text-table-tool-menu" data-text-table-menu>
             ${iconButton('Text', 'data-drawing-tool="Text" aria-current="true" aria-pressed="false"')}
             ${iconButton('Table', 'data-drawing-tool="Table" aria-pressed="false"')}
@@ -380,7 +385,7 @@ function drawingToolbar() {
           ? iconButton(label, 'data-swell-tool aria-pressed="false"')
         : iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`))
     .join('');
-  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
+  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
 }
 
 function classToolbar() {
@@ -399,13 +404,13 @@ function constraintToolbar() {
   if (fixedIndex >= 0) constraints.splice(fixedIndex, 1, 'Point-on');
   constraints.push('Fixed');
   return `<div class="menu-tool constraint-tool">
-    <button class="icon-button menu-toggle" title="Coincident" aria-label="Coincident constraint" aria-expanded="false" aria-pressed="false" data-selected-constraint="Coincident">${icon('Coincident')}</button>
-    <div class="constraint-menu">${constraints.map((item) => iconButton(item, `data-constraint="${item}" ${item === 'Coincident' ? 'aria-current="true"' : ''}`)).join('')}</div>
+    <button class="icon-button menu-toggle" title="Coincident" aria-label="Coincident constraint" aria-expanded="false" aria-pressed="false" data-selected-constraint="Coincident" data-requires-active-stack>${icon('Coincident')}</button>
+    <div class="constraint-menu">${constraints.map((item) => iconButton(item, `data-constraint="${item}" data-requires-active-stack ${item === 'Coincident' ? 'aria-current="true"' : ''}`)).join('')}</div>
   </div>`;
 }
 
 function dimensionToolbar({ includeText = true } = {}) {
-  return `<div class="toolbar-section dimension-toggles">${dimensionTools.map((tool) => iconButton(tool.label, `data-dimension-tool="${tool.label}" aria-pressed="false"`)).join('')}${includeText ? iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"') : ''}</div>`;
+  return `<div class="toolbar-section dimension-toggles">${dimensionTools.map((tool) => iconButton(tool.label, `data-dimension-tool="${tool.label}" data-requires-active-stack aria-pressed="false"`)).join('')}${includeText ? iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"') : ''}</div>`;
 }
 
 function controlToolbar() {
@@ -705,17 +710,6 @@ async function saveDrawingAs() {
   }
 }
 
-async function insertParamagicFile(file) {
-  if (!file) return;
-  try {
-    const drawing = parseParamagicDocument(await file.text());
-    canvasController.insertDrawingData(drawing);
-    updateDrawingActionState();
-  } catch (error) {
-    modal(`<h2>Insert failed</h2><p>${escapeHtml(error.message)}</p>`);
-  }
-}
-
 document.getElementById('openButton').addEventListener('click', () => {
   const fallbackInput = document.getElementById('openDrawingFileInput');
   if (typeof window.showOpenFilePicker !== 'function') {
@@ -734,11 +728,6 @@ document.getElementById('openButton').addEventListener('click', () => {
 });
 document.getElementById('openDrawingFileInput').addEventListener('change', async (event) => {
   await readDrawingFile(event.target.files[0]);
-  event.target.value = '';
-});
-document.getElementById('insertButton').addEventListener('click', () => document.getElementById('insertParamagicFileInput').click());
-document.getElementById('insertParamagicFileInput').addEventListener('change', async (event) => {
-  await insertParamagicFile(event.target.files[0]);
   event.target.value = '';
 });
 document.getElementById('saveButton').addEventListener('click', () => saveDrawing());
@@ -1106,6 +1095,10 @@ constraintMenu.querySelector('[data-constraint="Coincident"]')?.classList.add('s
 
 function showConstraintMenu() {
   clearTimeout(constraintMenuCloseTimer);
+  if (constraintToggle.disabled) {
+    hideConstraintMenu();
+    return;
+  }
   constraintTool.classList.add('open');
   constraintMenu.classList.add('open');
   positionHeaderToolMenu(constraintToggle, constraintMenu);
@@ -1141,6 +1134,10 @@ edgeToolMenu.querySelector('[data-edge-tool="Notch"]')?.classList.add('stored-co
 
 function showEdgeToolMenu() {
   clearTimeout(edgeToolMenuCloseTimer);
+  if (edgeToolToggle.disabled) {
+    hideEdgeToolMenu();
+    return;
+  }
   edgeTool.classList.add('open');
   edgeToolMenu.classList.add('open');
   positionHeaderToolMenu(edgeToolToggle, edgeToolMenu);
@@ -1302,6 +1299,12 @@ const canvasController = createInfiniteCanvas({
   entities: sampleEntities,
   solver: solverController,
 });
+const printDialogController = createPrintDialog({
+  canvas: canvasController,
+  getDrawingName: currentDrawingName,
+  getDimensionView: () => document.getElementById('dimensionTextMode')?.dataset.dimensionTextMode || 'named-value',
+});
+document.getElementById('printButton').addEventListener('click', () => printDialogController.open());
 controlToolsController = createControlTools({
   toolbar: document.getElementById('controlsToggle'),
   canvas: canvasController,
@@ -1618,6 +1621,14 @@ document.addEventListener('keydown', (event) => {
   if (key === 's') {
     event.preventDefault();
     document.getElementById(event.shiftKey ? 'saveAsButton' : 'saveButton').click();
+    return;
+  }
+  if (key === 'p') {
+    const printButton = document.getElementById('printButton');
+    if (!printButton.disabled) {
+      event.preventDefault();
+      printButton.click();
+    }
     return;
   }
   if (key === 'z' && !event.shiftKey) {

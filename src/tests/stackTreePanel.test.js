@@ -4,11 +4,15 @@ import assert from 'node:assert/strict';
 import { createStackTreeIndex } from '../../packages/paramagic-core/src/modules/StackArchitecture.js';
 import {
   STACK_ENABLE_EXPRESSION_PLACEHOLDER,
+  STACK_EXPRESSION_INPUT_MINIMUM_WIDTH,
+  stackActivationTarget,
   stackDisclosureLabel,
+  stackExpressionInputWidth,
   stackIdForCanvasHover,
   stackIdForRowHover,
   stackStatusText,
   stackToolbarAvailable,
+  stackToolbarLeft,
   stackVisibilityAvailable,
   visibleStackIds,
 } from '../../packages/paramagic-core/src/modules/StackTreePanel.js';
@@ -57,6 +61,13 @@ test('blank Stack enable expressions show the FALSE hint', () => {
   assert.equal(STACK_ENABLE_EXPRESSION_PLACEHOLDER, 'FALSE');
 });
 
+test('Stack enable expression inputs retain their base width and expand to fit longer text', () => {
+  assert.equal(STACK_EXPRESSION_INPUT_MINIMUM_WIDTH, 220);
+  assert.equal(stackExpressionInputWidth(218), 220);
+  assert.equal(stackExpressionInputWidth(340.2), 343);
+  assert.equal(stackExpressionInputWidth(Number.NaN), 220);
+});
+
 test('Stack disclosure controls clearly label both tree states', () => {
   assert.equal(stackDisclosureLabel(false, 'Frame'), 'Expand Frame');
   assert.equal(stackDisclosureLabel(true, 'Frame'), 'Collapse Frame');
@@ -67,6 +78,17 @@ test('Stack toolbar is available to active Stacks and drawing containers, not th
   assert.equal(stackToolbarAvailable({ active: false }), false);
   assert.equal(stackToolbarAvailable({ drawingContainer: true }), true);
   assert.equal(stackToolbarAvailable({ drawingRoot: true }), false);
+});
+
+test('Stack row activation toggles the clicked Stack', () => {
+  assert.equal(stackActivationTarget('stack-b', 'stack-a'), 'stack-b');
+  assert.equal(stackActivationTarget('stack-a', 'stack-a'), null);
+  assert.equal(stackActivationTarget('', 'stack-a'), null);
+});
+
+test('Stack toolbar anchors to the visible sidebar edge when a row overflows a narrow panel', () => {
+  assert.equal(stackToolbarLeft({ rowRight: 240, sidebarRight: 260 }), 244);
+  assert.equal(stackToolbarLeft({ rowRight: 236.58, sidebarRight: 190 }), 194);
 });
 
 test('canvas geometry hover resolves the owning Stack for tree highlighting', () => {

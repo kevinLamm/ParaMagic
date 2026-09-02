@@ -2,7 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   candidateFromSelections,
+  DIMENSION_EDIT_INPUT_MAXIMUM_HEIGHT,
+  DIMENSION_EDIT_INPUT_MINIMUM_HEIGHT,
   dimensionAnchorRecordIds,
+  dimensionEditInputHeight,
+  dimensionEditKeyAction,
+  dimensionEditPanelMarkup,
   radialCandidateUsesPlacementClick,
   setDimensionSelectionActive,
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
@@ -11,6 +16,25 @@ import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modul
 import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 
 const normalLengthTolerance = (value) => DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(value));
+
+test('Driving Dimension editing uses a wrapping multiline expression area', () => {
+  const markup = dimensionEditPanelMarkup();
+
+  assert.match(markup, /<textarea[^>]*class="dimension-edit-input"[^>]*rows="2"[^>]*wrap="soft"/);
+  assert.doesNotMatch(markup, /<input[^>]*class="dimension-edit-input"/);
+  assert.equal(DIMENSION_EDIT_INPUT_MINIMUM_HEIGHT, 54);
+  assert.equal(DIMENSION_EDIT_INPUT_MAXIMUM_HEIGHT, 180);
+  assert.equal(dimensionEditInputHeight(32), 54);
+  assert.equal(dimensionEditInputHeight(96), 96);
+  assert.equal(dimensionEditInputHeight(240), 180);
+});
+
+test('Driving Dimension multiline editing preserves apply, line-break, and cancel keys', () => {
+  assert.equal(dimensionEditKeyAction({ key: 'Enter' }), 'submit');
+  assert.equal(dimensionEditKeyAction({ key: 'Enter', shiftKey: true }), null);
+  assert.equal(dimensionEditKeyAction({ key: 'Escape' }), 'cancel');
+  assert.equal(dimensionEditKeyAction({ key: 'a' }), null);
+});
 
 function semanticVariableKeys(controller, variableIds) {
   return variableIds.map((id) => {

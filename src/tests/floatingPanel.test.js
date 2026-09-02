@@ -4,6 +4,7 @@ import {
   anchoredToolMenuPosition,
   clampPanelPosition,
   floatingPanelMaximumRight,
+  floatingPanelMinimumLeft,
   floatingPanelMinimumTop,
   horizontalToolSectionCount,
   horizontalToolSectionIndexes,
@@ -25,6 +26,33 @@ test('floating panel clamping respects a toolbar-safe top boundary', () => {
     { left: 500, top: 20, width: 340, height: 400 },
     { viewportWidth: 1200, viewportHeight: 800, margin: 8, minTop: 108 },
   ), { left: 500, top: 108 });
+});
+
+test('floating panels stay right of the Stack sidebar', () => {
+  assert.deepEqual(clampPanelPosition(
+    { left: 16, top: 120, width: 340, height: 400 },
+    {
+      viewportWidth: 1200,
+      viewportHeight: 800,
+      margin: 8,
+      minLeft: 268,
+      minTop: 56,
+    },
+  ), { left: 268, top: 120 });
+  assert.equal(floatingPanelMinimumLeft({ right: 260 }, { gap: 8 }), 268);
+});
+
+test('the Stack sidebar boundary takes priority when a panel cannot fit between both side rails', () => {
+  assert.deepEqual(clampPanelPosition(
+    { left: 0, top: 120, width: 340, height: 400 },
+    {
+      viewportWidth: 620,
+      viewportHeight: 800,
+      margin: 8,
+      minLeft: 268,
+      maxRight: 560,
+    },
+  ), { left: 268, top: 120 });
 });
 
 test('floating panels stay left of a vertical toolbar rail', () => {
