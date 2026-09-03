@@ -28,10 +28,10 @@ test('the full Parameters Panel list retains the user-sorted order', () => {
 
 test('the separated Parameters Panel view preserves relative user order within each type', () => {
   const sections = parameterTableSections(entries, { separated: true });
-  assert.deepEqual(sections.map(({ key }) => key), ['parameter', 'dimension', 'control']);
+  assert.deepEqual(sections.map(({ key }) => key), ['parameter', 'control', 'dimension']);
   assert.deepEqual(sections[0].entries.map(({ id }) => id), ['parameter-2', 'parameter-1']);
-  assert.deepEqual(sections[1].entries.map(({ id }) => id), ['dimension-2', 'dimension-1']);
-  assert.deepEqual(sections[2].entries.map(({ id }) => id), ['control-1', 'control-2']);
+  assert.deepEqual(sections[1].entries.map(({ id }) => id), ['control-1', 'control-2']);
+  assert.deepEqual(sections[2].entries.map(({ id }) => id), ['dimension-2', 'dimension-1']);
 });
 
 test('the separated table adds type headings and keeps the new-parameter row in Parameters', () => {
@@ -42,9 +42,10 @@ test('the separated table adds type headings and keeps the new-parameter row in 
   });
   assert.ok(markup.indexOf('>Parameters<') < markup.indexOf('data-id="parameter-2"'));
   assert.ok(markup.indexOf('data-id="parameter-1"') < markup.indexOf('data-draft'));
-  assert.ok(markup.indexOf('data-draft') < markup.indexOf('>Dimensions<'));
-  assert.ok(markup.indexOf('>Dimensions<') < markup.indexOf('data-id="dimension-2"'));
+  assert.ok(markup.indexOf('data-draft') < markup.indexOf('>Controls<'));
   assert.ok(markup.indexOf('>Controls<') < markup.indexOf('data-id="control-1"'));
+  assert.ok(markup.indexOf('data-id="control-2"') < markup.indexOf('>Dimensions<'));
+  assert.ok(markup.indexOf('>Dimensions<') < markup.indexOf('data-id="dimension-2"'));
 });
 
 test('unknown and user kinds are treated as Parameters', () => {
@@ -117,16 +118,18 @@ test('the table view toggle changes modes and limits grouped reordering to one t
     onChange: (separated) => changes.push(separated),
   });
 
-  assert.equal(view.isSeparated(), false);
-  assert.equal(attributes.get('aria-pressed'), 'false');
-  assert.equal(view.canReorder({ kind: 'user' }, { kind: 'dimension' }), true);
+  assert.equal(view.isSeparated(), true);
+  assert.equal(attributes.get('aria-pressed'), 'true');
+  assert.equal(button.title, 'Show the full user-sorted list');
+  assert.equal(view.canReorder({ kind: 'user' }, { kind: 'dimension' }), false);
 
   listeners.get('click')();
 
-  assert.equal(view.isSeparated(), true);
-  assert.equal(attributes.get('aria-pressed'), 'true');
-  assert.deepEqual(changes, [true]);
-  assert.equal(view.canReorder({ kind: 'user' }, { kind: 'dimension' }), false);
+  assert.equal(view.isSeparated(), false);
+  assert.equal(attributes.get('aria-pressed'), 'false');
+  assert.equal(button.title, 'Group by type');
+  assert.deepEqual(changes, [false]);
+  assert.equal(view.canReorder({ kind: 'user' }, { kind: 'dimension' }), true);
   assert.equal(view.canReorder({ kind: 'dimension' }, { kind: 'dimension' }), true);
 });
 
@@ -168,6 +171,8 @@ test('the Parameter export button reliably opens and closes its format menu', ()
 test('the Parameters heading uses icon-only Group By, Import, Export, and Help buttons', () => {
   const markup = parametersPanelHeaderActionsMarkup();
   assert.match(markup, /aria-label="Group by type"/);
+  assert.match(markup, /aria-pressed="true"/);
+  assert.match(markup, /title="Show the full user-sorted list"/);
   assert.match(markup, /aria-label="Import parameter table"/);
   assert.match(markup, /aria-label="Export parameter table"/);
   assert.match(markup, /aria-label="Expression help"/);

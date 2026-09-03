@@ -55,7 +55,9 @@ import {
   sampleEntities,
   saveFileAsWithPicker,
   setActiveStackToolAvailability,
+  syncPropertiesPanelAvailability,
   serializePortableDrawingJson,
+  textPropertiesMarkup,
 } from '@paramagic/core/editor';
 import {
   PARAMAGIC_DOCUMENT_EXTENSION,
@@ -420,40 +422,25 @@ function controlToolbar() {
 function propertiesPanel() {
   return panel(`<div class="properties-panel-header"><h2>Properties</h2><button type="button" class="panel-close-button properties-panel-close" id="propertiesPanelClose" aria-label="Close Properties" title="Close">&times;</button></div>
     <p class="properties-selection-status" id="propertiesSelectionStatus">No objects selected</p>
-    <label class="property-row" for="classProperty"><span>Class</span><select id="classProperty" aria-label="Class for selected geometry" disabled><option value="">X</option></select></label>
-    <div class="property-row"><span>Fill Color</span><div class="property-inline property-color-controls"><input id="fillColorProperty" aria-label="Fill color picker" type="color" value="#ffffff" disabled /><button type="button" id="imageFillProperty" class="property-image-fill-button" aria-label="Choose image fill" title="Choose image fill" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/></svg></button><input id="fillExpressionProperty" aria-label="Fill hex, expression, or image path" type="text" value="#ffffff" spellcheck="false" disabled /></div></div>
+    <label class="property-row" data-property-availability="canEditClass" for="classProperty" hidden><span>Class</span><select id="classProperty" aria-label="Class for selected geometry" disabled><option value="">X</option></select></label>
+    <div class="property-row" data-property-availability="canEditFill" hidden><span>Fill Color</span><div class="property-inline property-color-controls"><input id="fillColorProperty" aria-label="Fill color picker" type="color" value="#ffffff" disabled /><button type="button" id="imageFillProperty" class="property-image-fill-button" aria-label="Choose image fill" title="Choose image fill" disabled hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/></svg></button><input id="fillExpressionProperty" aria-label="Fill hex, expression, or image path" type="text" value="#ffffff" spellcheck="false" disabled /></div></div>
     ${imageFillPropertiesMarkup()}
-    <div class="property-row"><span>Fill Opacity</span><div class="property-inline opacity-controls"><input id="fillOpacitySlider" aria-label="Fill opacity slider" type="range" min="0" max="100" step="1" value="100" disabled /><input id="fillOpacityExpression" aria-label="Fill opacity expression" type="text" value="100" spellcheck="false" disabled /></div></div>
-    <div class="property-row"><span>Stroke Color</span><div class="property-inline property-color-controls"><input id="strokeColorProperty" aria-label="Stroke color picker" type="color" value="#202020" disabled /><button type="button" id="imageStrokeProperty" class="property-image-fill-button" aria-label="Choose image stroke" title="Choose image stroke" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/></svg></button><input id="strokeExpressionProperty" aria-label="Stroke hex, expression, or image path" type="text" value="#202020" spellcheck="false" disabled /></div></div>
+    <div class="property-row" data-property-availability="canEditOpacity" hidden><span>Fill Opacity</span><div class="property-inline opacity-controls"><input id="fillOpacitySlider" aria-label="Fill opacity slider" type="range" min="0" max="100" step="1" value="100" disabled /><input id="fillOpacityExpression" aria-label="Fill opacity expression" type="text" value="100" spellcheck="false" disabled /></div></div>
+    <div class="property-row" data-property-availability="canEditStroke" hidden><span>Stroke Color</span><div class="property-inline property-color-controls"><input id="strokeColorProperty" aria-label="Stroke color picker" type="color" value="#202020" disabled /><button type="button" id="imageStrokeProperty" class="property-image-fill-button" aria-label="Choose image stroke" title="Choose image stroke" disabled hidden><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="M4 18l5-5 3 3 3-4 5 6"/></svg></button><input id="strokeExpressionProperty" aria-label="Stroke hex, expression, or image path" type="text" value="#202020" spellcheck="false" disabled /></div></div>
     ${imageStrokePropertiesMarkup()}
-    <label class="property-row" for="strokeThicknessProperty"><span>Stroke Thickness</span><input id="strokeThicknessProperty" type="number" min="0.1" max="40" step="0.1" value="1.5" disabled /></label>
-    <div class="property-row"><span>Stroke Opacity</span><div class="property-inline opacity-controls"><input id="strokeOpacitySlider" aria-label="Stroke opacity slider" type="range" min="0" max="100" step="1" value="100" disabled /><input id="strokeOpacityExpression" aria-label="Stroke opacity expression" type="text" value="100" spellcheck="false" disabled /></div></div>
-    <label class="property-row" for="zIndexProperty"><span>Z-Index</span><select id="zIndexProperty" disabled>
+    <label class="property-row" data-property-availability="canEditStroke" for="strokeThicknessProperty" hidden><span>Stroke Thickness</span><input id="strokeThicknessProperty" type="number" min="0.1" max="40" step="0.1" value="1.5" disabled /></label>
+    <div class="property-row" data-property-availability="canEditStroke" hidden><span>Stroke Opacity</span><div class="property-inline opacity-controls"><input id="strokeOpacitySlider" aria-label="Stroke opacity slider" type="range" min="0" max="100" step="1" value="100" disabled /><input id="strokeOpacityExpression" aria-label="Stroke opacity expression" type="text" value="100" spellcheck="false" disabled /></div></div>
+    <label class="property-row" data-property-availability="canArrangeProperty" for="zIndexProperty" hidden><span>Z-Index</span><select id="zIndexProperty" disabled>
       <option value="">Arrange...</option>
       <option value="front">Bring to Front</option>
       <option value="back">Send to Back</option>
       <option value="forward">Bring Forward</option>
       <option value="backward">Send Backward</option>
     </select></label>
-    <label class="property-row text-checkbox-row seam-line-property-row" for="seamLineProperty" hidden><span>Seam Line</span><input id="seamLineProperty" type="checkbox" disabled /></label>
+    <label class="property-row text-checkbox-row seam-line-property-row" data-property-availability="canEditSeamLine" for="seamLineProperty" hidden><span>Seam Line</span><input id="seamLineProperty" type="checkbox" disabled /></label>
     ${objectVisibilityPropertiesMarkup()}
-    <label class="property-row text-property-row" for="fontNameProperty" hidden><span>Font Name</span><select id="fontNameProperty" disabled>
-      ${['Arial', 'Helvetica', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Times New Roman', 'Georgia', 'Garamond', 'Courier New', 'Comic Sans MS', 'Impact', 'Lucida Console'].map((name) => `<option value="${name}">${name}</option>`).join('')}
-    </select></label>
-    <label class="property-row text-property-row" for="fontSizeProperty" hidden><span>Font Size</span><input id="fontSizeProperty" type="number" min="1" step="1" value="28" disabled /></label>
-    <label class="property-row text-property-row" for="fontColorProperty" hidden><span>Font Color</span><input id="fontColorProperty" type="color" value="#202020" disabled /></label>
-    <label class="property-row text-property-row text-layout-property-row" for="multilineTextProperty" hidden><span>Multiline</span><input id="multilineTextProperty" type="checkbox" checked disabled /></label>
-    <div class="property-row text-property-row text-layout-property-row" id="textAlignmentPropertyRow" hidden><span>Alignment</span><div class="text-alignment-options" role="group" aria-label="Text alignment">
-      <button type="button" data-text-align="left" aria-label="Left alignment" title="Left alignment" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 10h10M4 14h16M4 18h12"/></svg></button>
-      <button type="button" data-text-align="center" aria-label="Center alignment" title="Center alignment" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 10h10M4 14h16M6 18h12"/></svg></button>
-      <button type="button" data-text-align="right" aria-label="Right alignment" title="Right alignment" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M10 10h10M4 14h16M8 18h12"/></svg></button>
-    </div></div>
-    <div class="property-row text-property-row text-layout-property-row" id="textVerticalAlignmentPropertyRow" hidden><span>Text Alignment</span><div class="text-alignment-options" role="group" aria-label="Text vertical alignment">
-      <button type="button" data-text-vertical-align="top" aria-label="Top text alignment" title="Top" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M7 13h10M7 17h10"/></svg></button>
-      <button type="button" data-text-vertical-align="middle" aria-label="Middle text alignment" title="Middle" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h10M7 9h10M4 12h16M7 15h10M7 19h10"/></svg></button>
-      <button type="button" data-text-vertical-align="bottom" aria-label="Bottom text alignment" title="Bottom" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10M7 11h10M7 15h10M4 19h16"/></svg></button>
-    </div></div>
-    <label class="property-row construction-property-row" for="constructionProperty"><span>Construction</span><input id="constructionProperty" type="checkbox" disabled /></label>`, 'class="floating-panel properties-panel" id="propertiesPanel" data-preserve-feature-selection aria-label="Properties" hidden');
+    ${textPropertiesMarkup()}
+    <label class="property-row construction-property-row" data-property-availability="canEditConstruction" for="constructionProperty" hidden><span>Construction</span><input id="constructionProperty" type="checkbox" disabled /></label>`, 'class="floating-panel properties-panel" id="propertiesPanel" data-preserve-feature-selection aria-label="Properties" hidden');
 }
 
 function modal(html) {
@@ -1343,7 +1330,6 @@ const propertiesToggle = document.getElementById('propertiesToggle');
 const propertiesPanelElement = document.getElementById('propertiesPanel');
 const propertiesPanelClose = document.getElementById('propertiesPanelClose');
 const propertiesSelectionStatus = document.getElementById('propertiesSelectionStatus');
-const seamLinePropertyRows = [...document.querySelectorAll('.seam-line-property-row')];
 const seamLineProperty = document.getElementById('seamLineProperty');
 const fillColorProperty = document.getElementById('fillColorProperty');
 const imageFillProperty = document.getElementById('imageFillProperty');
@@ -1358,7 +1344,6 @@ const strokeOpacitySlider = document.getElementById('strokeOpacitySlider');
 const strokeOpacityExpression = document.getElementById('strokeOpacityExpression');
 const zIndexProperty = document.getElementById('zIndexProperty');
 const constructionProperty = document.getElementById('constructionProperty');
-const textPropertyRows = [...document.querySelectorAll('.text-property-row')];
 const fontNameProperty = document.getElementById('fontNameProperty');
 const fontSizeProperty = document.getElementById('fontSizeProperty');
 const fontColorProperty = document.getElementById('fontColorProperty');
@@ -1399,22 +1384,17 @@ bindObjectVisibilityOverride({
 
 canvasController.onSelectionChange((properties) => {
   const editable = properties.supportedCount > 0;
-  seamLinePropertyRows.forEach((row) => { row.hidden = !properties.canEditSeamLine; });
-  seamLineProperty.disabled = !properties.canEditSeamLine;
-  [fillColorProperty, fillExpressionProperty].forEach((control) => { control.disabled = !properties.canEditFill; });
+  syncPropertiesPanelAvailability(propertiesPanelElement, {
+    ...properties,
+    canArrangeProperty: editable || properties.canArrange === true,
+  });
+  imageFillProperty.hidden = !properties.canEditImageFill;
   imageFillProperty.disabled = !properties.canEditImageFill;
   imageFillPropertyController.update(properties);
   objectVisibilityPropertyController.update(properties);
-  [fillOpacitySlider, fillOpacityExpression].forEach((control) => { control.disabled = !properties.canEditOpacity; });
-  [strokeColorProperty, strokeExpressionProperty, strokeThicknessProperty, strokeOpacitySlider, strokeOpacityExpression].forEach((control) => { control.disabled = !properties.canEditStroke; });
+  imageStrokeProperty.hidden = !properties.canEditImageStroke;
   imageStrokeProperty.disabled = !properties.canEditImageStroke;
   imageStrokePropertyController.update(properties);
-  zIndexProperty.disabled = !(editable || properties.canArrange === true);
-  constructionProperty.disabled = !properties.canEditConstruction;
-  textPropertyRows.forEach((row) => { row.hidden = !properties.canEditText; });
-  document.querySelectorAll('.text-layout-property-row').forEach((row) => { row.hidden = !properties.canEditText; });
-  [fontNameProperty, fontSizeProperty, fontColorProperty, multilineTextProperty, ...textAlignmentButtons, ...textVerticalAlignmentButtons]
-    .forEach((control) => { control.disabled = !properties.canEditText; });
   if (properties.canEditSeamLine) propertiesSelectionStatus.textContent = 'Stroke selected';
   else if (properties.arrayCount === 1) propertiesSelectionStatus.textContent = 'Array selected';
   else if (properties.linkedCopyCount === 1) propertiesSelectionStatus.textContent = 'Duplicate/Symmetric object selected';

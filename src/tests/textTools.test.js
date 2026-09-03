@@ -12,7 +12,9 @@ import {
   normalizeTextVerticalAlign,
   rememberTextDefaults,
   resolveTextFields,
+  textPropertiesMarkup,
 } from '../../packages/paramagic-core/src/modules/TextTools.js';
+import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { formatParameterFieldValue } from '../../packages/paramagic-core/src/modules/solver/Units.js';
 
 function interactionTarget() {
@@ -66,6 +68,43 @@ test('text fields resolve bracketed expressions without changing unresolved fiel
     },
   );
   assert.equal(rendered, '41 / [Unknown + 1]');
+});
+
+test('Text properties share one Font Size and Color row with a standard Multiline checkbox', () => {
+  const markup = textPropertiesMarkup();
+  const fontRowStart = markup.indexOf('text-font-property-row');
+  const multilineStart = markup.indexOf('multilineTextProperty');
+  assert.ok(fontRowStart >= 0);
+  assert.ok(markup.indexOf('fontSizeProperty', fontRowStart) < multilineStart);
+  assert.ok(markup.indexOf('fontColorProperty', fontRowStart) < multilineStart);
+  assert.equal((markup.match(/text-font-property-row/g) || []).length, 1);
+  assert.match(markup, /text-checkbox-row[^>]*data-property-availability="canEditText"[^>]*for="multilineTextProperty"/);
+});
+
+test('text fields preserve string results from conditional Control expressions', () => {
+  const solver = createSolverController();
+  solver.setDrawingProperties({ drawingUnit: 'in' });
+  const control = solver.createControlParameter({
+    name: 'c4',
+    expression: '"Straight Cushion"',
+  });
+  const evaluateTextExpression = (expression) => {
+    try {
+      return solver.evaluateDrawingLengthExpression(expression);
+    } catch {
+      return solver.evaluateParameterExpression(expression);
+    }
+  };
+  const render = () => resolveTextFields(
+    '[if(c4=="Straight Cushion","Straight","T Cushion")]',
+    solver.parameterExpressionEntries({ includeLocalAliases: true }),
+    (entry) => formatParameterFieldValue(entry, 'in'),
+    evaluateTextExpression,
+  );
+
+  assert.equal(render(), 'Straight');
+  solver.updateParameter(control.id, { expression: '"T Cushion"' });
+  assert.equal(render(), 'T Cushion');
 });
 
 test('text fields preserve unitless Control values while converting length parameters', () => {

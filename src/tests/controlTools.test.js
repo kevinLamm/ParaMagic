@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  CONTROL_EXTENSION_VERSION,
+  CONTROL_VISIBILITY_EXPRESSION_PLACEHOLDER,
   controlExpressionForValue,
   controlPanelState,
   controlRowMarkup,
   controlToolTypes,
+  controlVisibilityState,
   createControlItem,
   createControlPanelModel,
   formatMinMaxExpression,
@@ -42,9 +45,36 @@ test('panel controls normalize without canvas geometry', () => {
   assert.equal(item.label, '');
   assert.equal(item.configurationExpression, 'MinMax(0, 100, 50, 1)');
   assert.equal(item.selectedIndex, 0);
+  assert.equal(item.visibleExpression, '');
   assert.equal('x' in item, false);
   assert.equal('width' in item, false);
   assert.deepEqual(normalizeControlItem({ controlType: 'Numeric Textbox' }).controlType, 'numeric-textbox');
+});
+
+test('Control visibility uses the manual toggle or a fail-closed expression', () => {
+  const solver = new SolverController();
+  const gate = solver.createParameter({ name: 'Show Cushion', expression: 'TRUE' });
+  const conditional = createControlItem('Numeric Textbox', {
+    parameterName: 'c1',
+    visible: false,
+    visibleExpression: 'Show Cushion',
+  });
+
+  assert.deepEqual(controlVisibilityState(conditional, solver), { visible: true, error: null });
+  solver.updateParameter(gate.id, { expression: 'FALSE' });
+  assert.deepEqual(controlVisibilityState(conditional, solver), { visible: false, error: null });
+  assert.deepEqual(controlVisibilityState({ ...conditional, visibleExpression: '' }, solver), {
+    visible: false,
+    error: null,
+  });
+  assert.equal(controlVisibilityState({
+    ...conditional,
+    visible: true,
+    visibleExpression: 'Unknown Symbol',
+  }, solver).visible, true);
+  const invalid = controlVisibilityState({ ...conditional, visibleExpression: 'Unknown Symbol' }, solver);
+  assert.equal(invalid.visible, false);
+  assert.match(invalid.error, /visibility expression failed.*unknown parameter/i);
 });
 
 test('the legacy scrollbar label still normalizes to the slider control type', () => {
@@ -167,7 +197,12 @@ test('editing controls uses a wrapping expression area and a Visible button befo
   assert.match(markup, />MinMax\(0, 100, 50, 1\)<\/textarea>/);
   assert.match(markup, /data-control-visibility[^>]*aria-pressed="true"/);
   assert.ok(markup.indexOf('data-control-visibility') < markup.indexOf('data-control-remove'));
+  assert.doesNotMatch(markup, /data-control-visibility-expression/);
   assert.match(hiddenMarkup, /data-control-visibility[^>]*aria-pressed="false"/);
+  assert.match(hiddenMarkup, /data-control-visibility-expression[^>]*placeholder="FALSE"/);
+  assert.equal(CONTROL_VISIBILITY_EXPRESSION_PLACEHOLDER, 'FALSE');
+  assert.ok(hiddenMarkup.indexOf('panel-control-row-heading') < hiddenMarkup.indexOf('data-control-visibility-expression'));
+  assert.ok(hiddenMarkup.indexOf('data-control-visibility-expression') < hiddenMarkup.indexOf('panel-control-runtime'));
   assert.doesNotMatch(hiddenMarkup, /control-hidden|\sdisabled(?:=|\s|>)/);
 });
 
@@ -343,13 +378,15 @@ test('control panel serialization preserves labels and row order', () => {
   const second = model.add('Numeric Textbox');
   model.setLabel(second.id, 'Quantity');
   model.setItemVisible(second.id, false);
+  model.setItemVisibilityExpression(second.id, 'c1 > 0');
   model.reorder(second.id, 0);
 
   const serialized = model.serialize();
-  assert.equal(serialized.version, 2);
+  assert.equal(serialized.version, CONTROL_EXTENSION_VERSION);
   assert.deepEqual(serialized.items.map(({ id }) => id), [second.id, first.id]);
   assert.equal(serialized.items[0].label, 'Quantity');
   assert.equal(serialized.items[0].visible, false);
+  assert.equal(serialized.items[0].visibleExpression, 'c1 > 0');
   assert.equal(serialized.items.every((item) => !('x' in item)), true);
 
   model.clear();
@@ -357,19 +394,25 @@ test('control panel serialization preserves labels and row order', () => {
   assert.deepEqual(model.list().map(({ id }) => id), [second.id, first.id]);
   assert.equal(model.list()[0].parameterName, 'c2');
   assert.equal(model.list()[0].visible, false);
+  assert.equal(model.list()[0].visibleExpression, 'c1 > 0');
   assert.equal(normalizeControlItem({ controlType: 'Checkbox' }).visible, true);
 });
 
-test('renaming a referenced parameter updates stored control expressions', () => {
+test('renaming a referenced parameter updates stored value and visibility expressions', () => {
   const solver = new SolverController();
   const source = solver.createParameter({ name: 'choiceA', expression: '12 mm' });
   const model = createControlPanelModel({ solver });
-  const item = model.add('Dropdown', { configurationExpression: '{choiceA|Other}' });
+  const item = model.add('Dropdown', {
+    configurationExpression: '{choiceA|Other}',
+    visible: false,
+    visibleExpression: 'choiceA > 0',
+  });
 
   solver.updateParameter(source.id, { name: 'renamedChoice' });
   model.synchronizeParameters(solver.parameters());
 
   assert.equal(model.get(item.id).configurationExpression, '{renamedChoice|Other}');
+  assert.equal(model.get(item.id).visibleExpression, 'renamedChoice > 0');
   assert.equal(resolveControlChoices(model.get(item.id), solver).choices[0].label, '0.472');
 });
 

@@ -326,7 +326,20 @@ test('SubtractSystem consumes rectangular array placements as live derived cutte
   assert.deepEqual(new Set(firstPlan.features
     .filter((feature) => feature.boundaryRole === 'subtract')
     .map((feature) => feature.sourceId)), new Set(['cutter', firstDerivedId, secondDerivedId]));
-  assert.ok(firstPlan.features.some((feature) => feature.sourceId === firstDerivedId && feature.center?.[0] === 70));
+  const firstArrayFeature = firstPlan.features.find((feature) => (
+    feature.sourceId === firstDerivedId && feature.center?.[0] === 70
+  ));
+  assert.ok(firstArrayFeature);
+  assert.equal(firstArrayFeature.arrayId, definition.id);
+  assert.equal(firstArrayFeature.arrayPlacementIndex, 1);
+  assert.equal(firstArrayFeature.arraySourceId, cutter.id);
+  assert.equal(system.featureForHost({
+    recordId: target.id,
+    sourceId: cutter.id,
+    arrayId: definition.id,
+    arrayPlacementIndex: 1,
+    sourceFeatureIndex: firstArrayFeature.sourceFeatureIndex,
+  }).sourceId, firstDerivedId);
 
   evaluated.placements[1].translateX = 60;
   system.refreshPresentation();

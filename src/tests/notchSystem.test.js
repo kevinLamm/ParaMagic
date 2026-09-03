@@ -8,12 +8,36 @@ import {
   prepareNotchDerivativePresentationClone,
   prepareNotchValueOnlyPresentationClone,
 } from '../../packages/paramagic-core/src/modules/NotchSystem.js';
+import { serializeDrawingJson } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { createUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 
 const node = () => ({
   style: {},
   classList: { toggle() {} },
   setAttribute() {},
 });
+
+function canonicalDrawing(entities, extraExtensions = {}) {
+  const stackId = createUuid();
+  const classId = createUuid();
+  return {
+    identityArchitectureVersion: 1,
+    drawingId: createUuid(),
+    entities: entities.map((entity) => ({ ...entity, stackId: entity.stackId || stackId })),
+    constraints: [],
+    parameters: [],
+    dimensionAnnotations: [],
+    classes: [{ id: classId, name: 'Default', systemRole: 'default-class', removable: false }],
+    activeClassId: classId,
+    extensions: {
+      stacks: {
+        activeStackId: stackId,
+        stacks: [{ id: stackId, name: 'Default', systemRole: 'default-stack', removable: false }],
+      },
+      ...extraExtensions,
+    },
+  };
+}
 
 test('notch presentation refreshes only for its own dependency records', () => {
   const notch = {
@@ -71,7 +95,7 @@ test('derived Notch presentation removes the non-editable orange position handle
 
 function createSystem(features, records = []) {
   const featureForHost = (host) => features.find((feature) => (
-    feature.recordId === host?.recordId
+    (feature.recordId === host?.recordId || feature.stableKey === host?.stableKey)
       && feature.kind === host?.kind
       && feature.index === host?.index
   )) || null;
@@ -244,7 +268,7 @@ test('Notch creation stores the selected drawing notch type', () => {
   assert.equal(system.addNotch(feature, [3, 0], 'u-notch').notchType, 'u-notch');
 });
 
-test('Notch hosts preserve derived boundary ownership metadata', () => {
+test('Notch hosts preserve stable derived-boundary selectors without a redundant target reference', () => {
   const feature = {
     recordId: 'target',
     targetId: 'target',
@@ -261,9 +285,114 @@ test('Notch hosts preserve derived boundary ownership metadata', () => {
   const system = createSystem([feature]);
   const created = system.addNotch(feature, [5, 0]);
   assert.equal(created.host.sourceId, 'cutter');
-  assert.equal(created.host.targetId, 'target');
+  assert.equal('targetId' in created.host, false);
   assert.equal(created.host.boundaryRole, 'subtract');
   assert.equal(created.host.stableKey, feature.stableKey);
+});
+
+test('a Notch on a generated closed-cycle boundary saves without persisting its derived boundary ID', () => {
+  const sourceId = createUuid();
+  const source = { id: sourceId, type: 'line', start: [0, 0], end: [20, 0] };
+  const feature = {
+    recordId: sourceId,
+    sourceId,
+    targetId: createUuid(),
+    kind: 'segment',
+    index: 0,
+    sourceFeatureIndex: 0,
+    boundaryRole: 'outer',
+    stableKey: `resolved:${createUuid()}:${sourceId}:segment:0`,
+    parameterStart: 0,
+    parameterEnd: 1,
+    start: [0, 0],
+    end: [20, 0],
+    pickedPoint: [8, 0],
+  };
+  const created = createSystem([feature], [{ id: sourceId, recordType: 'geometry', entity: source }])
+    .addNotch(feature, feature.pickedPoint);
+
+  assert.equal(created.host.recordId, sourceId);
+  assert.equal('targetId' in created.host, false);
+  assert.doesNotThrow(() => serializeDrawingJson(canonicalDrawing([source, created]), 'Cycle Notch'));
+});
+
+test('a Notch on a Swell edge saves with the source entity as its persistent host', () => {
+  const sourceId = createUuid();
+  const source = {
+    id: sourceId,
+    type: 'rect',
+    x: 0,
+    y: 0,
+    width: 20,
+    height: 10,
+  };
+  const feature = {
+    recordId: createUuid(),
+    sourceId,
+    targetId: createUuid(),
+    swellDerived: true,
+    swellSourceId: sourceId,
+    sourceFeatureIndex: 0,
+    boundaryRole: 'swell-offset',
+    stableKey: `swell-boundary:${createUuid()}:${createUuid()}`,
+    kind: 'segment',
+    index: 0,
+    parameterStart: 0,
+    parameterEnd: 1,
+    start: [0, -1],
+    end: [20, -1],
+    pickedPoint: [8, -1],
+  };
+  const records = [{ id: sourceId, recordType: 'geometry', entity: source }];
+  const created = createSystem([feature], records).addNotch(feature, feature.pickedPoint);
+
+  assert.equal(created.host.recordId, sourceId);
+  assert.equal(created.host.derivedBoundaryType, 'swell');
+  assert.equal('sourceId' in created.host, false);
+  assert.equal('targetId' in created.host, false);
+
+  assert.doesNotThrow(() => serializeDrawingJson(canonicalDrawing([source, created]), 'Swell Notch'));
+});
+
+test('a Notch on an arrayed Subtract edge saves against the array definition and source entity', () => {
+  const sourceId = createUuid();
+  const targetId = createUuid();
+  const arrayId = createUuid();
+  const derivedPlacementId = createUuid();
+  const source = { id: sourceId, type: 'circle', center: [5, 5], radius: 2 };
+  const target = { id: targetId, type: 'rect', x: 0, y: 0, width: 20, height: 10 };
+  const feature = {
+    recordId: targetId,
+    targetId,
+    sourceId: derivedPlacementId,
+    arrayId,
+    arrayPlacementIndex: 2,
+    arraySourceId: sourceId,
+    kind: 'segment',
+    index: 4,
+    sourceFeatureIndex: 0,
+    boundaryRole: 'subtract',
+    stableKey: `${targetId}:${derivedPlacementId}:subtract:0`,
+    parameterStart: 0,
+    parameterEnd: 1,
+    start: [10, 3],
+    end: [10, 7],
+    pickedPoint: [10, 5],
+  };
+  const records = [source, target].map((entity) => ({ id: entity.id, recordType: 'geometry', entity }));
+  const created = createSystem([feature], records).addNotch(feature, feature.pickedPoint);
+
+  assert.equal(created.host.recordId, targetId);
+  assert.equal(created.host.sourceId, sourceId);
+  assert.equal(created.host.arrayId, arrayId);
+  assert.equal(created.host.arrayPlacementIndex, 2);
+  assert.equal('targetId' in created.host, false);
+  assert.doesNotThrow(() => serializeDrawingJson(canonicalDrawing([source, target, created], {
+    arrayTools: {
+      version: 5,
+      arrays: [{ id: arrayId, arrayType: 'rectangular', sourceIds: [sourceId] }],
+    },
+  }), 'Array Subtract Notch'));
 });
 
 test('derived-edge ownership metadata does not override Notch anchor distance', () => {

@@ -108,6 +108,17 @@ test('ordinary parameters preserve quoted strings and string references', () => 
   assert.equal(repository.evaluateExpression('SelectedCover'), 'basic/Fabric/36981_106.webp');
 });
 
+test('length evaluation rejects text results instead of leaking NaN', () => {
+  const repository = new ParameterRepository();
+  repository.setDefaultLengthUnit('in');
+  repository.createControl({ name: 'c4', expression: '"Straight Cushion"' });
+
+  assert.throws(
+    () => repository.evaluateLengthExpression('if(c4=="Straight Cushion","Straight","T Cushion")'),
+    /finite number/i,
+  );
+});
+
 test('catalog image references can be entered without quotes', () => {
   const repository = new ParameterRepository();
   const fabric = repository.createUser({

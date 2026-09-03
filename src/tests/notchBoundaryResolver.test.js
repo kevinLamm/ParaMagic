@@ -240,14 +240,18 @@ test('Notch and Seam Line host resolution accepts a registered derived boundary 
   const provider = {
     featureFromEvent: () => ({ ...feature, pickedPoint: [8, 0] }),
     featureForHost: (host) => host.stableKey === feature.stableKey ? feature : null,
-    boundaryForHost: (host) => host.targetId === boundary.id ? boundary : null,
+    boundaryForHost: (host) => host.recordId === feature.sourceId ? boundary : null,
     boundaryFeatures: () => boundary.features,
     inwardTarget: () => [8, 6.35],
     isClosedHost: () => true,
     boundaries: () => [boundary],
   };
   const resolver = createNotchBoundaryResolver({
-    records: [],
+    records: [{
+      id: feature.sourceId,
+      recordType: 'geometry',
+      entity: { id: feature.sourceId, type: 'line', start: [0, 0], end: [20, 0] },
+    }],
     recordSegments: () => [],
     renderedEntityForRecord: () => null,
     evaluateFilletedGeometry: (entities) => entities,
@@ -256,9 +260,19 @@ test('Notch and Seam Line host resolution accepts a registered derived boundary 
     getSegmentFeature: () => null,
     arcCircle: () => null,
     screenToWorld: () => [8, 0],
+    getResolvedBoundaries: () => [{
+      id: 'source-boundary',
+      recordIds: [feature.sourceId],
+      features: [{ ...sourceFeature, recordId: feature.sourceId }],
+      polygon: [[0, 0], [20, 0], [20, 10], [0, 10]],
+    }],
     derivedBoundaryProviders: new Set([provider]),
   });
-  const host = { recordId: feature.recordId, targetId: boundary.id, stableKey: feature.stableKey };
+  const host = {
+    recordId: feature.sourceId,
+    derivedBoundaryType: 'swell',
+    stableKey: feature.stableKey,
+  };
 
   assert.equal(resolver.featureFromEvent({ target: {}, clientX: 0, clientY: 0 }).recordId, feature.recordId);
   assert.equal(resolver.featureForHost(host), feature);

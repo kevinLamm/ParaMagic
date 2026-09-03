@@ -4,6 +4,7 @@ import {
   createObjectVisibilitySystem,
   evaluateVisibleExpression,
   filterVisibleThumbnailEntities,
+  objectVisibilityPropertiesMarkup,
   objectVisibilityState,
 } from '../../packages/paramagic-core/src/modules/ObjectVisibility.js';
 
@@ -24,11 +25,11 @@ function presentationNode() {
   };
 }
 
-test('Visible expressions accept booleans, default to TRUE, and reject non-booleans', () => {
+test('Visible expressions accept booleans, preserve blank as FALSE, and reject non-booleans', () => {
   const evaluate = (expression) => ({ TRUE: true, FALSE: false, showPanel: false, count: 2 })[expression];
   assert.deepEqual(objectVisibilityState({}, evaluate), {
     value: true,
-    expression: 'TRUE',
+    expression: '',
     error: null,
   });
   assert.deepEqual(objectVisibilityState({
@@ -38,7 +39,25 @@ test('Visible expressions accept booleans, default to TRUE, and reject non-boole
     expression: 'showPanel',
     error: null,
   });
+  assert.deepEqual(objectVisibilityState({
+    appearance: { visible: false, visibleExpression: '', visibleManuallyEnabled: false },
+  }, evaluate), {
+    value: false,
+    expression: '',
+    error: null,
+  });
   assert.match(evaluateVisibleExpression('count', evaluate).error, /TRUE or FALSE/);
+});
+
+test('Visible and its expression share one property row with a FALSE hint', () => {
+  const markup = objectVisibilityPropertiesMarkup();
+  assert.equal((markup.match(/object-visibility-property-row/g) || []).length, 1);
+  assert.match(markup, /id="visibleProperty"[^>]*type="checkbox"/);
+  assert.match(markup, /id="visibleExpressionProperty"[^>]*list="visibleExpressionSymbols"/);
+  assert.match(markup, /id="visibleExpressionProperty"[^>]*placeholder="FALSE"/);
+  assert.match(markup, /class="object-visibility-expression" hidden/);
+  assert.match(markup, /id="visibleExpressionProperty"[^>]*value=""/);
+  assert.ok(markup.indexOf('visibleProperty') < markup.indexOf('visibleExpressionProperty'));
 });
 
 test('closed-object visibility updates every boundary record and supports a presentation-only override', () => {
@@ -74,10 +93,11 @@ test('closed-object visibility updates every boundary record and supports a pres
   });
 
   assert.equal(system.selectedProperties().canEditVisible, true);
-  assert.equal(system.setSelectedVisibility({ visibleExpression: 'showPanel' }).success, true);
+  assert.equal(system.setSelectedVisibility({ visible: false, visibleExpression: 'showPanel' }).success, true);
   assert.equal(checkpoints[0], 'object-visibility-update');
   assert.equal(records.every(({ entity }) => entity.appearance.visibleExpression === 'showPanel'), true);
   assert.equal(records.every(({ entity }) => entity.appearance.visible === false), true);
+  assert.equal(records.every(({ entity }) => entity.appearance.visibleManuallyEnabled === false), true);
 
   system.syncPresentation();
   assert.equal(records.every(({ group }) => group.classes.has('object-visibility-hidden')), true);
@@ -119,13 +139,35 @@ test('open and construction geometry expose visibility as individual objects', (
   });
 
   assert.equal(system.selectedProperties().canEditVisible, true);
-  assert.equal(system.setSelectedVisibility({ visibleExpression: 'FALSE' }).success, true);
+  assert.equal(system.setSelectedVisibility({ visible: false, visibleExpression: 'FALSE' }).success, true);
   assert.equal(records.every(({ entity }) => entity.appearance.visible === false), true);
 
   system.syncPresentation();
   assert.equal(records.every(({ group }) => group.classes.has('object-visibility-hidden')), true);
   assert.equal(system.isRecordShown('open-line'), false);
   assert.equal(system.isRecordShown('construction-line'), false);
+});
+
+test('a blank selected-object Visible expression stays blank and evaluates false', () => {
+  const record = {
+    id: 'blank-visible-line',
+    recordType: 'geometry',
+    entity: { id: 'blank-visible-line', type: 'line', start: [0, 0], end: [10, 0] },
+    group: presentationNode(),
+  };
+  const system = createObjectVisibilitySystem({
+    records: [record],
+    selectedIds: new Set([record.id]),
+    evaluateExpression: (expression) => ({ TRUE: true, FALSE: false })[expression],
+    updateEntityAppearances: (updates) => updates.map(({ entity }) => entity),
+    applyChangedEntity: (entity) => { record.entity = entity; },
+  });
+
+  assert.equal(system.setSelectedVisibility({ visible: false }).success, true);
+  assert.equal(record.entity.appearance.visibleExpression, '');
+  assert.equal(record.entity.appearance.visible, false);
+  assert.equal(record.entity.appearance.visibleManuallyEnabled, false);
+  assert.equal(system.selectedProperties().visibleExpression, '');
 });
 
 test('additional tool-owned records expose expression-driven visibility', () => {
@@ -148,10 +190,10 @@ test('additional tool-owned records expose expression-driven visibility', () => 
     canEditVisible: true,
     visible: true,
     mixedVisible: false,
-    visibleExpression: 'TRUE',
+    visibleExpression: '',
     errors: { visible: null },
   });
-  assert.equal(system.setSelectedVisibility({ visibleExpression: 'showLabel' }).success, true);
+  assert.equal(system.setSelectedVisibility({ visible: false, visibleExpression: 'showLabel' }).success, true);
   assert.equal(record.entity.appearance.visibleExpression, 'showLabel');
   assert.equal(record.entity.appearance.visible, false);
 
@@ -185,7 +227,7 @@ test('disabled Stack records stay out of visibility expression processing', () =
 
   system.syncPresentation();
 
-  assert.deepEqual(evaluatedRecordIds, ['enabled-line']);
+  assert.deepEqual(evaluatedRecordIds, []);
   assert.equal(system.isRecordVisible(enabled.id), true);
   assert.equal(system.isRecordVisible(disabled.id), true);
   assert.equal(disabled.group.attributes.has('data-object-visible'), false);

@@ -312,6 +312,9 @@ test('circular array cutters rotate analytic composite boundaries without moving
   ]);
   assert.deepEqual(owners[0].boundary.features[0].start.map((value) => Math.round(value)), [0, 10]);
   assert.equal(owners[0].boundary.features[0].sourceId, owners[0].id);
+  assert.equal(owners[0].boundary.features[0].arrayId, definition.id);
+  assert.equal(owners[0].boundary.features[0].arrayPlacementIndex, 1);
+  assert.equal(owners[0].boundary.features[0].arraySourceId, 'edge-a');
   assert.equal(owners[0].sourceOwnerId, 'triangle-cutter');
 });
 
@@ -369,6 +372,10 @@ test('zero-count arrays have no placements and gate parent visibility to FALSE',
       columnCountExpression: 'columns',
     }, 'showParent'),
     '((showParent) && ((rows) > 0 && (columns) > 0))',
+  );
+  assert.equal(
+    arrayParentVisibilityExpression(circular.definition, ''),
+    '((FALSE) && ((0) > 0))',
   );
 });
 

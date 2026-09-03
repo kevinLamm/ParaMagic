@@ -15,6 +15,7 @@ import {
   swellLineSelectionProperties,
   swellSelectionCanFill,
   setSwellPropertyRowVisible,
+  syncSwellGroupPresentation,
 } from '../../packages/paramagic-core/src/modules/SwellTools.js';
 
 test('the Swell panel uses expression inputs and offers Swell only for line-based geometry', () => {
@@ -270,4 +271,37 @@ test('Swell Seam Line presentation mounts in the visible derived record', () => 
   assert.equal(host.before, hitTarget);
   assert.equal(swellInteractionGroup({ children: [unrelatedGroup, derivedGroup] }, 'source-line'), derivedGroup);
   assert.equal(swellPresentationHost({ children: [derivedGroup] }, 'missing'), null);
+});
+
+test('Swell derivative groups inherit hidden Stack presentation after a rebuild', () => {
+  const classes = new Set();
+  const group = {
+    classList: {
+      toggle(name, enabled) {
+        if (enabled) classes.add(name);
+        else classes.delete(name);
+      },
+    },
+  };
+  const canvas = {
+    getActiveStackId: () => 'other-stack',
+    isRecordInActiveStack: () => false,
+    isRecordVisible: () => false,
+    isObjectVisible: () => true,
+  };
+
+  assert.deepEqual(syncSwellGroupPresentation(group, 'swell-source', canvas), {
+    inactive: true,
+    stackHidden: true,
+    objectHidden: false,
+  });
+  assert.equal(classes.has('stack-hidden'), true);
+  assert.equal(classes.has('stack-inactive'), true);
+  assert.equal(classes.has('object-visibility-hidden'), false);
+
+  canvas.isRecordVisible = () => true;
+  canvas.isRecordInActiveStack = () => true;
+  syncSwellGroupPresentation(group, 'swell-source', canvas);
+  assert.equal(classes.has('stack-hidden'), false);
+  assert.equal(classes.has('stack-inactive'), false);
 });

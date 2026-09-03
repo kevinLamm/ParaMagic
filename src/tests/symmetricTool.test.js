@@ -197,7 +197,8 @@ test('window-selected Duplicate and Symmetric definitions move together from the
 test('Duplicate and Symmetric definitions persist independent visibility and z-index properties', () => {
   const defaults = normalizeLinkedCopyDefinition({ id: 'copy-default', sourceIds: ['table-a'] });
   assert.equal(defaults.visible, true);
-  assert.equal(defaults.visibleExpression, 'TRUE');
+  assert.equal(defaults.visibleManuallyEnabled, true);
+  assert.equal(defaults.visibleExpression, '');
   assert.equal(defaults.zIndex, null);
   assert.equal(defaults.sourceDefinitionId, 'copy-default');
   assert.equal(defaults.sourceStackId, null);
@@ -206,6 +207,7 @@ test('Duplicate and Symmetric definitions persist independent visibility and z-i
     id: 'copy-configured',
     sourceIds: ['table-a'],
     visible: false,
+    visibleManuallyEnabled: false,
     visibleExpression: 'showCopy',
     zIndex: 7,
   });
@@ -256,6 +258,26 @@ test('linked-copy property selection exposes its own Visible expression and pain
   assert.equal(patch.canEditVisible, true);
   assert.equal(patch.mixedVisible, true);
   assert.equal(patch.visibleExpression, null);
+});
+
+test('a blank linked-copy Visible expression stays blank and evaluates false', () => {
+  const definition = normalizeLinkedCopyDefinition({
+    id: 'duplicate-blank',
+    type: 'duplicate',
+    sourceIds: ['line-a'],
+    visible: false,
+    visibleManuallyEnabled: false,
+    visibleExpression: '',
+  });
+
+  assert.equal(definition.visibleExpression, '');
+  assert.equal(definition.visibleManuallyEnabled, false);
+  assert.equal(definition.visible, false);
+  assert.deepEqual(linkedCopyVisibilityState(definition, (expression) => expression === 'TRUE'), {
+    value: false,
+    expression: '',
+    error: null,
+  });
 });
 
 test('linked table copies use outline-only hits so they cannot block source cell editors', () => {
