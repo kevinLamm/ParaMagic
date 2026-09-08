@@ -1,15 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
+test('rectangular arrays follow the local axes of a rotated Stack', () => {
+  const result = evaluateArrayDefinition({ sourceIds: ['source'], arrayType: 'rectangular',
+    rowCountExpression: '1', columnCountExpression: '2', rowSpacingExpression: '20', columnSpacingExpression: '30',
+    rowCentroidSpacing: true, columnCentroidSpacing: true,
+  }, { sourceBounds: { x: 0, y: 0, width: 10, height: 5 }, coordinateFrame: { x: 50, y: 10, rotation: Math.PI / 2 } });
+  assert.equal(result.valid, true);
+  const offset = result.placements[1];
+  assert.ok(Math.abs(offset.translateX) < 1e-8);
+  assert.ok(Math.abs(offset.translateY - 30) < 1e-8);
+});
+
 import {
+  arrayDerivativeSourceVisible,
   arrayDerivedRecordId,
   arrayDerivedOwnerId,
+  arrayDimensionReference,
+  arrayIdsFromWindow,
   arrayParentVisibilityExpression,
   arrayPaintAnchorRecordId,
   arrayPlacementCount,
   arrayPlacementTransform,
   arraySelectionPropertyPatch,
   arraySourceIdsFromSelection,
+  arraySourceReferencesFromWindow,
+  arraySourceReferenceKey,
   boundsCentroid,
   circularArrayAngles,
   createArrayCenterPointEntity,
@@ -18,6 +34,8 @@ import {
   migrateArrayDefinition,
   materializeArraySubtractOwners,
   normalizeArrayDefinition,
+  normalizeArraySourceReferences,
+  orderArrayDefinitionsByDependencies,
   parseArrayDerivedRecordId,
   rectangularArrayOffsets,
 } from '../../packages/paramagic-core/src/modules/ArrayTools.js';
@@ -74,7 +92,51 @@ test('Array sources mirror canonical entity and window selections', () => {
   assert.deepEqual(arraySourceIdsFromSelection(['rectangle-3'], entities), ['rectangle-3']);
 });
 
-test('Array source selection rejects dimensions and derived-only geometry', () => {
+test('Array window selection tests rendered geometry instead of the placement bounding box', () => {
+  const target = (selectedByWindow) => ({ selectedByWindow });
+  const groups = [
+    {
+      dataset: { arrayId: 'partial-array' },
+      querySelectorAll: () => [target(true), target(false)],
+    },
+    {
+      dataset: { arrayId: 'contained-array' },
+      querySelectorAll: () => [target(true), target(true)],
+    },
+  ];
+  const matchesNode = (node) => node.selectedByWindow;
+
+  assert.deepEqual(arrayIdsFromWindow(groups, matchesNode, false), ['contained-array']);
+  assert.deepEqual(arrayIdsFromWindow(groups, matchesNode, true), ['partial-array', 'contained-array']);
+});
+
+test('Array source window selection retains contained derivative objects', () => {
+  const candidate = (reference, selectedGeometry) => ({
+    reference,
+    matches: () => false,
+    querySelectorAll: () => selectedGeometry.map((selectedByWindow) => ({ selectedByWindow })),
+  });
+  const candidates = [
+    candidate({ kind: 'linked-copy', copyId: 'partial-copy' }, [true, false]),
+    candidate({ kind: 'array-placement', arrayId: 'parent-array', placementIndex: 2 }, [true, true]),
+  ];
+  const referenceFromTarget = ({ reference }) => reference;
+  const matchesNode = (node) => node.selectedByWindow;
+
+  assert.deepEqual(
+    arraySourceReferencesFromWindow(candidates, referenceFromTarget, matchesNode, false),
+    [{ kind: 'array-placement', arrayId: 'parent-array', placementIndex: 2 }],
+  );
+  assert.deepEqual(
+    arraySourceReferencesFromWindow(candidates, referenceFromTarget, matchesNode, true),
+    [
+      { kind: 'linked-copy', copyId: 'partial-copy' },
+      { kind: 'array-placement', arrayId: 'parent-array', placementIndex: 2 },
+    ],
+  );
+});
+
+test('Array source selection accepts persistent derivatives while rejecting dimensions and controls', () => {
   const entities = new Map([
     ['line-1', { id: 'line-1', type: 'line' }],
     ['dimension-1', { id: 'dimension-1', type: 'dimension-line' }],
@@ -88,7 +150,56 @@ test('Array source selection rejects dimensions and derived-only geometry', () =
     'offset-1',
     'center-1',
     'line-1',
-  ], entities), ['line-1']);
+  ], entities), ['line-1', 'offset-1']);
+});
+
+test('Array derivative source references normalize and deduplicate every supported kind', () => {
+  const references = normalizeArraySourceReferences([
+    { kind: 'array-placement', arrayId: 'array-a', placementIndex: 2 },
+    { kind: 'array-placement', arrayId: 'array-a', placementIndex: '2' },
+    { kind: 'linked-copy', copyId: 'copy-a' },
+    { kind: 'swell-piece', ownerId: 'line-a', pieceIndex: 1 },
+    { kind: 'seam-line', sourceFeatures: [{ sourceId: 'shape-a', sourceFeatureIndex: 2, boundaryRole: 'outer', kind: 'segment' }] },
+    { kind: 'swell-piece', ownerId: '', pieceIndex: 0 },
+    { kind: 'unknown', id: 'ignored' },
+  ]);
+
+  assert.deepEqual(references, [
+    { kind: 'array-placement', arrayId: 'array-a', placementIndex: 2 },
+    { kind: 'linked-copy', copyId: 'copy-a' },
+    { kind: 'swell-piece', ownerId: 'line-a', pieceIndex: 1 },
+    { kind: 'seam-line', sourceFeatures: [{ sourceId: 'shape-a', sourceFeatureIndex: 2, boundaryRole: 'outer', kind: 'segment' }] },
+  ]);
+  assert.deepEqual(references.map(arraySourceReferenceKey), [
+    'array-placement:array-a:2',
+    'linked-copy:copy-a',
+    'swell-piece:line-a:1',
+    'seam-line:shape-a|2|outer|segment|',
+  ]);
+  const definition = normalizeArrayDefinition({ id: 'array-b', sourceRefs: references });
+  assert.deepEqual(definition.sourceRefs, references);
+  assert.equal(evaluateArrayDefinition(definition, {
+    sourceBounds: { x: 0, y: 0, width: 10, height: 10 },
+  }).valid, true);
+});
+
+test('Array definitions render derivative parents before dependents and identify cycles', () => {
+  const parent = normalizeArrayDefinition({ id: 'parent', sourceIds: ['line-a'] });
+  const child = normalizeArrayDefinition({
+    id: 'child',
+    sourceRefs: [{ kind: 'array-placement', arrayId: 'parent', placementIndex: 1 }],
+  });
+  const grandchild = normalizeArrayDefinition({
+    id: 'grandchild',
+    sourceRefs: [{ kind: 'array-placement', arrayId: 'child', placementIndex: 1 }],
+  });
+  const ordered = orderArrayDefinitionsByDependencies([grandchild, child, parent]);
+  assert.deepEqual(ordered.ordered.map(({ id }) => id), ['parent', 'child', 'grandchild']);
+  assert.deepEqual([...ordered.cyclicIds], []);
+
+  parent.sourceRefs = [{ kind: 'array-placement', arrayId: 'grandchild', placementIndex: 1 }];
+  const cyclic = orderArrayDefinitionsByDependencies([parent, child, grandchild]);
+  assert.deepEqual(new Set(cyclic.cyclicIds), new Set(['parent', 'child', 'grandchild']));
 });
 
 test('rectangular offsets follow left, center, right and up, center, down directions', () => {
@@ -197,6 +308,15 @@ test('circular angles distribute a full circle without duplicating 360 degrees',
 test('array dimension identities remain stable and placement transforms match rendered copies', () => {
   const recordId = arrayDerivedRecordId('array:one', 3, 'shape/one');
   assert.equal(isUuid(recordId), true);
+  assert.deepEqual(arrayDimensionReference('array:one', 3, 'shape/one'), {
+    recordId: 'shape/one',
+    derivedFeature: {
+      provider: 'array',
+      arrayId: 'array:one',
+      placementIndex: 3,
+      sourceId: 'shape/one',
+    },
+  });
   assert.deepEqual(parseArrayDerivedRecordId('array-derived:array%3Aone:3:shape%2Fone'), {
     arrayId: 'array:one',
     placementIndex: 3,
@@ -316,6 +436,15 @@ test('circular array cutters rotate analytic composite boundaries without moving
   assert.equal(owners[0].boundary.features[0].arrayPlacementIndex, 1);
   assert.equal(owners[0].boundary.features[0].arraySourceId, 'edge-a');
   assert.equal(owners[0].sourceOwnerId, 'triangle-cutter');
+});
+
+test('inactive derivative source Stacks remain visible to dependent Arrays', () => {
+  const node = (classes) => ({
+    closest: () => ({ classList: { contains: (name) => classes.includes(name) } }),
+  });
+  assert.equal(arrayDerivativeSourceVisible(node(['stack-inactive'])), true);
+  assert.equal(arrayDerivativeSourceVisible(node(['stack-hidden'])), false);
+  assert.equal(arrayDerivativeSourceVisible(node(['object-visibility-hidden'])), false);
 });
 
 test('circular arrays derive radius from the selected-object centroid and count the original', () => {
@@ -632,7 +761,20 @@ test('drawing I/O preserves, remaps, and merges array extension data', () => {
           arrayType: 'rectangular',
           sourceIds: ['inserted-shape'],
           rowSpacingExpression: 'd1 * 2',
+        }, {
+          id: 'inserted-derived-array',
+          arrayType: 'rectangular',
+          sourceRefs: [
+            { kind: 'array-placement', arrayId: 'inserted-array', placementIndex: 1 },
+            { kind: 'linked-copy', copyId: 'inserted-copy' },
+            { kind: 'swell-piece', ownerId: 'inserted-shape', pieceIndex: 0 },
+            { kind: 'seam-line', sourceFeatures: [{ sourceId: 'inserted-shape', sourceFeatureIndex: 0, boundaryRole: 'outer', kind: 'segment' }] },
+          ],
         }],
+      },
+      linkedCopyTools: {
+        version: 1,
+        copies: [{ id: 'inserted-copy', type: 'duplicate', sourceIds: ['inserted-shape'] }],
       },
     },
   });
@@ -640,11 +782,19 @@ test('drawing I/O preserves, remaps, and merges array extension data', () => {
   const merged = mergeDrawingData(base, inserted);
   const arrays = merged.extensions.arrayTools.arrays;
   const insertedArray = arrays[1];
-  assert.equal(arrays.length, 2);
+  const insertedDerivedArray = arrays[2];
+  const insertedCopy = merged.extensions.linkedCopyTools.copies[0];
+  assert.equal(arrays.length, 3);
   assert.notEqual(insertedArray.id, 'inserted-array');
   assert.notEqual(insertedArray.sourceIds[0], 'inserted-shape');
   assert.equal(insertedArray.sourceIds[0], merged.entities[1].id);
   assert.equal(insertedArray.rowSpacingExpression, 'd1 * 2');
   assert.equal(insertedArray.stackId, merged.entities[1].stackId);
   assert.notEqual(insertedArray.stackId, merged.entities[0].stackId);
+  assert.deepEqual(insertedDerivedArray.sourceRefs, [
+    { kind: 'array-placement', arrayId: insertedArray.id, placementIndex: 1 },
+    { kind: 'linked-copy', copyId: insertedCopy.id },
+    { kind: 'swell-piece', ownerId: merged.entities[1].id, pieceIndex: 0 },
+    { kind: 'seam-line', sourceFeatures: [{ sourceId: merged.entities[1].id, sourceFeatureIndex: 0, boundaryRole: 'outer', kind: 'segment' }] },
+  ]);
 });

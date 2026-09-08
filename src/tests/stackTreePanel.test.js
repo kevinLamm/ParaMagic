@@ -1,3 +1,4 @@
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -36,11 +37,11 @@ test('collapsed Stack descendants are absent from the visible tree order', () =>
 
   assert.deepEqual(
     visibleStackIds(index, new Set([defaultId, parentId, childId])),
-    [defaultId, parentId, childId, grandchildId, siblingId],
+    [defaultId, parentId, childId, grandchildId, siblingId, GLOBAL_LAYER_ID],
   );
   assert.deepEqual(
     visibleStackIds(index, new Set([defaultId, childId])),
-    [defaultId, parentId, siblingId],
+    [defaultId, parentId, siblingId, GLOBAL_LAYER_ID],
   );
 });
 

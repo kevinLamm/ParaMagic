@@ -1,3 +1,5 @@
+import { createStackViewTool } from '../packages/paramagic-core/src/modules/StackViewTool.js';
+import { createPanelDock } from '../packages/paramagic-core/src/modules/PanelDock.js';
 import {
   ARRAY_TOOL_ICONS,
   DOCUMENT_VARIABLE_SPECS,
@@ -7,6 +9,7 @@ import {
   SYMMETRIC_ICON,
   SWELL_ICON,
   arrayToolTypes,
+  bindExpressionBoxInputs,
   bindDeferredColorPicker,
   bindFloatingPanelBoundary,
   bindFloatingPanelDrag,
@@ -103,6 +106,7 @@ const iconPaths = {
   Export: '<path d="M12 4v11"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/>',
   Print: '<path d="M7 8V4h10v4"/><path d="M6 17H4v-7h16v7h-2"/><path d="M7 14h10v6H7z"/>',
   'Zoom All': '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/><path d="M10.5 7v7M7 10.5h7"/>',
+  'Align View to Stack': '<path d="M7 18V7m0 11h11M4 10l3-3 3 3m5 5 3 3-3 3"/><path d="M5 4a9 9 0 0 1 15 6m0-5v5h-5"/>',
   'App Menu': '<path d="M5 7h14M5 12h14M5 17h14"/>',
   Select: '<path d="M6 4l10 8-5 1 3 6-3 1-3-6-4 3z"/>',
   Line: '<path d="M5 19L19 5"/>',
@@ -183,6 +187,8 @@ const iconButton = (label, attrs = '') => `<button class="icon-button" title="${
 const appMenuButton = (label, attrs = '') => `<button class="app-menu-item" type="button" ${attrs}>${icon(label)}<span>${label}</span></button>`;
 const drawingName = (name) => String(name ?? '').replace(/\.(?:paramagic|json|dxf|svg|png)$/i, '');
 const app = document.getElementById('root');
+const unbindExpressionBoxInputs = bindExpressionBoxInputs(document);
+if (import.meta.hot) import.meta.hot.dispose(unbindExpressionBoxInputs);
 installToolRepeatShortcut(document);
 
 app.innerHTML = `
@@ -195,7 +201,6 @@ app.innerHTML = `
           ${appMenuButton('Open', 'id="openButton"')}
           ${appMenuButton('Save', 'id="saveButton" data-requires-drawing')}
           ${appMenuButton('Save As', 'id="saveAsButton" data-requires-drawing disabled')}
-          ${appMenuButton('Insert Image', 'id="insertImageButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
@@ -204,7 +209,7 @@ app.innerHTML = `
       <div class="unified-toolbar" aria-label="Drawing toolbar">${drawingToolbar()}</div>
       <div class="app-header-vertical-rail" id="appHeaderVerticalRail" aria-label="Vertical drawing tools" hidden></div>
     </header>
-    <aside id="stackTreeSidebar"></aside>
+    <aside id="sidePanelDock"><div id="stackTreeSidebar"></div></aside>
     <main class="canvas" id="canvas" data-canvas="true">
       <div class="grid" id="grid" data-canvas="true"></div>
       <svg class="drawing-plane" id="drawingPlane" data-canvas="true"></svg>
@@ -219,6 +224,7 @@ app.innerHTML = `
 const appHeader = document.getElementById('appHeader');
 const appHeaderVerticalRail = document.getElementById('appHeaderVerticalRail');
 const stackTreeSidebar = document.getElementById('stackTreeSidebar');
+let sidePanelDockController = null;
 const appMenuShell = document.querySelector('.app-menu-shell');
 const appMenuToggle = document.getElementById('appMenuToggle');
 const appMenu = document.getElementById('appMenu');
@@ -228,7 +234,7 @@ bindResponsiveToolHeader(appHeader, {
   rail: appHeaderVerticalRail,
 });
 bindFloatingPanelBoundary(appHeader, {
-  leftSidebar: stackTreeSidebar,
+  leftSidebar: document.getElementById('sidePanelDock'),
   rightRail: appHeaderVerticalRail,
 });
 
@@ -380,14 +386,14 @@ function drawingToolbar() {
             ${iconButton('Text', 'data-drawing-tool="Text" aria-current="true" aria-pressed="false"')}
             ${iconButton('Table', 'data-drawing-tool="Table" aria-pressed="false"')}
           </div>
-        </div>`
+        </div>${iconButton('Insert Image', 'id="insertImageButton" data-requires-active-stack')}`
         : label === 'Table'
           ? ''
         : label === 'Swell'
           ? iconButton(label, 'data-swell-tool aria-pressed="false"')
         : iconButton(label, `data-drawing-tool="${label}" aria-pressed="false"`))
     .join('');
-  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
+  return `<div class="toolbar-section app-view-tools">${iconButton('Zoom All', 'id="resetView"')}${iconButton('Align View to Stack', 'id="alignStackView" data-preserve-feature-selection aria-pressed="false"')}<span class="toolbar-divider"></span>${iconButton('Parameters', 'id="parametersButton"')}${controlToolbar()}${iconButton('Show Hidden Objects', 'id="visibilityOverrideToggle" data-preserve-feature-selection aria-pressed="false"')}${iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"')}<span class="toolbar-divider"></span>${classToolbar()}</div><div class="toolbar-section history-tools">${iconButton('Undo', 'id="undoButton" disabled')}${iconButton('Redo', 'id="redoButton" disabled')}${iconButton('Cut', 'id="cutButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Copy', 'id="copyButton" data-preserve-feature-selection data-requires-active-stack')}${iconButton('Paste', 'id="pasteButton"')}</div><div class="toolbar-section drawing-tools">${iconButton('Construction', 'data-toggle-button aria-pressed="false"')}${tools}</div><div class="toolbar-section drawing-aids">${constraintToolbar()}${dimensionToolbar({ includeText: false })}<span class="toolbar-divider"></span>${iconButton('Properties', 'id="propertiesToggle" data-preserve-feature-selection aria-controls="propertiesPanel" aria-pressed="false"')}${iconButton('Auto Constrain', 'data-drawing-aid="auto-constrain" aria-pressed="true"')}${iconButton('Object Snap', 'data-drawing-aid="object-snap" aria-pressed="true"')}</div>`;
 }
 
 function classToolbar() {
@@ -406,13 +412,13 @@ function constraintToolbar() {
   if (fixedIndex >= 0) constraints.splice(fixedIndex, 1, 'Point-on');
   constraints.push('Fixed');
   return `<div class="menu-tool constraint-tool">
-    <button class="icon-button menu-toggle" title="Coincident" aria-label="Coincident constraint" aria-expanded="false" aria-pressed="false" data-selected-constraint="Coincident" data-requires-active-stack>${icon('Coincident')}</button>
-    <div class="constraint-menu">${constraints.map((item) => iconButton(item, `data-constraint="${item}" data-requires-active-stack ${item === 'Coincident' ? 'aria-current="true"' : ''}`)).join('')}</div>
+    <button class="icon-button menu-toggle" title="Coincident" aria-label="Coincident constraint" aria-expanded="false" aria-pressed="false" data-selected-constraint="Coincident">${icon('Coincident')}</button>
+    <div class="constraint-menu">${constraints.map((item) => iconButton(item, `data-constraint="${item}" ${item === 'Coincident' ? 'aria-current="true"' : ''}`)).join('')}</div>
   </div>`;
 }
 
 function dimensionToolbar({ includeText = true } = {}) {
-  return `<div class="toolbar-section dimension-toggles">${dimensionTools.map((tool) => iconButton(tool.label, `data-dimension-tool="${tool.label}" data-requires-active-stack aria-pressed="false"`)).join('')}${includeText ? iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"') : ''}</div>`;
+  return `<div class="toolbar-section dimension-toggles">${dimensionTools.map((tool) => iconButton(tool.label, `data-dimension-tool="${tool.label}" aria-pressed="false"`)).join('')}${includeText ? iconButton('Dimension Text: Named Value', 'id="dimensionTextMode" data-dimension-text-mode="named-value"') : ''}</div>`;
 }
 
 function controlToolbar() {
@@ -683,7 +689,11 @@ async function saveDrawingAs() {
     if (result.format === 'paramagic') {
       if (!independentSave) throw new Error('The independent drawing graph was not created.');
       currentDrawingFileHandle = result.handle;
-      canvasController.loadDrawingData(independentSave.drawing, { zoomToFit: false, history: 'coalesce' });
+      canvasController.loadDrawingData(independentSave.drawing, {
+        zoomToFit: false,
+        history: 'coalesce',
+        preserveStackActivation: true,
+      });
       setDrawingName(result.name);
       drawingHistory.reset();
       await browserAutosaveController?.saveNow();
@@ -1286,6 +1296,7 @@ const canvasController = createInfiniteCanvas({
   entities: sampleEntities,
   solver: solverController,
 });
+createStackViewTool({ button: document.getElementById('alignStackView'), canvas: canvasController });
 const printDialogController = createPrintDialog({
   canvas: canvasController,
   getDrawingName: currentDrawingName,
@@ -1296,6 +1307,7 @@ controlToolsController = createControlTools({
   toolbar: document.getElementById('controlsToggle'),
   canvas: canvasController,
   solver: solverController,
+  onVisibilityChange: visible => sidePanelDockController?.reflectVisibility('controls', visible),
 });
 let storageStatusTimer = null;
 function showStorageStatus(message, error = false) {
@@ -1356,6 +1368,7 @@ function setPropertiesPanelVisible(visible) {
   if (visible) floatingPanelControllers.get(propertiesPanelElement)?.clamp();
   propertiesToggle.classList.toggle('active', visible);
   propertiesToggle.setAttribute('aria-pressed', String(visible));
+  sidePanelDockController?.reflectVisibility('properties', visible);
 }
 
 propertiesToggle.addEventListener('click', () => {
@@ -1570,7 +1583,10 @@ const redoButton = document.getElementById('redoButton');
 const drawingHistory = new DrawingHistory({
   capture: () => ({ name: currentDrawingName(), drawing: canvasController.getDrawingData() }),
   restore: (state) => {
-    canvasController.loadDrawingData(state.drawing, { zoomToFit: false });
+    canvasController.loadDrawingData(state.drawing, {
+      zoomToFit: false,
+      preserveStackActivation: true,
+    });
     setDrawingName(state.name || 'Untitled Drawing');
     const mode = dimensionTextModeButton.dataset.dimensionTextMode;
     canvasController.setDimensionTextMode(mode);
@@ -1673,11 +1689,17 @@ const linkedCopyTools = createLinkedCopyTools({
 const arrayTools = createArrayTools({
   toolbar: document.querySelector('.array-tool'),
   canvas: canvasController,
+  derivativeSourceProviders: [
+    linkedCopyTools.derivativeSourceProvider,
+    ...(canvasController.getDerivativeSourceProviders?.() || []),
+    swellTools.derivativeSourceProvider,
+  ],
 });
 
 canvasController.registerDerivedDimensionFeatureProvider?.(linkedCopyTools.derivedDimensionProvider);
 canvasController.registerDerivedDimensionFeatureProvider?.(arrayTools.derivedDimensionProvider);
 canvasController.registerDerivedSelectionProvider?.(linkedCopyTools.selectionProvider);
+canvasController.registerDerivedSelectionProvider?.(arrayTools.selectionProvider);
 canvasController.registerSelectionPropertyProvider?.(linkedCopyTools.selectionPropertyProvider);
 constraintController.registerConstraintOperation?.(linkedCopyTools.constraintOperation);
 canvasController.registerSubtractOperandProvider?.(arrayTools.subtractOperandProvider);
@@ -1764,6 +1786,21 @@ stackTreePanelController = createStackTreePanel({
   },
 });
 
+sidePanelDockController = createPanelDock({
+  host: document.getElementById('sidePanelDock'),
+  panels: [
+    { id: 'stacks', label: 'Stacks', content: stackTreeSidebar, iconMarkup: icon('Stacks') },
+    {
+      id: 'controls', label: 'Controls', content: controlToolsController.panel,
+      toggle: document.getElementById('controlsToggle'),
+      actions: controlToolsController.panel.querySelector('.controls-panel-header-actions'),
+      setVisible: controlToolsController.setVisible,
+    },
+    { id: 'properties', label: 'Properties', content: propertiesPanelElement, toggle: propertiesToggle, setVisible: setPropertiesPanelVisible },
+  ],
+});
+if (import.meta.hot) import.meta.hot.dispose(() => sidePanelDockController.destroy());
+
 const notchTools = createNotchTools({
   toolbar: document.querySelector('.drawing-tools'),
   canvas: canvasController,
@@ -1808,12 +1845,14 @@ async function initializeBrowserAutosave() {
       currentDrawingFileHandle = browserFile.fileHandle || null;
       setDrawingName(browserFile.name);
     } else {
+      canvasController.setActiveStack(null);
       currentDrawingFileHandle = null;
       setDrawingName('Untitled Drawing');
       await browserAutosaveController.saveNow();
     }
     document.documentElement.dataset.browserAutosaveState = 'ready';
   } catch (error) {
+    canvasController.setActiveStack(null);
     currentDrawingFileHandle = null;
     setDrawingName('Untitled Drawing');
     document.documentElement.dataset.browserAutosaveState = 'error';
@@ -1823,4 +1862,5 @@ async function initializeBrowserAutosave() {
   updateDrawingActionState();
 }
 
-initializeBrowserAutosave();
+const initialization = initializeBrowserAutosave();
+export { canvasController, initialization };

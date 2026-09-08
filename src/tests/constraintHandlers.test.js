@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   constraintFeatureFromEvent,
   constraintHelpersVisible,
+  constraintRelevantToStackContext,
   constraintRecordVisible,
   constraintReferencesActiveStack,
   constraintReferencesAnyRecord,
@@ -80,11 +81,19 @@ test('constraint helpers appear only when their constraint touches the active St
   }, () => false), true);
 });
 
-test('constraint helper overlay is hidden whenever no Stack is active', () => {
+test('constraint helper overlay remains available for the Global layer with no active Stack', () => {
   assert.equal(constraintHelpersVisible({ requested: true, scale: 1, activeStackId: 'stack-a' }), true);
-  assert.equal(constraintHelpersVisible({ requested: true, scale: 1, activeStackId: null }), false);
+  assert.equal(constraintHelpersVisible({ requested: true, scale: 1, activeStackId: null }), true);
   assert.equal(constraintHelpersVisible({ requested: false, scale: 1, activeStackId: 'stack-a' }), false);
   assert.equal(constraintHelpersVisible({ requested: true, scale: 0.01, activeStackId: 'stack-a' }), false);
+});
+
+test('constraint helpers switch between Global-layer and active-Stack relevance', () => {
+  const global = { stackId: '00000000-0000-4000-8000-000000000001', coordinateSpace: 'global' };
+  const local = { stackId: 'stack-a', featureRefs: [{ recordId: 'line-a' }] };
+  assert.equal(constraintRelevantToStackContext(global, null, () => false), true);
+  assert.equal(constraintRelevantToStackContext(local, null, () => false), false);
+  assert.equal(constraintRelevantToStackContext(local, 'stack-a', (id) => id === 'line-a'), true);
 });
 
 test('incremental constraint-helper refresh identifies only constraints touching changed records', () => {

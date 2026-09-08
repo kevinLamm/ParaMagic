@@ -53,7 +53,7 @@ test('Visible and its expression share one property row with a FALSE hint', () =
   const markup = objectVisibilityPropertiesMarkup();
   assert.equal((markup.match(/object-visibility-property-row/g) || []).length, 1);
   assert.match(markup, /id="visibleProperty"[^>]*type="checkbox"/);
-  assert.match(markup, /id="visibleExpressionProperty"[^>]*list="visibleExpressionSymbols"/);
+  assert.match(markup, /id="visibleExpressionProperty"[^>]*data-expression-source="visibleExpressionSymbols"/);
   assert.match(markup, /id="visibleExpressionProperty"[^>]*placeholder="FALSE"/);
   assert.match(markup, /class="object-visibility-expression" hidden/);
   assert.match(markup, /id="visibleExpressionProperty"[^>]*value=""/);

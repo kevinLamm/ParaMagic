@@ -154,6 +154,41 @@ test('controller excludes disabled Stack variables and cross-Stack residuals fro
   assert.deepEqual(result.stackResults.map(({ stackIds }) => stackIds), [['stack-a']]);
 });
 
+test('entity-level cross-Stack constraints propagate solved geometry through every related Stack', () => {
+  const controller = createSolverController();
+  controller.setStackState({
+    activeStackId: 'stack-a',
+    stacks: [
+      { id: 'stack-a', name: 'Stack A', frame: { x: 0, y: 0, rotation: 0 } },
+      { id: 'stack-b', name: 'Stack B', frame: { x: 10, y: 0, rotation: 0 } },
+      { id: 'stack-c', name: 'Stack C', frame: { x: 20, y: 0, rotation: 0 } },
+    ],
+  });
+  controller.addEntity({ id: 'point-a', type: 'point', stackId: 'stack-a', point: [0, 0] });
+  controller.addEntity({ id: 'point-b', type: 'point', stackId: 'stack-b', point: [10, 0] });
+  controller.addEntity({ id: 'point-c', type: 'point', stackId: 'stack-c', point: [20, 0] });
+  const point = (recordId) => ({ kind: 'point', recordId, index: 0 });
+  assert.ok(controller.addConstraint({
+    type: 'Coincident', solveDomain: 'entity', featureRefs: [point('point-a'), point('point-b')],
+  }).constraint);
+  assert.ok(controller.addConstraint({
+    type: 'Coincident', solveDomain: 'entity', featureRefs: [point('point-b'), point('point-c')],
+  }).constraint);
+  const beforeFrames = structuredClone(controller.stackState.stacks.map(({ id, frame }) => ({ id, frame })));
+  const movedA = { ...controller.getEntity('point-a'), point: [7, 4] };
+  const outcome = controller.updateEntities([movedA], {
+    lockedVariableIds: controller.variableIdsForEntity('point-a'),
+  });
+
+  assert.ok(['converged', 'unchanged'].includes(outcome.result.status), JSON.stringify(outcome.result));
+  assert.deepEqual(new Set(outcome.result.solveScope.stackIds), new Set(['stack-a', 'stack-b', 'stack-c']));
+  assert.deepEqual(controller.stackState.stacks.map(({ id, frame }) => ({ id, frame })), beforeFrames);
+  for (const id of ['point-b', 'point-c']) {
+    const actual = controller.getEntity(id).point;
+    assert.ok(Math.hypot(actual[0] - 7, actual[1] - 4) < 1e-5, `${id}: ${actual}`);
+  }
+});
+
 test('controller derives cross-Stack constraint participation from referenced entities when cached metadata is missing', () => {
   const controller = createSolverController();
   controller.loadSketch({
@@ -205,7 +240,7 @@ test('cross-Stack dimension parameters inherit live participants and become unav
     }],
   });
 
-  assert.deepEqual(controller.dimensions.get('dimension-ab').participantStackIds, ['stack-b']);
+  assert.deepEqual(controller.dimensions.get('dimension-ab').participantStackIds, ['stack-a', 'stack-b']);
   controller.setEnabledStackIds(['stack-a']);
   assert.equal(controller.dimensions.isEntryAvailable(controller.dimensions.get('dimension-ab')), false);
   controller.setDimensionEnabledStates(new Map([['dimension-ab', true]]));

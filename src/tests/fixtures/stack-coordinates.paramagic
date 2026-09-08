@@ -1,0 +1,361 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 4,
+  "name": "Stack Coordinates",
+  "stackArchitectureVersion": 6,
+  "drawingUnit": "in",
+  "dxfExportUnit": "in",
+  "filletRadius": 25.4,
+  "entities": [
+    {
+      "id": "a982afee-8a0a-5a02-ba88-190691d30708",
+      "type": "line",
+      "stackId": "3da699fa-7dff-5805-9186-d380948a2403",
+      "start": [
+        0,
+        0
+      ],
+      "end": [
+        70,
+        70
+      ],
+      "classId": "756065a6-370f-4bb6-b835-8e66258fe63b",
+      "classPropertyOverrides": [],
+      "sourceRecordId": "a982afee-8a0a-5a02-ba88-190691d30708",
+      "sourceStackId": "3da699fa-7dff-5805-9186-d380948a2403"
+    },
+    {
+      "id": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+      "type": "polygon",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "points": [
+        [
+          179.9950736518276,
+          0
+        ],
+        [
+          260.0049263481766,
+          0
+        ],
+        [
+          260.00487757196913,
+          50
+        ],
+        [
+          179.995122428035,
+          50
+        ]
+      ],
+      "classId": "756065a6-370f-4bb6-b835-8e66258fe63b",
+      "classPropertyOverrides": [],
+      "sourceRecordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+      "sourceStackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b"
+    },
+    {
+      "id": "aa543119-4b72-5505-bed8-81ac0425ce32",
+      "type": "circle",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "center": [
+        290,
+        70
+      ],
+      "radius": 12,
+      "classId": "756065a6-370f-4bb6-b835-8e66258fe63b",
+      "classPropertyOverrides": [],
+      "sourceRecordId": "aa543119-4b72-5505-bed8-81ac0425ce32",
+      "sourceStackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b"
+    },
+    {
+      "id": "43575195-13ee-5f73-9f0b-1198c38e3310",
+      "type": "text",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "x": 180,
+      "y": 90,
+      "text": "MOVING STACK",
+      "fontSize": 14,
+      "textHeight": 5,
+      "classId": "756065a6-370f-4bb6-b835-8e66258fe63b",
+      "classPropertyOverrides": [
+        "fontSize"
+      ],
+      "sourceRecordId": "43575195-13ee-5f73-9f0b-1198c38e3310",
+      "sourceStackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b"
+    }
+  ],
+  "constraints": [
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "index": 0
+        }
+      ],
+      "id": "bb9159bc-b206-4031-8df6-4522d2263694",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "bb9159bc-b206-4031-8df6-4522d2263694"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "index": 1
+        }
+      ],
+      "id": "f28216b5-80d7-46be-88df-ea06d2068cc8",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "f28216b5-80d7-46be-88df-ea06d2068cc8"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "index": 2
+        }
+      ],
+      "id": "aee56628-9974-41f3-bf41-692160ae865c",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "aee56628-9974-41f3-bf41-692160ae865c"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "index": 3
+        }
+      ],
+      "id": "127bafa3-ebad-47d3-8d73-6526e2244ea6",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "127bafa3-ebad-47d3-8d73-6526e2244ea6"
+    },
+    {
+      "type": "Horizontal Distance",
+      "source": "dimension",
+      "anchors": {
+        "start": {
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "type": "point",
+          "index": 0
+        },
+        "end": {
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "type": "point",
+          "index": 1
+        }
+      },
+      "featureRefs": [],
+      "dimensionRef": "716fcc5f-5fb2-4e66-9a48-99744e0d5aa8",
+      "orientation": 1,
+      "direction": [
+        1,
+        0
+      ],
+      "id": "c5564337-a482-4391-9b54-c04f72eeeed0",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c5564337-a482-4391-9b54-c04f72eeeed0"
+    }
+  ],
+  "parameters": [
+    {
+      "id": "716fcc5f-5fb2-4e66-9a48-99744e0d5aa8",
+      "name": "d1",
+      "expression": "3.15 in",
+      "value": 80.00999999999999,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "b96398aa-8efb-5cdf-94be-bc1d20020da2",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "participantStackIds": [],
+      "error": null,
+      "order": 0,
+      "sourceDimensionId": "716fcc5f-5fb2-4e66-9a48-99744e0d5aa8"
+    }
+  ],
+  "dimensionAnnotations": [
+    {
+      "id": "b96398aa-8efb-5cdf-94be-bc1d20020da2",
+      "type": "dimension-line",
+      "stackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+      "subtype": "horizontal",
+      "dimensionMode": "driving",
+      "start": [
+        180,
+        0
+      ],
+      "end": [
+        260,
+        0
+      ],
+      "label": [
+        220,
+        -25
+      ],
+      "anchors": {
+        "start": {
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "type": "point",
+          "index": 0
+        },
+        "end": {
+          "recordId": "26dece55-b86f-530e-9f3b-e2f4c24c85f4",
+          "type": "point",
+          "index": 1
+        }
+      },
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "orientation": 1,
+      "direction": [
+        1,
+        0
+      ],
+      "coordinateFrame": {
+        "x": 180,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "716fcc5f-5fb2-4e66-9a48-99744e0d5aa8",
+      "dimensionName": "d1",
+      "sourceRelationshipId": "716fcc5f-5fb2-4e66-9a48-99744e0d5aa8"
+    }
+  ],
+  "documentMetadata": {
+    "documentTitle": "",
+    "drawingNumber": "",
+    "revision": "",
+    "revisionDescription": "",
+    "approvalStatus": "",
+    "author": "",
+    "designer": "",
+    "checker": "",
+    "approver": "",
+    "company": "",
+    "project": "",
+    "customer": "",
+    "jobNumber": "",
+    "partNumber": "",
+    "sheetSize": "",
+    "drawingScale": "",
+    "projectionStandard": "",
+    "material": "",
+    "finish": "",
+    "density": "",
+    "thickness": "",
+    "userName": "",
+    "createdDate": "2026-09-04",
+    "modifiedDate": "2026-09-04",
+    "revisionDate": "2026-09-04"
+  },
+  "documentContext": {
+    "fileName": "",
+    "filePath": "",
+    "contentKind": "drawing",
+    "displayName": ""
+  },
+  "classes": [
+    {
+      "id": "756065a6-370f-4bb6-b835-8e66258fe63b",
+      "name": "X",
+      "systemRole": "default-class",
+      "removable": false,
+      "duplicable": false,
+      "properties": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "TRUE",
+        "fontName": "Arial",
+        "fontSize": 28,
+        "fontColor": "#202020",
+        "multiline": true,
+        "textAlign": "left",
+        "textVerticalAlign": "top"
+      }
+    }
+  ],
+  "activeClassId": "756065a6-370f-4bb6-b835-8e66258fe63b",
+  "extensions": {
+    "stacks": {
+      "version": 6,
+      "activeStackId": "3da699fa-7dff-5805-9186-d380948a2403",
+      "stacks": [
+        {
+          "id": "3da699fa-7dff-5805-9186-d380948a2403",
+          "name": "Reference",
+          "kind": "stack",
+          "sourceStackId": "3da699fa-7dff-5805-9186-d380948a2403",
+          "parentStackId": null,
+          "order": 0,
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "removable": true,
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0
+          },
+          "systemRole": "default-stack"
+        },
+        {
+          "id": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+          "name": "Moving",
+          "frame": {
+            "x": 180,
+            "y": 0,
+            "rotation": 0
+          },
+          "kind": "stack",
+          "sourceStackId": "6c1bc42d-a5b7-5028-b5a2-7ceb39ba767b",
+          "parentStackId": null,
+          "order": 1,
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "removable": true
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "kind": "global",
+          "name": "Global",
+          "enabled": true,
+          "parentStackId": null,
+          "order": 2,
+          "sourceStackId": "00000000-0000-4000-8000-000000000001",
+          "visible": true,
+          "enabledExpression": "",
+          "removable": false
+        }
+      ]
+    }
+  },
+  "drawingId": "fcd043ba-419c-4c6a-9331-3c5620f95e66",
+  "identityArchitectureVersion": 1
+}

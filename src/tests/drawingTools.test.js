@@ -2,10 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   addEditableLineChain,
+  createSegmentSelectionNodes,
   drawingArcFromPoints,
   drawingGeometryHitTargetClass,
 } from '../../packages/paramagic-core/src/modules/DrawingTools.js';
 import { createGeometryBinding } from '../../packages/paramagic-core/src/modules/solver/SolverModel.js';
+
+test('segment selection keeps its hit node separate from the thin highlight graphic', () => {
+  const nodes = [];
+  const hits = createSegmentSelectionNodes({}, [{ start: [1, 2], end: [3, 4], index: 2 }], (_group, tag, attributes) => {
+    const node = { tag, attributes };
+    nodes.push(node);
+    return node;
+  });
+  assert.deepEqual(hits, [nodes[0]]);
+  assert.equal(nodes[0].attributes['data-segment-index'], 2);
+  assert.equal(nodes[1].attributes.class, 'segment-select-visual');
+  assert.equal(nodes[1].attributes['aria-hidden'], 'true');
+  for (const coordinate of ['x1', 'x2', 'y1', 'y2']) assert.equal(nodes[0].attributes[coordinate], nodes[1].attributes[coordinate]);
+});
 
 test('editable closed line chains match the Polyline tool segment representation', () => {
   const additions = [];

@@ -169,11 +169,13 @@ test('drawing normalization upgrades legacy parallel-edge dimensions to live sup
 
   const annotation = drawing.dimensionAnnotations[0];
   assert.equal(annotation.measurementKind, 'parallel-edge-distance');
-  assert.deepEqual(annotation.measureStart, [25, 0]);
-  assert.deepEqual(annotation.measureEnd, [25, 5]);
+  assert.deepEqual(annotation.measureStart, [20, 0]);
+  assert.deepEqual(annotation.measureEnd, [20, 5]);
   assert.deepEqual(annotation.anchors.lineToLine, {
     reference: { kind: 'segment', recordId: drawing.entities[0].id, index: 0 },
     measured: { kind: 'segment', recordId: drawing.entities[1].id, index: 0 },
+    referenceEndpoint: 'end',
+    measuredEndpoint: 'start',
   });
   const constraint = drawing.constraints[0];
   assert.equal(constraint.type, 'Line Line Distance');
@@ -229,6 +231,8 @@ test('drawing normalization upgrades point-to-line parallel dimensions to line-t
   assert.deepEqual(drawing.dimensionAnnotations[0].anchors.lineToLine, {
     reference: { kind: 'segment', recordId: drawing.entities[0].id, index: 0 },
     measured: { kind: 'segment', recordId: drawing.entities[1].id, index: 0 },
+    referenceEndpoint: 'end',
+    measuredEndpoint: 'start',
   });
 });
 

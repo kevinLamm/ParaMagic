@@ -2,11 +2,18 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   canvasPresentationDefinitionRoots,
+  constructionHiddenInValueOnly,
   fitCanvasPresentationSvg,
   fittedPresentationViewport,
   isCanvasPresentationSourceNode,
   valueOnlyDimensionText,
 } from '../../packages/paramagic-core/src/modules/CanvasPresentation.js';
+
+test('Value Only identifies construction sources for derivative renderers', () => {
+  assert.equal(constructionHiddenInValueOnly({ construction: true }, 'value'), true);
+  assert.equal(constructionHiddenInValueOnly({ construction: false }, 'value'), false);
+  assert.equal(constructionHiddenInValueOnly({ construction: true }, 'named-value'), false);
+});
 
 function svgNode(tagName, attributes = {}, children = []) {
   const node = {

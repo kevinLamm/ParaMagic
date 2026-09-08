@@ -1,3 +1,4 @@
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -79,7 +80,7 @@ test('canvas Stack interaction resolves ownership from the nearest Stack present
   assert.equal(stackIdForCanvasInteractionTarget({ closest: () => ({ dataset: { stackId: 'outside' } }) }, canvas), null);
 });
 
-test('inactive canvas records select their Stack on click and activate it on double click', () => {
+test('inactive canvas records select their Stack on click without activating it on double click', () => {
   const canvas = interactionCanvas();
   let activeStackId = 'stack-a';
   let selectedStackId = 'stack-a';
@@ -98,16 +99,51 @@ test('inactive canvas records select their Stack on click and activate it on dou
   assert.equal(click.propagationStopped, true);
 
   const doubleClick = canvas.dispatch('dblclick', 'stack-b');
-  assert.equal(activeStackId, 'stack-b');
-  assert.equal(doubleClick.defaultPrevented, true);
+  assert.equal(activeStackId, 'stack-a');
+  assert.equal(doubleClick.defaultPrevented, false);
+  assert.equal(doubleClick.propagationStopped, false);
 
-  const activeClick = canvas.dispatch('click', 'stack-b');
+  const activeClick = canvas.dispatch('click', 'stack-a');
   assert.equal(activeClick.defaultPrevented, false);
   stop();
   assert.equal(canvas.listenerCount(), 0);
 });
 
-test('the second captured geometry click activates its inactive Stack when a fill consumes dblclick', () => {
+test('canvas geometry clicks do not select a Stack when no Stack is active', () => {
+  const canvas = interactionCanvas();
+  let selectedStackId = 'stack-a';
+  bindCanvasStackInteractions({
+    canvasElement: canvas,
+    getActiveStackId: () => null,
+    hasStack: () => true,
+    selectStack: (stackId) => { selectedStackId = stackId; return true; },
+  });
+
+  const click = canvas.dispatch('click', 'stack-b');
+  assert.equal(selectedStackId, 'stack-a');
+  assert.equal(click.defaultPrevented, false);
+  assert.equal(click.propagationStopped, false);
+});
+
+test('Global layer controls receive clicks while a drawable Stack remains active', () => {
+  const canvas = interactionCanvas();
+  let selectedStackId = 'stack-a';
+  bindCanvasStackInteractions({
+    canvasElement: canvas,
+    getActiveStackId: () => 'stack-a',
+    hasStack: () => true,
+    selectStack: (stackId) => { selectedStackId = stackId; return true; },
+  });
+
+  for (const detail of [1, 2]) {
+    const click = canvas.dispatch('click', GLOBAL_LAYER_ID, { detail });
+    assert.equal(click.defaultPrevented, false);
+    assert.equal(click.propagationStopped, false);
+  }
+  assert.equal(selectedStackId, 'stack-a');
+});
+
+test('the second captured geometry click only selects its inactive Stack', () => {
   const canvas = interactionCanvas();
   let activeStackId = 'stack-a';
   let selectedStackId = 'stack-a';
@@ -122,13 +158,13 @@ test('the second captured geometry click activates its inactive Stack when a fil
   canvas.dispatch('click', 'stack-b', { detail: 1 });
   const secondClick = canvas.dispatch('click', 'stack-b', { detail: 2 });
 
-  assert.equal(activeStackId, 'stack-b');
+  assert.equal(activeStackId, 'stack-a');
   assert.equal(selectedStackId, 'stack-b');
   assert.equal(secondClick.defaultPrevented, true);
   assert.equal(secondClick.propagationStopped, true);
 });
 
-test('nearby pointer presses activate an inactive Stack before a fill can consume the click sequence', () => {
+test('nearby pointer presses never activate an inactive Stack', () => {
   const canvas = interactionCanvas();
   let activeStackId = 'stack-a';
   bindCanvasStackInteractions({
@@ -145,7 +181,7 @@ test('nearby pointer presses activate an inactive Stack before a fill can consum
   canvas.dispatch('pointerdown', 'stack-b', {
     button: 0, detail: 1, timeStamp: 360, clientX: 44, clientY: 82,
   });
-  assert.equal(activeStackId, 'stack-b');
+  assert.equal(activeStackId, 'stack-a');
 });
 
 test('separate clicks do not activate an inactive Stack outside the double-click gesture', () => {
@@ -255,7 +291,7 @@ test('fallback ownership role belongs to an ordinary removable Stack', () => {
       { id: 'stack-a', name: 'Duplicate' },
     ],
   });
-  assert.deepEqual(state.stacks, [
+  assert.deepEqual(state.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ frame, ...stack }) => stack), [
     {
       id: defaultId, name: 'Base', visible: false, systemRole: 'default-stack', removable: true,
       kind: 'stack', sourceStackId: defaultId, parentStackId: null, order: 0, enabled: true, enabledExpression: '',
@@ -273,7 +309,7 @@ test('a new drawing starts with only a fresh active Stack 1', () => {
   const second = createNewDrawingStackState();
   const initial = first.stacks.find(({ name }) => name === INITIAL_USER_STACK_NAME);
 
-  assert.deepEqual(first.stacks.map(({ name }) => name), ['Stack 1']);
+  assert.deepEqual(first.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Stack 1']);
   assert.equal(first.activeStackId, initial.id);
   assert.equal(initial.removable, true);
   assert.notEqual(second.activeStackId, first.activeStackId);
@@ -412,7 +448,7 @@ test('a relationship record owned by an enabled Stack is disabled when any parti
   assert.equal(dimensionGroup.classList.classes.has('stack-disabled'), false);
 });
 
-test('no active Stack keeps all visible geometry at full opacity while leaving it non-editable', () => {
+test('no active Stack exposes entity interaction only while a relation tool is active', () => {
   const canvasClassList = trackedClassList();
   const firstGroup = presentationNode();
   const secondGroup = presentationNode();
@@ -441,7 +477,12 @@ test('no active Stack keeps all visible geometry at full opacity while leaving i
   assert.equal(system.isRecordEnabled(records[0]), false);
   assert.equal(system.isRecordEnabled(records[1]), false);
   canvasClassList.toggle('dimension-selection-active', true);
-  assert.equal(system.isRecordEnabled(records[0]), false);
+  assert.equal(system.isRecordEnabled(records[0]), true);
+  assert.equal(system.isRecordEnabled(records[1]), true);
+  canvasClassList.toggle('dimension-selection-active', false);
+  canvasClassList.toggle('constraint-selection-active', true);
+  assert.equal(system.isRecordEnabled(records[0]), true);
+  assert.equal(system.isRecordEnabled(records[1]), true);
 });
 
 test('hovering a Stack applies a presentation-only highlight to all of its records', () => {
@@ -487,10 +528,10 @@ test('stacks can be reordered directly to a dragged list index', () => {
   const third = system.addStack('Third');
   assert.equal(system.moveStackToIndex(third.id, 1), true);
   assert.equal(defaultId, initialId);
-  assert.deepEqual(system.getState().stacks.map(({ id }) => id), [initialId, third.id, first.id, second.id]);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [initialId, third.id, first.id, second.id]);
   assert.equal(system.moveStackToIndex(defaultId, 99), true);
-  assert.deepEqual(system.getState().stacks.map(({ id }) => id), [third.id, first.id, second.id, initialId]);
-  assert.deepEqual(normalizeStackState(system.getState()).stacks.map(({ id }) => id), [third.id, first.id, second.id, initialId]);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [third.id, first.id, second.id, initialId]);
+  assert.deepEqual(normalizeStackState(system.getState()).stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [third.id, first.id, second.id, initialId]);
 });
 
 test('drawing-extension restoration notifies stack panel subscribers', () => {
@@ -506,7 +547,7 @@ test('drawing-extension restoration notifies stack panel subscribers', () => {
     ],
   });
   assert.deepEqual(reasons, ['subscribe', 'restore']);
-  assert.deepEqual(system.getState().stacks.map(({ name }) => name), ['Default', 'Stack 2']);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Default', 'Stack 2']);
 });
 
 test('Stack creation and rename enforce case-insensitive unique display names', () => {
@@ -525,7 +566,7 @@ test('automatic Stack names advance from the initial Stack 1', () => {
   const system = createStackSystem({ records: [], selectedIds: new Set() });
   const second = system.addStack();
   const third = system.addStack();
-  assert.deepEqual(system.getState().stacks.map(({ name }) => name), ['Stack 1', 'Stack 2', 'Stack 3']);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Stack 1', 'Stack 2', 'Stack 3']);
   assert.equal(second.name, 'Stack 2');
   assert.equal(third.name, 'Stack 3');
 });
@@ -552,7 +593,7 @@ test('Stack manager creates child and sibling nodes and reparents without changi
 
   assert.equal(system.stack(child.id).parentStackId, parent.id);
   assert.equal(system.stack(sibling.id).parentStackId, parent.id);
-  assert.deepEqual(system.getState().stacks.map(({ id }) => id).slice(-3), [parent.id, child.id, sibling.id]);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id).slice(-3), [parent.id, child.id, sibling.id]);
   assert.equal(system.reparentStack(sibling.id, null, 0), true);
   assert.equal(system.stack(sibling.id).id, sibling.id);
   assert.equal(system.stack(sibling.id).parentStackId, null);
@@ -601,7 +642,7 @@ test('subtree deletion reports every owned record and removes descendants atomic
   assert.deepEqual(removed.removedStackIds, [parentId, childId]);
   assert.deepEqual(new Set(removed.recordIds), new Set(['parent-record', 'child-record']));
   assert.equal(removed.createdStackId, null);
-  assert.deepEqual(system.getState().stacks.map(({ name }) => name), ['Default']);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Default']);
 });
 
 test('deleting the last Stack creates and activates a fresh Stack 1', () => {
@@ -612,7 +653,7 @@ test('deleting the last Stack creates and activates a fresh Stack 1', () => {
   const replacement = system.stack(removed.createdStackId);
 
   assert.deepEqual(removed.removedStackIds, [removedId]);
-  assert.deepEqual(system.getState().stacks.map(({ name }) => name), ['Stack 1']);
+  assert.deepEqual(system.getState().stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Stack 1']);
   assert.equal(replacement.name, 'Stack 1');
   assert.equal(replacement.removable, true);
   assert.equal(system.activeStackId(), replacement.id);
@@ -629,7 +670,7 @@ test('clearing a drawing creates and activates a new Stack 1 UUID', () => {
 
   const cleared = system.clear();
   const initial = cleared.stacks.find(({ name }) => name === 'Stack 1');
-  assert.deepEqual(cleared.stacks.map(({ name }) => name), ['Stack 1']);
+  assert.deepEqual(cleared.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ name }) => name), ['Stack 1']);
   assert.equal(cleared.activeStackId, initial.id);
   assert.notEqual(initial.id, originalStackId);
   assert.equal(changes.at(-1).reason, 'clear');

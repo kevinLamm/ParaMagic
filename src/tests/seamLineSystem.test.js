@@ -8,7 +8,62 @@ import {
   seamLineSplineLineTrim,
 } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
 import { seamLineEdgeReference, seamLineSourceReference } from '../../packages/paramagic-core/src/modules/SeamLineSystem.js';
-import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
+import {
+  cloneDrawingIdentityGraph,
+  identityAudit,
+} from '../../packages/paramagic-core/src/modules/DrawingIdentitySystem.js';
+import { serializeDrawingJson } from '../../packages/paramagic-core/src/modules/DrawingIO.js';
+import { createUuid, isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
+
+test('seam-line definitions save and clone when the region is a composite', () => {
+  const stackId = createUuid();
+  const classId = createUuid();
+  const entityId = createUuid();
+  const compositeId = createUuid();
+  const drawing = {
+    identityArchitectureVersion: 1,
+    drawingId: createUuid(),
+    entities: [{
+      id: entityId,
+      type: 'rect',
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 80,
+      stackId,
+      composite: { id: compositeId, kind: 'closed-region' },
+    }],
+    constraints: [],
+    parameters: [],
+    dimensionAnnotations: [],
+    classes: [{ id: classId, name: 'Default', systemRole: 'default-class', removable: false }],
+    activeClassId: classId,
+    extensions: {
+      stacks: {
+        activeStackId: stackId,
+        stacks: [{ id: stackId, name: 'Default', systemRole: 'default-stack', removable: false }],
+      },
+      seamLines: {
+        version: 2,
+        definitions: [{
+          id: createUuid(),
+          regionId: compositeId,
+          recordIds: [entityId],
+          defaultEnabled: true,
+          overrides: [],
+        }],
+      },
+    },
+  };
+
+  assert.equal(identityAudit(drawing).valid, true);
+  assert.doesNotThrow(() => serializeDrawingJson(drawing, 'Composite Seam Line'));
+
+  const { drawing: copy } = cloneDrawingIdentityGraph(drawing);
+  assert.notEqual(copy.entities[0].composite.id, compositeId);
+  assert.equal(copy.extensions.seamLines.definitions[0].regionId, copy.entities[0].composite.id);
+  assert.equal(identityAudit(copy).valid, true);
+});
 
 test('seam-line presentation skips unrelated record changes', () => {
   const definitions = [{
@@ -524,6 +579,15 @@ test('Seam Line presentation mounts inside its owner group before hit targets', 
     assert.equal(seamPath.attributes.get('stroke-width'), '1.5');
     assert.equal(seamPath.attributes.get('stroke-dasharray'), '7 5');
     assert.equal(seamPath.attributes.get('vector-effect'), 'non-scaling-stroke');
+    const seamHit = root.children[0].children[1];
+    assert.equal(seamHit.attributes.get('class'), 'seam-line-hit');
+    assert.equal(seamHit.attributes.get('stroke-width'), '20');
+    const reference = system.derivativeSourceProvider.referenceFromTarget({
+      closest: () => root.children[0],
+    });
+    assert.equal(reference.kind, 'seam-line');
+    assert.equal(reference.sourceFeatures[0].sourceId, 'shape');
+    assert.equal(system.derivativeSourceProvider.nodeForReference(reference), root.children[0]);
     assert.deepEqual(objectLayer.children, [ownerGroup, foregroundGroup]);
     assert.equal(system.presentationNodesForSourceIds(['shape']).length, 1);
 

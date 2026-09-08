@@ -165,6 +165,18 @@ test('enabling warp rebases a stale guide to the image current display size', ()
   near(rendered[3][1] - rendered[0][1], 24 * 25.4, 0.2);
 });
 
+test('enabling the next warp recalls the previous target dimensions', () => {
+  const entity = {
+    source: 'data:image/png;base64,a',
+    width: 400,
+    height: 300,
+  };
+  const enabled = enableWarpSettings(entity, { targetHeight: 508, targetWidth: 317.5 });
+  assert.equal(enabled.targetHeight, 508);
+  assert.equal(enabled.targetWidth, 317.5);
+  assert.equal(enabled.enabled, true);
+});
+
 test('image-local guide coordinates convert to source pixels', () => {
   const warp = normalizeWarpSettings({ sourceDisplayWidth: 200, sourceDisplayHeight: 100 }, { source: 'data:image/png;base64,a', width: 200, height: 100 });
   assert.deepEqual(localPointToSourcePixel([-100, -50], warp, 400, 300), [0, 0]);

@@ -1,27 +1,34 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  bindDimensionRecordInteractions,
   candidateFromSelections,
+  commitSmartDimensionCandidate,
   DIMENSION_EDIT_INPUT_MAXIMUM_HEIGHT,
   DIMENSION_EDIT_INPUT_MINIMUM_HEIGHT,
   dimensionAnchorRecordIds,
   dimensionEditInputHeight,
   dimensionEditKeyAction,
   dimensionEditPanelMarkup,
+  dimensionTextHitBounds,
   radialCandidateUsesPlacementClick,
   setDimensionSelectionActive,
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
 import { createSolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 import { DEFAULT_SOLVE_TOLERANCE } from '../../packages/paramagic-core/src/modules/solver/NumericSolverCore.js';
 import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 
 const normalLengthTolerance = (value) => DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(value));
 
-test('Driving Dimension editing uses a wrapping multiline expression area', () => {
+test('Driving Dimension editing uses the shared multiline expression box lookup', () => {
   const markup = dimensionEditPanelMarkup();
 
   assert.match(markup, /<textarea[^>]*class="dimension-edit-input"[^>]*rows="2"[^>]*wrap="soft"/);
+  assert.match(markup, /data-expression-lookup-list[^>]*role="listbox"/);
+  assert.doesNotMatch(markup, /data-expression-lookup-toggle/);
   assert.doesNotMatch(markup, /<input[^>]*class="dimension-edit-input"/);
+  assert.doesNotMatch(markup, /<textarea[^>]*list=/);
   assert.equal(DIMENSION_EDIT_INPUT_MINIMUM_HEIGHT, 54);
   assert.equal(DIMENSION_EDIT_INPUT_MAXIMUM_HEIGHT, 180);
   assert.equal(dimensionEditInputHeight(32), 54);
@@ -34,6 +41,86 @@ test('Driving Dimension multiline editing preserves apply, line-break, and cance
   assert.equal(dimensionEditKeyAction({ key: 'Enter', shiftKey: true }), null);
   assert.equal(dimensionEditKeyAction({ key: 'Escape' }), 'cancel');
   assert.equal(dimensionEditKeyAction({ key: 'a' }), null);
+});
+
+function dimensionInteractionGroup() {
+  const listeners = new Map();
+  return {
+    addEventListener(name, listener) {
+      if (!listeners.has(name)) listeners.set(name, []);
+      listeners.get(name).push(listener);
+    },
+    removeEventListener(name, listener) {
+      listeners.set(name, (listeners.get(name) || []).filter((entry) => entry !== listener));
+    },
+    dispatch(name, overrides = {}) {
+      const interaction = overrides.interaction || 'text';
+      const event = {
+        button: 0,
+        detail: 1,
+        timeStamp: 100,
+        clientX: 40,
+        clientY: 50,
+        defaultPrevented: false,
+        propagationStopped: false,
+        immediatePropagationStopped: false,
+        preventDefault() { this.defaultPrevented = true; },
+        stopPropagation() { this.propagationStopped = true; },
+        stopImmediatePropagation() {
+          this.immediatePropagationStopped = true;
+          this.propagationStopped = true;
+        },
+        target: {
+          closest(selector) {
+            if (interaction === 'text' && selector.includes('.dimension-text')) return this;
+            if (interaction === 'path' && selector === '.dimension-path') return this;
+            return null;
+          },
+        },
+        ...overrides,
+      };
+      for (const listener of listeners.get(name) || []) listener(event);
+      return event;
+    },
+  };
+}
+
+test('Driving Dimension text opens on the second press without starting another drag', () => {
+  const group = dimensionInteractionGroup();
+  const record = {
+    group,
+    entity: { type: 'dimension-line', dimensionMode: 'driving', dimensionId: 'length' },
+  };
+  let dragCount = 0;
+  let editCount = 0;
+  bindDimensionRecordInteractions(record, {
+    beginLineDrag: () => { dragCount += 1; },
+    editText: () => { editCount += 1; },
+  });
+
+  group.dispatch('pointerdown', { timeStamp: 100, clientX: 40, clientY: 50 });
+  const secondPress = group.dispatch('pointerdown', {
+    timeStamp: 220,
+    clientX: 43,
+    clientY: 53,
+    detail: 2,
+  });
+  group.dispatch('dblclick', { timeStamp: 230, detail: 2, clientX: 43, clientY: 53 });
+
+  assert.equal(dragCount, 1);
+  assert.equal(editCount, 1);
+  assert.equal(secondPress.defaultPrevented, true);
+  assert.equal(secondPress.immediatePropagationStopped, true);
+});
+
+test('Dimension text hit bounds provide a screen-sized hover area at every zoom', () => {
+  for (const scale of [0.5, 1, 2]) {
+    const bounds = dimensionTextHitBounds({ x: 20, y: 30, width: 18, height: 14 }, scale);
+    assert.ok(bounds.width * scale >= 32);
+    assert.ok(bounds.height * scale >= 36);
+    assert.equal(bounds.x + bounds.width / 2, 29);
+    assert.equal(bounds.y + bounds.height / 2, 37);
+  }
 });
 
 function semanticVariableKeys(controller, variableIds) {
@@ -96,6 +183,9 @@ test('circle Smart Dimensions measure diameter while arc dimensions continue to 
   assert.equal(circle.subtype, 'diameter');
   assert.equal(circle.measuredValue, 24);
   assert.match(circle.text, /^24/);
+  assert.ok(Math.abs(circle.offsetDirection[0] - 30 / Math.sqrt(1300)) < 1e-9);
+  assert.ok(Math.abs(circle.offsetDirection[1] + 20 / Math.sqrt(1300)) < 1e-9);
+  assert.ok(Math.abs(circle.offsetDistance - (Math.sqrt(1300) - 12)) < 1e-9);
   assert.equal(arc.subtype, 'radius');
   assert.equal(arc.measuredValue, 12);
 });
@@ -116,6 +206,38 @@ test('Smart Dimensions retain the built-in origin as a point anchor', () => {
   assert.equal(Object.hasOwn(candidate.anchors.measureStart, 'recordId'), false);
   assert.deepEqual(candidate.anchors.measureEnd, { type: 'point', recordId: 'line-a', index: 2 });
   assert.deepEqual([...dimensionAnchorRecordIds(candidate)], ['line-a']);
+});
+
+test('the origin belongs to the global coordinate system when no Stack is active', () => {
+  const globalOrigin = canvasOriginPointFeature(null, {
+    activeStackId: null,
+    stacks: [{ id: 'stack-a', frame: { x: 25, y: 10, rotation: 0 } }],
+  });
+  const stackOrigin = canvasOriginPointFeature(null, {
+    activeStackId: 'stack-a',
+    stacks: [{ id: 'stack-a', frame: { x: 25, y: 10, rotation: 0 } }],
+  });
+
+  assert.equal(globalOrigin.stackId, GLOBAL_LAYER_ID);
+  assert.deepEqual(globalOrigin.point, [0, 0]);
+  assert.equal(stackOrigin.stackId, 'stack-a');
+  assert.deepEqual(stackOrigin.point, [25, 10]);
+});
+
+test('committing a Smart Dimension preserves its selected highlight through the placement click', () => {
+  const calls = [];
+  const canvas = {
+    addDimension(entity) { calls.push(['add', entity]); },
+    getActiveStackId() { return null; },
+    suppressNextCanvasSelectionClear() { calls.push(['suppress']); },
+  };
+  const candidate = { type: 'dimension-line', dimensionMode: 'driven' };
+
+  assert.equal(commitSmartDimensionCandidate(canvas, candidate, { preserveSelectionThroughClick: true }), true);
+  assert.deepEqual(calls, [
+    ['add', { ...candidate, solveDomain: 'stack-frame' }],
+    ['suppress'],
+  ]);
 });
 
 test('a radial candidate treats its next geometry hit as placement instead of another selection', () => {
@@ -166,6 +288,41 @@ test('a notch point creates an external Smart Driving dimension that retains bot
   const result = controller.addDimension(candidate);
   assert.equal(result.entity.dimensionMode, 'driving');
   assert.equal(result.result.status, 'unchanged');
+});
+
+test('a Swell-derived point can be the fixed reference for a Notch Smart Driving dimension', () => {
+  const notch = { kind: 'point', recordId: 'notch-a', entityType: 'notch', index: 0, point: [25, 0] };
+  const reference = {
+    kind: 'point',
+    recordId: 'swell-piece-a',
+    entityType: 'line',
+    index: 2,
+    point: [0, 0],
+    swellDerived: true,
+    swellSourceId: 'line-a',
+    dimensionReference: {
+      recordId: 'line-a',
+      derivedFeature: { provider: 'swell', segmentIndex: 0, role: 'swell', ordinal: 1 },
+    },
+  };
+  const candidate = candidateFromSelections([notch, reference], [12, -20], 'driving');
+
+  assert.deepEqual(candidate.externalDrivingTarget, {
+    type: 'notch-distance',
+    recordId: 'notch-a',
+    otherAnchor: {
+      type: 'point',
+      recordId: 'line-a',
+      derivedFeature: { provider: 'swell', segmentIndex: 0, role: 'swell', ordinal: 1 },
+      index: 2,
+    },
+  });
+  assert.deepEqual(candidate.anchors.measureEnd, {
+    type: 'point',
+    recordId: 'line-a',
+    derivedFeature: { provider: 'swell', segmentIndex: 0, role: 'swell', ordinal: 1 },
+    index: 2,
+  });
 });
 
 test('a notch point to segment creates an external Smart Driving dimension', () => {
@@ -232,6 +389,10 @@ test('a derived point automatically creates one horizontal linked-position drivi
   const derived = {
     kind: 'point', recordId: 'duplicate-derived:copy-a:line-a', entityType: 'line', index: 0,
     point: [80, 30], linkedCopyId: 'copy-a', linkedCopyType: 'duplicate', linkedSourceId: 'line-a',
+    dimensionReference: {
+      recordId: 'line-a',
+      derivedFeature: { provider: 'linked-copy', copyId: 'copy-a', sourceId: 'line-a' },
+    },
   };
   const reference = { kind: 'point', recordId: 'line-b', entityType: 'line', index: 1, point: [20, 10] };
   const candidate = candidateFromSelections([derived, reference], [50, 80], 'driving', false, 'mm');
@@ -240,7 +401,8 @@ test('a derived point automatically creates one horizontal linked-position drivi
   assert.equal(candidate.dimensionMode, 'driving');
   assert.deepEqual(candidate.externalDrivingTarget, {
     type: 'linked-position',
-    recordId: derived.recordId,
+    recordId: 'line-a',
+    derivedFeature: { provider: 'linked-copy', copyId: 'copy-a', sourceId: 'line-a' },
     copyId: 'copy-a',
     sourceId: 'line-a',
     pointIndex: 0,
@@ -268,7 +430,7 @@ test('linked-position routing forces a deterministic axis and blocks unsupported
   assert.equal(candidateFromSelections([derived, canvasOriginPointFeature()], [22, 45], 'driving'), null);
 });
 
-test('parallel edge dimensions use a cursor-independent perpendicular supporting-line distance', () => {
+test('parallel edge dimensions use a cursor-independent distance at the closest stored endpoint', () => {
   const first = { kind: 'segment', recordId: 'line-a', entityType: 'line', index: 0, start: [0, 0], end: [100, 0] };
   const second = { kind: 'segment', recordId: 'line-b', entityType: 'line', index: 0, start: [40, 25], end: [80, 25] };
   const candidate = candidateFromSelections([first, second], [42, 50], 'driven');
@@ -277,13 +439,20 @@ test('parallel edge dimensions use a cursor-independent perpendicular supporting
   assert.equal(candidate.measurementKind, 'parallel-edge-distance');
   assert.equal(candidate.subtype, 'aligned');
   assert.equal(differentlyPlaced.subtype, 'aligned');
-  assert.deepEqual(candidate.measureStart, [60, 0]);
-  assert.deepEqual(candidate.measureEnd, [60, 25]);
+  assert.deepEqual(candidate.measureStart, [40, 0]);
+  assert.deepEqual(candidate.measureEnd, [40, 25]);
+  assert.deepEqual(differentlyPlaced.measureStart, [80, 0]);
+  assert.deepEqual(differentlyPlaced.measureEnd, [80, 25]);
   assert.equal(candidate.measuredValue, 25);
+  assert.equal(differentlyPlaced.measuredValue, 25);
   assert.deepEqual(candidate.anchors.lineToLine, {
     reference: { kind: 'segment', recordId: 'line-a', index: 0 },
     measured: { kind: 'segment', recordId: 'line-b', index: 0 },
+    referenceEndpoint: 'start',
+    measuredEndpoint: 'start',
   });
+  assert.equal(differentlyPlaced.anchors.lineToLine.referenceEndpoint, 'end');
+  assert.equal(differentlyPlaced.anchors.lineToLine.measuredEndpoint, 'end');
   assert.equal(candidate.anchors.measureStart, undefined);
 });
 
@@ -297,8 +466,8 @@ test('parallel oblique edges measure their normal delta and nonparallel edges cr
 
   assert.equal(distance.type, 'dimension-line');
   assert.equal(distance.subtype, 'aligned');
-  assert.deepEqual(distance.measureStart, [50, 50]);
-  assert.deepEqual(distance.measureEnd, [40, 60]);
+  assert.deepEqual(distance.measureStart, [0, 0]);
+  assert.deepEqual(distance.measureEnd, [-10, 10]);
   assert.ok(Math.abs(distance.measuredValue - Math.sqrt(200)) < 1e-9);
   assert.equal(angle.type, 'angle-dimension');
 });

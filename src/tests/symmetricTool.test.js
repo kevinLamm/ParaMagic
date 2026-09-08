@@ -10,6 +10,7 @@ import {
   isDerivedSeamEntity,
   isSymmetricCenterline,
   linkedCopyDefinitionFromMatrix,
+  linkedCopyDimensionReference,
   linkedCopyIdsFromWindow,
   linkedCopyPaintKey,
   linkedCopyUsesOutlineHit,
@@ -30,6 +31,19 @@ import {
 } from '../../packages/paramagic-core/src/modules/SymmetricTool.js';
 import { resolveVectorDrawingPoint } from '../../packages/paramagic-core/src/modules/DrawingTools.js';
 import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
+import { transformStackPoint } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
+
+test('linked copies rotate their reflection and placement with the owning Stack', () => {
+  const frame = { x: 30, y: 20, rotation: Math.PI / 4 };
+  const definition = { type: 'symmetric', sourceIds: ['source'], anchor: [10, 0], linear: { a: -1, b: 0, c: 0, d: 1 } };
+  const localMatrix = linkedCopyMatrix(definition, [2, 3]);
+  const worldMatrix = linkedCopyMatrix(definition, transformStackPoint([2, 3], frame), frame);
+  for (const point of [[0, 0], [2, 7], [5, 9]]) {
+    const expected = transformStackPoint(applyMatrix(localMatrix, point), frame);
+    const actual = applyMatrix(worldMatrix, transformStackPoint(point, frame));
+    actual.forEach((value, index) => assert.ok(Math.abs(value - expected[index]) < 1e-8));
+  }
+});
 
 function reflect(matrix, point) {
   return [
@@ -223,15 +237,19 @@ test('Duplicate and Symmetric definitions persist independent visibility and z-i
 });
 
 test('Linked Copy constraints retain owner, participant, and portable relationship identities', () => {
+  const derivedRecordId = duplicateDerivedRecordId('copy-a', 'line-a');
   const constraint = normalizeLinkedPositionConstraint({
     id: 'linked-cross',
     sourceRelationshipId: 'source-linked-cross',
     stackRelationshipBindingKey: 'binding-a-b',
     stackId: 'stack-a',
     participantStackIds: ['stack-b', 'stack-a', 'stack-b'],
-    featureRefs: [{ kind: 'point', recordId: 'line-b', index: 0 }],
+    featureRefs: [
+      { kind: 'point', recordId: derivedRecordId, index: 2 },
+      { kind: 'point', recordId: 'line-b', index: 0 },
+    ],
     externalDrivingTarget: {
-      recordId: duplicateDerivedRecordId('copy-a', 'line-a'),
+      recordId: derivedRecordId,
       copyId: 'copy-a',
       sourceId: 'line-a',
       pointIndex: 2,
@@ -243,6 +261,16 @@ test('Linked Copy constraints retain owner, participant, and portable relationsh
   assert.deepEqual(constraint.participantStackIds, ['stack-b']);
   assert.equal(constraint.sourceRelationshipId, 'source-linked-cross');
   assert.equal(constraint.stackRelationshipBindingKey, 'binding-a-b');
+  assert.deepEqual(constraint.featureRefs[0], {
+    kind: 'point',
+    ...linkedCopyDimensionReference('copy-a', 'line-a'),
+    index: 2,
+  });
+  assert.equal(constraint.externalDrivingTarget.recordId, 'line-a');
+  assert.deepEqual(
+    constraint.externalDrivingTarget.derivedFeature,
+    linkedCopyDimensionReference('copy-a', 'line-a').derivedFeature,
+  );
 });
 
 test('linked-copy property selection exposes its own Visible expression and paint controls', () => {
@@ -353,7 +381,7 @@ test('linked Coincident uses the existing linked-position operation with a zero 
   });
   assert.deepEqual(target, {
     type: 'linked-position',
-    recordId: derived.recordId,
+    ...linkedCopyDimensionReference('copy-a', 'line-a'),
     copyId: 'copy-a',
     sourceId: 'line-a',
     pointIndex: 2,

@@ -33,7 +33,10 @@ const decodeConsoleOutput = (value) => {
 };
 
 try {
-  writeFileSync(fixturePath, createAutodeskDxfFixture(), 'utf8');
+  const rotation = process.env.PARAMAGIC_DXF_TEST_ROTATION;
+  writeFileSync(fixturePath, createAutodeskDxfFixture(rotation === undefined ? {} : {
+    frame: { x: 100, y: 50, rotation: Number(rotation) },
+  }), 'utf8');
   const result = spawnSync(installedConsole, [
     '/i', fixturePath,
     '/s', auditScript,

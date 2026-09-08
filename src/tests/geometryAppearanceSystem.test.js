@@ -101,6 +101,23 @@ test('without a segment target a stroke edit applies to the selected geometry re
   assert.equal(records[1].entity.appearance.strokeColor, '#12abef');
 });
 
+test('a derived closed-region provider can authorize an image fill for its open source edges', () => {
+  const { records, system } = createFixture();
+  const patch = { fillExpression: 'basic/Fabric/linen.webp' };
+
+  const rejected = system.setSelectedAppearance(patch, { recordIds: records.map(({ id }) => id) });
+  assert.equal(rejected.success, false);
+  assert.match(rejected.error, /complete closed objects/);
+
+  const applied = system.setSelectedAppearance(patch, {
+    recordIds: records.map(({ id }) => id),
+    allowImageFill: true,
+  });
+  assert.equal(applied.success, true);
+  assert.ok(records.every(({ entity }) => entity.appearance.fillType === 'image'));
+  assert.ok(records.every(({ entity }) => entity.appearance.fillImageReference === patch.fillExpression));
+});
+
 test('stroke properties report the focused segment instead of a mixed region value', () => {
   const { system } = createFixture({ selectedSegment: { recordId: 'edge-b', index: 0 } });
 

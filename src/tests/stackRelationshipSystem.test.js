@@ -1,10 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  ENTITY_RELATIONSHIP_SOLVE_DOMAIN,
+  STACK_FRAME_RELATIONSHIP_SOLVE_DOMAIN,
   createDormantStackRelationships,
+  isStackFrameRelationship,
   pruneDormantStackRelationships,
   reconcileDormantStackRelationships,
+  stackRelationshipSolveDomain,
 } from '../../packages/paramagic-core/src/modules/StackRelationshipSystem.js';
+
+test('Stack relationship interaction mode follows active Stack state', () => {
+  assert.equal(stackRelationshipSolveDomain(null), STACK_FRAME_RELATIONSHIP_SOLVE_DOMAIN);
+  assert.equal(stackRelationshipSolveDomain('stack-a'), ENTITY_RELATIONSHIP_SOLVE_DOMAIN);
+  assert.equal(isStackFrameRelationship({ coordinateSpace: 'global' }), true);
+  assert.equal(isStackFrameRelationship({ coordinateSpace: 'global', solveDomain: 'entity' }), false);
+  assert.equal(isStackFrameRelationship({ coordinateSpace: 'local', solveDomain: 'stack-frame' }), false);
+});
 
 function crossStackFixture() {
   return {

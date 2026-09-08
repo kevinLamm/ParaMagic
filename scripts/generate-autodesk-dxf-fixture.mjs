@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { serializeDxf } from '../packages/paramagic-core/src/modules/DrawingIO.js';
 import { createDrawingDxfSnapshot } from '../packages/paramagic-core/src/modules/DxfExport.js';
+import { transformStackEntity } from '../packages/paramagic-core/src/modules/StackCoordinates.js';
 
 export const autodeskDxfFixtureDrawing = {
   drawingUnit: 'mm',
@@ -82,8 +83,15 @@ export const autodeskDxfFixtureDrawing = {
   ],
 };
 
-export function createAutodeskDxfFixture() {
-  return serializeDxf(createDrawingDxfSnapshot(autodeskDxfFixtureDrawing));
+export function createAutodeskDxfFixture({ frame = null } = {}) {
+  const drawing = structuredClone(autodeskDxfFixtureDrawing);
+  if (frame) {
+    drawing.entities = drawing.entities.map((entity) => transformStackEntity(entity, frame));
+    drawing.dimensionAnnotations = drawing.dimensionAnnotations.map((entity) => ({
+      ...transformStackEntity(entity, frame), coordinateFrame: frame,
+    }));
+  }
+  return serializeDxf(createDrawingDxfSnapshot(drawing));
 }
 
 export function writeAutodeskDxfFixture(outputPath = resolve('autodesk-paramagic-fixture.dxf')) {

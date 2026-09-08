@@ -211,6 +211,13 @@ test('linked aligned dimensions synchronize stale baseline coordinates to measur
   assert.equal(dimension.path.getAttribute('d'), 'M 0 -50 L 80 -50');
   assert.equal(dimension.extensionA.getAttribute('d'), 'M 0 -6 L 0 -60');
   assert.equal(dimension.extensionB.getAttribute('d'), 'M 80 -6 L 80 -60');
+
+  right.entity.end = [160, 0];
+  manager.refreshLinkedDimensions(new Set([right.id]));
+
+  assert.equal(dimension.entity.offsetDistance, 50);
+  assert.deepEqual(dimension.entity.offsetDirection, [0, -1]);
+  assert.equal(dimension.path.getAttribute('d'), 'M 0 -50 L 160 -50');
 });
 
 test('parallel-edge dimensions keep a live perpendicular projection after the edges become nonparallel', () => {

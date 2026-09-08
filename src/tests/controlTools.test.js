@@ -194,6 +194,9 @@ test('editing controls uses a wrapping expression area and a Visible button befo
   const hiddenMarkup = controlRowMarkup(hiddenItem, controlPanelState(hiddenItem, solver), true);
 
   assert.match(markup, /<textarea[^>]*data-control-expression[^>]*rows="2"[^>]*wrap="soft"/);
+  assert.match(markup, /data-expression-lookup-list[^>]*role="listbox"/);
+  assert.doesNotMatch(markup, /data-expression-lookup-toggle/);
+  assert.doesNotMatch(markup, /<textarea[^>]*list=/);
   assert.match(markup, />MinMax\(0, 100, 50, 1\)<\/textarea>/);
   assert.match(markup, /data-control-visibility[^>]*aria-pressed="true"/);
   assert.ok(markup.indexOf('data-control-visibility') < markup.indexOf('data-control-remove'));

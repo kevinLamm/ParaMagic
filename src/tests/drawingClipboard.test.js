@@ -1,3 +1,4 @@
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -106,6 +107,124 @@ test('copying an array includes its definition, sources, center dependencies, an
   assert.equal(packageValue.drawing.entities.some(({ id }) => id === cid('a')), true);
   assert.equal(packageValue.drawing.entities.some(({ id }) => id === cid('b')), true);
   assert.equal(packageValue.drawing.parameters.some(({ name }) => name === 'spacing'), true);
+});
+
+test('copying a derivative-sourced array carries and remaps every live source dependency', () => {
+  const snapshot = fixture();
+  const swellSource = withSwellDefinition({
+    id: cid('swell-source'),
+    type: 'line',
+    start: [0, 30],
+    end: [40, 30],
+    stackId: cid('stack-a'),
+  }, {
+    enabled: true,
+    offsetExpression: '4',
+    swellOffsetExpression: '10',
+    startTransitionExpression: '8',
+    endTransitionExpression: '8',
+  });
+  const seamSource = {
+    id: cid('seam-source'),
+    type: 'rect',
+    x: 70,
+    y: 0,
+    width: 30,
+    height: 20,
+    stackId: cid('stack-a'),
+  };
+  snapshot.entities.push(swellSource, seamSource);
+  snapshot.extensions.linkedCopyTools = {
+    version: 1,
+    copies: [{
+      id: cid('duplicate-source'),
+      type: 'duplicate',
+      sourceIds: [cid('b')],
+      anchor: [45, 0],
+      linear: { a: 1, b: 0, c: 0, d: 1 },
+      stackId: cid('stack-a'),
+    }],
+  };
+  snapshot.extensions.seamLines = {
+    version: 2,
+    definitions: [{
+      id: cid('seam-definition'),
+      regionId: seamSource.id,
+      recordIds: [seamSource.id],
+      defaultEnabled: true,
+      overrides: [],
+    }],
+  };
+  snapshot.extensions.arrayTools.arrays.push({
+    id: cid('derivative-array'),
+    arrayType: 'rectangular',
+    sourceIds: [],
+    sourceRefs: [
+      { kind: 'array-placement', arrayId: cid('array-1'), placementIndex: 1 },
+      { kind: 'linked-copy', copyId: cid('duplicate-source') },
+      { kind: 'swell-piece', ownerId: swellSource.id, pieceIndex: 0 },
+      {
+        kind: 'seam-line',
+        sourceFeatures: [{
+          sourceId: seamSource.id,
+          sourceFeatureIndex: 0,
+          boundaryRole: 'outer',
+          kind: 'segment',
+        }],
+      },
+    ],
+    rowCountExpression: '1',
+    columnCountExpression: '2',
+    columnSpacingExpression: '25',
+    stackId: cid('stack-a'),
+  });
+
+  const packageValue = createClipboardPackage(snapshot, { arrayIds: [cid('derivative-array')] });
+  assert.deepEqual(
+    packageValue.drawing.extensions.arrayTools.arrays.map(({ id }) => id),
+    [cid('array-1'), cid('derivative-array')],
+  );
+  assert.deepEqual(
+    packageValue.drawing.extensions.linkedCopyTools.copies.map(({ id }) => id),
+    [cid('duplicate-source')],
+  );
+  const copiedEntityIds = new Set(packageValue.drawing.entities.map(({ id }) => id));
+  [cid('a'), cid('b'), swellSource.id, seamSource.id].forEach((id) => {
+    assert.equal(copiedEntityIds.has(id), true);
+  });
+  assert.deepEqual(
+    packageValue.drawing.extensions.seamLines.definitions.map(({ id }) => id),
+    [cid('seam-definition')],
+  );
+
+  const inserted = retargetClipboardDrawing(packageValue, cid('stack-destination'));
+  const { drawing, idMap } = mergeDrawingDataWithMap({
+    entities: [],
+    constraints: [],
+    parameters: [],
+    dimensionAnnotations: [],
+    extensions: { stacks: {
+      activeStackId: cid('stack-destination'),
+      stacks: [{ id: cid('stack-destination'), name: 'Destination', systemRole: 'default-stack' }],
+    } },
+  }, inserted, { inheritControlParameters: false, targetStackId: cid('stack-destination') });
+  const pastedDerivativeArray = drawing.extensions.arrayTools.arrays
+    .find(({ sourceDefinitionId }) => sourceDefinitionId === cid('derivative-array'));
+
+  assert.deepEqual(pastedDerivativeArray.sourceRefs, [
+    { kind: 'array-placement', arrayId: idMap.get(cid('array-1')), placementIndex: 1 },
+    { kind: 'linked-copy', copyId: idMap.get(cid('duplicate-source')) },
+    { kind: 'swell-piece', ownerId: idMap.get(swellSource.id), pieceIndex: 0 },
+    {
+      kind: 'seam-line',
+      sourceFeatures: [{
+        sourceId: idMap.get(seamSource.id),
+        sourceFeatureIndex: 0,
+        boundaryRole: 'outer',
+        kind: 'segment',
+      }],
+    },
+  ]);
 });
 
 test('clipboard parameter closure uses spaced global names and the local Stack dimension identity', () => {
@@ -616,7 +735,7 @@ test('Drawing container Save As exports its child Stack tree without the contain
   const exportedState = packageValue.drawing.extensions.stacks;
   assert.equal(packageValue.drawing.documentContext.contentKind, 'drawing');
   assert.equal(exportedState.stacks.some(({ id }) => id === containerId), false);
-  assert.deepEqual(exportedState.stacks.map(({ id }) => id), [rootId, childId]);
+  assert.deepEqual(exportedState.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [rootId, childId]);
   assert.equal(exportedState.stacks[0].parentStackId, null);
   assert.equal(exportedState.stacks[1].parentStackId, rootId);
 });
@@ -645,7 +764,7 @@ test('Stack Save As packages the complete descendant tree without pulling in anc
   const packageValue = createStackSubtreePackage(drawing, rootId);
   const stackState = packageValue.drawing.extensions.stacks;
 
-  assert.deepEqual(stackState.stacks.map(({ id }) => id), [rootId, childId, grandchildId]);
+  assert.deepEqual(stackState.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [rootId, childId, grandchildId]);
   assert.equal(stackState.stacks[0].parentStackId, null);
   assert.equal(stackState.stacks[1].parentStackId, rootId);
   assert.equal(stackState.stacks[2].parentStackId, childId);

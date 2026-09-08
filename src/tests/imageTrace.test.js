@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   configureOpenCvResources,
+  createImageTraceSettingsMemory,
   getOpenCvResourceConfiguration,
   imageLocalToWorldPoint,
   imagePixelToLocalPoint,
@@ -41,6 +42,20 @@ test('image trace settings use practical defaults and clamp user input', () => {
     detail: 9,
     smoothing: 3,
   });
+});
+
+test('image trace settings memory recalls the latest normalized slider values', () => {
+  const memory = createImageTraceSettingsMemory();
+  assert.deepEqual(memory.recall(), { tolerance: 24, detail: 8, smoothing: 1 });
+  assert.deepEqual(memory.remember({ tolerance: '41', detail: '6', smoothing: '4' }), {
+    tolerance: 41,
+    detail: 6,
+    smoothing: 4,
+  });
+  const recalled = memory.recall();
+  assert.deepEqual(recalled, { tolerance: 41, detail: 6, smoothing: 4 });
+  recalled.tolerance = 0;
+  assert.equal(memory.recall().tolerance, 41);
 });
 
 test('trace coordinates map the displayed image corners to raster corners', () => {

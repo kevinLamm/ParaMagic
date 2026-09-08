@@ -1112,6 +1112,65 @@ test('large driving-dimension edits use automatic continuation through constrain
   near(Math.abs(top.end[1] - moving.start[1]), 7 * 25.4, 1e-3);
 });
 
+test('driving dimensions can replace a deleted-reference expression through continuation', () => {
+  const controller = createSolverController();
+  const stackId = controller.defaultStackId();
+  controller.createControlParameter({ id: 'repair-control', name: 'c1', expression: '45' });
+  const first = controller.dimensions.addDimension({
+    id: 'repair-source-d1',
+    expression: '27',
+    driving: true,
+    unit: 'in',
+    stackId,
+  });
+  const second = controller.dimensions.addDimension({
+    id: 'repair-source-d2',
+    expression: '45',
+    driving: true,
+    unit: 'in',
+    stackId,
+  });
+  const line = controller.addEntity({
+    id: 'repair-target-line',
+    type: 'line',
+    stackId,
+    start: [0, 0],
+    end: [254, 0],
+  });
+  const target = controller.addDimension({
+    type: 'dimension-line',
+    dimensionMode: 'driving',
+    subtype: 'horizontal',
+    start: [...line.start],
+    end: [...line.end],
+    measureStart: [...line.start],
+    measureEnd: [...line.end],
+    label: [127, -20],
+    text: '',
+    anchors: {
+      start: { type: 'segment-start', recordId: line.id, index: 0 },
+      end: { type: 'segment-end', recordId: line.id, index: 0 },
+      measureStart: { type: 'segment-start', recordId: line.id, index: 0 },
+      measureEnd: { type: 'segment-end', recordId: line.id, index: 0 },
+    },
+  });
+  const targetId = target.entity.dimensionId;
+  const linked = controller.setDimension(targetId, 'c1+d1+d2');
+  assert.ok(['converged', 'unchanged'].includes(linked.status), linked.message);
+
+  controller.removeDimension(first.id);
+  controller.removeDimension(second.id);
+  assert.match(controller.dimensions.get(targetId).error, /Unknown parameter: d1/);
+
+  const repaired = controller.setDimension(targetId, 'c1+6+6');
+  assert.ok(['converged', 'unchanged'].includes(repaired.status), repaired.message);
+  assert.ok(repaired.continuationSteps > 1);
+  assert.equal(controller.dimensions.get(targetId).expression, 'c1+6+6');
+  assert.equal(controller.dimensions.get(targetId).error, null);
+  const solved = controller.getEntity(line.id);
+  near(Math.abs(solved.end[0] - solved.start[0]), 57 * 25.4, 1e-3);
+});
+
 test('failed dimension continuation restores the original expression and geometry atomically', () => {
   const controller = createSolverController();
   const line = controller.addEntity({ id: 'fixed-dimension-line', type: 'line', start: [0, 0], end: [254, 0] });

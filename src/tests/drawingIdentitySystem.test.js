@@ -11,6 +11,16 @@ import {
 } from '../../packages/paramagic-core/src/modules/DrawingIdentitySystem.js';
 import { createUuid, isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 import {
+  duplicateDerivedRecordId,
+  linkedCopyDimensionReference,
+  normalizeLinkedPositionConstraint,
+} from '../../packages/paramagic-core/src/modules/SymmetricTool.js';
+import { arrayDimensionReference } from '../../packages/paramagic-core/src/modules/ArrayTools.js';
+import {
+  normalizeSwellExternalConstraint,
+  swellDimensionReference,
+} from '../../packages/paramagic-core/src/modules/SwellTools.js';
+import {
   createIndependentDrawingSave,
   parseDrawingText,
   serializeDrawingJson,
@@ -194,6 +204,178 @@ test('ordinary save and open preserve every canonical UUID exactly', () => {
   assert.equal(reopened.constraints[0].id, canonical.constraints[0].id);
   assert.equal(reopened.constraints[0].featureRefs[0].recordId, canonical.entities[0].id);
   assert.equal(reopened.extensions.stacks.stacks[0].id, canonical.extensions.stacks.stacks[0].id);
+});
+
+test('Swell-derived dimension anchors persist through their source entity identity', () => {
+  const canonical = migrateDrawingIdentities(legacyDrawing()).drawing;
+  const sourceId = canonical.entities[0].id;
+  const stackId = canonical.extensions.stacks.stacks[0].id;
+  const notchId = createUuid();
+  const parameterId = createUuid();
+  canonical.entities.push({
+    id: notchId,
+    type: 'notch',
+    stackId,
+    host: { recordId: sourceId, kind: 'segment', index: 0 },
+    point: [5, 0],
+    end: [5, 2],
+  });
+  canonical.parameters.push({
+    id: parameterId,
+    name: 'd1',
+    expression: '2',
+    value: 2,
+    stackId,
+  });
+  const derivedAnchor = {
+    type: 'point',
+    recordId: sourceId,
+    index: 2,
+    derivedFeature: { provider: 'swell', segmentIndex: 0, role: 'swell', ordinal: 1 },
+  };
+  canonical.dimensionAnnotations.push({
+    id: createUuid(),
+    type: 'dimension-line',
+    dimensionMode: 'driving',
+    dimensionId: parameterId,
+    stackId,
+    anchors: {
+      start: { type: 'point', recordId: notchId, index: 0 },
+      end: derivedAnchor,
+      measureStart: { type: 'point', recordId: notchId, index: 0 },
+      measureEnd: derivedAnchor,
+    },
+    externalDrivingTarget: {
+      type: 'notch-distance',
+      recordId: notchId,
+      otherAnchor: derivedAnchor,
+    },
+  });
+
+  assert.doesNotThrow(() => serializeDrawingJson(canonical, 'Swell Dimension'));
+  const { drawing: copy, idMap } = cloneDrawingIdentityGraph(canonical);
+  assert.equal(copy.dimensionAnnotations[0].anchors.measureEnd.recordId, idMap.get(sourceId));
+  assert.deepEqual(copy.dimensionAnnotations[0].anchors.measureEnd.derivedFeature, derivedAnchor.derivedFeature);
+  assert.equal(identityAudit(copy).valid, true);
+});
+
+test('Swell constraints save through source RecordIDs and remap on Save As', () => {
+  const canonical = migrateDrawingIdentities(legacyDrawing()).drawing;
+  const sourceId = canonical.entities[0].id;
+  const stackId = canonical.extensions.stacks.stacks[0].id;
+  const movableId = createUuid();
+  const transientRecordId = createUuid();
+  const dimensionReference = swellDimensionReference(sourceId, 0, 'offset', 0);
+  canonical.entities.push({
+    id: movableId,
+    type: 'line',
+    stackId,
+    start: [0, 5],
+    end: [10, 5],
+  });
+  canonical.extensions.swell = {
+    version: 2,
+    constraints: [normalizeSwellExternalConstraint({
+      id: createUuid(),
+      type: 'Point-on Line',
+      stackId,
+      participantStackIds: [],
+      externalTarget: {
+        type: 'swell-derived',
+        derivedRef: { kind: 'segment', recordId: transientRecordId, index: 0 },
+        movableRef: { kind: 'point', recordId: movableId, index: 0 },
+        sourceId,
+      },
+    }, (request) => request.recordId === transientRecordId ? {
+      kind: 'segment',
+      recordId: transientRecordId,
+      index: 0,
+      swellDerived: true,
+      swellSourceId: sourceId,
+      dimensionReference,
+    } : null)],
+  };
+
+  const constraint = canonical.extensions.swell.constraints[0];
+  assert.equal(constraint.externalTarget.derivedRef.recordId, sourceId);
+  assert.deepEqual(constraint.externalTarget.derivedRef.derivedFeature, dimensionReference.derivedFeature);
+  assert.doesNotThrow(() => serializeDrawingJson(canonical, 'Swell Constraint'));
+  assert.equal(identityAudit(canonical).valid, true);
+
+  const { drawing: copy, idMap } = cloneDrawingIdentityGraph(canonical);
+  const copiedTarget = copy.extensions.swell.constraints[0].externalTarget;
+  assert.equal(copiedTarget.derivedRef.recordId, idMap.get(sourceId));
+  assert.equal(copiedTarget.sourceId, idMap.get(sourceId));
+  assert.equal(copiedTarget.movableRef.recordId, idMap.get(movableId));
+  assert.deepEqual(copiedTarget.derivedRef.derivedFeature, dimensionReference.derivedFeature);
+  assert.equal(identityAudit(copy).valid, true);
+});
+
+test('every derived dimension provider exposes the same source-backed identity contract', () => {
+  const sourceId = createUuid();
+  const copyId = createUuid();
+  const arrayId = createUuid();
+  const references = [
+    linkedCopyDimensionReference(copyId, sourceId),
+    arrayDimensionReference(arrayId, 2, sourceId),
+    swellDimensionReference(sourceId, 0, 'offset', 0),
+  ];
+
+  assert.deepEqual(references.map(({ recordId }) => recordId), [sourceId, sourceId, sourceId]);
+  assert.deepEqual(
+    references.map(({ derivedFeature }) => derivedFeature.provider),
+    ['linked-copy', 'array', 'swell'],
+  );
+});
+
+test('Duplicate constraints save through source RecordIDs and remap their derivative selector on Save As', () => {
+  const canonical = migrateDrawingIdentities(legacyDrawing()).drawing;
+  const sourceId = canonical.entities[0].id;
+  const stackId = canonical.extensions.stacks.stacks[0].id;
+  const copyId = createUuid();
+  const constraintId = createUuid();
+  const transientRecordId = duplicateDerivedRecordId(copyId, sourceId);
+  canonical.extensions.linkedCopyTools = {
+    version: 4,
+    copies: [{
+      id: copyId,
+      sourceDefinitionId: copyId,
+      sourceStackId: stackId,
+      type: 'duplicate',
+      sourceIds: [sourceId],
+      anchor: [20, 20],
+      linear: { a: 1, b: 0, c: 0, d: 1 },
+      stackId,
+      visible: true,
+    }],
+    positionConstraints: [normalizeLinkedPositionConstraint({
+      id: constraintId,
+      stackId,
+      featureRefs: [
+        { kind: 'point', recordId: transientRecordId, index: 0 },
+        { kind: 'point', recordId: sourceId, index: 2 },
+      ],
+      externalDrivingTarget: {
+        recordId: transientRecordId,
+        copyId,
+        sourceId,
+        pointIndex: 0,
+        otherAnchor: { recordId: sourceId, index: 2 },
+      },
+    })],
+  };
+
+  assert.doesNotThrow(() => serializeDrawingJson(canonical, 'Duplicate Constraint'));
+  assert.deepEqual(
+    canonical.extensions.linkedCopyTools.positionConstraints[0].featureRefs[0],
+    { kind: 'point', ...linkedCopyDimensionReference(copyId, sourceId), index: 0 },
+  );
+  const { drawing: copy, idMap } = cloneDrawingIdentityGraph(canonical);
+  const copiedConstraint = copy.extensions.linkedCopyTools.positionConstraints[0];
+  assert.equal(copiedConstraint.featureRefs[0].recordId, idMap.get(sourceId));
+  assert.equal(copiedConstraint.featureRefs[0].derivedFeature.copyId, idMap.get(copyId));
+  assert.equal(copiedConstraint.featureRefs[0].derivedFeature.sourceId, idMap.get(sourceId));
+  assert.equal(identityAudit(copy).valid, true);
 });
 
 test('canonical files fail closed before malformed declarations can be regenerated', () => {

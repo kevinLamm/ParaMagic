@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><title>Expression popup comparison</title><link rel="stylesheet" href="/src/styles/app.css"><style>body{padding:40px;font:14px Arial;overflow:auto}label{display:block;margin-bottom:32px}input,textarea{display:block;width:320px;padding:6px;margin-top:6px}button{padding:8px;border:1px solid #888}#result{white-space:pre-wrap}#bottom{position:fixed;bottom:12px;right:12px;margin:0}</style></head>
+<body>
+<label>Native input reference<input aria-label="Native input reference" list="native-options" autocomplete="off"></label>
+<label>Shared input expression<input aria-label="Shared input expression" data-expression-source="native-options" autocomplete="off"></label>
+<label>Shared textarea expression<textarea aria-label="Shared textarea expression" rows="2"></textarea></label>
+<label id="bottom">Bottom edge expression<input aria-label="Bottom edge expression" data-expression-source="native-options"></label>
+<datalist id="native-options"><option value="Width" label="Width (parameter)"></option><option value="Waist" label="Waist (parameter)"></option><option value="Height" label="Height (parameter)"></option></datalist>
+<button id="run">Run component checks</button><output id="result"></output>
+<script type="module" src="./expression-popup-browser.js"></script>
+</body></html>

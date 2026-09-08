@@ -7,5 +7,10 @@ const mainSource = readFileSync(new URL('../main.js', import.meta.url), 'utf8');
 test('the Main Menu omits duplicate-drawing and legacy drawing-insert actions', () => {
   assert.doesNotMatch(mainSource, /appMenuButton\('Duplicate Drawing'/);
   assert.doesNotMatch(mainSource, /appMenuButton\('Insert',\s*'id="insertButton"/);
+  assert.doesNotMatch(mainSource, /appMenuButton\('Insert Image'/);
   assert.doesNotMatch(mainSource, /insertParamagicFileInput|insertParamagicFile\s*\(/);
+});
+
+test('Insert Image is an active-Stack drawing tool immediately after Text', () => {
+  assert.match(mainSource, /<\/div>\$\{iconButton\('Insert Image', 'id="insertImageButton" data-requires-active-stack'\)\}`/);
 });

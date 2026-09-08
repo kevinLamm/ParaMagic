@@ -4,6 +4,7 @@ import {
   createNotchEntity,
   createNotchLocationMemory,
   createNotchSystem,
+  notchDrivingDimensionDependsOn,
   notchDependsOnRecordIds,
   prepareNotchDerivativePresentationClone,
   prepareNotchValueOnlyPresentationClone,
@@ -13,7 +14,8 @@ import { createUuid } from '../../packages/paramagic-core/src/modules/IdentitySy
 
 const node = () => ({
   style: {},
-  classList: { toggle() {} },
+  classList: { add() {}, remove() {}, toggle() {} },
+  removeAttribute() {},
   setAttribute() {},
 });
 
@@ -93,7 +95,7 @@ test('derived Notch presentation removes the non-editable orange position handle
   assert.equal(hitRemoved, true);
 });
 
-function createSystem(features, records = []) {
+function createSystem(features, records = [], options = {}) {
   const featureForHost = (host) => features.find((feature) => (
     (feature.recordId === host?.recordId || feature.stableKey === host?.stableKey)
       && feature.kind === host?.kind
@@ -115,13 +117,76 @@ function createSystem(features, records = []) {
     notifyObjectChange() {},
     syncState() {},
     showStatusMessage() {},
-    solver: {},
-    getPointFeature: () => null,
-    getSegmentFeature: () => null,
+    solver: options.solver || {},
+    getPointFeature: options.getPointFeature || (() => null),
+    getSegmentFeature: options.getSegmentFeature || (() => null),
+    derivedFeatureDependsOn: options.derivedFeatureDependsOn || (() => false),
     refreshLinkedDimensions() {},
     reapplySolverSnapshot() {},
   });
 }
+
+test('a Notch driving dimension reacts to its ordinary or derived reference', () => {
+  const notch = { id: 'notch-a', host: { recordId: 'host-edge' } };
+  const target = {
+    type: 'notch-distance',
+    recordId: 'notch-a',
+    otherAnchor: { type: 'point', recordId: 'swell-piece-a', index: 0 },
+  };
+  const dependsOnDerived = (recordId, changedRecordIds) => (
+    recordId === 'swell-piece-a' && changedRecordIds.has('swell-source-a')
+  );
+
+  assert.equal(notchDrivingDimensionDependsOn(notch, target, new Set(['swell-piece-a'])), true);
+  assert.equal(notchDrivingDimensionDependsOn(notch, target, new Set(['swell-source-a']), dependsOnDerived), true);
+  assert.equal(notchDrivingDimensionDependsOn(notch, target, new Set(['unrelated']), dependsOnDerived), false);
+});
+
+test('a Notch Smart Driving dimension resolves and applies a Swell-derived point reference', () => {
+  const host = {
+    recordId: 'host-edge', kind: 'segment', index: 0, start: [0, 0], end: [100, 0],
+  };
+  const entity = createNotchEntity(host, [20, 0], [20, 10], 'notch-a');
+  const notchRecord = {
+    id: entity.id, recordType: 'notch', entity,
+    group: node(), line: node(), hitNode: node(), dot: node(), handles: [],
+  };
+  const dimensionRecord = {
+    id: 'dimension-a',
+    recordType: 'dimension',
+    entity: {
+      dimensionMode: 'driving',
+      dimensionId: 'dimension-parameter-a',
+      subtype: 'horizontal',
+      externalDrivingTarget: {
+        type: 'notch-distance',
+        recordId: entity.id,
+        otherAnchor: {
+          type: 'point',
+          recordId: 'swell-source-a',
+          index: 0,
+          derivedFeature: { provider: 'swell', segmentIndex: 0, role: 'swell', ordinal: 1 },
+        },
+      },
+    },
+    group: node(),
+  };
+  const system = createSystem([host], [notchRecord, dimensionRecord], {
+    solver: { dimensions: new Map([['dimension-parameter-a', { value: 40 }]]) },
+    getPointFeature: (recordId, index, options) => (
+      recordId === 'swell-source-a'
+        && index === 0
+        && options.derivedFeature?.provider === 'swell'
+        ? { kind: 'point', recordId, index, point: [0, 0] }
+        : null
+    ),
+  });
+
+  system.applyDrivingDimensions(new Set(['swell-source-a']));
+
+  assert.ok(Math.abs(notchRecord.entity.point[0] - 40) < 0.01);
+  assert.ok(Math.abs(notchRecord.entity.point[1]) < 0.01);
+});
 
 test('a Notch follows the dragged point onto another edge of its host', () => {
   const first = {

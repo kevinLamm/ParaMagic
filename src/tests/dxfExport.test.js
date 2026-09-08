@@ -1016,6 +1016,78 @@ test('inch DXF dimensions round to thirty-seconds with five-decimal precision', 
   assert.match(dxf, /\n1\n1\.09375"\n/);
 });
 
+test('rotated Stack perimeter leaders preserve text direction in DXF coordinates', () => {
+  const dxf = serializeDxf({
+    drawingUnit: 'mm', dxfExportUnit: 'mm', entities: [],
+    dimensionAnnotations: [{
+      id: 'rotated-perimeter', type: 'multi-curve-length-dimension', dimensionMode: 'driven',
+      target: [0, 0], elbow: [20, 20], label: [20, 40], text: 'PERIM 125',
+      coordinateFrame: { x: 0, y: 0, rotation: Math.PI / 2 },
+    }],
+  });
+  const value = (block, code) => Number(block.split('\n').find((_, i, lines) => i % 2 === 1 && lines[i - 1] === String(code)));
+  const leader = entityBlocks(dxf, 'LEADER')[0];
+  const text = entityBlocks(dxf, 'MTEXT')[0];
+  assert.ok(Math.abs(value(leader, 211)) < 1e-10);
+  assert.equal(value(leader, 221), -1);
+  assert.ok(Math.abs(value(text, 11)) < 1e-10);
+  assert.equal(value(text, 21), -1);
+});
+
+for (const exportUnit of ['mm', 'in']) {
+  test(`${exportUnit} DXF perimeter exports as an annotated native leader with matching text and arrows`, () => {
+    const dxf = exportDxf({
+      drawingUnit: 'mm', dxfExportUnit: exportUnit, entities: [],
+      dimensionAnnotations: [{
+        id: 'perimeter', type: 'multi-curve-length-dimension', dimensionMode: 'driven',
+        target: [0, 0], elbow: [20, -20], label: [40, -20], text: 'PERIM 125',
+      }],
+    });
+    const value = (block, code) => block.split('\n').find((_, i, lines) => i % 2 === 1 && lines[i - 1] === String(code));
+    const leaders = entityBlocks(dxf, 'LEADER');
+    const texts = entityBlocks(dxf, 'MTEXT');
+    assert.equal(leaders.length, 1);
+    assert.equal(texts.length, 1);
+    assert.equal(value(leaders[0], 340), value(texts[0], 5));
+    assert.match(texts[0], new RegExp(`\\n102\\n\\{ACAD_REACTORS\\n330\\n${value(leaders[0], 5)}\\n`));
+    assert.equal(value(leaders[0], 73), '0');
+    assert.equal(value(leaders[0], 76), '3');
+    assert.equal(value(leaders[0], 71), '1');
+    const style = namedEntityBlock(dxf, 'DIMSTYLE', DXF_DIMENSION_STYLE);
+    assert.ok(style, 'leader-only exports must include their dimension style');
+    const size = Number(value(style, 41));
+    assert.ok(Math.abs(size - 12 / (exportUnit === 'in' ? 25.4 : 1)) < 1e-6);
+    assert.equal(Number(value(style, 140)), size);
+    assert.equal(Number(value(texts[0], 40)), size);
+    assert.equal(Number(value(leaders[0], 40)), size);
+    assert.equal(entityBlocks(dxf, 'LINE').length, 0);
+    assert.equal(entityBlocks(dxf, 'SOLID').length, 0);
+    assert.equal(entityBlocks(dxf, 'TEXT').length, 0);
+  });
+
+  test(`${exportUnit} DXF dimension block text matches its arrow length and dimension style`, () => {
+    const dxf = exportDxf({
+      drawingUnit: 'mm', dxfExportUnit: exportUnit, entities: [],
+      dimensionAnnotations: [{
+        id: 'distance', type: 'dimension-line', dimensionMode: 'driven',
+        start: [0, 0], end: [100, 0], label: [50, -20], text: '100',
+      }],
+    });
+    const value = (block, code) => Number(block.split('\n').find((_, i, lines) => i % 2 === 1 && lines[i - 1] === String(code)));
+    const size = value(namedEntityBlock(dxf, 'DIMSTYLE', DXF_DIMENSION_STYLE), 41);
+    for (const text of entityBlocks(dxf, 'TEXT')) assert.equal(value(text, 40), size);
+    const arrows = entityBlocks(dxf, 'SOLID');
+    assert.equal(arrows.length, 2);
+    for (const arrow of arrows) {
+      const length = Math.hypot(
+        (value(arrow, 11) + value(arrow, 12)) / 2 - value(arrow, 10),
+        (value(arrow, 21) + value(arrow, 22)) / 2 - value(arrow, 20),
+      );
+      assert.ok(Math.abs(length - size) < 2e-6);
+    }
+  });
+}
+
 test('DXF export includes opted-in Driving Dimensions and omits excluded dimensions', () => {
   const dxf = exportDxf({
     drawingUnit: 'mm',

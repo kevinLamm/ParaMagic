@@ -1,3 +1,4 @@
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -11,6 +12,7 @@ import {
   participantStackIds,
   reparentStack,
   reorderStack,
+  stackArchitectureStateForDrawingLoad,
   STACK_ARCHITECTURE_VERSION,
   subtreeStackIds,
   validateStackReparent,
@@ -48,8 +50,8 @@ test('v3 Stack state normalizes a deterministic pre-order tree with canonical fi
 
   assert.equal(state.version, STACK_ARCHITECTURE_VERSION);
   assert.equal(state.activeStackId, firstChildId);
-  assert.deepEqual(state.stacks.map(({ id }) => id), [defaultId, parentId, firstChildId, secondChildId]);
-  assert.deepEqual(state.stacks.map(({ order }) => order), [0, 1, 0, 1]);
+  assert.deepEqual(state.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [defaultId, parentId, firstChildId, secondChildId]);
+  assert.deepEqual(state.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ order }) => order), [0, 1, 0, 1]);
   assert.equal(state.stacks.find(({ id }) => id === secondChildId).enabled, true);
   assert.equal(state.stacks.find(({ id }) => id === secondChildId).enabledExpression, '');
   assert.equal(state.stacks.find(({ id }) => id === firstChildId).enabled, false);
@@ -109,7 +111,7 @@ test('reparent and reorder preserve Stack IDs and reject descendant drops', () =
   ] });
 
   const nested = reparentStack(state, secondId, firstId, 0);
-  assert.deepEqual(nested.stacks.map(({ id }) => id), [defaultId, firstId, secondId, childId]);
+  assert.deepEqual(nested.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), [defaultId, firstId, secondId, childId]);
   assert.deepEqual(nested.stacks.find(({ id }) => id === secondId), {
     ...state.stacks.find(({ id }) => id === secondId), parentStackId: firstId, order: 0,
   });
@@ -133,7 +135,7 @@ test('active Stack fallback prefers an enabled ancestor and then deterministic t
 
   assert.equal(nextActiveStackId(state, [childId], childId), parentId);
   assert.equal(nextActiveStackId(state, [childId, parentId], childId), siblingId);
-  assert.equal(nextActiveStackId(state, state.stacks.map(({ id }) => id), childId), null);
+  assert.equal(nextActiveStackId(state, state.stacks.filter(({ id }) => id !== GLOBAL_LAYER_ID).map(({ id }) => id), childId), null);
 });
 
 test('v2 Stack state migrates flat once without re-running legacy expression rewriting', () => {
@@ -173,6 +175,19 @@ test('v4 preserves an intentionally empty active Stack and rejects drawing conta
     ...state,
     activeStackId: containerId,
   }), /not a drawable Stack/);
+});
+
+test('drawing load starts in Global mode unless an internal reload preserves Stack activation', () => {
+  const defaultId = sid('drawing-load-default');
+  const stored = {
+    version: STACK_ARCHITECTURE_VERSION,
+    activeStackId: defaultId,
+    stacks: [{ id: defaultId, name: 'Default', systemRole: 'default-stack' }],
+  };
+
+  assert.equal(stackArchitectureStateForDrawingLoad(stored).activeStackId, null);
+  assert.equal(stackArchitectureStateForDrawingLoad(stored, { preserveActiveStack: true }).activeStackId, defaultId);
+  assert.equal(stored.activeStackId, defaultId);
 });
 
 test('Stack names are unique case-insensitively and use the standard numeric suffix', () => {

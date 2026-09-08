@@ -1,18 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 import {
   applyValueOnlyExportDimensionAppearance,
   createDimensionValueOnlyPersistence,
+  createDimensionRecord,
+  syncDimensionStackFrames,
   DRIVEN_DIMENSION_PRESENTATION_COLOR,
   dimensionExcludedFromExport,
   dimensionHiddenInTextMode,
   dimensionIncludedInValueOnly,
+  dimensionVisibleInStackContext,
   setDimensionIncludedInValueOnly,
   dimensionTextEditable,
+  finishDimensionLineMove,
   prepareDimensionPresentationClone,
   mclDimensionLayout,
   moveDimensionLine,
   radiusDimensionLayout,
+  syncDimensionRecordPresentation,
   updateDimensionPresentationScale,
   uprightDimensionControlPoint,
 } from '../../packages/paramagic-core/src/modules/DimensionSystem.js';
@@ -25,6 +31,38 @@ function attributeNode() {
     setAttribute(name, value) { attributes.set(name, String(value)); },
     getAttribute(name) { return attributes.get(name) || ''; },
   };
+}
+
+for (const dimensionMode of ['driving', 'driven']) {
+  test(`${dimensionMode} inclusion toggle uses the current entity after a Stack frame update`, () => {
+    const entity = { id: 'dimension', dimensionId: 'parameter', stackId: 'stack', type: 'dimension-line',
+      dimensionMode, subtype: 'horizontal', start: [0, 0], end: [20, 0], label: [10, -10], text: '20' };
+    const persisted = [];
+    const add = (_parent, _tag, attributes) => {
+      const node = Object.assign(attributeNode(), {
+        dataset: { recordId: attributes['data-record-id'] },
+        classList: { toggle() {} }, listeners: {},
+        addEventListener(type, listener) { this.listeners[type] = listener; },
+      });
+      Object.entries(attributes).forEach(([key, value]) => node.setAttribute(key, value));
+      return node;
+    };
+    const record = createDimensionRecord({ add, objectLayer: {}, entity, scale: 1,
+      updateRecordHandles() {}, bindRecordEvents() {}, onToggleExport: (current) => { persisted.push(current); return true; } });
+    const previous = { stacks: [{ id: 'stack', frame: { x: 0, y: 0, rotation: 0 } }] };
+    const next = { stacks: [{ id: 'stack', frame: { x: 30, y: 20, rotation: Math.PI / 4 } }] };
+    syncDimensionStackFrames([record], previous, next);
+    assert.notEqual(record.entity, entity);
+    const initial = dimensionIncludedInValueOnly(record.entity);
+    record.exportToggle.listeners.click({ preventDefault() {}, stopPropagation() {} });
+    assert.equal(dimensionIncludedInValueOnly(record.entity), !initial);
+    assert.equal(record.exportToggle.getAttribute('aria-pressed'), String(!initial));
+    assert.equal(persisted[0], record.entity);
+    assert.equal(dimensionIncludedInValueOnly(entity), initial);
+    record.exportToggle.listeners.keydown({ key: 'Enter', preventDefault() {}, stopPropagation() {} });
+    assert.equal(dimensionIncludedInValueOnly(record.entity), initial);
+    assert.equal(persisted[1], record.entity);
+  });
 }
 
 test('Value Only inclusion defaults to driven dimensions and can be enabled for driving dimensions', () => {
@@ -52,6 +90,49 @@ test('Value Only view hides dimensions not included in that presentation', () =>
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'value'), true);
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'named-value'), false);
   assert.equal(dimensionHiddenInTextMode(excludedDriven, 'expression'), false);
+});
+
+test('Stack dimension presentation follows active Stack and Value Only inclusion', () => {
+  const excludedLocal = { stackId: 'stack-a', dimensionMode: 'driving' };
+  const includedLocal = { ...excludedLocal, includeInValueOnly: true };
+  const global = { ...excludedLocal, stackId: GLOBAL_LAYER_ID, coordinateSpace: 'global' };
+
+  assert.equal(dimensionVisibleInStackContext(excludedLocal, null), false);
+  assert.equal(dimensionVisibleInStackContext(excludedLocal, 'stack-a'), true);
+  assert.equal(dimensionVisibleInStackContext(excludedLocal, 'stack-b'), true);
+  assert.equal(dimensionVisibleInStackContext(includedLocal, null), true);
+  assert.equal(dimensionVisibleInStackContext(global, null), true);
+
+  const attributes = new Map();
+  const classes = new Set();
+  const record = {
+    entity: excludedLocal,
+    dimensionParentsVisible: true,
+    group: {
+      style: {},
+      classList: {
+        toggle(name, enabled) {
+          if (enabled) classes.add(name);
+          else classes.delete(name);
+        },
+      },
+      setAttribute(name, value) { attributes.set(name, String(value)); },
+    },
+  };
+
+  assert.equal(syncDimensionRecordPresentation(record), false);
+  assert.equal(record.group.style.display, 'none');
+  assert.equal(attributes.get('aria-hidden'), 'true');
+
+  record.entity = includedLocal;
+  assert.equal(syncDimensionRecordPresentation(record), true);
+  assert.equal(record.group.style.display, '');
+  assert.equal(attributes.get('aria-hidden'), 'false');
+
+  record.entity = excludedLocal;
+  assert.equal(syncDimensionRecordPresentation(record, { activeStackId: 'stack-b' }), true);
+  assert.equal(syncDimensionRecordPresentation(record, { activeStackId: 'stack-b', textMode: 'value' }), false);
+  assert.equal(record.group.style.display, 'none');
 });
 
 test('Driving Dimension text becomes read-only when shown in Value Only view', () => {
@@ -179,6 +260,26 @@ test('diameter dimension spans both circle edges and renders two arrowheads', ()
   assert.notEqual(layout.arrowB, '');
 });
 
+test('diameter placement keeps its direction and gap from the circle when the radius changes', () => {
+  const layout = radiusDimensionLayout({
+    type: 'radius-dimension',
+    subtype: 'diameter',
+    center: [0, 0],
+    radius: 80,
+    elbow: [30, -20],
+    label: [62, -20],
+    offsetDirection: [0.6, -0.8],
+    offsetDistance: 25,
+  }, 1);
+
+  assert.deepEqual(layout.target, [48, -64]);
+  assert.deepEqual(layout.elbow, [63, -84]);
+  assert.ok(Math.abs(Math.hypot(
+    layout.elbow[0] - layout.target[0],
+    layout.elbow[1] - layout.target[1],
+  ) - 25) < 1e-9);
+});
+
 test('multi-length dimension text ends at the horizontal leader endpoint on the left side', () => {
   const entity = {
     type: 'multi-curve-length-dimension',
@@ -250,6 +351,7 @@ test('dimension presentation snapshots recompute arrows, labels, and offsets at 
 test('dragging a radius dimension keeps its text attached to the leader landing', () => {
   const entity = {
     type: 'radius-dimension',
+    dimensionId: 'radius-parameter',
     center: [0, 0],
     radius: 50,
     elbow: [30, -20],
@@ -267,4 +369,18 @@ test('dragging a radius dimension keeps its text attached to the leader landing'
 
   const layout = radiusDimensionLayout(entity, 1);
   assert.deepEqual(entity.label, layout.landingEnd);
+  assert.ok(Math.abs(entity.offsetDirection[0] - 50 / Math.sqrt(2600)) < 1e-9);
+  assert.ok(Math.abs(entity.offsetDirection[1] - 10 / Math.sqrt(2600)) < 1e-9);
+  assert.ok(Math.abs(entity.offsetDistance - (Math.sqrt(2600) - 50)) < 1e-9);
+
+  let stored = null;
+  assert.equal(finishDimensionLineMove(record, {
+    updateDimensionAnnotation(dimensionId, annotation) {
+      stored = { dimensionId, annotation: structuredClone(annotation) };
+      return true;
+    },
+  }), true);
+  assert.equal(stored.dimensionId, 'radius-parameter');
+  assert.deepEqual(stored.annotation.offsetDirection, entity.offsetDirection);
+  assert.equal(stored.annotation.offsetDistance, entity.offsetDistance);
 });
