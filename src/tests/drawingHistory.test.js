@@ -1,6 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DrawingHistory } from '../../packages/paramagic-core/src/modules/DrawingHistory.js';
+import { createDrawingUpdateCoordinator } from '../../packages/paramagic-core/src/modules/DrawingUpdateCoordinator.js';
+
+test('a coordinated restore publishes inside the history boundary and preserves Redo', async () => {
+  let state = { width: 63.5, derivedWidth: 63.5 };
+  const updates = createDrawingUpdateCoordinator({ publish: () => history.record() });
+  updates.register('dependent', () => { state.derivedWidth = state.width; });
+  const history = new DrawingHistory({ capture: () => state, restore: snapshot => {
+    state = snapshot;
+    updates.invalidate();
+    updates.flush();
+  } });
+  state.width = 74;
+  updates.invalidate();
+  updates.flush();
+  assert.equal(history.past.length, 1);
+  assert.equal(history.undo(), true);
+  await Promise.resolve();
+  assert.deepEqual(state, { width: 63.5, derivedWidth: 63.5 });
+  assert.equal(history.future.length, 1);
+  assert.equal(history.redo(), true);
+  await Promise.resolve();
+  assert.deepEqual(state, { width: 74, derivedWidth: 74 });
+  assert.equal(history.past.length, 1);
+});
 
 test('drawing history restores complete snapshots through undo and redo', () => {
   let state = { name: '', drawing: { entities: [], parameters: [] } };

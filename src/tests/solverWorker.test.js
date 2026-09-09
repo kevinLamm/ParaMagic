@@ -493,3 +493,21 @@ test('solver worker client keeps committed mutations ordered and non-droppable',
   assert.equal((await second).status, 'completed');
   client.terminate();
 });
+
+
+test('pointer input invalidates an in-flight preview before the next frame dispatch', async () => {
+  const worker = new ManualWorker();
+  const client = new SolverWorkerClient(worker);
+  const preview = client.dragUpdate([{ id: 'point', type: 'point', point: [1, 0] }]);
+  client.supersedeInteractivePreview();
+  worker.respond(createSolverWorkerResult(worker.messages[0], {
+    status: 'converged', changedEntities: [{ id: 'point', type: 'point', point: [1, 0] }],
+  }));
+  assert.equal((await preview).status, 'stale');
+  const latest = client.dragUpdate([{ id: 'point', type: 'point', point: [9, 4] }]);
+  worker.respond(createSolverWorkerResult(worker.messages[1], {
+    status: 'converged', changedEntities: [{ id: 'point', type: 'point', point: [9, 4] }],
+  }));
+  assert.deepEqual((await latest).changedEntities[0].point, [9, 4]);
+  client.terminate();
+});

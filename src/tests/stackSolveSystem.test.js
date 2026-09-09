@@ -406,7 +406,7 @@ test('failed Stack solves identify the participating Stack names and offending r
 
   assert.match(failure.message, /Bodice Front/);
   assert.match(failure.message, /Bodice Back/);
-  assert.match(failure.message, /Coincident \(cross-ab\)/);
+  assert.match(failure.message, /Largest remaining constraint error: Coincident/);
   assert.deepEqual(failure.offender, {
     stackIds: ['stack-a', 'stack-b'],
     constraintId: 'cross-ab',

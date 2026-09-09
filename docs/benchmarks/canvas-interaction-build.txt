@@ -1,0 +1,36 @@
+
+> paramagic@0.1.0 build
+> node scripts/validate-app.js && vite build
+
+Validated 15 required files, syntax-checked 207 JavaScript files, audited 95 production files, and verified 7 extension UUID schemas.
+vite v8.2.2 building server environment for production...
+transforming...
+✓ 4 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/server/.vite/manifest.json  0.15 kB │ gzip: 0.11 kB
+dist/server/wrangler.json        1.26 kB │ gzip: 0.65 kB
+dist/server/index.js             0.21 kB │ gzip: 0.16 kB
+
+✓ built in 18ms
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 99 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/client/.assetsignore                                       0.02 kB
+dist/client/index.html                                          0.59 kB │ gzip:   0.40 kB
+dist/client/assets/MontserratLight-6YemM-CCBnFAy6.otf         227.30 kB
+dist/client/assets/MontserratExtrabold-VGO60-CS85DtgK.ttf     277.35 kB
+dist/client/assets/opencv-AjJB4fSW.js                      13,298.86 kB
+dist/client/assets/index-RsBMOzTV.css                          97.32 kB │ gzip:  16.09 kB
+dist/client/assets/cpexcel.full-CAlsa5X_.js                   442.90 kB │ gzip: 173.98 kB
+dist/client/assets/xlsx-DwRHmDrW.js                           492.52 kB │ gzip: 160.52 kB
+dist/client/assets/index-BEtLzkdk.js                        1,164.30 kB │ gzip: 333.88 kB
+
+✓ built in 383ms
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

@@ -534,10 +534,9 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .linked-copy-content,
 .linked-copy-content * { pointer-events: none !important; }
 .linked-copy-group.linked-copy-driving-dimension { cursor: default; }
-.linked-copy-group .linked-copy-driving-handles .point-handle { opacity: 0; pointer-events: none; }
-.canvas.constraint-selection-active .linked-copy-group .linked-copy-driving-handles .point-handle { opacity: 1; pointer-events: all; }
-.linked-copy-group.linked-copy-driving-dimension .linked-copy-driving-handles.hovered .point-handle,
-.linked-copy-group.linked-copy-driving-dimension .linked-copy-driving-handles .point-handle.smart-selected { opacity: 1; pointer-events: all; }
+.linked-copy-group .linked-copy-driving-handles .point-handle.linked-copy-driving-handle { opacity: 0; pointer-events: none; }
+.linked-copy-group .linked-copy-driving-handles.hovered .point-handle,
+.linked-copy-group .linked-copy-driving-handles .point-handle:is(.hovered, .selected, .smart-selected, .overlap-cycle-selected, .object-snap-target) { opacity: 1; pointer-events: all; }
 .linked-copy-group:not(.linked-copy-driving-dimension):hover .linked-copy-content .selectable-entity:not(.hit-target):not(.segment-select-line),
 .linked-copy-group:not(.linked-copy-driving-dimension).hovered .linked-copy-content .selectable-entity:not(.hit-target):not(.segment-select-line) { stroke: #FFCE1B !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
 .linked-copy-group:not(.linked-copy-driving-dimension).selected:not(.hovered) .linked-copy-content .selectable-entity:not(.hit-target):not(.segment-select-line) { stroke: rgba(0,0,255,.7) !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
@@ -567,6 +566,7 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .dimension-arrow { stroke: #7F00FF; stroke-width: .7; vector-effect: non-scaling-stroke; fill: #7F00FF; pointer-events: all; }
 .dimension-text { fill: #7F00FF; stroke: none; font-size: 14px; filter: none; paint-order: normal; stroke-width: 0; pointer-events: bounding-box; }
 .dimension-text-hit { fill: transparent; stroke: none; pointer-events: all; }
+.overlap-cycle-status { position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px); padding: 8px 12px; border: 1px solid #00AEEF; border-radius: 6px; background: #fff; color: #16324f; font: 12px/1.5 system-ui, sans-serif; pointer-events: none; z-index: 20; }
 .canvas.constraint-selection-active .dimension-record,
 .canvas.constraint-selection-active .dimension-record *,
 .canvas.dimension-selection-active .dimension-record,

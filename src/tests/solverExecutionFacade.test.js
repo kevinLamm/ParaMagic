@@ -371,3 +371,48 @@ test('solver facade exposes guarded block Jacobian configuration without changin
   assert.equal(facade.executionStatus().jacobianMode, 'blocks');
   assert.equal(facade.controller.jacobianMode, 'blocks');
 });
+
+
+test('presentation mutations retain the worker model and graph and flush before a following edit', async () => {
+  const worker = new LoopbackWorker();
+  const messages = [];
+  const send = worker.postMessage.bind(worker);
+  worker.postMessage = (message) => { messages.push(message); send(message); };
+  const facade = createSolverExecutionFacade({ mode: 'worker-drag', workerClient: new SolverWorkerClient(worker) });
+  facade.addEntity({ id: 'source', type: 'line', start: [0, 0], end: [20, 0] });
+  await facade.verifyWorkerParity();
+  const graph = worker.runtime.controller.getConstraintGraph();
+  messages.length = 0;
+  facade.updateEntity({ ...facade.getEntity('source'), appearance: { strokeColor: '#ff0000' } });
+  facade.updateEntity({ ...facade.getEntity('source'), construction: true });
+  facade.setExternalStackRelationships([{ id: 'external', featureRefs: [], operation: { apply() {} } }]);
+  facade.beginDrag(facade.variableIdsForEntity('source'));
+  await facade.updateEntitiesInteractive([{ ...facade.getEntity('source'), start: [2, 3], end: [22, 3] }]);
+  await facade.endDragInteractive();
+  assert.equal((await facade.verifyWorkerParity()).matched, true);
+  assert.equal(worker.runtime.controller.getConstraintGraph(), graph);
+  assert.equal(messages.filter(({ type }) => type === 'load-sketch').length, 0);
+  assert.equal(messages[0].type, 'update-model');
+  assert.equal(messages[0].payload.updates.filter(({ method }) => method === 'updateEntity').length, 1);
+  facade.terminate();
+});
+
+
+test('worker checkpoints include derived fillets before their constraints are restored', async () => {
+  const facade = createSolverExecutionFacade({ mode: 'worker-drag', workerClient: new SolverWorkerClient(new LoopbackWorker()) });
+  facade.loadSketch({
+    entities: [
+      { id: 'h', type: 'line', start: [0, 0], end: [100, 0] },
+      { id: 'v', type: 'line', start: [0, 0], end: [0, 100] },
+      { id: 'p', type: 'point', point: [10 - 10 / Math.sqrt(2), 10 - 10 / Math.sqrt(2)] },
+    ],
+    derivedEntities: [{ id: 'fillet', type: 'fillet', sourceA: { recordId: 'h', index: 0 }, sourceB: { recordId: 'v', index: 0 }, radius: 10 }],
+    constraints: [{ id: 'on-fillet', type: 'Point-on Fillet', featureRefs: [{kind:'point',recordId:'p',index:0},{kind:'arc',recordId:'fillet'}] }],
+  });
+  const parity = await facade.verifyWorkerParity();
+  assert.equal(parity.matched, true);
+  assert.equal(parity.result.snapshot.derivedEntities.length, 1);
+  assert.notEqual(parity.result.snapshot.constraints[0].enabled, false);
+  assert.equal(parity.result.snapshot.constraints[0].loadError, undefined);
+  facade.terminate();
+});

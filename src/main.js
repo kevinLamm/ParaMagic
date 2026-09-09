@@ -1586,11 +1586,15 @@ const drawingHistory = new DrawingHistory({
     canvasController.loadDrawingData(state.drawing, {
       zoomToFit: false,
       preserveStackActivation: true,
+      history: 'none',
     });
     setDrawingName(state.name || 'Untitled Drawing');
     const mode = dimensionTextModeButton.dataset.dimensionTextMode;
     canvasController.setDimensionTextMode(mode);
     constraintController.setHelpersVisible(mode !== 'value');
+    // Restored dependencies and their notifications belong to this restore,
+    // while DrawingHistory is still suppressing new history entries.
+    canvasController.flushDrawingUpdate();
     updateDrawingActionState();
     browserAutosaveController?.schedule();
   },

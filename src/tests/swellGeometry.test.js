@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   deriveSwellBoundaries,
   deriveSwellGeometry,
+  createSwellGeometryEvaluator,
   isSwellEntity,
   normalizeSwellDefinition,
   resolveSwellTransitionDistances,
@@ -425,4 +426,30 @@ test('closed Swell geometry exposes stable analytic boundary features for downst
   assert.ok(boundary.features.every((feature) => feature.sourceId === source.id));
   assert.ok(boundary.features.every((feature) => feature.targetId === boundary.id));
   assert.ok(boundary.features.every((feature) => feature.stableKey.startsWith(`swell-boundary:${boundary.id}:`)));
+});
+
+
+test('Swell evaluation reuses unaffected components and invalidates changed expressions and endpoint neighbours', () => {
+  const evaluate = createSwellGeometryEvaluator();
+  const entities = [
+    withSwellDefinition({ id: 'first', type: 'line', start: [0, 0], end: [20, 0] }, definition()),
+    withSwellDefinition({ id: 'neighbour', type: 'line', start: [20, 0], end: [20, 20] }, definition()),
+    withSwellDefinition({ id: 'separate', type: 'line', start: [100, 0], end: [120, 0] }, definition()),
+  ];
+  const values = { ...VALUES };
+  const options = { entities, evaluateLength: (key) => values[key] ?? Number(key) };
+  const first = evaluate(options);
+  assert.deepEqual(first, deriveSwellGeometry(options));
+  entities[0].start[0] = -2;
+  const changed = evaluate(options);
+  assert.notEqual(changed.get('first'), first.get('first'));
+  assert.notEqual(changed.get('neighbour'), first.get('neighbour'));
+  assert.equal(changed.get('separate'), first.get('separate'));
+  assert.deepEqual(changed, deriveSwellGeometry(options));
+  values.offset = 2;
+  const parameterChange = evaluate(options);
+  assert.notEqual(parameterChange.get('separate'), changed.get('separate'));
+  assert.deepEqual(parameterChange, deriveSwellGeometry(options));
+  entities.pop();
+  assert.equal(evaluate(options).has('separate'), false);
 });

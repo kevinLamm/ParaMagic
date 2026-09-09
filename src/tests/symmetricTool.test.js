@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   applyMatrix,
+  syncLinkedCopyHandleHover,
   duplicateDerivedRecordId,
   linkedCoincidentPositionTarget,
   linkedConstraintHelperVisible,
@@ -29,6 +30,28 @@ import {
   selectionIdsFromTarget,
   symmetricDerivedRecordId,
 } from '../../packages/paramagic-core/src/modules/SymmetricTool.js';
+
+test('duplicate and symmetric handles only hover near their full point area, regardless of tool activation', () => {
+  const makeHandle = (x) => {
+    const classes = new Set(['smart-selected']);
+    return {
+      classes, closest: () => null,
+      getBoundingClientRect: () => ({ left: x - 6, top: 94, width: 12, height: 12 }),
+      classList: { toggle: (name, value) => value ? classes.add(name) : classes.delete(name) },
+    };
+  };
+  const duplicate = makeHandle(100), symmetric = makeHandle(200);
+  const groups = [duplicate, symmetric].map(handle => ({ querySelectorAll: () => [handle] }));
+  assert.equal(syncLinkedCopyHandleHover(groups, { clientX: 108, clientY: 100 }), 1);
+  assert.equal(duplicate.classes.has('hovered'), true);
+  assert.equal(symmetric.classes.has('hovered'), false);
+  assert.equal(syncLinkedCopyHandleHover(groups, { clientX: 208, clientY: 100 }), 1);
+  assert.equal(duplicate.classes.has('hovered'), false);
+  assert.equal(symmetric.classes.has('hovered'), true);
+  assert.equal(syncLinkedCopyHandleHover(groups, { clientX: 208, clientY: 100 }, false), 0);
+  assert.equal(symmetric.classes.has('hovered'), false);
+  assert.equal(duplicate.classes.has('smart-selected'), true, 'hover updates preserve selected handles');
+});
 import { resolveVectorDrawingPoint } from '../../packages/paramagic-core/src/modules/DrawingTools.js';
 import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
 import { transformStackPoint } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';

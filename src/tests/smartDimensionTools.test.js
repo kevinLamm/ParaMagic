@@ -4,6 +4,7 @@ import {
   bindDimensionRecordInteractions,
   candidateFromSelections,
   commitSmartDimensionCandidate,
+  createSmartDimensionTools,
   DIMENSION_EDIT_INPUT_MAXIMUM_HEIGHT,
   DIMENSION_EDIT_INPUT_MINIMUM_HEIGHT,
   dimensionAnchorRecordIds,
@@ -20,6 +21,53 @@ import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modu
 import { GLOBAL_LAYER_ID } from '../../packages/paramagic-core/src/modules/StackCoordinates.js';
 
 const normalLengthTolerance = (value) => DEFAULT_SOLVE_TOLERANCE * Math.max(1, Math.abs(value));
+
+for (const mode of ['driving', 'driven']) {
+  test(`${mode} dimension picking prioritizes a nearby point but honors an explicitly cycled edge`, () => {
+    const previousWindow = globalThis.window;
+    globalThis.window = new EventTarget();
+    let activate, delegate, selected;
+    const pointNode = {
+      closest: () => null,
+      getBoundingClientRect: () => ({ left: 94, top: 94, width: 12, height: 12 }),
+    };
+    const point = { kind: 'point', recordId: 'endpoint', index: 2, point: [100, 100], node: pointNode };
+    const edgeNode = {};
+    const edge = { kind: 'segment', recordId: 'neighbor', index: 0, start: [0, 105], end: [200, 105], node: edgeNode };
+    const button = {
+      dataset: { dimensionTool: mode === 'driven' ? 'Smart Driven Dimension' : 'Smart Driving Dimension' },
+      classList: { toggle() {}, remove() {} }, setAttribute() {},
+      addEventListener: (_name, listener) => { activate = listener; },
+    };
+    const canvas = {
+      getCanvasElement: () => ({ classList: { toggle() {}, contains: () => false } }),
+      getHandleLayer: () => ({ querySelectorAll: () => [pointNode] }),
+      getFeatureFromEvent: event => (event.paramagicSelectionTarget || event.target) === pointNode ? point : edge,
+      screenToWorld: (x, y) => [x, y],
+      setSmartDimensionDelegate: value => { delegate = value; },
+      setSmartDimensionFeatureSelection: value => { selected = value; },
+      clearPreview() {}, setDimensionPreview() {},
+    };
+    try {
+      const tool = createSmartDimensionTools({ toolbar: { querySelectorAll: () => [button] }, canvas });
+      activate();
+      const event = { button: 0, clientX: 107, clientY: 100, target: edgeNode, preventDefault() {}, stopPropagation() {} };
+      delegate.pointerDown(event);
+      assert.equal(selected[0], point);
+      tool.clearSelections();
+      delegate.pointerDown({ ...event, paramagicSelectionTarget: edgeNode });
+      assert.equal(selected[0].kind, 'segment');
+      assert.equal(selected[0].recordId, edge.recordId);
+      if (mode === 'driven') {
+        tool.clearSelections();
+        delegate.pointerDown({ ...event, ctrlKey: true });
+        assert.equal(selected[0].kind, 'segment', 'multi-curve length mode must retain geometry picking');
+      }
+    } finally {
+      globalThis.window = previousWindow;
+    }
+  });
+}
 
 test('Driving Dimension editing uses the shared multiline expression box lookup', () => {
   const markup = dimensionEditPanelMarkup();
@@ -85,7 +133,7 @@ function dimensionInteractionGroup() {
   };
 }
 
-test('Driving Dimension text opens on the second press without starting another drag', () => {
+test('Driving Dimension opens on the completed second click so the launching release cannot dismiss it', () => {
   const group = dimensionInteractionGroup();
   const record = {
     group,
@@ -105,12 +153,60 @@ test('Driving Dimension text opens on the second press without starting another 
     clientY: 53,
     detail: 2,
   });
+  assert.equal(editCount, 0, 'opening before release can retarget click outside the label');
+  group.dispatch('pointerup');
+  const click = group.dispatch('click', { detail: 2 });
+  assert.equal(click.immediatePropagationStopped, true);
   group.dispatch('dblclick', { timeStamp: 230, detail: 2, clientX: 43, clientY: 53 });
 
-  assert.equal(dragCount, 1);
+  assert.equal(dragCount, 0);
   assert.equal(editCount, 1);
   assert.equal(secondPress.defaultPrevented, true);
   assert.equal(secondPress.immediatePropagationStopped, true);
+});
+
+test('Dimension press jitter does not capture a drag; deliberate movement starts from the original press', () => {
+  const group = dimensionInteractionGroup();
+  const record = { group, entity: { dimensionMode: 'driving', dimensionId: 'length' } };
+  const drags = [];
+  let edits = 0;
+  bindDimensionRecordInteractions(record, {
+    beginLineDrag: (event) => drags.push([event.clientX, event.clientY]),
+    editText: () => edits++,
+  });
+  group.dispatch('pointerdown');
+  group.dispatch('pointermove', { clientX: 42, clientY: 51 });
+  assert.deepEqual(drags, []);
+  group.dispatch('pointermove', { clientX: 50 });
+  assert.deepEqual(drags, [[40, 50]]);
+  group.dispatch('pointerup');
+  group.dispatch('pointerdown', { timeStamp: 200, detail: 2 });
+  assert.equal(edits, 0, 'drag must not count as first half of double-click');
+  group.dispatch('pointercancel');
+  group.dispatch('pointermove', { clientX: 70 });
+  assert.equal(drags.length, 1);
+});
+
+test('Dimension pointer release outside the label disarms dragging, while a second click can still edit', () => {
+  const group = dimensionInteractionGroup();
+  const surface = dimensionInteractionGroup();
+  group.ownerDocument = surface;
+  let edits = 0;
+  let drags = 0;
+  const dispose = bindDimensionRecordInteractions({ group, entity: { dimensionMode: 'driving', dimensionId: 'length' } }, {
+    beginLineDrag: () => drags++, editText: () => edits++,
+  });
+  group.dispatch('pointerdown');
+  surface.dispatch('pointerup');
+  surface.dispatch('pointermove', { clientX: 100 });
+  assert.equal(drags, 0);
+  group.dispatch('pointerdown', { timeStamp: 300 });
+  surface.dispatch('pointerup');
+  group.dispatch('click');
+  assert.equal(edits, 1);
+  dispose();
+  group.dispatch('pointerdown', { timeStamp: 400 });
+  assert.equal(edits, 1);
 });
 
 test('Dimension text hit bounds provide a screen-sized hover area at every zoom', () => {

@@ -177,3 +177,25 @@ test('Properties panel edits become persistent class overrides without freezing 
   assert.equal(resolved.strokeThickness, 8);
   assert.deepEqual(records[0].entity.classPropertyOverrides, ['fill']);
 });
+
+
+test('appearance evaluation is reused and invalidated when parameter values change', () => {
+  let value = 50, evaluations = 0, changed;
+  const solver = {
+    subscribe(listener) { changed = listener; },
+    evaluateParameterExpression(expression) { evaluations += 1; return expression === 'opacity' ? value : Number(expression); },
+    evaluateDrawingLengthExpression: Number,
+  };
+  const system = createGeometryAppearanceSystem({ records: [], selectedIds: new Set(), solver });
+  const entity = { id: 'shape', type: 'circle', radius: 10, appearance: { fillOpacityExpression: 'opacity' } };
+  const first = system.appearance(entity);
+  const count = evaluations;
+  assert.equal(first.fillOpacity, 0.5);
+  assert.equal(system.appearance(entity), first);
+  assert.equal(evaluations, count);
+  value = 25;
+  changed();
+  assert.equal(system.appearance(entity).fillOpacity, 0.25);
+  entity.appearance.strokeColor = '#ff0000';
+  assert.equal(system.appearance(entity).strokeColor, '#ff0000');
+});

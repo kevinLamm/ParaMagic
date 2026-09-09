@@ -16,6 +16,16 @@ import {
 } from '../../packages/paramagic-core/src/modules/ConstraintSystem.js';
 import { canvasOriginPointFeature } from '../../packages/paramagic-core/src/modules/CanvasOrigin.js';
 
+test('constraint overlap candidates distinguish coincident handles from parallel edges', () => {
+  const canvas = { getFeatureFromEvent: event => event.paramagicSelectionTarget.feature };
+  const point = constraintFeatureFromEvent(canvas, { paramagicSelectionTarget: { feature: { kind: 'point', index: 2 } } });
+  const edge = constraintFeatureFromEvent(canvas, { paramagicSelectionTarget: { feature: { kind: 'segment', index: 0 } } });
+  assert.equal(featureAllowed('Coincident', point), true);
+  assert.equal(featureAllowed('Coincident', edge), false);
+  assert.equal(featureAllowed('Parallel', point), false);
+  assert.equal(featureAllowed('Parallel', edge), true);
+});
+
 test('constraint helpers require every referenced record to be visible', () => {
   const constraint = {
     featureRefs: [
@@ -184,4 +194,47 @@ test('constraint feature picking includes rendered linked-copy geometry', () => 
 
   assert.equal(constraintFeatureFromEvent(canvas, event), expected);
   assert.deepEqual(calls, [[event, { rendered: true }]]);
+});
+
+function pointPriorityFixture() {
+  const edge = { kind: 'segment', recordId: 'nearby-line', index: 0 };
+  const handle = (recordId, x, y, options = {}) => ({
+    feature: { kind: 'point', recordId, index: 2 },
+    closest: () => options.hidden ? {} : null,
+    getBoundingClientRect: () => ({ left: x - 6, top: y - 6, width: 12, height: 12 }),
+    ownerDocument: { defaultView: { getComputedStyle: () => ({
+      display: 'inline', visibility: 'visible', opacity: '0', pointerEvents: 'none',
+    }) } },
+  });
+  const handles = [handle('endpoint', 100, 100), handle('farther-endpoint', 104, 100)];
+  const canvas = {
+    getHandleLayer: () => ({ querySelectorAll: () => handles }),
+    getFeatureFromEvent: (event) => (event.paramagicSelectionTarget || event.target)?.feature || edge,
+  };
+  return { canvas, handles, handle, edge, event: { clientX: 99, clientY: 101, target: { feature: edge } } };
+}
+
+test('Coincident prefers the nearest rendered handle over a neighboring line hit area', () => {
+  const { canvas, event, handles } = pointPriorityFixture();
+  assert.equal(constraintFeatureFromEvent(canvas, event, 'Coincident'), handles[0].feature);
+});
+
+test('point priority uses screen distance and does not capture clicks outside the handle area', () => {
+  const { canvas, event, edge, handles } = pointPriorityFixture();
+  assert.equal(constraintFeatureFromEvent(canvas, { ...event, clientX: 92, clientY: 100 }, 'Coincident'), handles[0].feature);
+  assert.equal(constraintFeatureFromEvent(canvas, { ...event, clientX: 90, clientY: 100 }, 'Coincident'), edge);
+});
+
+test('point priority preserves direct point hits, explicit cycle choices, and edge-only tools', () => {
+  const { canvas, event, handles, edge } = pointPriorityFixture();
+  assert.equal(constraintFeatureFromEvent(canvas, { ...event, target: handles[1] }, 'Coincident'), handles[1].feature);
+  assert.equal(constraintFeatureFromEvent(canvas, { ...event, paramagicSelectionTarget: event.target }, 'Point-on'), edge);
+  assert.equal(constraintFeatureFromEvent(canvas, event, 'Parallel'), edge);
+});
+
+test('point priority excludes hidden geometry and keeps derived point identity', () => {
+  const { canvas, event, handles, handle } = pointPriorityFixture();
+  handles.splice(0, handles.length, handle('hidden', 99, 101, { hidden: true }),
+    handle('duplicate-derived:copy:source', 100, 100));
+  assert.equal(constraintFeatureFromEvent(canvas, event, 'Coincident'), handles[1].feature);
 });

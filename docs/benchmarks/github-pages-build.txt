@@ -1,0 +1,25 @@
+
+> paramagic@0.1.0 build:pages
+> node scripts/validate-app.js && vite build --mode github-pages
+
+Validated 15 required files, syntax-checked 209 JavaScript files, audited 95 production files, and verified 7 extension UUID schemas.
+vite v8.2.2 building client environment for github-pages...
+transforming...
+✓ 99 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-pages/index.html                                          0.61 kB │ gzip:   0.41 kB
+dist-pages/assets/MontserratLight-6YemM-CCBnFAy6.otf         227.30 kB
+dist-pages/assets/MontserratExtrabold-VGO60-CS85DtgK.ttf     277.35 kB
+dist-pages/assets/opencv-AjJB4fSW.js                      13,298.86 kB
+dist-pages/assets/index-qzgyFaYY.css                          97.27 kB │ gzip:  16.11 kB
+dist-pages/assets/cpexcel.full-CAlsa5X_.js                   442.90 kB │ gzip: 173.98 kB
+dist-pages/assets/xlsx-DwRHmDrW.js                           492.52 kB │ gzip: 160.52 kB
+dist-pages/assets/index-DXE-Bqz4.js                        1,167.23 kB │ gzip: 334.86 kB
+
+✓ built in 389ms
+[plugin builtin:vite-reporter]
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

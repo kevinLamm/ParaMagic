@@ -1,0 +1,370 @@
+TAP version 13
+# Subtest: the entire point perimeter is hittable without a parent geometry hover
+ok 1 - the entire point perimeter is hittable without a parent geometry hover
+  ---
+  duration_ms: 0.5842
+  type: 'test'
+  ...
+# Subtest: ordinary window selection replaces the existing selection
+ok 2 - ordinary window selection replaces the existing selection
+  ---
+  duration_ms: 0.4859
+  type: 'test'
+  ...
+# Subtest: Ctrl window selection adds a new group to the existing selection
+ok 3 - Ctrl window selection adds a new group to the existing selection
+  ---
+  duration_ms: 0.0797
+  type: 'test'
+  ...
+# Subtest: Ctrl window selection toggles an already selected group like Ctrl pick selection
+ok 4 - Ctrl window selection toggles an already selected group like Ctrl pick selection
+  ---
+  duration_ms: 0.5248
+  type: 'test'
+  ...
+# Subtest: constraint overlap candidates distinguish coincident handles from parallel edges
+ok 5 - constraint overlap candidates distinguish coincident handles from parallel edges
+  ---
+  duration_ms: 1.1955
+  type: 'test'
+  ...
+# Subtest: constraint helpers require every referenced record to be visible
+ok 6 - constraint helpers require every referenced record to be visible
+  ---
+  duration_ms: 0.1142
+  type: 'test'
+  ...
+# Subtest: constraint helpers require both Stack and region visibility
+ok 7 - constraint helpers require both Stack and region visibility
+  ---
+  duration_ms: 0.0832
+  type: 'test'
+  ...
+# Subtest: constraint helper visibility handles duplicate and missing feature references
+ok 8 - constraint helper visibility handles duplicate and missing feature references
+  ---
+  duration_ms: 0.399
+  type: 'test'
+  ...
+# Subtest: the built-in origin does not make a constraint helper appear hidden
+ok 9 - the built-in origin does not make a constraint helper appear hidden
+  ---
+  duration_ms: 0.1149
+  type: 'test'
+  ...
+# Subtest: constraint helpers appear only when their constraint touches the active Stack
+ok 10 - constraint helpers appear only when their constraint touches the active Stack
+  ---
+  duration_ms: 0.1188
+  type: 'test'
+  ...
+# Subtest: constraint helper overlay remains available for the Global layer with no active Stack
+ok 11 - constraint helper overlay remains available for the Global layer with no active Stack
+  ---
+  duration_ms: 0.1252
+  type: 'test'
+  ...
+# Subtest: constraint helpers switch between Global-layer and active-Stack relevance
+ok 12 - constraint helpers switch between Global-layer and active-Stack relevance
+  ---
+  duration_ms: 0.0785
+  type: 'test'
+  ...
+# Subtest: incremental constraint-helper refresh identifies only constraints touching changed records
+ok 13 - incremental constraint-helper refresh identifies only constraints touching changed records
+  ---
+  duration_ms: 0.2003
+  type: 'test'
+  ...
+# Subtest: constraint selection toggles dimension hit-testing on the canvas
+ok 14 - constraint selection toggles dimension hit-testing on the canvas
+  ---
+  duration_ms: 0.3049
+  type: 'test'
+  ...
+# Subtest: Equal accepts homogeneous segment, arc, and circle pairs only
+ok 15 - Equal accepts homogeneous segment, arc, and circle pairs only
+  ---
+  duration_ms: 0.2282
+  type: 'test'
+  ...
+# Subtest: Length accepts only one line segment or arc
+ok 16 - Length accepts only one line segment or arc
+  ---
+  duration_ms: 0.0503
+  type: 'test'
+  ...
+# Subtest: constraint helpers anchor arcs on their visible curve instead of their center
+ok 17 - constraint helpers anchor arcs on their visible curve instead of their center
+  ---
+  duration_ms: 0.0756
+  type: 'test'
+  ...
+# Subtest: constraint point affordances follow whether the active constraint accepts points
+ok 18 - constraint point affordances follow whether the active constraint accepts points
+  ---
+  duration_ms: 0.2346
+  type: 'test'
+  ...
+# Subtest: constraint feature picking includes rendered linked-copy geometry
+ok 19 - constraint feature picking includes rendered linked-copy geometry
+  ---
+  duration_ms: 0.0866
+  type: 'test'
+  ...
+# Subtest: Coincident prefers the nearest rendered handle over a neighboring line hit area
+ok 20 - Coincident prefers the nearest rendered handle over a neighboring line hit area
+  ---
+  duration_ms: 0.2058
+  type: 'test'
+  ...
+# Subtest: point priority uses screen distance and does not capture clicks outside the handle area
+ok 21 - point priority uses screen distance and does not capture clicks outside the handle area
+  ---
+  duration_ms: 0.0682
+  type: 'test'
+  ...
+# Subtest: point priority preserves direct point hits, explicit cycle choices, and edge-only tools
+ok 22 - point priority preserves direct point hits, explicit cycle choices, and edge-only tools
+  ---
+  duration_ms: 0.0529
+  type: 'test'
+  ...
+# Subtest: point priority excludes hidden geometry and keeps derived point identity
+ok 23 - point priority excludes hidden geometry and keeps derived point identity
+  ---
+  duration_ms: 0.0599
+  type: 'test'
+  ...
+# Subtest: Alt overlap selection cycles through handles and strokes at one location
+ok 24 - Alt overlap selection cycles through handles and strokes at one location
+  ---
+  duration_ms: 1.1209
+  type: 'test'
+  ...
+# Subtest: overlap selection restarts when the pointer or candidate stack changes
+ok 25 - overlap selection restarts when the pointer or candidate stack changes
+  ---
+  duration_ms: 0.0934
+  type: 'test'
+  ...
+# Subtest: overlap cycling tolerates hand jitter and can reverse without drifting its anchor
+ok 26 - overlap cycling tolerates hand jitter and can reverse without drifting its anchor
+  ---
+  duration_ms: 0.5003
+  type: 'test'
+  ...
+# Subtest: hidden overlapping points preview without selecting; Enter accepts the exact handle
+ok 27 - hidden overlapping points preview without selecting; Enter accepts the exact handle
+  ---
+  duration_ms: 0.6025
+  type: 'test'
+  ...
+# Subtest: overlap hit testing skips records disabled by the active Stack
+ok 28 - overlap hit testing skips records disabled by the active Stack
+  ---
+  duration_ms: 0.192
+  type: 'test'
+  ...
+# Subtest: driving dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+ok 29 - driving dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+  ---
+  duration_ms: 1.5424
+  type: 'test'
+  ...
+# Subtest: driven dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+ok 30 - driven dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+  ---
+  duration_ms: 0.2497
+  type: 'test'
+  ...
+# Subtest: Driving Dimension editing uses the shared multiline expression box lookup
+ok 31 - Driving Dimension editing uses the shared multiline expression box lookup
+  ---
+  duration_ms: 0.2658
+  type: 'test'
+  ...
+# Subtest: Driving Dimension multiline editing preserves apply, line-break, and cancel keys
+ok 32 - Driving Dimension multiline editing preserves apply, line-break, and cancel keys
+  ---
+  duration_ms: 0.085
+  type: 'test'
+  ...
+# Subtest: Driving Dimension opens on the completed second click so the launching release cannot dismiss it
+ok 33 - Driving Dimension opens on the completed second click so the launching release cannot dismiss it
+  ---
+  duration_ms: 0.4075
+  type: 'test'
+  ...
+# Subtest: Dimension press jitter does not capture a drag; deliberate movement starts from the original press
+ok 34 - Dimension press jitter does not capture a drag; deliberate movement starts from the original press
+  ---
+  duration_ms: 0.5402
+  type: 'test'
+  ...
+# Subtest: Dimension pointer release outside the label disarms dragging, while a second click can still edit
+ok 35 - Dimension pointer release outside the label disarms dragging, while a second click can still edit
+  ---
+  duration_ms: 0.2254
+  type: 'test'
+  ...
+# Subtest: Dimension text hit bounds provide a screen-sized hover area at every zoom
+ok 36 - Dimension text hit bounds provide a screen-sized hover area at every zoom
+  ---
+  duration_ms: 0.1589
+  type: 'test'
+  ...
+# Subtest: Smart Dimension selection toggles existing dimension hit-testing on the canvas
+ok 37 - Smart Dimension selection toggles existing dimension hit-testing on the canvas
+  ---
+  duration_ms: 0.1978
+  type: 'test'
+  ...
+# Subtest: circle Smart Dimensions measure diameter while arc dimensions continue to measure radius
+ok 38 - circle Smart Dimensions measure diameter while arc dimensions continue to measure radius
+  ---
+  duration_ms: 0.4011
+  type: 'test'
+  ...
+# Subtest: Smart Dimensions retain the built-in origin as a point anchor
+ok 39 - Smart Dimensions retain the built-in origin as a point anchor
+  ---
+  duration_ms: 0.2131
+  type: 'test'
+  ...
+# Subtest: the origin belongs to the global coordinate system when no Stack is active
+ok 40 - the origin belongs to the global coordinate system when no Stack is active
+  ---
+  duration_ms: 0.5903
+  type: 'test'
+  ...
+# Subtest: committing a Smart Dimension preserves its selected highlight through the placement click
+ok 41 - committing a Smart Dimension preserves its selected highlight through the placement click
+  ---
+  duration_ms: 0.1515
+  type: 'test'
+  ...
+# Subtest: a radial candidate treats its next geometry hit as placement instead of another selection
+ok 42 - a radial candidate treats its next geometry hit as placement instead of another selection
+  ---
+  duration_ms: 0.1131
+  type: 'test'
+  ...
+# Subtest: a fillet uses a normal solver-driven Smart Driving radius dimension
+ok 43 - a fillet uses a normal solver-driven Smart Driving radius dimension
+  ---
+  duration_ms: 0.0722
+  type: 'test'
+  ...
+# Subtest: a driven fillet radius remains a measurement without a driving target
+ok 44 - a driven fillet radius remains a measurement without a driving target
+  ---
+  duration_ms: 0.049
+  type: 'test'
+  ...
+# Subtest: a notch point creates an external Smart Driving dimension that retains both anchors
+ok 45 - a notch point creates an external Smart Driving dimension that retains both anchors
+  ---
+  duration_ms: 4.9208
+  type: 'test'
+  ...
+# Subtest: a Swell-derived point can be the fixed reference for a Notch Smart Driving dimension
+ok 46 - a Swell-derived point can be the fixed reference for a Notch Smart Driving dimension
+  ---
+  duration_ms: 0.1557
+  type: 'test'
+  ...
+# Subtest: a notch point to segment creates an external Smart Driving dimension
+ok 47 - a notch point to segment creates an external Smart Driving dimension
+  ---
+  duration_ms: 0.9899
+  type: 'test'
+  ...
+# Subtest: a segment to notch point creates the same external Smart Driving dimension
+ok 48 - a segment to notch point creates the same external Smart Driving dimension
+  ---
+  duration_ms: 0.1218
+  type: 'test'
+  ...
+# Subtest: a text point to segment dimension stays driving and retains live anchors
+ok 49 - a text point to segment dimension stays driving and retains live anchors
+  ---
+  duration_ms: 6.3918
+  type: 'test'
+  ...
+# Subtest: a derived point automatically creates one horizontal linked-position driving dimension
+ok 50 - a derived point automatically creates one horizontal linked-position driving dimension
+  ---
+  duration_ms: 1.3244
+  type: 'test'
+  ...
+# Subtest: linked-position routing forces a deterministic axis and blocks unsupported or repeated relationships
+ok 51 - linked-position routing forces a deterministic axis and blocks unsupported or repeated relationships
+  ---
+  duration_ms: 0.147
+  type: 'test'
+  ...
+# Subtest: parallel edge dimensions use a cursor-independent distance at the closest stored endpoint
+ok 52 - parallel edge dimensions use a cursor-independent distance at the closest stored endpoint
+  ---
+  duration_ms: 0.4055
+  type: 'test'
+  ...
+# Subtest: parallel oblique edges measure their normal delta and nonparallel edges create an angle
+ok 53 - parallel oblique edges measure their normal delta and nonparallel edges create an angle
+  ---
+  duration_ms: 0.3065
+  type: 'test'
+  ...
+# Subtest: a driving parallel-edge dimension persists one line-to-line constraint without a separate Parallel constraint
+ok 54 - a driving parallel-edge dimension persists one line-to-line constraint without a separate Parallel constraint
+  ---
+  duration_ms: 6.0119
+  type: 'test'
+  ...
+# Subtest: a line-to-line driving dimension removes its controlled axis from endpoint drag locks
+ok 55 - a line-to-line driving dimension removes its controlled axis from endpoint drag locks
+  ---
+  duration_ms: 2.7797
+  type: 'test'
+  ...
+# Subtest: axis dimensions stored with point anchors hold the opposite anchor during endpoint drag
+ok 56 - axis dimensions stored with point anchors hold the opposite anchor during endpoint drag
+  ---
+  duration_ms: 1.3481
+  type: 'test'
+  ...
+# Subtest: angled dimensions use the rays selected by the user instead of the opposite acute angle
+ok 57 - angled dimensions use the rays selected by the user instead of the opposite acute angle
+  ---
+  duration_ms: 0.1678
+  type: 'test'
+  ...
+# Subtest: every Smart Driving dimension records a normalized direction
+ok 58 - every Smart Driving dimension records a normalized direction
+  ---
+  duration_ms: 0.2361
+  type: 'test'
+  ...
+# Subtest: an aligned Smart Driving dimension rejects an endpoint dragged onto its mirrored branch
+ok 59 - an aligned Smart Driving dimension rejects an endpoint dragged onto its mirrored branch
+  ---
+  duration_ms: 6.6107
+  type: 'test'
+  ...
+# Subtest: loading a legacy driving dimension derives and persists its current direction
+ok 60 - loading a legacy driving dimension derives and persists its current direction
+  ---
+  duration_ms: 2.233
+  type: 'test'
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 60
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 150.4598
