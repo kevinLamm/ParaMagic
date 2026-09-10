@@ -6,6 +6,8 @@ import {
   fitCanvasPresentationSvg,
   fittedPresentationViewport,
   isCanvasPresentationSourceNode,
+  namespaceCanvasPresentationIds,
+  sanitizeCanvasPresentationClone,
   valueOnlyDimensionText,
 } from '../../packages/paramagic-core/src/modules/CanvasPresentation.js';
 
@@ -19,8 +21,11 @@ function svgNode(tagName, attributes = {}, children = []) {
   const node = {
     tagName,
     children,
-    attributes: Object.entries(attributes).map(([name, value]) => ({ name, localName: name, value })),
+    get attributes() { return Object.entries(attributes).map(([name, value]) => ({ name, localName: name, value })); },
     getAttribute: (name) => attributes[name] || null,
+    setAttribute: (name, value) => { attributes[name] = String(value); },
+    removeAttribute: (name) => { delete attributes[name]; },
+    cloneNode: () => svgNode(tagName, { ...attributes }, children.map(child => child.cloneNode(true))),
     querySelectorAll: (selector) => selector === '*'
       ? children.flatMap((child) => [child, ...(child.querySelectorAll?.('*') || [])])
       : [],
@@ -147,4 +152,48 @@ test('canvas presentation omits all live-canvas definitions when exported conten
   const content = svgNode('g', {}, [svgNode('path', { stroke: '#000000' })]);
 
   assert.deepEqual(canvasPresentationDefinitionRoots({ ownerSVGElement }, content), []);
+});
+
+test('presentation sanitization retains embedded image-stroke paint servers and removes editor IDs', () => {
+  const source = svgNode('g', { id: 'editor-record' }, [
+    svgNode('pattern', { id: 'image-stroke-a' }, [svgNode('image', { href: 'data:image/png;base64,AA==' })]),
+    svgNode('rect', { id: 'editor-shape', fill: 'url(#image-stroke-a)' }),
+  ]);
+  const clone = sanitizeCanvasPresentationClone(source, { dimensionTextMode: 'named-value' });
+  assert.equal(clone.getAttribute('id'), null);
+  assert.equal(clone.children[0].getAttribute('id'), 'image-stroke-a');
+  assert.equal(clone.children[1].getAttribute('id'), null);
+  assert.equal(clone.children[1].getAttribute('fill'), 'url(#image-stroke-a)');
+  assert.equal(source.getAttribute('id'), 'editor-record');
+});
+
+test('presentation copies own independent paint, clipping, style and chained href references', () => {
+  const image = svgNode('image', { id: 'tile', href: 'https://example.test/tile.png#original' });
+  const pattern = svgNode('pattern', { id: 'paint', href: '#tile' });
+  const clip = svgNode('clipPath', { id: 'clip' });
+  const use = svgNode('use', { 'xlink:href': '#tile' });
+  const shape = svgNode('path', {
+    fill: 'url("#paint")', stroke: 'url(\'#paint\')',
+    style: 'clip-path: url(#clip); fill: url(#paint); color: #fff',
+    'data-record-id': 'paint',
+  });
+  const svg = svgNode('svg', {}, [image, pattern, clip, use, shape]);
+  namespaceCanvasPresentationIds(svg);
+  const paintId = pattern.getAttribute('id');
+  const tileId = image.getAttribute('id');
+  assert.notEqual(paintId, 'paint');
+  assert.equal(shape.getAttribute('fill'), `url(#${paintId})`);
+  assert.equal(shape.getAttribute('stroke'), `url(#${paintId})`);
+  assert.equal(shape.getAttribute('style'), `clip-path: url(#${clip.getAttribute('id')}); fill: url(#${paintId}); color: #fff`);
+  assert.equal(pattern.getAttribute('href'), `#${tileId}`);
+  assert.equal(use.getAttribute('xlink:href'), `#${tileId}`);
+  assert.equal(image.getAttribute('href'), 'https://example.test/tile.png#original');
+  assert.equal(shape.getAttribute('data-record-id'), 'paint');
+
+  const output = namespaceCanvasPresentationIds(svg.cloneNode(true));
+  const previewIds = new Set(svg.querySelectorAll('*').map(node => node.getAttribute('id')).filter(Boolean));
+  const outputIds = output.querySelectorAll('*').map(node => node.getAttribute('id')).filter(Boolean);
+  assert.ok(outputIds.every(id => !previewIds.has(id)));
+  assert.equal(output.children[4].getAttribute('fill'), `url(#${output.children[1].getAttribute('id')})`);
+  assert.equal(pattern.getAttribute('id'), paintId);
 });

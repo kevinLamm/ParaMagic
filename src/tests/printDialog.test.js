@@ -237,17 +237,39 @@ test('Print hands a physical-size page to the system print dialog and cleans it 
     documentRef: { body: { appendChild: (node) => { appended = node; } } },
     windowRef: {
       addEventListener: (name, listener, options) => { afterPrint = { name, listener, options }; },
-      setTimeout: (callback, delay) => {
-        assert.equal(delay, 1000);
-        callback();
-      },
+      setTimeout: () => assert.fail('Print output must survive until afterprint, regardless of preview load time'),
     },
     print: () => { printed += 1; },
   });
 
   assert.equal(appended, output);
   assert.equal(printed, 1);
-  assert.equal(removed, 1);
+  assert.equal(removed, 0);
   assert.equal(afterPrint.name, 'afterprint');
   assert.deepEqual(afterPrint.options, { once: true });
+  afterPrint.listener();
+  assert.equal(removed, 1);
+});
+
+test('repeated print handoffs replace the previous output and failed handoffs release it', () => {
+  const mounted = new Set();
+  const listeners = new Set();
+  const documentRef = { body: { appendChild: node => mounted.add(node) } };
+  const windowRef = {
+    addEventListener: (_name, listener) => listeners.add(listener),
+    removeEventListener: (_name, listener) => listeners.delete(listener),
+  };
+  const output = () => { const node = { remove: () => mounted.delete(node) }; return node; };
+  const first = output();
+  const second = output();
+  const print = () => assert.equal(mounted.size, 1);
+  handoffPrintOutput(first, { documentRef, windowRef, print });
+  handoffPrintOutput(second, { documentRef, windowRef, print });
+  assert.deepEqual([...mounted], [second]);
+  assert.equal(listeners.size, 1);
+  assert.throws(() => handoffPrintOutput(output(), {
+    documentRef, windowRef, print: () => { throw new Error('Print failed'); },
+  }), /Print failed/);
+  assert.equal(mounted.size, 0);
+  assert.equal(listeners.size, 0);
 });

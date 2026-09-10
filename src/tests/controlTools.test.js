@@ -186,6 +186,25 @@ test('slider runtime markup uses a numeric value textbox', () => {
   assert.doesNotMatch(markup, /<output/);
 });
 
+test('slider and numeric arrows share the evaluated MinMax progression', () => {
+  const solver = new SolverController();
+  const increment = solver.createParameter({ name: 'increment', expression: '0.5' });
+  const item = createControlItem('Slider Control', {
+    configurationExpression: 'MinMax(0.25, 10.25, 2.25, increment)',
+  });
+
+  for (const step of [0.5, 0.25, 2]) {
+    solver.updateParameter(increment.id, { expression: String(step) });
+    const markup = controlRowMarkup(item, controlPanelState(item, solver), false);
+    const inputs = markup.match(/<input\b[^>]*>/g);
+    assert.equal(inputs.length, 2);
+    for (const input of inputs) {
+      assert.match(input, /min="0.25" max="10.25"/);
+      assert.ok(input.includes(`step="${step}"`));
+    }
+  }
+});
+
 test('editing controls uses a wrapping expression area and a Visible button before Delete', () => {
   const solver = new SolverController();
   const item = createControlItem('Slider Control', { parameterName: 'c1' });

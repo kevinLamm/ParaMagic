@@ -13,6 +13,18 @@ import { DimensionRepository } from '../../packages/paramagic-core/src/modules/s
 import { SketchModel, Variable } from '../../packages/paramagic-core/src/modules/solver/SolverModel.js';
 import { evaluateFillet } from '../../packages/paramagic-core/src/modules/FilletSystem.js';
 
+test('line distance derivatives follow residual scaling for submillimeter reference lines', () => {
+  for (const length of [0.2, 0.96, 1.1]) {
+    const model = new SketchModel();
+    model.addEntity({ id: 'reference', type: 'line', start: [4, 2], end: [4.1, 2 + length] });
+    model.addEntity({ id: 'measured', type: 'line', start: [7, -3], end: [7.2, 8] });
+    model.addConstraint({ id: 'distance', type: 'Line Line Distance', orientation: 1, value: 3, featureRefs: ['reference', 'measured'].map((recordId) => ({ kind: 'segment', recordId })) });
+    const block = new ConstraintRegistry().blocks(model, new DimensionRepository()).blocks[0];
+    const verification = verifyJacobianBlock(block);
+    assert.equal(verification.valid, true, JSON.stringify(verification.differences));
+  }
+});
+
 test('constraint blocks map touched variables into component-local columns', () => {
   const model = new SketchModel();
   model.addEntity({ id: 'arc', type: 'arc', start: [5, 0], arcPoint: [0, 5], end: [-5, 0] });

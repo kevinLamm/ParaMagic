@@ -1508,8 +1508,8 @@ pre { white-space: pre-wrap; background: #fff; border-radius: 0; border: 1px sol
 @media print {
   body { overflow: visible !important; background: #fff !important; }
   body > * { display: none !important; }
-  body > .print-output-root { display: block !important; }
-  .print-output-page { break-after: page; }
+  body > .print-output-root { display: block !important; position: fixed; inset: 0; overflow: hidden; }
+  .print-output-page { break-before: auto; break-after: auto; break-inside: avoid; }
 }
 /* The left dock owns panel sizing and placement; each panel owns its contents. */
 .panel-dock { position:absolute; top:var(--workspace-top); bottom:0; left:0; z-index:35; width:var(--stack-sidebar-width); display:flex; flex-direction:column; min-height:0; background:var(--surface-background); border-right:1px solid var(--surface-border); box-shadow:3px 0 10px rgb(0 0 0 / 5%); }

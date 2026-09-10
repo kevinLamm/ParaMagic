@@ -275,6 +275,26 @@ test('PNG export keeps its measurement host mounted while rendering one full-siz
   assert.equal(host.isConnected, false);
 });
 
+test('shared rasterization supports transparent artwork without painting a white rectangle behind it', async () => {
+  const draws = [];
+  const canvas = {
+    getContext: () => ({
+      fillRect: () => assert.fail('Transparent brush snapshots must not cover underlying drawing objects'),
+      drawImage: (...args) => draws.push(args),
+    }),
+    toBlob: resolve => resolve(new Blob(['png'], { type: 'image/png' })),
+  };
+  let released = false;
+  await rasterizePresentationSvg({}, 100, 50, {
+    background: null,
+    createCanvas: () => canvas,
+    prepareRasterMarkup: async () => '<svg/>',
+    loadSvgImage: async () => ({ image: {}, release: () => { released = true; } }),
+  });
+  assert.equal(draws.length, 1);
+  assert.equal(released, true);
+});
+
 test('PNG export rejects empty or non-measurable bounds', () => {
   assert.throws(
     () => pngExportFormatForBounds({ x: 0, y: 0, width: 0, height: 10 }),

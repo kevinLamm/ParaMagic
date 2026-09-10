@@ -1,6 +1,8 @@
 import {
   createCanvasPresentationSvg,
   fittedPresentationViewport,
+  namespaceCanvasPresentationIds,
+  prepareImageStrokePrintSvg,
 } from '@paramagic/core/export';
 import { dimensions } from '@paramagic/core/editor';
 import { PRINT_PAGE_SIZES, printLayout } from './PrintLayouts.js';
@@ -233,16 +235,28 @@ export function printOutputMarkup(layout) {
   return `<style>@page { size: ${layout.mmWidth}mm ${layout.mmHeight}mm; margin: 0; }</style><section class="print-output-page"></section>`;
 }
 
+const activePrintOutputs = new WeakMap();
+
 export function handoffPrintOutput(output, {
   documentRef = globalThis.document,
   windowRef = globalThis.window,
   print = () => windowRef?.print?.(),
 } = {}) {
+  activePrintOutputs.get(documentRef)?.();
   documentRef.body.appendChild(output);
-  const cleanup = () => output.remove();
+  const cleanup = () => {
+    output.remove();
+    windowRef?.removeEventListener?.('afterprint', cleanup);
+    if (activePrintOutputs.get(documentRef) === cleanup) activePrintOutputs.delete(documentRef);
+  };
+  activePrintOutputs.set(documentRef, cleanup);
   windowRef?.addEventListener?.('afterprint', cleanup, { once: true });
-  print();
-  windowRef?.setTimeout?.(cleanup, 1000);
+  try {
+    print();
+  } catch (error) {
+    cleanup();
+    throw error;
+  }
 }
 
 export function previewPageSize(layout, containerWidth, containerHeight, inset = 20) {
@@ -370,6 +384,7 @@ export function createPrintDialog({
   let settings = normalizePrintSettings({ dimensionView: getDimensionView() });
   let backdrop = null;
   let printableSvg = null;
+  let preparingPrint = false;
   let keydownListener = null;
   let resizeListener = null;
   let selectionKeydownListener = null;
@@ -520,7 +535,7 @@ export function createPrintDialog({
       : next.scaleMode === 'actual' ? 1 : next.scaleDenominator;
     scaleOutput.textContent = `Scale 1:${Number(denominator.toFixed(3))}`;
     status.textContent = `${layout.label} · ${next.orientation === 'landscape' ? 'Landscape' : 'Portrait'}`;
-    printButton.disabled = false;
+    printButton.disabled = preparingPrint;
   }
 
   function syncDimensionViewControl(mode) {
@@ -722,8 +737,15 @@ export function createPrintDialog({
     windowRef?.addEventListener?.('pointercancel', selectionPointerCancelListener, true);
   }
 
-  function printCurrentPreview() {
-    if (!printableSvg || !backdrop) return;
+  async function printCurrentPreview() {
+    if (!printableSvg || !backdrop || preparingPrint) return;
+    preparingPrint = true;
+    const dialog = backdrop;
+    const printButton = dialog.querySelector('.print-confirm');
+    const status = dialog.querySelector('.print-preview-status');
+    const previousStatus = status.textContent;
+    printButton.disabled = true;
+    status.textContent = 'Preparing print…';
     readSettings();
     const layout = printLayout(settings.pageSize, settings.orientation);
     const output = documentRef.createElement('div');
@@ -734,10 +756,23 @@ export function createPrintDialog({
     page.style.width = `${layout.mmWidth}mm`;
     page.style.height = `${layout.mmHeight}mm`;
     page.style.padding = `${PRINT_MARGIN_MM}mm`;
-    const svg = printableSvg.cloneNode(true);
+    const svg = namespaceCanvasPresentationIds(printableSvg.cloneNode(true));
     svg.removeAttribute('aria-label');
     page.appendChild(svg);
-    handoffPrintOutput(output, { documentRef, windowRef, print });
+    try {
+      await prepareImageStrokePrintSvg(printableSvg, svg, {
+        widthMm: layout.mmWidth - PRINT_MARGIN_MM * 2,
+        heightMm: layout.mmHeight - PRINT_MARGIN_MM * 2,
+      });
+      if (backdrop !== dialog) return;
+      status.textContent = previousStatus;
+      handoffPrintOutput(output, { documentRef, windowRef, print });
+    } catch (error) {
+      status.textContent = `Could not prepare print: ${error.message}`;
+    } finally {
+      preparingPrint = false;
+      if (backdrop) backdrop.querySelector('.print-confirm').disabled = !printableSvg;
+    }
   }
 
   function bind() {

@@ -1373,8 +1373,8 @@ test('a driving arc radius can equal exactly half its fixed chord', () => {
   controller.model.binding('semicircle-arc').variables.get('center.y').value = 1;
   const projected = controller.solve({ fullSolve: true, jacobianMode: 'blocks' });
   assert.ok(['converged', 'unchanged'].includes(projected.status), projected.message);
-  assert.equal(projected.jacobianStats.mode, 'dense-reference');
-  assert.equal(projected.jacobianStats.fallbackReason, 'half-chord-arc-projection');
+  assert.equal(projected.jacobianStats.mode, 'blocks');
+  assert.equal(projected.jacobianStats.fallbackReason, undefined);
 });
 
 test('an exact half-chord arc remains solvable when its connected chord is made collinear', () => {
