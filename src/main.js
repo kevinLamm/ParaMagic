@@ -86,6 +86,7 @@ import {
 import { configureImageCatalogResources, configureOpenCvResources } from '@paramagic/core/images';
 import { drawingBrowserTitle, imageCatalogResources, openCvResources } from './app-config.js';
 import { createPrintDialog } from './PrintDialog.js';
+import { showDrawingDiagnostics } from './DrawingDiagnosticsDialog.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
@@ -199,8 +200,8 @@ app.innerHTML = `
         <nav class="app-menu-popover export-dropdown" id="appMenu" aria-label="File actions" hidden>
           ${appMenuButton('New', 'id="newButton"')}
           ${appMenuButton('Open', 'id="openButton"')}
-          ${appMenuButton('Save', 'id="saveButton" data-requires-drawing')}
-          ${appMenuButton('Save As', 'id="saveAsButton" data-requires-drawing disabled')}
+          ${appMenuButton('Save', 'id="saveButton"')}
+          ${appMenuButton('Save As', 'id="saveAsButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
@@ -338,7 +339,6 @@ function updateDrawingActionState() {
   document.querySelectorAll('[data-requires-drawing]').forEach((button) => {
     button.disabled = !shouldEnable;
   });
-  document.querySelector('.export-dropdown')?.classList.toggle('disabled', !shouldEnable);
   const activeStackId = canvasController?.getActiveStackId?.() || null;
   const canCreate = Boolean(activeStackId);
   setActiveStackToolAvailability(document, activeStackId);
@@ -498,8 +498,10 @@ function safeBaseName(name) {
 
 async function readDrawingFile(file, fileHandle = null) {
   if (!file) return;
+  let content;
   try {
-    const drawing = await parsePortableDrawingText(file.name, await file.text(), {
+    content = await file.text();
+    const drawing = await parsePortableDrawingText(file.name, content, {
       importAsset: importPortableCatalogImage,
     });
     canvasController.loadDrawingData(drawing);
@@ -508,7 +510,12 @@ async function readDrawingFile(file, fileHandle = null) {
     drawingHistory.reset();
     browserAutosaveController?.saveNow();
     updateDrawingActionState();
+    if (drawing.identityWarnings?.length) showStorageStatus(
+      `Opened with ${drawing.identityWarnings.length} drawing error(s). ${drawing.identityWarnings[0].message}`,
+      true,
+    );
   } catch (error) {
+    if (showDrawingDiagnostics({ name: file.name, content, error, download: downloadText })) return;
     modal(`<h2>Open failed</h2><p>${escapeHtml(error.message)}</p>`);
   }
 }
@@ -530,8 +537,11 @@ function drawingSnapshotForFile(name = currentDrawingName()) {
   return snapshot;
 }
 
+let lastSaveDiagnostics = null;
 function serializeCurrentDrawing(name = currentDrawingName()) {
-  return serializeParamagicDocument(drawingSnapshotForFile(name), name);
+  const content = serializeParamagicDocument(drawingSnapshotForFile(name), name);
+  lastSaveDiagnostics = JSON.parse(content).saveDiagnostics || null;
+  return content;
 }
 
 function paramagicFilePickerOptions(name) {
@@ -633,20 +643,31 @@ const drawingFileController = createDrawingFileController({
 });
 
 async function saveDrawing() {
+  let result;
   try {
-    const result = await drawingFileController.save(currentDrawingName());
-    if (result.status !== 'saved') return;
+    result = await drawingFileController.save(currentDrawingName());
+  } catch (error) {
+    modal(`<h2>Save failed</h2><p>${escapeHtml(error.message)}</p>`);
+    return;
+  }
+  if (result.status !== 'saved') return;
+  try {
     setDrawingName(result.name);
     drawingHistory.recordSoon();
     await browserAutosaveController?.saveNow();
   } catch (error) {
-    modal(`<h2>Save failed</h2><p>${escapeHtml(error.message)}</p>`);
+    showStorageStatus(`Saved ${result.name}. ${error.message}`, true);
+    return;
   }
+  showStorageStatus(lastSaveDiagnostics
+    ? `Saved ${result.name} with errors preserved. You can share this file for diagnosis.`
+    : `Saved ${result.name}.`);
 }
 
 async function saveDrawingAs() {
   let png = null;
   let independentSave = null;
+  let savedResult = null;
   try {
     const result = await saveFileAsWithPicker({
       formats: saveAsFormats,
@@ -686,23 +707,33 @@ async function saveDrawingAs() {
       download: downloadText,
     });
     if (result.status !== 'saved') return;
+    savedResult = result;
     if (result.format === 'paramagic') {
       if (!independentSave) throw new Error('The independent drawing graph was not created.');
       currentDrawingFileHandle = result.handle;
-      canvasController.loadDrawingData(independentSave.drawing, {
-        zoomToFit: false,
-        history: 'coalesce',
-        preserveStackActivation: true,
-      });
+      if (independentSave.requiresReload) {
+        canvasController.loadDrawingData(independentSave.drawing, {
+          zoomToFit: false,
+          history: 'coalesce',
+          preserveStackActivation: true,
+        });
+        drawingHistory.reset();
+      }
       setDrawingName(result.name);
-      drawingHistory.reset();
       await browserAutosaveController?.saveNow();
+      showStorageStatus(independentSave.drawing.saveDiagnostics
+        ? `Saved ${result.name} with errors preserved. You can share this file for diagnosis.`
+        : `Saved ${result.name}.`);
     } else if (png) {
       showStorageStatus(`Saved ${result.name} (${png.width} × ${png.height}, ${png.blob.size} bytes).`);
     } else {
       showStorageStatus(`Saved ${result.name}.`);
     }
   } catch (error) {
+    if (savedResult) {
+      showStorageStatus(`Saved ${savedResult.name}, but the editor could not finish updating: ${error.message}`, true);
+      return;
+    }
     modal(`<h2>Save As failed</h2><p>${escapeHtml(error.message)}</p>`);
   }
 }
@@ -1842,12 +1873,18 @@ browserAutosaveController = createBrowserAutosaveController({
 
 async function initializeBrowserAutosave() {
   document.documentElement.dataset.browserAutosaveState = 'loading';
+  let browserFile;
   try {
-    const browserFile = await browserAutosaveController.load();
+    browserFile = await browserAutosaveController.load();
     if (browserFile?.content) {
-      canvasController.loadDrawingData(parseParamagicDocument(browserFile.content), { zoomToFit: true });
+      const drawing = parseParamagicDocument(browserFile.content);
+      canvasController.loadDrawingData(drawing, { zoomToFit: true });
       currentDrawingFileHandle = browserFile.fileHandle || null;
       setDrawingName(browserFile.name);
+      if (drawing.identityWarnings?.length) showStorageStatus(
+        `Restored with ${drawing.identityWarnings.length} drawing error(s). ${drawing.identityWarnings[0].message}`,
+        true,
+      );
     } else {
       canvasController.setActiveStack(null);
       currentDrawingFileHandle = null;
@@ -1860,6 +1897,12 @@ async function initializeBrowserAutosave() {
     currentDrawingFileHandle = null;
     setDrawingName('Untitled Drawing');
     document.documentElement.dataset.browserAutosaveState = 'error';
+    if (browserFile?.content) showDrawingDiagnostics({
+      name: `${drawingName(browserFile.name)}.paramagic`,
+      content: browserFile.content,
+      error,
+      download: downloadText,
+    });
     showStorageStatus(error?.message || 'The browser-local autosave could not be restored.', true);
   }
   drawingHistory.reset();

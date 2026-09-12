@@ -378,21 +378,19 @@ test('Duplicate constraints save through source RecordIDs and remap their deriva
   assert.equal(identityAudit(copy).valid, true);
 });
 
-test('canonical files fail closed before malformed declarations can be regenerated', () => {
+test('canonical files preserve malformed declarations for diagnosis instead of regenerating them', () => {
   const canonical = readFileSync(new URL('../../tests/fixtures/paramagic/corrupt-canonical-identity.paramagic', import.meta.url), 'utf8');
-  assert.throws(
-    () => parseDrawingText('corrupt.paramagic', canonical),
-    /entities\.0\.id.*not a UUID/,
-  );
+  const reopened = parseDrawingText('corrupt.paramagic', canonical);
+  assert.equal(reopened.entities[0].id, JSON.parse(canonical).entities[0].id);
+  assert.ok(reopened.identityWarnings.some(issue => /entities\.0\.id/.test(issue.path)));
 });
 
-test('canonical files reject dangling references before entering the live drawing', () => {
+test('canonical files open with dangling references preserved and reported', () => {
   const canonical = migrateDrawingIdentities(legacyDrawing()).drawing;
   canonical.constraints[0].featureRefs[0].recordId = createUuid();
-  assert.throws(
-    () => parseDrawingText('corrupt.paramagic', JSON.stringify(canonical)),
-    /featureRefs\.0\.recordId.*does not resolve/,
-  );
+  const reopened = parseDrawingText('corrupt.paramagic', JSON.stringify(canonical));
+  assert.equal(reopened.constraints[0].featureRefs[0].recordId, canonical.constraints[0].featureRefs[0].recordId);
+  assert.ok(reopened.identityWarnings.some(issue => /featureRefs\.0\.recordId/.test(issue.path)));
 });
 
 test('canonical identity audit rejects references to the wrong record kind', () => {

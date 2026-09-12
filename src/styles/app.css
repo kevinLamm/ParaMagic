@@ -1253,6 +1253,8 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .modal { width: min(900px, calc(100vw - 48px)); max-height: calc(100vh - 110px); overflow: auto; border: 1px solid var(--surface-border); background: var(--surface-background); color: #202020; border-radius: 0; padding: 18px; box-shadow: 0 12px 36px rgba(0,0,0,.16); position: relative; }
 .modal h2, .modal h3 { color: #242424; }
 .modal p { color: #555; }
+.drawing-diagnostics-errors { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 160px; overflow: auto; }
+.drawing-diagnostics-modal textarea { display: block; width: 100%; height: 220px; margin: 16px 0; font-family: monospace; resize: vertical; }
 .class-list-panel[hidden] { display: none !important; }
 .class-list-panel { top: var(--floating-panel-min-top); right: 16px; left: auto; width: 240px; max-height: min(520px, calc(100vh - var(--floating-panel-min-top) - 8px)); padding: 10px; display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 8px; overflow: hidden; }
 .class-list-panel-header { display: flex; align-items: center; justify-content: space-between; min-height: 24px; }
