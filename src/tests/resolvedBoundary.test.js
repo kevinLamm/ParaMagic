@@ -5,6 +5,27 @@ import {
   resolveClosedBoundariesForRecordIds,
   resolvedBoundaryForHost,
 } from '../../packages/paramagic-core/src/modules/BoundaryTopology.js';
+import { sharedPointRegions, touchingComposites } from './fixtures/sharedPointRegions.js';
+
+test('adjacent inferred faces use their own unshared appearance sources across drawing order changes', () => {
+  const entities = sharedPointRegions();
+  const summarize = (input) => resolveClosedBoundaries(input).map((boundary) => ({
+    id: boundary.id,
+    members: [...boundary.recordIds].sort(),
+    source: boundary.appearanceSourceId,
+  })).sort((a, b) => a.id.localeCompare(b.id));
+  const boundaries = summarize(entities);
+  assert.equal(boundaries.length, 2);
+  assert.equal(boundaries.find(({ members }) => members.includes('upper-arc')).source, 'upper-arc');
+  assert.equal(boundaries.find(({ members }) => members.includes('lower-curve')).source, 'lower-curve');
+  assert.deepEqual(summarize([...entities].reverse()), boundaries);
+});
+
+test('touching composites resolve unique object identities and fill sources', () => {
+  const boundaries = resolveClosedBoundaries(touchingComposites());
+  assert.deepEqual(boundaries.map(({ id }) => id).sort(), ['left-panel', 'right-panel']);
+  for (const boundary of boundaries) assert.equal(boundary.appearanceSourceId, `${boundary.id}-0`);
+});
 
 test('incremental boundary resolution excludes unrelated geometry', () => {
   const entities = [

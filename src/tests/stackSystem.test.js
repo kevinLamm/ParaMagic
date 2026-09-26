@@ -406,6 +406,32 @@ test('inactive Stack records are dimmed and disabled until a dimension or constr
   assert.equal(system.isRecordEnabled(inactiveRecord), false);
 });
 
+test('relationship tools retain inactive ownership on fill boundaries and derived presentations', () => {
+  const classList = trackedClassList();
+  const record = { id: 'edge', entity: { id: 'edge', stackId: 'stack-b' }, group: presentationNode() };
+  const region = Object.assign(presentationNode(), { dataset: { parentIds: 'edge' } });
+  const derived = Object.assign(presentationNode(), { dataset: { stackId: 'stack-b' } });
+  const system = createStackSystem({ records: [record], selectedIds: new Set(), canvasElement: { classList } });
+  system.restore({ activeStackId: 'stack-a', stacks: [{ id: 'stack-a', name: 'A' }, { id: 'stack-b', name: 'B' }] });
+  const sync = () => system.syncPresentation([region], [derived]);
+  for (const toolClass of ['constraint-selection-active', 'dimension-selection-active']) {
+    classList.add(toolClass);
+    sync();
+    assert.equal(system.isRecordEnabled(record), true, 'real features remain available to relationship tools');
+    for (const node of [record.group, region, derived]) {
+      assert.equal(node.classList.contains('stack-inactive'), true, 'inactive fills retain their hit-policy scope');
+      assert.equal(node.attributes.get('data-stack-id'), 'stack-b');
+    }
+    classList.remove(toolClass);
+  }
+  system.setActiveStack('stack-b');
+  sync();
+  for (const node of [record.group, region, derived]) assert.equal(node.classList.contains('stack-inactive'), false);
+  system.setActiveStack(null);
+  sync();
+  for (const node of [record.group, region, derived]) assert.equal(node.classList.contains('stack-inactive'), false);
+});
+
 test('a relationship record owned by an enabled Stack is disabled when any participant Stack is disabled', () => {
   const dimensionGroup = presentationNode();
   const dimensionRecord = {

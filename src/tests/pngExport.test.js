@@ -222,7 +222,7 @@ test('PNG rasterization saves the full fitted capture canvas without downsamplin
   assert.equal(released, true);
 });
 
-test('PNG export keeps its measurement host mounted while rendering one full-size fitted snapshot', async () => {
+test('PNG export preserves the Stack subtree through measurement and full-size rendering', async () => {
   const presentations = [];
   const host = {
     style: {},
@@ -239,14 +239,24 @@ test('PNG export keeps its measurement host mounted while rendering one full-siz
     },
     createElement() { return host; },
   };
-  const createPresentationSvg = () => {
+  const sourceBounds = [
+    { stackId: 'parent', x: 0, y: 0, width: 90, height: 70 },
+    { stackId: 'child', x: 0, y: 90, width: 90, height: 70 },
+    { stackId: 'sibling', x: 500, y: 0, width: 90, height: 70 },
+  ];
+  const createPresentationSvg = ({ stackIds }) => {
+    const included = sourceBounds.filter((entry) => !stackIds || stackIds.includes(entry.stackId));
     const content = {
       querySelector: () => null,
       querySelectorAll: () => [],
-      getBBox: () => ({ x: 0, y: 0, width: 160, height: 90 }),
+      getBBox: () => ({ x: 0, y: 0,
+        width: Math.max(...included.map(({ x, width }) => x + width)),
+        height: Math.max(...included.map(({ y, height }) => y + height)),
+      }),
     };
     const svg = {
       content,
+      included,
       querySelector: (selector) => selector === '[data-canvas-presentation-content]' ? content : null,
       setAttribute() {},
     };
@@ -262,15 +272,16 @@ test('PNG export keeps its measurement host mounted while rendering one full-siz
   };
 
   const { createCanvasPresentationPng } = await import('../../packages/paramagic-core/src/modules/PngExport.js');
-  const result = await createCanvasPresentationPng({}, { documentRef }, {
+  const result = await createCanvasPresentationPng({}, { documentRef, stackIds: ['parent', 'child'] }, {
     createPresentationSvg,
     rasterizePresentation,
   });
 
   assert.equal(rasterized.length, 1);
-  assert.equal(rasterized[0].width, 2720);
-  assert.equal(rasterized[0].height, 1530);
+  assert.equal(rasterized[0].width, 1530);
+  assert.equal(rasterized[0].height, 2720);
   assert.equal(presentations.length, 2);
+  presentations.forEach((svg) => assert.deepEqual(svg.included.map(({ stackId }) => stackId), ['parent', 'child']));
   assert.equal(result.blob.size, 2 * 1024 * 1024);
   assert.equal(host.isConnected, false);
 });

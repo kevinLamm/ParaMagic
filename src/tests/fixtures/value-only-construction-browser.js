@@ -27,6 +27,16 @@ drawing.extensions.arrayTools = {
     rowSpacingExpression: '0',
     columnSpacingExpression: '30',
     columnDirection: 'right',
+  }, {
+    id: 'f8c1903e-a230-45ee-8d89-f09d0a22e156',
+    stackId: arraySource.stackId,
+    arrayType: 'rectangular',
+    sourceIds: [],
+    sourceRefs: [{ kind: 'array-placement', arrayId: 'b6ec65ca-d912-4b09-8b5c-f231466d7f11', placementIndex: 1 }],
+    rowCountExpression: '2',
+    columnCountExpression: '1',
+    rowSpacingExpression: '40',
+    columnSpacingExpression: '0',
   }],
 };
 drawing.extensions.linkedCopyTools = {
@@ -68,6 +78,8 @@ const ordinaryGeometryVisible = [...objectLayer.querySelectorAll('.canvas-record
   .some((node) => node.querySelector('.entity') && getComputedStyle(node).display !== 'none');
 
 dimensionTextModeButton.click();
+await nextFrame();
+const expressionCount = constructionDerivativeCount();
 dimensionTextModeButton.click();
 await nextFrame();
 const restored = constructionDerivativeCount();
@@ -75,11 +87,13 @@ dimensionTextModeButton.click();
 await nextFrame();
 
 const checks = {
-  'construction derivatives render outside Value Only': before >= 2,
+  'construction derivatives and nested arrays render outside Value Only': before >= 4,
   'construction derivatives are absent in Value Only': during === 0,
   'original construction records are hidden in Value Only': originalHidden,
   'ordinary geometry remains visible in Value Only': ordinaryGeometryVisible,
   'leaving Value Only restores construction derivatives': restored === before,
+  'Expression view restores construction derivatives': expressionCount === before,
+  'returning to Value Only hides derivatives again': constructionDerivativeCount() === 0,
 };
 const failed = Object.entries(checks).filter(([, passed]) => !passed).map(([label]) => label);
 output.textContent = failed.length

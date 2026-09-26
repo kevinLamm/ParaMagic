@@ -1,9 +1,81 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { findClosedGeometryCycles } from '../../packages/paramagic-core/src/modules/BoundaryTopology.js';
+import { sharedPointRegions, touchingComposites } from './fixtures/sharedPointRegions.js';
 
 const point = (recordId, index) => ({ kind: 'point', recordId, index });
 const coincident = (id, a, b) => ({ id, type: 'Coincident', featureRefs: [a, b], enabled: true });
+
+const members = (cycles) => cycles.map((cycle) => cycle.map(({ entityId }) => entityId).sort().join(',')).sort();
+
+test('shared line/arc/curve junctions produce bounded faces rather than a spanning-tree cycle basis', () => {
+  const entities = sharedPointRegions();
+  for (const order of [entities, [...entities].reverse(), [entities[1], entities[0], entities[2]]]) {
+    assert.deepEqual(members(findClosedGeometryCycles(order)), ['divider,lower-curve', 'divider,upper-arc']);
+  }
+});
+
+test('touching closed composites retain their own edges and produce no extra regions', () => {
+  const entities = touchingComposites();
+  const expected = ['left-panel-0,left-panel-1,left-panel-2,left-panel-3', 'right-panel-0,right-panel-1,right-panel-2,right-panel-3'];
+  assert.deepEqual(members(findClosedGeometryCycles(entities)), expected);
+  assert.deepEqual(members(findClosedGeometryCycles([...entities].reverse())), expected);
+});
+
+test('an interior dangling branch does not become part of a fill boundary', () => {
+  const entities = [...sharedPointRegions(), { id: 'branch', type: 'line', start: [-60, 0], end: [0, -20] }];
+  assert.deepEqual(members(findClosedGeometryCycles(entities)), ['divider,lower-curve', 'divider,upper-arc']);
+});
+
+test('loose line loops sharing a divider stay separate when edge direction and order change', () => {
+  const entities = [
+    { id: 'divider', type: 'line', start: [0, 0], end: [100, 0] },
+    { id: 'upper-a', type: 'line', start: [100, 0], end: [50, -50] },
+    { id: 'upper-b', type: 'line', start: [50, -50], end: [0, 0] },
+    { id: 'lower-a', type: 'line', start: [100, 0], end: [50, 50] },
+    { id: 'lower-b', type: 'line', start: [50, 50], end: [0, 0] },
+  ];
+  const expected = ['divider,lower-a,lower-b', 'divider,upper-a,upper-b'];
+  assert.deepEqual(members(findClosedGeometryCycles(entities)), expected);
+  assert.deepEqual(members(findClosedGeometryCycles(entities.reverse().map((entity) => ({
+    ...entity, start: entity.end, end: entity.start,
+  })))), expected);
+});
+
+test('tangent arc loops meeting at a single point do not exchange their boundaries', () => {
+  const entities = [
+    { id: 'left-top', type: 'arc', start: [-100, 0], arcPoint: [-50, -50], end: [0, 0] },
+    { id: 'right-top', type: 'arc', start: [0, 0], arcPoint: [50, -50], end: [100, 0] },
+    { id: 'left-bottom', type: 'arc', start: [0, 0], arcPoint: [-50, 50], end: [-100, 0] },
+    { id: 'right-bottom', type: 'arc', start: [100, 0], arcPoint: [50, 50], end: [0, 0] },
+  ];
+  assert.deepEqual(members(findClosedGeometryCycles(entities)), ['left-bottom,left-top', 'right-bottom,right-top']);
+});
+
+test('loose geometry and a closed composite may share both endpoints without borrowing edges', () => {
+  const panel = touchingComposites().slice(0, 4);
+  const loose = [
+    { id: 'loose-line', type: 'line', start: [100, 0], end: [100, 80] },
+    { id: 'loose-curve', type: 'curve', points: [[100, 80], [150, 40], [100, 0]] },
+  ];
+  assert.deepEqual(members(findClosedGeometryCycles([...panel, ...loose])), [
+    'left-panel-0,left-panel-1,left-panel-2,left-panel-3', 'loose-curve,loose-line',
+  ]);
+});
+
+test('a bridge between nested outlines does not concatenate their fill boundaries', () => {
+  const outline = (prefix, points) => points.map((start, index) => ({
+    id: `${prefix}-${index}`, type: 'line', start, end: points[(index + 1) % points.length],
+  }));
+  const entities = [
+    ...outline('outer', [[0, 0], [100, 0], [100, 100], [0, 100]]),
+    ...outline('inner', [[25, 25], [75, 25], [75, 75], [25, 75]]),
+    { id: 'bridge', type: 'line', start: [0, 0], end: [25, 25] },
+  ];
+  assert.deepEqual(members(findClosedGeometryCycles(entities)), [
+    'inner-0,inner-1,inner-2,inner-3', 'outer-0,outer-1,outer-2,outer-3',
+  ]);
+});
 
 test('coincident endpoint constraints turn connected open objects into a closed cycle', () => {
   const entities = [

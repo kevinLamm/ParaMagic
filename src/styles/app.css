@@ -68,17 +68,21 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .canvas:focus { outline: none; }
 .canvas.panning { cursor: grabbing; }
 .canvas-stack-hover-layer, .canvas-hover-layer, .canvas-overlap-cycle-layer, .canvas-handle-layer { pointer-events: none; }
-.canvas-stack-hover-layer .stack-hover-overlay-record,
-.canvas-stack-hover-layer .stack-hover-overlay-graphic { pointer-events: none !important; }
+/* Important declarations in this layer take precedence over tool hit rules.
+   Highlight clones keep the source geometry's classes, but are never targets. */
+@layer canvas-decoration {
+  .canvas-stack-hover-layer *, .canvas-hover-layer *, .canvas-overlap-cycle-layer * {
+    pointer-events: none !important;
+  }
+}
 .canvas-hover-layer .hover-highlight-graphic,
-.canvas-stack-hover-layer .stack-hover-overlay-graphic { pointer-events: none !important; stroke: #FFCE1B !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; vector-effect: non-scaling-stroke !important; filter: none !important; }
+.canvas-stack-hover-layer .stack-hover-overlay-graphic { stroke: #FFCE1B !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; vector-effect: non-scaling-stroke !important; filter: none !important; }
 .canvas-hover-layer .hover-highlight-graphic:not(.dimension-text),
 .canvas-stack-hover-layer .stack-hover-overlay-graphic:not(.dimension-text) { fill: none !important; fill-opacity: 0 !important; }
 .canvas-hover-layer .hover-highlight-graphic.dimension-text,
 .canvas-stack-hover-layer .stack-hover-overlay-graphic.dimension-text { fill: #FFCE1B !important; stroke: none !important; }
 .canvas-hover-layer .hover-highlight-graphic.dimension-arrow,
 .canvas-stack-hover-layer .stack-hover-overlay-graphic.dimension-arrow { fill: #FFCE1B !important; stroke: #FFCE1B !important; }
-.canvas-overlap-cycle-layer .overlap-cycle-indicator { pointer-events: none !important; }
 .canvas-overlap-cycle-layer .overlap-cycle-indicator:not(.point-handle):not(.dimension-text) { fill: none !important; fill-opacity: 0 !important; }
 .canvas-overlap-cycle-layer .overlap-cycle-indicator:not(.point-handle) { stroke: #00AEEF !important; stroke-width: calc(var(--original-stroke-width, 1.5px) + 2px) !important; filter: none !important; }
 .canvas-overlap-cycle-layer .overlap-cycle-indicator.point-handle { opacity: 1 !important; fill: #fff !important; stroke: #00AEEF !important; stroke-width: 3.5px !important; filter: none !important; }
@@ -1082,6 +1086,21 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .stack-disabled { display: none !important; pointer-events: none !important; }
 .stack-inactive { opacity: .46; }
 .stack-inactive.stack-hovered { opacity: .62; }
+/* Relationship tools can reference other Stacks' edges and points, but their
+   interiors must not hide geometry in the active Stack. Fill-only boundary
+   presentations have separate edge targets; linked copies use their geometry
+   instead of the group's rectangular selection area. */
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .stack-inactive .closed-entity.selectable-entity,
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .stack-inactive .linked-copy-content .selectable-entity {
+  pointer-events: stroke !important;
+}
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .closed-constrained-region.stack-inactive,
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .stack-inactive .closed-constrained-region,
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .stack-inactive .swell-derived-fill,
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .linked-copy-group.stack-inactive,
+.canvas:is(.dimension-selection-active, .constraint-selection-active) .stack-inactive .linked-copy-hit {
+  pointer-events: none !important;
+}
 .canvas:not(.inactive-stack-hit-test-blocked):not(.dimension-selection-active):not(.constraint-selection-active) .closed-constrained-region.stack-inactive {
   pointer-events: fill !important;
 }

@@ -80,10 +80,11 @@ try {
   saveButton.disabled = false;
   assert(!saveButton.disabled, 'normal Save action is available');
   const saved = canvasController.getDrawingData();
-  const constraint = saved.extensions.swell.constraints[0];
-  assert(constraint.externalTarget.derivedRef.recordId === sourceId, 'Swell constraint stores the real source RecordID');
-  assert(constraint.externalTarget.derivedRef.derivedFeature?.provider === 'swell', 'Swell constraint stores a live derivative selector');
-  assert(constraint.externalTarget.sourceId === sourceId, 'Swell target source identity is portable');
+  const constraint = saved.constraints.find(({ id }) => id === constraintId);
+  const derivedRef = constraint.featureRefs.find((ref) => ref.derivedFeature);
+  assert(derivedRef.recordId === sourceId, 'Swell constraint stores the real source RecordID');
+  assert(derivedRef.derivedFeature.provider === 'swell', 'Swell constraint stores a live derivative selector');
+  assert(!saved.extensions.swell, 'Swell relationships persist in the ordinary solver graph');
   assert(identityAudit(saved).valid, 'saved drawing passes the complete identity audit');
 
   output.textContent = `READY: ${checks.length} pre-save checks\n${checks.join('\n')}\nUse App Menu > Save.`;
