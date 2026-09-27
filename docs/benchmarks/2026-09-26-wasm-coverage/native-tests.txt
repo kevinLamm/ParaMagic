@@ -1,0 +1,322 @@
+TAP version 13
+# Subtest: WASM coverage: Parallel residuals and Jacobian match JavaScript
+ok 1 - WASM coverage: Parallel residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 8.8756
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Perpendicular residuals and Jacobian match JavaScript
+ok 2 - WASM coverage: Perpendicular residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.2501
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Point-on Line residuals and Jacobian match JavaScript
+ok 3 - WASM coverage: Point-on Line residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.7075
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Point Line Distance residuals and Jacobian match JavaScript
+ok 4 - WASM coverage: Point Line Distance residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.9118
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Line Line Distance residuals and Jacobian match JavaScript
+ok 5 - WASM coverage: Line Line Distance residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.233
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Collinear residuals and Jacobian match JavaScript
+ok 6 - WASM coverage: Collinear residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.7935
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Equal residuals and Jacobian match JavaScript
+ok 7 - WASM coverage: Equal residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.7833
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Length residuals and Jacobian match JavaScript
+ok 8 - WASM coverage: Length residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.7737
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Tangent residuals and Jacobian match JavaScript
+ok 9 - WASM coverage: Tangent residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 2.3208
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Point-on Arc residuals and Jacobian match JavaScript
+ok 10 - WASM coverage: Point-on Arc residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.2217
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Angle residuals and Jacobian match JavaScript
+ok 11 - WASM coverage: Angle residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.0292
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Meta residuals and Jacobian match JavaScript
+ok 12 - WASM coverage: Meta residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.598
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Radius residuals and Jacobian match JavaScript
+ok 13 - WASM coverage: Radius residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.8374
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Diameter residuals and Jacobian match JavaScript
+ok 14 - WASM coverage: Diameter residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.7018
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Concentric residuals and Jacobian match JavaScript
+ok 15 - WASM coverage: Concentric residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 0.8098
+  type: 'test'
+  ...
+# Subtest: WASM coverage: Coincident residuals and Jacobian match JavaScript
+ok 16 - WASM coverage: Coincident residuals and Jacobian match JavaScript
+  ---
+  duration_ms: 1.1524
+  type: 'test'
+  ...
+# Subtest: WASM preserves analytical line and arc length derivatives
+ok 17 - WASM preserves analytical line and arc length derivatives
+  ---
+  duration_ms: 6.7799
+  type: 'test'
+  ...
+# Subtest: WASM equal/length/tangent variants and domain branches match JavaScript
+ok 18 - WASM equal/length/tangent variants and domain branches match JavaScript
+  ---
+  duration_ms: 13.2026
+  type: 'test'
+  ...
+# Subtest: WASM projected dimensions preserve clamping, orientation, and degenerate lines
+ok 19 - WASM projected dimensions preserve clamping, orientation, and degenerate lines
+  ---
+  duration_ms: 21.3305
+  type: 'test'
+  ...
+# Subtest: WASM supports polygon/table segments, interpolated points, and global frames
+ok 20 - WASM supports polygon/table segments, interpolated points, and global frames
+  ---
+  duration_ms: 2.0742
+  type: 'test'
+  ...
+# Subtest: WASM Point-on Fillet: line-line
+ok 21 - WASM Point-on Fillet: line-line
+  ---
+  duration_ms: 8.0959
+  type: 'test'
+  ...
+# Subtest: WASM Point-on Fillet: line-arc
+ok 22 - WASM Point-on Fillet: line-arc
+  ---
+  duration_ms: 6.6464
+  type: 'test'
+  ...
+# Subtest: WASM Point-on Fillet: curve-line
+ok 23 - WASM Point-on Fillet: curve-line
+  ---
+  duration_ms: 3.028
+  type: 'test'
+  ...
+# Subtest: WASM Point-on Fillet: curve-curve
+ok 24 - WASM Point-on Fillet: curve-curve
+  ---
+  duration_ms: 3.7522
+  type: 'test'
+  ...
+# Subtest: WASM Point-on Fillet: arc-arc
+ok 25 - WASM Point-on Fillet: arc-arc
+  ---
+  duration_ms: 5.7713
+  type: 'test'
+  ...
+# Subtest: complete native solves agree with JavaScript on the new constraint types
+ok 26 - complete native solves agree with JavaScript on the new constraint types
+  ---
+  duration_ms: 14.119
+  type: 'test'
+  ...
+# Subtest: native arc radius edits preserve exact semicircle reduction and branch seeding
+ok 27 - native arc radius edits preserve exact semicircle reduction and branch seeding
+  ---
+  duration_ms: 36.3334
+  type: 'test'
+  ...
+# Subtest: unsupported derived Swell components retain complete JavaScript solving
+ok 28 - unsupported derived Swell components retain complete JavaScript solving
+  ---
+  duration_ms: 11.4518
+  type: 'test'
+  ...
+# Subtest: invalid dimensional inputs cannot become valid native zero-target constraints
+ok 29 - invalid dimensional inputs cannot become valid native zero-target constraints
+  ---
+  duration_ms: 2.9367
+  type: 'test'
+  ...
+# Subtest: native Coincident residual and analytical Jacobian match JS
+ok 30 - native Coincident residual and analytical Jacobian match JS
+  ---
+  duration_ms: 6.838
+  type: 'test'
+  ...
+# Subtest: native Horizontal residual and analytical Jacobian match JS
+ok 31 - native Horizontal residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.7231
+  type: 'test'
+  ...
+# Subtest: native Vertical residual and analytical Jacobian match JS
+ok 32 - native Vertical residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.5934
+  type: 'test'
+  ...
+# Subtest: native Distance residual and analytical Jacobian match JS
+ok 33 - native Distance residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.721
+  type: 'test'
+  ...
+# Subtest: native Horizontal Distance residual and analytical Jacobian match JS
+ok 34 - native Horizontal Distance residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.8411
+  type: 'test'
+  ...
+# Subtest: native Vertical Distance residual and analytical Jacobian match JS
+ok 35 - native Vertical Distance residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.7197
+  type: 'test'
+  ...
+# Subtest: native Fixed residual and analytical Jacobian match JS
+ok 36 - native Fixed residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.6799
+  type: 'test'
+  ...
+# Subtest: native Radius residual and analytical Jacobian match JS
+ok 37 - native Radius residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.6892
+  type: 'test'
+  ...
+# Subtest: native Diameter residual and analytical Jacobian match JS
+ok 38 - native Diameter residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.7041
+  type: 'test'
+  ...
+# Subtest: native Midpoint residual and analytical Jacobian match JS
+ok 39 - native Midpoint residual and analytical Jacobian match JS
+  ---
+  duration_ms: 1.1563
+  type: 'test'
+  ...
+# Subtest: native Concentric residual and analytical Jacobian match JS
+ok 40 - native Concentric residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.4356
+  type: 'test'
+  ...
+# Subtest: native Point-on Circle residual and analytical Jacobian match JS
+ok 41 - native Point-on Circle residual and analytical Jacobian match JS
+  ---
+  duration_ms: 0.547
+  type: 'test'
+  ...
+# Subtest: native derivative branches preserve degeneracies and signed radius semantics
+ok 42 - native derivative branches preserve degeneracies and signed radius semantics
+  ---
+  duration_ms: 8.2067
+  type: 'test'
+  ...
+# Subtest: persistent repeated edits match the JS oracle and keep topology and arena
+ok 43 - persistent repeated edits match the JS oracle and keep topology and arena
+  ---
+  duration_ms: 395.8887
+  type: 'test'
+  ...
+# Subtest: native topology responds to structural edits, enabled states, and references
+ok 44 - native topology responds to structural edits, enabled states, and references
+  ---
+  duration_ms: 0.6748
+  type: 'test'
+  ...
+# Subtest: native preserves free-floating gauge, cancellation rollback, and lock release
+ok 45 - native preserves free-floating gauge, cancellation rollback, and lock release
+  ---
+  duration_ms: 7.7386
+  type: 'test'
+  ...
+# Subtest: inconsistent constraints and no-free-variable cases cannot report false convergence
+ok 46 - inconsistent constraints and no-free-variable cases cannot report false convergence
+  ---
+  duration_ms: 0.8048
+  type: 'test'
+  ...
+# Subtest: arc intrinsic equations now run through the native backend
+ok 47 - arc intrinsic equations now run through the native backend
+  ---
+  duration_ms: 1.671
+  type: 'test'
+  ...
+# Subtest: async Worker dimension transactions cancel, restore, then commit the newest revision
+ok 48 - async Worker dimension transactions cancel, restore, then commit the newest revision
+  ---
+  duration_ms: 1709.678
+  type: 'test'
+  ...
+# Subtest: native Worker client coalesces same-dimension edits but respects ordering barriers
+ok 49 - native Worker client coalesces same-dimension edits but respects ordering barriers
+  ---
+  duration_ms: 0.485
+  type: 'test'
+  ...
+# Subtest: a completed obsolete revision is hidden and carried into the next accepted delta
+ok 50 - a completed obsolete revision is hidden and carried into the next accepted delta
+  ---
+  duration_ms: 0.2832
+  type: 'test'
+  ...
+# Subtest: expression-driven parameter updates retain JavaScript values and native geometry parity
+ok 51 - expression-driven parameter updates retain JavaScript values and native geometry parity
+  ---
+  duration_ms: 101.5174
+  type: 'test'
+  ...
+# Subtest: native drag preview retains the existing final tolerance and releases locks
+ok 52 - native drag preview retains the existing final tolerance and releases locks
+  ---
+  duration_ms: 1.9596
+  type: 'test'
+  ...
+1..52
+# tests 52
+# suites 0
+# pass 52
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2332.0898

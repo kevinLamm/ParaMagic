@@ -1,0 +1,11 @@
+import {canvasController as canvas, initialization} from '../../main.js';
+await initialization;
+canvas.loadDrawingData({entities:[], parameters:[], constraints:[], dimensionAnnotations:[], extensions:{controls:{version:4,items:[]}}}, {history:'reset'});
+canvas.flushDrawingUpdate();
+const host=document.createElement('div');host.style.cssText='position:fixed;bottom:10px;right:10px;z-index:4000;background:white;border:1px solid #999;padding:8px;font:12px monospace;max-width:650px';
+const reload=document.createElement('button');reload.textContent='Reload saved Controls';
+const inspect=document.createElement('button');inspect.textContent='Inspect Controls state';
+const output=document.createElement('pre');output.style.cssText='max-height:220px;overflow:auto';host.append(reload,inspect,output);document.body.append(host);
+const show=()=>{const d=canvas.getDrawingData();output.textContent=JSON.stringify({controls:d.extensions.controls,parameters:d.parameters.filter(p=>p.kind==='control').map(({name,value,expression})=>({name,value,expression}))},null,2);};
+reload.onclick=()=>{canvas.loadDrawingData(JSON.parse(JSON.stringify(canvas.getDrawingData())),{history:'commit'});canvas.flushDrawingUpdate();show();};
+inspect.onclick=show;

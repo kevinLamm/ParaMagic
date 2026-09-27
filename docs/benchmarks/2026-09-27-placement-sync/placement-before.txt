@@ -1,0 +1,92 @@
+TAP version 13
+# Subtest: javascript: collective relocation survives an immediate control edit without reloading the Worker
+not ok 1 - javascript: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 24.8449
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\node_modules\\.cache\\stack-placement-sync\\src\\tests\\stackPlacementWorker.test.js:50:3'
+  failureType: 'testCodeFailure'
+  error: '5 != 85'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:11:43)
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:70:7)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: javascript: cancelled placement and journal recovery retain the accepted canvas location
+not ok 2 - javascript: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 6.2816
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\node_modules\\.cache\\stack-placement-sync\\src\\tests\\stackPlacementWorker.test.js:93:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:102:14)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wasm: collective relocation survives an immediate control edit without reloading the Worker
+not ok 3 - wasm: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 11.3457
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\node_modules\\.cache\\stack-placement-sync\\src\\tests\\stackPlacementWorker.test.js:50:3'
+  failureType: 'testCodeFailure'
+  error: '5 != 85'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:11:43)
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:70:7)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: wasm: cancelled placement and journal recovery retain the accepted canvas location
+not ok 4 - wasm: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 5.6926
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\node_modules\\.cache\\stack-placement-sync\\src\\tests\\stackPlacementWorker.test.js:93:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/node_modules/.cache/stack-placement-sync/src/tests/stackPlacementWorker.test.js:102:14)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 137.0959

@@ -1,0 +1,760 @@
+TAP version 13
+# Subtest: driven line extensions use closest endpoints on either side with a screen-sized gap
+ok 1 - driven line extensions use closest endpoints on either side with a screen-sized gap
+  ---
+  duration_ms: 2.1774
+  type: 'test'
+  ...
+# Subtest: driving line extensions use closest endpoints on either side with a screen-sized gap
+ok 2 - driving line extensions use closest endpoints on either side with a screen-sized gap
+  ---
+  duration_ms: 0.7858
+  type: 'test'
+  ...
+# Subtest: a parallel dimension keeps following its selected endpoint after geometry changes
+ok 3 - a parallel dimension keeps following its selected endpoint after geometry changes
+  ---
+  duration_ms: 1.4393
+  type: 'test'
+  ...
+# Subtest: loading a midpoint-based parallel dimension records the closest endpoint choices
+ok 4 - loading a midpoint-based parallel dimension records the closest endpoint choices
+  ---
+  duration_ms: 0.4406
+  type: 'test'
+  ...
+# Subtest: a linked diameter keeps its direction and circumference gap as its circle changes
+ok 5 - a linked diameter keeps its direction and circumference gap as its circle changes
+  ---
+  duration_ms: 0.7196
+  type: 'test'
+  ...
+# Subtest: loading a radial dimension records its current direction and circumference gap
+ok 6 - loading a radial dimension records its current direction and circumference gap
+  ---
+  duration_ms: 0.1
+  type: 'test'
+  ...
+# Subtest: a saved length-dimension direction prevents an anchor-order flip
+ok 7 - a saved length-dimension direction prevents an anchor-order flip
+  ---
+  duration_ms: 0.2841
+  type: 'test'
+  ...
+# Subtest: a saved length-dimension distance survives parameter-driven anchor changes
+ok 8 - a saved length-dimension distance survives parameter-driven anchor changes
+  ---
+  duration_ms: 0.1404
+  type: 'test'
+  ...
+# Subtest: dragging a length dimension across its anchor records the newly chosen direction
+ok 9 - dragging a length dimension across its anchor records the newly chosen direction
+  ---
+  duration_ms: 0.4308
+  type: 'test'
+  ...
+# Subtest: finishing a length-dimension drag persists its distance and direction
+ok 10 - finishing a length-dimension drag persists its distance and direction
+  ---
+  duration_ms: 0.3516
+  type: 'test'
+  ...
+# Subtest: a saved drawing round trip retains the length-dimension placement direction
+ok 11 - a saved drawing round trip retains the length-dimension placement direction
+  ---
+  duration_ms: 11.2068
+  type: 'test'
+  ...
+# Subtest: loading a legacy length dimension records its current placement direction
+ok 12 - loading a legacy length dimension records its current placement direction
+  ---
+  duration_ms: 0.1359
+  type: 'test'
+  ...
+# Subtest: Stack rotation carries the saved dimension placement direction
+ok 13 - Stack rotation carries the saved dimension placement direction
+  ---
+  duration_ms: 0.215
+  type: 'test'
+  ...
+# Subtest: point-to-line extension moves only the line origin, regardless of selection order
+ok 14 - point-to-line extension moves only the line origin, regardless of selection order
+  ---
+  duration_ms: 0.2417
+  type: 'test'
+  ...
+# Subtest: a single line length retains point endpoint gaps
+ok 15 - a single line length retains point endpoint gaps
+  ---
+  duration_ms: 0.0987
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to horizontal edge retains its line distance and direction, order false
+ok 16 - JavaScript: origin to horizontal edge retains its line distance and direction, order false
+  ---
+  duration_ms: 34.7269
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to horizontal edge retains its line distance and direction, order true
+ok 17 - JavaScript: origin to horizontal edge retains its line distance and direction, order true
+  ---
+  duration_ms: 11.7715
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to vertical edge retains its line distance and direction, order false
+ok 18 - JavaScript: origin to vertical edge retains its line distance and direction, order false
+  ---
+  duration_ms: 11.496
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to vertical edge retains its line distance and direction, order true
+ok 19 - JavaScript: origin to vertical edge retains its line distance and direction, order true
+  ---
+  duration_ms: 11.775
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to sloped edge retains its line distance and direction, order false
+ok 20 - JavaScript: origin to sloped edge retains its line distance and direction, order false
+  ---
+  duration_ms: 27.5008
+  type: 'test'
+  ...
+# Subtest: JavaScript: origin to sloped edge retains its line distance and direction, order true
+ok 21 - JavaScript: origin to sloped edge retains its line distance and direction, order true
+  ---
+  duration_ms: 23.482
+  type: 'test'
+  ...
+# Subtest: JavaScript: an origin-edge edit translates connected Collinear Stacks and still allows sliding
+ok 22 - JavaScript: an origin-edge edit translates connected Collinear Stacks and still allows sliding
+  ---
+  duration_ms: 11.9756
+  type: 'test'
+  ...
+# Subtest: JavaScript: point-edge distance permits required rotation when a world Fixed point prevents translation
+ok 23 - JavaScript: point-edge distance permits required rotation when a world Fixed point prevents translation
+  ---
+  duration_ms: 14.6203
+  type: 'test'
+  ...
+# Subtest: WASM: origin to horizontal edge retains its line distance and direction, order false
+ok 24 - WASM: origin to horizontal edge retains its line distance and direction, order false
+  ---
+  duration_ms: 14.9063
+  type: 'test'
+  ...
+# Subtest: WASM: origin to horizontal edge retains its line distance and direction, order true
+ok 25 - WASM: origin to horizontal edge retains its line distance and direction, order true
+  ---
+  duration_ms: 8.5878
+  type: 'test'
+  ...
+# Subtest: WASM: origin to vertical edge retains its line distance and direction, order false
+ok 26 - WASM: origin to vertical edge retains its line distance and direction, order false
+  ---
+  duration_ms: 8.4321
+  type: 'test'
+  ...
+# Subtest: WASM: origin to vertical edge retains its line distance and direction, order true
+ok 27 - WASM: origin to vertical edge retains its line distance and direction, order true
+  ---
+  duration_ms: 7.39
+  type: 'test'
+  ...
+# Subtest: WASM: origin to sloped edge retains its line distance and direction, order false
+ok 28 - WASM: origin to sloped edge retains its line distance and direction, order false
+  ---
+  duration_ms: 18.1952
+  type: 'test'
+  ...
+# Subtest: WASM: origin to sloped edge retains its line distance and direction, order true
+ok 29 - WASM: origin to sloped edge retains its line distance and direction, order true
+  ---
+  duration_ms: 17.4034
+  type: 'test'
+  ...
+# Subtest: WASM: an origin-edge edit translates connected Collinear Stacks and still allows sliding
+ok 30 - WASM: an origin-edge edit translates connected Collinear Stacks and still allows sliding
+  ---
+  duration_ms: 5.8814
+  type: 'test'
+  ...
+# Subtest: WASM: point-edge distance permits required rotation when a world Fixed point prevents translation
+ok 31 - WASM: point-edge distance permits required rotation when a world Fixed point prevents translation
+  ---
+  duration_ms: 6.2962
+  type: 'test'
+  ...
+# Subtest: Stack point-edge preview measures the supporting line independently of label position and retains active-Stack behavior
+ok 32 - Stack point-edge preview measures the supporting line independently of label position and retains active-Stack behavior
+  ---
+  duration_ms: 0.6423
+  type: 'test'
+  ...
+# Subtest: driving dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+ok 33 - driving dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+  ---
+  duration_ms: 2.0938
+  type: 'test'
+  ...
+# Subtest: driven dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+ok 34 - driven dimension picking prioritizes a nearby point but honors an explicitly cycled edge
+  ---
+  duration_ms: 0.2736
+  type: 'test'
+  ...
+# Subtest: Driving Dimension editing uses the shared multiline expression box lookup
+ok 35 - Driving Dimension editing uses the shared multiline expression box lookup
+  ---
+  duration_ms: 0.3121
+  type: 'test'
+  ...
+# Subtest: Driving Dimension multiline editing preserves apply, line-break, and cancel keys
+ok 36 - Driving Dimension multiline editing preserves apply, line-break, and cancel keys
+  ---
+  duration_ms: 0.0755
+  type: 'test'
+  ...
+# Subtest: Driving Dimension opens on the completed second click so the launching release cannot dismiss it
+ok 37 - Driving Dimension opens on the completed second click so the launching release cannot dismiss it
+  ---
+  duration_ms: 0.4145
+  type: 'test'
+  ...
+# Subtest: Dimension press jitter does not capture a drag; deliberate movement starts from the original press
+ok 38 - Dimension press jitter does not capture a drag; deliberate movement starts from the original press
+  ---
+  duration_ms: 0.5309
+  type: 'test'
+  ...
+# Subtest: Dimension pointer release outside the label disarms dragging, while a second click can still edit
+ok 39 - Dimension pointer release outside the label disarms dragging, while a second click can still edit
+  ---
+  duration_ms: 0.2182
+  type: 'test'
+  ...
+# Subtest: Dimension text hit bounds provide a screen-sized hover area at every zoom
+ok 40 - Dimension text hit bounds provide a screen-sized hover area at every zoom
+  ---
+  duration_ms: 0.1586
+  type: 'test'
+  ...
+# Subtest: Smart Dimension selection toggles existing dimension hit-testing on the canvas
+ok 41 - Smart Dimension selection toggles existing dimension hit-testing on the canvas
+  ---
+  duration_ms: 0.1968
+  type: 'test'
+  ...
+# Subtest: circle Smart Dimensions measure diameter while arc dimensions continue to measure radius
+ok 42 - circle Smart Dimensions measure diameter while arc dimensions continue to measure radius
+  ---
+  duration_ms: 0.4003
+  type: 'test'
+  ...
+# Subtest: Smart Dimensions retain the built-in origin as a point anchor
+ok 43 - Smart Dimensions retain the built-in origin as a point anchor
+  ---
+  duration_ms: 0.2264
+  type: 'test'
+  ...
+# Subtest: the origin belongs to the global coordinate system when no Stack is active
+ok 44 - the origin belongs to the global coordinate system when no Stack is active
+  ---
+  duration_ms: 0.1346
+  type: 'test'
+  ...
+# Subtest: committing a Smart Dimension preserves its selected highlight through the placement click
+ok 45 - committing a Smart Dimension preserves its selected highlight through the placement click
+  ---
+  duration_ms: 0.129
+  type: 'test'
+  ...
+# Subtest: a radial candidate treats its next geometry hit as placement instead of another selection
+ok 46 - a radial candidate treats its next geometry hit as placement instead of another selection
+  ---
+  duration_ms: 0.0968
+  type: 'test'
+  ...
+# Subtest: a fillet uses a normal solver-driven Smart Driving radius dimension
+ok 47 - a fillet uses a normal solver-driven Smart Driving radius dimension
+  ---
+  duration_ms: 0.0701
+  type: 'test'
+  ...
+# Subtest: a driven fillet radius remains a measurement without a driving target
+ok 48 - a driven fillet radius remains a measurement without a driving target
+  ---
+  duration_ms: 0.05
+  type: 'test'
+  ...
+# Subtest: a notch point creates an external Smart Driving dimension that retains both anchors
+ok 49 - a notch point creates an external Smart Driving dimension that retains both anchors
+  ---
+  duration_ms: 5.7807
+  type: 'test'
+  ...
+# Subtest: a Swell-derived point can be the fixed reference for a Notch Smart Driving dimension
+ok 50 - a Swell-derived point can be the fixed reference for a Notch Smart Driving dimension
+  ---
+  duration_ms: 0.2744
+  type: 'test'
+  ...
+# Subtest: a notch point to segment creates an external Smart Driving dimension
+ok 51 - a notch point to segment creates an external Smart Driving dimension
+  ---
+  duration_ms: 1.4242
+  type: 'test'
+  ...
+# Subtest: a segment to notch point creates the same external Smart Driving dimension
+ok 52 - a segment to notch point creates the same external Smart Driving dimension
+  ---
+  duration_ms: 0.1778
+  type: 'test'
+  ...
+# Subtest: a text point to segment dimension stays driving and retains live anchors
+ok 53 - a text point to segment dimension stays driving and retains live anchors
+  ---
+  duration_ms: 8.8563
+  type: 'test'
+  ...
+# Subtest: a derived point automatically creates one horizontal linked-position driving dimension
+ok 54 - a derived point automatically creates one horizontal linked-position driving dimension
+  ---
+  duration_ms: 0.8711
+  type: 'test'
+  ...
+# Subtest: linked-position routing forces a deterministic axis and blocks unsupported or repeated relationships
+ok 55 - linked-position routing forces a deterministic axis and blocks unsupported or repeated relationships
+  ---
+  duration_ms: 0.1505
+  type: 'test'
+  ...
+# Subtest: parallel edge dimensions use a cursor-independent distance at the closest stored endpoint
+ok 56 - parallel edge dimensions use a cursor-independent distance at the closest stored endpoint
+  ---
+  duration_ms: 0.3791
+  type: 'test'
+  ...
+# Subtest: parallel oblique edges measure their normal delta and nonparallel edges create an angle
+ok 57 - parallel oblique edges measure their normal delta and nonparallel edges create an angle
+  ---
+  duration_ms: 0.306
+  type: 'test'
+  ...
+# Subtest: a driving parallel-edge dimension persists one line-to-line constraint without a separate Parallel constraint
+ok 58 - a driving parallel-edge dimension persists one line-to-line constraint without a separate Parallel constraint
+  ---
+  duration_ms: 7.2772
+  type: 'test'
+  ...
+# Subtest: a line-to-line driving dimension removes its controlled axis from endpoint drag locks
+ok 59 - a line-to-line driving dimension removes its controlled axis from endpoint drag locks
+  ---
+  duration_ms: 3.3409
+  type: 'test'
+  ...
+# Subtest: axis dimensions stored with point anchors hold the opposite anchor during endpoint drag
+ok 60 - axis dimensions stored with point anchors hold the opposite anchor during endpoint drag
+  ---
+  duration_ms: 1.9713
+  type: 'test'
+  ...
+# Subtest: angled dimensions use the rays selected by the user instead of the opposite acute angle
+ok 61 - angled dimensions use the rays selected by the user instead of the opposite acute angle
+  ---
+  duration_ms: 0.2851
+  type: 'test'
+  ...
+# Subtest: every Smart Driving dimension records a normalized direction
+ok 62 - every Smart Driving dimension records a normalized direction
+  ---
+  duration_ms: 0.2339
+  type: 'test'
+  ...
+# Subtest: an aligned Smart Driving dimension rejects an endpoint dragged onto its mirrored branch
+ok 63 - an aligned Smart Driving dimension rejects an endpoint dragged onto its mirrored branch
+  ---
+  duration_ms: 8.1751
+  type: 'test'
+  ...
+# Subtest: loading a legacy driving dimension derives and persists its current direction
+ok 64 - loading a legacy driving dimension derives and persists its current direction
+  ---
+  duration_ms: 2.1935
+  type: 'test'
+  ...
+# Subtest: empty persisted Global frames resolve to the identity coordinate system
+ok 65 - empty persisted Global frames resolve to the identity coordinate system
+  ---
+  duration_ms: 1.5892
+  type: 'test'
+  ...
+# Subtest: global parallel rotates the inactive Stack without changing any local shape
+ok 66 - global parallel rotates the inactive Stack without changing any local shape
+  ---
+  duration_ms: 12.7703
+  type: 'test'
+  ...
+# Subtest: a new global relationship solves every Stack in the connected placement component
+ok 67 - a new global relationship solves every Stack in the connected placement component
+  ---
+  duration_ms: 3.067
+  type: 'test'
+  ...
+# Subtest: dragging either Stack holds its frame and solves the complete related placement component
+ok 68 - dragging either Stack holds its frame and solves the complete related placement component
+  ---
+  duration_ms: 2.5759
+  type: 'test'
+  ...
+# Subtest: global dragging allows sliding Stacks joined by an active-Stack cross-Stack Collinear constraint
+ok 69 - global dragging allows sliding Stacks joined by an active-Stack cross-Stack Collinear constraint
+  ---
+  duration_ms: 1.8128
+  type: 'test'
+  ...
+# Subtest: global transform constraints solve through active-Stack cross-Stack entity relationships
+ok 70 - global transform constraints solve through active-Stack cross-Stack entity relationships
+  ---
+  duration_ms: 3.285
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+ok 71 - active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+  ---
+  duration_ms: 2.911
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+ok 72 - active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+  ---
+  duration_ms: 10.9021
+  type: 'test'
+  ...
+# Subtest: saved placement roles survive activation changes and a drawing round trip
+ok 73 - saved placement roles survive activation changes and a drawing round trip
+  ---
+  duration_ms: 4.2392
+  type: 'test'
+  ...
+# Subtest: an impossible global equal-length relationship fails without deforming either Stack
+ok 74 - an impossible global equal-length relationship fails without deforming either Stack
+  ---
+  duration_ms: 0.8353
+  type: 'test'
+  ...
+# Subtest: collinear placement translates and rotates every entity while keeping the reference still
+ok 75 - collinear placement translates and rotates every entity while keeping the reference still
+  ---
+  duration_ms: 1.1464
+  type: 'test'
+  ...
+# Subtest: global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+ok 76 - global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+  ---
+  duration_ms: 20.8574
+  type: 'test'
+  ...
+# Subtest: a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+ok 77 - a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+  ---
+  duration_ms: 6.322
+  type: 'test'
+  ...
+# Subtest: global layer is permanent and cannot become the active drawable Stack
+ok 78 - global layer is permanent and cannot become the active drawable Stack
+  ---
+  duration_ms: 0.773
+  type: 'test'
+  ...
+# Subtest: removing geometry also removes its global relationships from an initialized graph
+ok 79 - removing geometry also removes its global relationships from an initialized graph
+  ---
+  duration_ms: 1.8857
+  type: 'test'
+  ...
+# Subtest: DXF preserves the placement and local horizontal direction of a rotated dimension
+ok 80 - DXF preserves the placement and local horizontal direction of a rotated dimension
+  ---
+  duration_ms: 1.0589
+  type: 'test'
+  ...
+# Subtest: canvas axes use the active Stack frame and return to global when none is active
+ok 81 - canvas axes use the active Stack frame and return to global when none is active
+  ---
+  duration_ms: 0.2652
+  type: 'test'
+  ...
+# Subtest: worker placement results carry frames before the main controller imports world geometry
+ok 82 - worker placement results carry frames before the main controller imports world geometry
+  ---
+  duration_ms: 2.5411
+  type: 'test'
+  ...
+# Subtest: failed placement transactions restore frames, annotations, and local shape together
+ok 83 - failed placement transactions restore frames, annotations, and local shape together
+  ---
+  duration_ms: 1.5394
+  type: 'test'
+  ...
+# Subtest: moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+ok 84 - moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+  ---
+  duration_ms: 1.0256
+  type: 'test'
+  ...
+# Subtest: JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+ok 85 - JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 14.0796
+  type: 'test'
+  ...
+# Subtest: JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+ok 86 - JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 4.4775
+  type: 'test'
+  ...
+# Subtest: JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+ok 87 - JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 5.6058
+  type: 'test'
+  ...
+# Subtest: JavaScript: independent dimension directions stay independent through three connected Stacks
+ok 88 - JavaScript: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.7031
+  type: 'test'
+  ...
+# Subtest: JavaScript: a driven measurement does not couple Stack movement
+ok 89 - JavaScript: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 1.3969
+  type: 'test'
+  ...
+# Subtest: JavaScript: disabled relationships do not couple Stack movement
+ok 90 - JavaScript: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 2.0043
+  type: 'test'
+  ...
+# Subtest: JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 91 - JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 4.747
+  type: 'test'
+  ...
+# Subtest: WASM: Parallel connects rotation without grouping translations, dragging either Stack
+ok 92 - WASM: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 5.2689
+  type: 'test'
+  ...
+# Subtest: WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+ok 93 - WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 2.6674
+  type: 'test'
+  ...
+# Subtest: WASM: horizontal dimension preserves spacing without coupling vertical movement
+ok 94 - WASM: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 4.7256
+  type: 'test'
+  ...
+# Subtest: WASM: independent dimension directions stay independent through three connected Stacks
+ok 95 - WASM: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.4677
+  type: 'test'
+  ...
+# Subtest: WASM: a driven measurement does not couple Stack movement
+ok 96 - WASM: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 1.0384
+  type: 'test'
+  ...
+# Subtest: WASM: disabled relationships do not couple Stack movement
+ok 97 - WASM: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 1.7573
+  type: 'test'
+  ...
+# Subtest: WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 98 - WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 2.9331
+  type: 'test'
+  ...
+# Subtest: javascript: collective relocation survives an immediate control edit without reloading the Worker
+ok 99 - javascript: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 29.7947
+  type: 'test'
+  ...
+# Subtest: javascript: cancelled placement and journal recovery retain the accepted canvas location
+ok 100 - javascript: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 14.8382
+  type: 'test'
+  ...
+# Subtest: javascript: geometry edits between collective moves use the correct frame
+ok 101 - javascript: geometry edits between collective moves use the correct frame
+  ---
+  duration_ms: 6.3911
+  type: 'test'
+  ...
+# Subtest: wasm: collective relocation survives an immediate control edit without reloading the Worker
+ok 102 - wasm: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 12.1715
+  type: 'test'
+  ...
+# Subtest: wasm: cancelled placement and journal recovery retain the accepted canvas location
+ok 103 - wasm: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 11.1094
+  type: 'test'
+  ...
+# Subtest: wasm: geometry edits between collective moves use the correct frame
+ok 104 - wasm: geometry edits between collective moves use the correct frame
+  ---
+  duration_ms: 5.7867
+  type: 'test'
+  ...
+# Subtest: JavaScript: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+ok 105 - JavaScript: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+  ---
+  duration_ms: 15.451
+  type: 'test'
+  ...
+# Subtest: JavaScript: Vertical rotates a whole Stack from 40,0 without deforming its objects
+ok 106 - JavaScript: Vertical rotates a whole Stack from 40,0 without deforming its objects
+  ---
+  duration_ms: 4.914
+  type: 'test'
+  ...
+# Subtest: JavaScript: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+ok 107 - JavaScript: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+  ---
+  duration_ms: 2.8869
+  type: 'test'
+  ...
+# Subtest: JavaScript: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+ok 108 - JavaScript: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+  ---
+  duration_ms: 3.2706
+  type: 'test'
+  ...
+# Subtest: JavaScript: local constraints survive global rotation and contradictory axes roll back
+ok 109 - JavaScript: local constraints survive global rotation and contradictory axes roll back
+  ---
+  duration_ms: 5.4301
+  type: 'test'
+  ...
+# Subtest: JavaScript: global Fixed point holds its world position without locking local variables
+ok 110 - JavaScript: global Fixed point holds its world position without locking local variables
+  ---
+  duration_ms: 2.9378
+  type: 'test'
+  ...
+# Subtest: JavaScript: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+ok 111 - JavaScript: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+  ---
+  duration_ms: 2.5886
+  type: 'test'
+  ...
+# Subtest: JavaScript: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+ok 112 - JavaScript: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+  ---
+  duration_ms: 1.7336
+  type: 'test'
+  ...
+# Subtest: JavaScript: a driving distance between Stacks moves frames and an internal dimension is rejected
+ok 113 - JavaScript: a driving distance between Stacks moves frames and an internal dimension is rejected
+  ---
+  duration_ms: 9.4337
+  type: 'test'
+  ...
+# Subtest: JavaScript: active-Stack Horizontal retains local geometry editing
+ok 114 - JavaScript: active-Stack Horizontal retains local geometry editing
+  ---
+  duration_ms: 1.6015
+  type: 'test'
+  ...
+# Subtest: WASM: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+ok 115 - WASM: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+  ---
+  duration_ms: 6.9693
+  type: 'test'
+  ...
+# Subtest: WASM: Vertical rotates a whole Stack from 40,0 without deforming its objects
+ok 116 - WASM: Vertical rotates a whole Stack from 40,0 without deforming its objects
+  ---
+  duration_ms: 2.9827
+  type: 'test'
+  ...
+# Subtest: WASM: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+ok 117 - WASM: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+  ---
+  duration_ms: 2.5402
+  type: 'test'
+  ...
+# Subtest: WASM: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+ok 118 - WASM: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+  ---
+  duration_ms: 3.9264
+  type: 'test'
+  ...
+# Subtest: WASM: local constraints survive global rotation and contradictory axes roll back
+ok 119 - WASM: local constraints survive global rotation and contradictory axes roll back
+  ---
+  duration_ms: 3.853
+  type: 'test'
+  ...
+# Subtest: WASM: global Fixed point holds its world position without locking local variables
+ok 120 - WASM: global Fixed point holds its world position without locking local variables
+  ---
+  duration_ms: 1.9415
+  type: 'test'
+  ...
+# Subtest: WASM: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+ok 121 - WASM: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+  ---
+  duration_ms: 2.5844
+  type: 'test'
+  ...
+# Subtest: WASM: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+ok 122 - WASM: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+  ---
+  duration_ms: 0.8969
+  type: 'test'
+  ...
+# Subtest: WASM: a driving distance between Stacks moves frames and an internal dimension is rejected
+ok 123 - WASM: a driving distance between Stacks moves frames and an internal dimension is rejected
+  ---
+  duration_ms: 7.2739
+  type: 'test'
+  ...
+# Subtest: WASM: active-Stack Horizontal retains local geometry editing
+ok 124 - WASM: active-Stack Horizontal retains local geometry editing
+  ---
+  duration_ms: 3.5008
+  type: 'test'
+  ...
+# Subtest: Smart Dimensions in transform mode accept cross-Stack angles/distances and the origin, excluding internal and external shape edits
+ok 125 - Smart Dimensions in transform mode accept cross-Stack angles/distances and the origin, excluding internal and external shape edits
+  ---
+  duration_ms: 0.3652
+  type: 'test'
+  ...
+1..125
+# tests 125
+# suites 0
+# pass 125
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 345.0307

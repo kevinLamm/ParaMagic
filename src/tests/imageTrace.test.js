@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { applyImageTraceRegion } from '../../packages/paramagic-core/src/modules/ImageSystem.js';
+import { createStackSystem } from '../../packages/paramagic-core/src/modules/StackSystem.js';
+import { DrawingHistory } from '../../packages/paramagic-core/src/modules/DrawingHistory.js';
 import {
   configureOpenCvResources,
   createImageTraceSettingsMemory,
@@ -16,6 +19,100 @@ const nearPoint = (actual, expected) => {
   near(actual[0], expected[0]);
   near(actual[1], expected[1]);
 };
+
+function traceDrawingFixture() {
+  let history;
+  const stacks = createStackSystem({ records: [], selectedIds: new Set(),
+    onChange: ({ history: mode }) => { if (mode === 'commit') history?.record(); },
+  });
+  const parent = stacks.addStack('Image source');
+  stacks.setActiveStack(parent.id);
+  const image = { id: 'image', type: 'image', stackId: parent.id };
+  let entities = [image];
+  const capture = () => ({ stacks: stacks.getState(), entities: structuredClone(entities) });
+  history = new DrawingHistory({ capture, restore: (snapshot) => {
+    stacks.restore(snapshot.stacks);
+    entities = snapshot.entities;
+  } });
+  const drawing = {
+    getStackState: stacks.getState, restoreStackState: stacks.restore, addStack: stacks.addStack,
+    checkpoint: () => { history.flush(); history.record(); },
+    commit: () => history.record(),
+    addObject: () => { throw Error('Trace must retain batched creation'); },
+    addObjects: (entries, options) => {
+      assert.deepEqual(options, { select: false, notify: false });
+      entities.push(...entries.map(({ entity }) => entity));
+      return entries.map(({ entity }) => ({ id: entity.id, entity }));
+    },
+  };
+  return { stacks, image, parent, drawing, history, capture };
+}
+
+const outline = [[70, 20], [120, 20], [120, 60], [70, 60]];
+
+test('Apply Trace creates a closed outline in a new child without changing activation or selection', () => {
+  const f = traceDrawingFixture();
+  const placed = f.stacks.getState();
+  const frame = { x: 100, y: -40, rotation: 0.4 };
+  placed.stacks.find(s => s.id === f.parent.id).frame = frame;
+  f.stacks.restore(placed);
+  const created = applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  assert.equal(created.length, 4);
+  const child = f.stacks.stack(created[0].entity.stackId);
+  assert.equal(child.parentStackId, f.parent.id);
+  assert.deepEqual(child.frame, frame);
+  assert.equal(f.stacks.activeStackId(), f.parent.id);
+  assert.equal(f.stacks.selectedStackId(), f.parent.id);
+  assert.equal(f.image.stackId, f.parent.id);
+  created.forEach(({ entity }, i) => {
+    assert.equal(entity.stackId, child.id);
+    assert.deepEqual(entity.start, outline[i]);
+    assert.deepEqual(entity.end, outline[(i + 1) % outline.length]);
+    assert.equal(entity.composite.closed, true);
+  });
+});
+
+test('each Apply Trace creates a separate sibling under the source image Stack', () => {
+  const f = traceDrawingFixture();
+  const first = applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  const second = applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  assert.notEqual(first[0].entity.stackId, second[0].entity.stackId);
+  const children = f.stacks.getState().stacks.filter(s => s.parentStackId === f.parent.id);
+  assert.equal(children.length, 2);
+  assert.notEqual(children[0].name, children[1].name);
+  assert.equal(f.stacks.activeStackId(), f.parent.id);
+});
+
+test('one Undo removes both the trace and its child Stack and Redo restores both', () => {
+  const f = traceDrawingFixture(), before = f.capture();
+  applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  const after = f.capture();
+  assert.equal(f.history.past.length, 1);
+  assert.equal(f.history.undo(), true);
+  assert.deepEqual(f.capture(), before);
+  assert.equal(f.history.redo(), true);
+  assert.deepEqual(f.capture(), after);
+});
+
+test('Apply Trace uses image ownership even when a different Stack is active', () => {
+  const f = traceDrawingFixture();
+  const other = f.stacks.addStack('Other');
+  f.stacks.setActiveStack(other.id);
+  const created = applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  assert.equal(f.stacks.stack(created[0].entity.stackId).parentStackId, f.parent.id);
+  assert.equal(f.stacks.activeStackId(), other.id);
+});
+
+for (const fail of ['rejected', 'exception']) test(`a ${fail} trace leaves no empty Stack or history action`, () => {
+  const f = traceDrawingFixture(), before = f.capture();
+  f.drawing.addObjects = () => { if (fail === 'exception') throw Error('Unable to add'); return []; };
+  const apply = () => applyImageTraceRegion({ image: f.image, worldPoints: outline }, f.drawing);
+  if (fail === 'exception') assert.throws(apply, /Unable to add/);
+  else assert.deepEqual(apply(), []);
+  assert.deepEqual(f.capture(), before);
+  assert.equal(f.history.past.length, 0);
+  assert.equal(f.stacks.selectedStackId(), f.parent.id);
+});
 
 test('the host configures the exact OpenCV script resource used by core', (context) => {
   context.after(() => configureOpenCvResources());

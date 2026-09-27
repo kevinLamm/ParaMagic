@@ -1,0 +1,12 @@
+import {canvasController as canvas,initialization} from '../../main.js';
+import {serializeParamagicDocument,parseParamagicDocument} from '@paramagic/core/document';
+await initialization;
+canvas.loadDrawingData({entities:[],parameters:[],constraints:[],documentMetadata:{}},{history:'reset'});
+canvas.flushDrawingUpdate();
+const host=document.createElement('div');host.style.cssText='position:fixed;right:15px;bottom:15px;z-index:1000;padding:10px;background:white;border:1px solid #888;font:12px monospace;max-width:400px';
+const button=document.createElement('button');button.textContent='Save and reopen test drawing';
+const legacy=document.createElement('button');legacy.textContent='Load legacy test drawing';
+const output=document.createElement('pre');output.style.cssText='white-space:pre-wrap;max-height:150px;overflow:auto';
+host.append(button,legacy,output);document.body.append(host);
+button.onclick=()=>{const text=serializeParamagicDocument(canvas.getDrawingData(),'Description test');const saved=JSON.parse(text);output.textContent=JSON.stringify(saved.documentMetadata,null,2);canvas.loadDrawingData(parseParamagicDocument(text),{history:'commit'});canvas.flushDrawingUpdate();};
+legacy.onclick=()=>{canvas.loadDrawingData({entities:[],parameters:[],constraints:[],documentMetadata:{documentTitle:'Legacy drawing'}},{history:'commit'});canvas.flushDrawingUpdate();};

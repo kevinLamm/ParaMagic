@@ -123,7 +123,7 @@ test('dragging either Stack holds its frame and solves the complete related plac
   assert.deepEqual(new Set(dragged.result.changedStackIds), new Set(['a', 'b']));
 });
 
-test('global dragging translates Stacks joined by an active-Stack cross-Stack Collinear constraint in real time', () => {
+test('global dragging allows sliding Stacks joined by an active-Stack cross-Stack Collinear constraint', () => {
   const solver = createSolverController();
   solver.setStackState({
     activeStackId: 'a',
@@ -161,19 +161,20 @@ test('global dragging translates Stacks joined by an active-Stack cross-Stack Co
   assert.deepEqual(solver.model.binding('edge-b').toEntity(), beforeLocalB);
   const afterFrames = new Map(solver.stackState.stacks.map(({ id, frame }) => [id, frame]));
   for (const stackId of ['a', 'b']) {
-    close(afterFrames.get(stackId).x - beforeFrames.get(stackId).x, delta.x);
-    close(afterFrames.get(stackId).y - beforeFrames.get(stackId).y, delta.y);
+    close(afterFrames.get(stackId).x - beforeFrames.get(stackId).x, stackId === 'a' ? delta.x : 0);
+    close(afterFrames.get(stackId).y - beforeFrames.get(stackId).y, 0);
     close(afterFrames.get(stackId).rotation, beforeFrames.get(stackId).rotation);
   }
   const afterA = solver.model.entity('edge-a');
   const afterB = solver.model.entity('edge-b');
-  for (const [before, after] of [[beforeA, afterA], [beforeB, afterB]]) {
+  for (const [before, after] of [[beforeA, afterA]]) {
     close(after.start[0] - before.start[0], delta.x);
     close(after.start[1] - before.start[1], delta.y);
     close(after.end[0] - before.end[0], delta.x);
     close(after.end[1] - before.end[1], delta.y);
   }
-  assert.deepEqual(new Set(dragged.result.changedStackIds), new Set(['a', 'b']));
+  assert.deepEqual(afterB, beforeB);
+  assert.deepEqual(dragged.result.changedStackIds, ['a']);
 });
 
 test('global transform constraints solve through active-Stack cross-Stack entity relationships', () => {

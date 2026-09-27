@@ -1,0 +1,496 @@
+TAP version 13
+# Subtest: rectangular arrays follow the local axes of a rotated Stack
+ok 1 - rectangular arrays follow the local axes of a rotated Stack
+  ---
+  duration_ms: 1.9053
+  type: 'test'
+  ...
+# Subtest: array definitions normalize independent row and column spacing expressions
+ok 2 - array definitions normalize independent row and column spacing expressions
+  ---
+  duration_ms: 0.4426
+  type: 'test'
+  ...
+# Subtest: Array sources mirror canonical entity and window selections
+ok 3 - Array sources mirror canonical entity and window selections
+  ---
+  duration_ms: 0.132
+  type: 'test'
+  ...
+# Subtest: Array window selection tests rendered geometry instead of the placement bounding box
+ok 4 - Array window selection tests rendered geometry instead of the placement bounding box
+  ---
+  duration_ms: 0.1791
+  type: 'test'
+  ...
+# Subtest: Array source window selection retains contained derivative objects
+ok 5 - Array source window selection retains contained derivative objects
+  ---
+  duration_ms: 0.432
+  type: 'test'
+  ...
+# Subtest: Array source selection accepts persistent derivatives while rejecting dimensions and controls
+ok 6 - Array source selection accepts persistent derivatives while rejecting dimensions and controls
+  ---
+  duration_ms: 0.176
+  type: 'test'
+  ...
+# Subtest: Array derivative source references normalize and deduplicate every supported kind
+ok 7 - Array derivative source references normalize and deduplicate every supported kind
+  ---
+  duration_ms: 0.3692
+  type: 'test'
+  ...
+# Subtest: Array definitions render derivative parents before dependents and identify cycles
+ok 8 - Array definitions render derivative parents before dependents and identify cycles
+  ---
+  duration_ms: 0.3315
+  type: 'test'
+  ...
+# Subtest: rectangular offsets follow left, center, right and up, center, down directions
+ok 9 - rectangular offsets follow left, center, right and up, center, down directions
+  ---
+  duration_ms: 0.4394
+  type: 'test'
+  ...
+# Subtest: equal rectangular spacing values produce equal edge gaps for a non-square object
+ok 10 - equal rectangular spacing values produce equal edge gaps for a non-square object
+  ---
+  duration_ms: 0.2889
+  type: 'test'
+  ...
+# Subtest: rectangular centroid spacing can be enabled independently for rows and columns
+ok 11 - rectangular centroid spacing can be enabled independently for rows and columns
+  ---
+  duration_ms: 0.1265
+  type: 'test'
+  ...
+# Subtest: circular angles distribute a full circle without duplicating 360 degrees
+ok 12 - circular angles distribute a full circle without duplicating 360 degrees
+  ---
+  duration_ms: 0.1194
+  type: 'test'
+  ...
+# Subtest: array dimension identities remain stable and placement transforms match rendered copies
+ok 13 - array dimension identities remain stable and placement transforms match rendered copies
+  ---
+  duration_ms: 0.6199
+  type: 'test'
+  ...
+# Subtest: rectangular array placements materialize active source circles as stable Boolean cutters
+ok 14 - rectangular array placements materialize active source circles as stable Boolean cutters
+  ---
+  duration_ms: 0.6068
+  type: 'test'
+  ...
+# Subtest: array Boolean copies inherit Subtract only from their original source object
+ok 15 - array Boolean copies inherit Subtract only from their original source object
+  ---
+  duration_ms: 0.2179
+  type: 'test'
+  ...
+# Subtest: selected array properties expose visibility without a Subtract property
+ok 16 - selected array properties expose visibility without a Subtract property
+  ---
+  duration_ms: 0.7406
+  type: 'test'
+  ...
+# Subtest: circular array cutters rotate analytic composite boundaries without moving the source placement
+ok 17 - circular array cutters rotate analytic composite boundaries without moving the source placement
+  ---
+  duration_ms: 0.5435
+  type: 'test'
+  ...
+# Subtest: inactive derivative source Stacks remain visible to dependent Arrays
+ok 18 - inactive derivative source Stacks remain visible to dependent Arrays
+  ---
+  duration_ms: 0.0892
+  type: 'test'
+  ...
+# Subtest: circular arrays derive radius from the selected-object centroid and count the original
+ok 19 - circular arrays derive radius from the selected-object centroid and count the original
+  ---
+  duration_ms: 0.1334
+  type: 'test'
+  ...
+# Subtest: zero-count arrays have no placements and gate parent visibility to FALSE
+ok 20 - zero-count arrays have no placements and gate parent visibility to FALSE
+  ---
+  duration_ms: 0.1766
+  type: 'test'
+  ...
+# Subtest: array paint order follows its highest-positioned source object
+ok 21 - array paint order follows its highest-positioned source object
+  ---
+  duration_ms: 0.0701
+  type: 'test'
+  ...
+# Subtest: a circular array center is a persistent solver point that accepts point constraints
+ok 22 - a circular array center is a persistent solver point that accepts point constraints
+  ---
+  duration_ms: 8.6856
+  type: 'test'
+  ...
+# Subtest: a circular array center accepts a driving point-to-point dimension
+ok 23 - a circular array center accepts a driving point-to-point dimension
+  ---
+  duration_ms: 5.4412
+  type: 'test'
+  ...
+# Subtest: partial circular arrays use the original as zero and a signed stop-angle sweep
+ok 24 - partial circular arrays use the original as zero and a signed stop-angle sweep
+  ---
+  duration_ms: 0.1408
+  type: 'test'
+  ...
+# Subtest: legacy circular arrays migrate away from radius and absolute start angle
+ok 25 - legacy circular arrays migrate away from radius and absolute start angle
+  ---
+  duration_ms: 0.142
+  type: 'test'
+  ...
+# Subtest: array expressions resolve existing parameter names without creating parameters
+ok 26 - array expressions resolve existing parameter names without creating parameters
+  ---
+  duration_ms: 0.1614
+  type: 'test'
+  ...
+# Subtest: array expressions resolve real repository parameter names
+ok 27 - array expressions resolve real repository parameter names
+  ---
+  duration_ms: 0.6855
+  type: 'test'
+  ...
+# Subtest: array validation rejects fractional counts and positive circular arrays without a center
+ok 28 - array validation rejects fractional counts and positive circular arrays without a center
+  ---
+  duration_ms: 0.4347
+  type: 'test'
+  ...
+# Subtest: drawing I/O preserves, remaps, and merges array extension data
+ok 29 - drawing I/O preserves, remaps, and merges array extension data
+  ---
+  duration_ms: 6.7236
+  type: 'test'
+  ...
+# Subtest: fillet presentation updates only changed sources and their dependent fillets
+ok 30 - fillet presentation updates only changed sources and their dependent fillets
+  ---
+  duration_ms: 0.9423
+  type: 'test'
+  ...
+# Subtest: line-line fillet derives tangent points without changing source endpoints
+ok 31 - line-line fillet derives tangent points without changing source endpoints
+  ---
+  duration_ms: 0.7619
+  type: 'test'
+  ...
+# Subtest: regular fillet constraints convert a line corner into a solved arc
+ok 32 - regular fillet constraints convert a line corner into a solved arc
+  ---
+  duration_ms: 15.0588
+  type: 'test'
+  ...
+# Subtest: evaluated fillet geometry trims display lines and adds an arc
+ok 33 - evaluated fillet geometry trims display lines and adds an arc
+  ---
+  duration_ms: 0.2943
+  type: 'test'
+  ...
+# Subtest: evaluated fillet geometry preserves construction fillets as construction arcs
+ok 34 - evaluated fillet geometry preserves construction fillets as construction arcs
+  ---
+  duration_ms: 0.1758
+  type: 'test'
+  ...
+# Subtest: a fillet touching a Swell source inherits its Swell definition
+ok 35 - a fillet touching a Swell source inherits its Swell definition
+  ---
+  duration_ms: 0.2581
+  type: 'test'
+  ...
+# Subtest: fillet source endpoints can remain connected by their original Coincident constraint
+ok 36 - fillet source endpoints can remain connected by their original Coincident constraint
+  ---
+  duration_ms: 0.4453
+  type: 'test'
+  ...
+# Subtest: fillet rejects radii that consume either source line
+ok 37 - fillet rejects radii that consume either source line
+  ---
+  duration_ms: 0.2168
+  type: 'test'
+  ...
+# Subtest: fillet topology replaces the virtual sharp corner with the derived arc
+ok 38 - fillet topology replaces the virtual sharp corner with the derived arc
+  ---
+  duration_ms: 0.9131
+  type: 'test'
+  ...
+# Subtest: line-arc fillet trims the line and arc from their shared corner
+ok 39 - line-arc fillet trims the line and arc from their shared corner
+  ---
+  duration_ms: 0.6567
+  type: 'test'
+  ...
+# Subtest: line-arc fillet keeps the source arc internally tangent to the fillet arc
+ok 40 - line-arc fillet keeps the source arc internally tangent to the fillet arc
+  ---
+  duration_ms: 2.8388
+  type: 'test'
+  ...
+# Subtest: curve-line fillet trims the curve endpoint along its tangent
+ok 41 - curve-line fillet trims the curve endpoint along its tangent
+  ---
+  duration_ms: 0.219
+  type: 'test'
+  ...
+# Subtest: arc-arc fillet trims both arcs from the shared corner
+ok 42 - arc-arc fillet trims both arcs from the shared corner
+  ---
+  duration_ms: 0.2174
+  type: 'test'
+  ...
+# Subtest: arc-curve fillet trims both sources from the shared corner
+ok 43 - arc-curve fillet trims both sources from the shared corner
+  ---
+  duration_ms: 0.1422
+  type: 'test'
+  ...
+# Subtest: curve-curve fillet trims both curve endpoints along their tangents
+ok 44 - curve-curve fillet trims both curve endpoints along their tangents
+  ---
+  duration_ms: 0.1816
+  type: 'test'
+  ...
+# Subtest: new Swell entities default to offset-only while legacy definitions retain Swell mode
+ok 45 - new Swell entities default to offset-only while legacy definitions retain Swell mode
+  ---
+  duration_ms: 3.1766
+  type: 'test'
+  ...
+# Subtest: negative Swell expressions reverse direction while retaining positive distances
+ok 46 - negative Swell expressions reverse direction while retaining positive distances
+  ---
+  duration_ms: 0.7457
+  type: 'test'
+  ...
+# Subtest: turning Swell off preserves its expressions and turning it back on restores the transition geometry
+ok 47 - turning Swell off preserves its expressions and turning it back on restores the transition geometry
+  ---
+  duration_ms: 0.5478
+  type: 'test'
+  ...
+# Subtest: Swell decoration forces construction while preserving solver-round-trippable metadata
+ok 48 - Swell decoration forces construction while preserving solver-round-trippable metadata
+  ---
+  duration_ms: 0.5626
+  type: 'test'
+  ...
+# Subtest: Swell line uses right-side base offset, transition arcs, and a central swell line
+ok 49 - Swell line uses right-side base offset, transition arcs, and a central swell line
+  ---
+  duration_ms: 0.7604
+  type: 'test'
+  ...
+# Subtest: overlapping transition distances shrink proportionally no lower than half
+ok 50 - overlapping transition distances shrink proportionally no lower than half
+  ---
+  duration_ms: 0.2278
+  type: 'test'
+  ...
+# Subtest: Swell Offset at or below Offset produces an ordinary offset
+ok 51 - Swell Offset at or below Offset produces an ordinary offset
+  ---
+  duration_ms: 0.2101
+  type: 'test'
+  ...
+# Subtest: Coincident construction endpoints miter their Swell offset sets
+ok 52 - Coincident construction endpoints miter their Swell offset sets
+  ---
+  duration_ms: 0.9425
+  type: 'test'
+  ...
+# Subtest: Coincident line and arc offsets share the same joined endpoint
+ok 53 - Coincident line and arc offsets share the same joined endpoint
+  ---
+  duration_ms: 0.693
+  type: 'test'
+  ...
+# Subtest: a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+ok 54 - a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+  ---
+  duration_ms: 0.6676
+  type: 'test'
+  ...
+# Subtest: Coincident arc offsets intersect at one shared endpoint
+ok 55 - Coincident arc offsets intersect at one shared endpoint
+  ---
+  duration_ms: 0.3786
+  type: 'test'
+  ...
+# Subtest: circles and closed line chains offset outward regardless of segment direction
+ok 56 - circles and closed line chains offset outward regardless of segment direction
+  ---
+  duration_ms: 0.8553
+  type: 'test'
+  ...
+# Subtest: closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+ok 57 - closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+  ---
+  duration_ms: 0.2158
+  type: 'test'
+  ...
+# Subtest: arc offsets are concentric and follow the right side of their stored direction
+ok 58 - arc offsets are concentric and follow the right side of their stored direction
+  ---
+  duration_ms: 0.219
+  type: 'test'
+  ...
+# Subtest: connected line, arc, and spline Swell objects join into one closed outward boundary
+ok 59 - connected line, arc, and spline Swell objects join into one closed outward boundary
+  ---
+  duration_ms: 2.2355
+  type: 'test'
+  ...
+# Subtest: legacy polyline entities can retain per-segment Swell settings
+ok 60 - legacy polyline entities can retain per-segment Swell settings
+  ---
+  duration_ms: 0.092
+  type: 'test'
+  ...
+# Subtest: closed Swell geometry exposes stable analytic boundary features for downstream tools
+ok 61 - closed Swell geometry exposes stable analytic boundary features for downstream tools
+  ---
+  duration_ms: 0.644
+  type: 'test'
+  ...
+# Subtest: the Swell panel uses expression inputs and offers Swell only for line-based geometry
+ok 62 - the Swell panel uses expression inputs and offers Swell only for line-based geometry
+  ---
+  duration_ms: 0.8675
+  type: 'test'
+  ...
+# Subtest: a mixed Swell object exposes controls from its line-capable geometry
+ok 63 - a mixed Swell object exposes controls from its line-capable geometry
+  ---
+  duration_ms: 0.4985
+  type: 'test'
+  ...
+# Subtest: arc, circle, and spline-only Swell selections hide the Swell controls
+ok 64 - arc, circle, and spline-only Swell selections hide the Swell controls
+  ---
+  duration_ms: 0.1132
+  type: 'test'
+  ...
+# Subtest: Swell expressions are visible for enabled or mixed line selections, but not disabled ones
+ok 65 - Swell expressions are visible for enabled or mixed line selections, but not disabled ones
+  ---
+  duration_ms: 1.1049
+  type: 'test'
+  ...
+# Subtest: hidden Swell controls are removed from the panel layout
+ok 66 - hidden Swell controls are removed from the panel layout
+  ---
+  duration_ms: 0.6138
+  type: 'test'
+  ...
+# Subtest: new Swell geometry remembers the last expression entered in every field
+ok 67 - new Swell geometry remembers the last expression entered in every field
+  ---
+  duration_ms: 0.1474
+  type: 'test'
+  ...
+# Subtest: a Swell circle fill resolves its analytic edge for Seam Line
+ok 68 - a Swell circle fill resolves its analytic edge for Seam Line
+  ---
+  duration_ms: 0.3043
+  type: 'test'
+  ...
+# Subtest: Swell properties stay hidden while Duplicate, Symmetric, or Array is active
+ok 69 - Swell properties stay hidden while Duplicate, Symmetric, or Array is active
+  ---
+  duration_ms: 0.1199
+  type: 'test'
+  ...
+# Subtest: Swell offset pieces expose ordinary geometry-style point handles
+ok 70 - Swell offset pieces expose ordinary geometry-style point handles
+  ---
+  duration_ms: 0.3317
+  type: 'test'
+  ...
+# Subtest: a complete connected Swell boundary enables fill properties for every source type
+ok 71 - a complete connected Swell boundary enables fill properties for every source type
+  ---
+  duration_ms: 0.2893
+  type: 'test'
+  ...
+# Subtest: Swell offset pieces expose analytic features to Smart Dimensions
+ok 72 - Swell offset pieces expose analytic features to Smart Dimensions
+  ---
+  duration_ms: 0.3246
+  type: 'test'
+  ...
+# Subtest: Swell derivative regions and strokes expose image appearance controls
+ok 73 - Swell derivative regions and strokes expose image appearance controls
+  ---
+  duration_ms: 0.6189
+  type: 'test'
+  ...
+# Subtest: Swell image strokes expose analytic path sampling for derived geometry
+ok 74 - Swell image strokes expose analytic path sampling for derived geometry
+  ---
+  duration_ms: 0.2834
+  type: 'test'
+  ...
+# Subtest: Smart Driving Dimension accepts Swell-derived points but not immutable edges
+ok 75 - Smart Driving Dimension accepts Swell-derived points but not immutable edges
+  ---
+  duration_ms: 0.0658
+  type: 'test'
+  ...
+# Subtest: external entity point constraints retain a reactive Swell-derived target
+ok 76 - external entity point constraints retain a reactive Swell-derived target
+  ---
+  duration_ms: 0.2865
+  type: 'test'
+  ...
+# Subtest: legacy Swell constraints normalize transient piece UUIDs to portable source references
+ok 77 - legacy Swell constraints normalize transient piece UUIDs to portable source references
+  ---
+  duration_ms: 0.1463
+  type: 'test'
+  ...
+# Subtest: persisted Swell derivative features use a real source RecordID plus a provider selector
+ok 78 - persisted Swell derivative features use a real source RecordID plus a provider selector
+  ---
+  duration_ms: 0.0675
+  type: 'test'
+  ...
+# Subtest: Swell-derived concentric constraints move the external round feature
+ok 79 - Swell-derived concentric constraints move the external round feature
+  ---
+  duration_ms: 0.9697
+  type: 'test'
+  ...
+# Subtest: Swell Seam Line presentation mounts in the visible derived record
+ok 80 - Swell Seam Line presentation mounts in the visible derived record
+  ---
+  duration_ms: 0.128
+  type: 'test'
+  ...
+# Subtest: Swell derivative groups inherit hidden Stack presentation after a rebuild
+ok 81 - Swell derivative groups inherit hidden Stack presentation after a rebuild
+  ---
+  duration_ms: 0.125
+  type: 'test'
+  ...
+1..81
+# tests 81
+# suites 0
+# pass 81
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 152.2843

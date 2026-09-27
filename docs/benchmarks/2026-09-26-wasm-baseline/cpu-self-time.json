@@ -1,0 +1,434 @@
+[
+  {
+    "name": "now",
+    "url": "",
+    "line": 0,
+    "selfMs": 1892.03
+  },
+  {
+    "name": "now",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 692,
+    "selfMs": 1751.6100000000001
+  },
+  {
+    "name": "apply",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 158,
+    "selfMs": 351.591
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 250,
+    "selfMs": 198.732
+  },
+  {
+    "name": "cancellationCheck",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 704,
+    "selfMs": 172.591
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 233,
+    "selfMs": 164.915
+  },
+  {
+    "name": "solveMatrixFreeDampedLeastSquares",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 186,
+    "selfMs": 81.447
+  },
+  {
+    "name": "applyJacobian",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 226,
+    "selfMs": 65.387
+  },
+  {
+    "name": "applyJacobianTranspose",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 243,
+    "selfMs": 60.913
+  },
+  {
+    "name": "(garbage collector)",
+    "url": "",
+    "line": 0,
+    "selfMs": 51.97
+  },
+  {
+    "name": "throwIfCancelled",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 15,
+    "selfMs": 51.355999999999995
+  },
+  {
+    "name": "vectorDot",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 101,
+    "selfMs": 37.249
+  },
+  {
+    "name": "createMatrixFreeJacobian",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 136,
+    "selfMs": 26.911
+  },
+  {
+    "name": "(program)",
+    "url": "",
+    "line": 0,
+    "selfMs": 25.054
+  },
+  {
+    "name": "solveLevenbergMarquardt",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 677,
+    "selfMs": 20.38
+  },
+  {
+    "name": "transformStackEntity",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/StackCoordinates.js",
+    "line": 24,
+    "selfMs": 15.947000000000001
+  },
+  {
+    "name": "randomUUID",
+    "url": "",
+    "line": 0,
+    "selfMs": 8.89
+  },
+  {
+    "name": "collectReferences",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 3,
+    "selfMs": 7.785
+  },
+  {
+    "name": "structuredClone",
+    "url": "",
+    "line": 0,
+    "selfMs": 7.332000000000001
+  },
+  {
+    "name": "binding",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 675,
+    "selfMs": 6.225
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 196,
+    "selfMs": 6.217
+  },
+  {
+    "name": "directPoint",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 20,
+    "selfMs": 6.199
+  },
+  {
+    "name": "evaluateJacobianBlock",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 75,
+    "selfMs": 5.58
+  },
+  {
+    "name": "value",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 225,
+    "selfMs": 5.223
+  },
+  {
+    "name": "constraintModel",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 757,
+    "selfMs": 4.81
+  },
+  {
+    "name": "cancellationReason",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 39,
+    "selfMs": 4.758
+  },
+  {
+    "name": "rebuild",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 196,
+    "selfMs": 4.241
+  },
+  {
+    "name": "clone",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 22,
+    "selfMs": 3.585
+  },
+  {
+    "name": "blocks",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintRegistry.js",
+    "line": 32,
+    "selfMs": 3.243
+  },
+  {
+    "name": "vectorBetween",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 145,
+    "selfMs": 3.162
+  },
+  {
+    "name": "localVariables",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintRegistry.js",
+    "line": 14,
+    "selfMs": 3.105
+  },
+  {
+    "name": "get",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ParameterRepository.js",
+    "line": 1068,
+    "selfMs": 3.099
+  },
+  {
+    "name": "choleskyFactor",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 107,
+    "selfMs": 3.088
+  },
+  {
+    "name": "accumulatePointGradient",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 345,
+    "selfMs": 3.048
+  },
+  {
+    "name": "connectedChain",
+    "url": "http://127.0.0.1:54351/scripts/solver-baseline/fixtures.js",
+    "line": 19,
+    "selfMs": 2.729
+  },
+  {
+    "name": "createUuid",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/IdentitySystem.js",
+    "line": 115,
+    "selfMs": 1.822
+  },
+  {
+    "name": "point",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 229,
+    "selfMs": 1.645
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 366,
+    "selfMs": 1.633
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintRegistry.js",
+    "line": 111,
+    "selfMs": 1.622
+  },
+  {
+    "name": "segmentPoints",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 120,
+    "selfMs": 1.615
+  },
+  {
+    "name": "refreshFixedVariables",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 655,
+    "selfMs": 1.592
+  },
+  {
+    "name": "referencedRecordIds",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 27,
+    "selfMs": 1.569
+  },
+  {
+    "name": "safeScale",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 308,
+    "selfMs": 1.565
+  },
+  {
+    "name": "value",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ParameterRepository.js",
+    "line": 1073,
+    "selfMs": 1.563
+  },
+  {
+    "name": "distance",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 484,
+    "selfMs": 1.562
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 109,
+    "selfMs": 1.559
+  },
+  {
+    "name": "pointReferenceKey",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ArcSolveGeometry.js",
+    "line": 12,
+    "selfMs": 1.558
+  },
+  {
+    "name": "solveSample",
+    "url": "http://127.0.0.1:54351/scripts/solver-baseline/measure.js",
+    "line": 9,
+    "selfMs": 1.552
+  },
+  {
+    "name": "connect",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 151,
+    "selfMs": 1.55
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 308,
+    "selfMs": 1.54
+  },
+  {
+    "name": "required",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 313,
+    "selfMs": 1.275
+  },
+  {
+    "name": "constraintModel",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 100,
+    "selfMs": 1.234
+  },
+  {
+    "name": "evaluate",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintRegistry.js",
+    "line": 100,
+    "selfMs": 1.095
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 47,
+    "selfMs": 0.918
+  },
+  {
+    "name": "entity",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 679,
+    "selfMs": 0.561
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 273,
+    "selfMs": 0.441
+  },
+  {
+    "name": "assertMatrixShape",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 20,
+    "selfMs": 0.441
+  },
+  {
+    "name": "referenceVariableIds",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintGraph.js",
+    "line": 13,
+    "selfMs": 0.42
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/JacobianBlocks.js",
+    "line": 24,
+    "selfMs": 0.239
+  },
+  {
+    "name": "localPoint",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 707,
+    "selfMs": 0.161
+  },
+  {
+    "name": "Distance",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 602,
+    "selfMs": 0.04
+  },
+  {
+    "name": "blocks.push.evaluateAnalyticalJacobian",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/ConstraintRegistry.js",
+    "line": 92,
+    "selfMs": 0.028
+  },
+  {
+    "name": "Horizontal",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 417,
+    "selfMs": 0.02
+  },
+  {
+    "name": "variableIdsForFeature",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 773,
+    "selfMs": 0.016
+  },
+  {
+    "name": "segment",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 322,
+    "selfMs": 0.012
+  },
+  {
+    "name": "view.resolveSegment",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 761,
+    "selfMs": 0.01
+  },
+  {
+    "name": "(anonymous)",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 414,
+    "selfMs": 0.008
+  },
+  {
+    "name": "point",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/NumericSolverCore.js",
+    "line": 318,
+    "selfMs": 0.007
+  },
+  {
+    "name": "pointValueAndDerivatives",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js",
+    "line": 318,
+    "selfMs": 0.007
+  },
+  {
+    "name": "view.resolvePoint",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 760,
+    "selfMs": 0.006
+  },
+  {
+    "name": "localSegment",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 729,
+    "selfMs": 0.004
+  },
+  {
+    "name": "featureBinding",
+    "url": "http://127.0.0.1:54351/packages/paramagic-core/src/modules/solver/SolverModel.js",
+    "line": 700,
+    "selfMs": 0.004
+  }
+]

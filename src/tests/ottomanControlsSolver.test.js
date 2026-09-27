@@ -12,9 +12,9 @@ test('the latest Ottoman depth edit changes strategy within one correction budge
   const parameter = controller.dimensions.list().find(entry => entry.name === 'c2');
   const constraints = structuredClone(controller.constraints());
   const attempts = [];
-  const solve = controller.solve.bind(controller);
-  controller.solve = (...args) => {
-    const result = solve(...args);
+  const solve = controller.solveWork.bind(controller);
+  controller.solveWork = function* (...args) {
+    const result = yield* solve(...args);
     attempts.push(result);
     return result;
   };

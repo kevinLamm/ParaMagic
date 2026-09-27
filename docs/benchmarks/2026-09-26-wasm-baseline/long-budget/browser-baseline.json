@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-26T14:15:45.873Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000
+    ],
+    "samples": 1,
+    "budgetMs": 60000,
+    "profileCount": 0,
+    "auxiliary": false,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Production JS component solver in a local Chromium page. Headline samples are uninstrumented, budget-limited, warm-started dimension edits on initially satisfied fresh models; setup and validation excluded. Separate profiler/phase/transport runs must not be added to headline time. Wasm times and speedups are null until a replacement is measured.",
+  "results": [
+    {
+      "scenario": "shared-dimension",
+      "count": 1000,
+      "tolerance": 0.001,
+      "entities": 333,
+      "variables": 1332,
+      "activeVariables": 1330,
+      "components": 1,
+      "setup": {
+        "buildMs": 6.799999952316284,
+        "graphMs": 2.900000035762787,
+        "scopeMs": 0.30000001192092896
+      },
+      "samples": [
+        {
+          "edit": 0,
+          "requestedTarget": 84.125,
+          "mutationMs": 0,
+          "elapsedMs": 11058,
+          "status": "converged",
+          "message": "Constraints converged.",
+          "iterations": 70,
+          "acceptedSteps": 70,
+          "rejectedSteps": 0,
+          "cancellationReason": null,
+          "timings": {
+            "residualMs": 23.999999821186066,
+            "jacobianMs": 107.10000014305115,
+            "linearSolveMs": 10921.100000023842,
+            "totalMs": 11058
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 1000,
+            "analyticalBlocks": 999,
+            "fallbackBlocks": 1,
+            "residualRows": 1333,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 5318,
+            "preconditionerBlocks": 333,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 741,
+            "linearConverged": true,
+            "linearResidual": 1.722636639154603e-15,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.0009589500536003523,
+            "maxResidual": 0.0000742966046018312,
+            "residualCount": 1333,
+            "maxCoordinateError": 0.6628817073979008,
+            "movedEntities": 333,
+            "movedFraction": 1,
+            "parameterValue": 84.125
+          },
+          "heapBeforeBytes": 15168187,
+          "heapAfterBytes": 73891837,
+          "heapDeltaBytes": 58723650,
+          "wasmSolveMs": null,
+          "speedup": null
+        }
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "count": 1000,
+      "variables": 1330,
+      "residualCount": 1333,
+      "residualMs": 0.800000011920929,
+      "topologyMs": 3.199999988079071,
+      "analyticalMs": 1.2999999523162842,
+      "analyticalCalls": 999,
+      "fallbackResidualMs": 0,
+      "assemblyTotalMs": 2.5,
+      "assemblyAndPreconditionerMs": 1.2000000476837158,
+      "numericalNonzeros": 2659,
+      "storedDerivativeEntries": 5318,
+      "diagnostics": {
+        "totalBlocks": 1000,
+        "analyticalBlocks": 999,
+        "fallbackBlocks": 1,
+        "residualRows": 1333,
+        "derivativeEntries": 5318,
+        "preconditionerBlocks": 333,
+        "largestPreconditionerBlock": 4
+      },
+      "firstLinearStepMs": 2.400000035762787,
+      "firstLinearIterations": 10,
+      "firstLinearConverged": true,
+      "linearError": null,
+      "snapshotMs": 1.0999999642372131,
+      "structuredCloneMs": 1,
+      "jsonEncodeMs": 0.19999998807907104,
+      "jsonBytes": 179981
+    }
+  ],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "c1cc95c934d2cddaca3aa56885d1f944e27d4e2d2225d13911981b9a2fb49101",
+    "scripts/solver-baseline/fixtures.js": "72be22eed7483cba41b7313c4d095076f1c3c9399e650366dcfcc6178341381a",
+    "scripts/solver-baseline/measure.js": "764c1306d425c657d6fee5ab98ab22efbb42ad61942d11ea1ccf76bd1e53bab8",
+    "scripts/solver-baseline/browser.js": "512455eb169cb8be53350cb898587dae222afba324c52bfa3d307a734b9ef5ac",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "47f34e875eaa2a6895d3cfeb5653b5684f2df7f83b07aa0b0c00846211bb9b93",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "4ff27f211661a9dd90bd83bc585af7a7454251e96a1511c6783b632a2ce3f7fd",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "8e0bba1d0a5e83438e0e63ca98610985aa1762a5ba9d2219ca4fd7ef7997181e",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "be101a36400eef428af7ce7fe0bc1b35bef140da486f2750f8b1e406a2a0f5fb",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "f464952ec12f2ef93bad0c100225dcc09197cf545d31ef9bcd6c8a89e1835dfd",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "9987221d165a74d5fcf4490928b4b12c0eff64545b8ef5fbb970f0cda27e34bb",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "158ae260391d4bf0809e23a48803ce1f7164b5fac5a2fa82ca1ff300255a49d8",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "98b70852aeda361fe12d4c83fca8aff9d724ee1361a6d38daa9d44d3f9d56736",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "c89adaceb9ab99f7228ac4ba5f311a319d7ed80f1e22c0b76b1e424c702eb923"
+  },
+  "finishedAt": "2026-09-26T14:15:57.995Z"
+}

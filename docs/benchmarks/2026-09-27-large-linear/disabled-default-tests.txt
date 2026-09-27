@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: document bounds handle drawings beyond JavaScript argument limits
+ok 1 - document bounds handle drawings beyond JavaScript argument limits
+  ---
+  duration_ms: 41.6525
+  type: 'test'
+  ...
+# Subtest: document variables expose automatic drawing values and editable metadata
+ok 2 - document variables expose automatic drawing values and editable metadata
+  ---
+  duration_ms: 0.2205
+  type: 'test'
+  ...
+# Subtest: document variables resolve in text fields and parameter expressions
+ok 3 - document variables resolve in text fields and parameter expressions
+  ---
+  duration_ms: 6.5517
+  type: 'test'
+  ...
+# Subtest: document metadata persists through solver snapshots
+ok 4 - document metadata persists through solver snapshots
+  ---
+  duration_ms: 2.3986
+  type: 'test'
+  ...
+# Subtest: disabled Stack geometry is excluded from drawing bounding variables
+ok 5 - disabled Stack geometry is excluded from drawing bounding variables
+  ---
+  duration_ms: 2.6237
+  type: 'test'
+  ...
+# Subtest: normal application startup retains the established large-system algorithm
+ok 6 - normal application startup retains the established large-system algorithm
+  ---
+  duration_ms: 126.9595
+  type: 'test'
+  ...
+# Subtest: heap minimum-degree ordering and fill agree with the reference symbolic compiler
+ok 7 - heap minimum-degree ordering and fill agree with the reference symbolic compiler
+  ---
+  duration_ms: 4.4847
+  type: 'test'
+  ...
+# Subtest: sparse topology work and fill limits reject dense graphs without global dense storage
+ok 8 - sparse topology work and fill limits reject dense graphs without global dense storage
+  ---
+  duration_ms: 0.5001
+  type: 'test'
+  ...
+# Subtest: large connected edits converge and reuse native topology (shared target: false)
+ok 9 - large connected edits converge and reuse native topology (shared target: false)
+  ---
+  duration_ms: 178.7142
+  type: 'test'
+  ...
+# Subtest: large connected edits converge and reuse native topology (shared target: true)
+ok 10 - large connected edits converge and reuse native topology (shared target: true)
+  ---
+  duration_ms: 158.4123
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {}
+ok 11 - large native solutions preserve reference constraints and freedoms: {}
+  ---
+  duration_ms: 231.422
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"floating":true}
+ok 12 - large native solutions preserve reference constraints and freedoms: {"floating":true}
+  ---
+  duration_ms: 235.3131
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"underconstrained":true}
+ok 13 - large native solutions preserve reference constraints and freedoms: {"underconstrained":true}
+  ---
+  duration_ms: 108.686
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"conflict":true}
+ok 14 - large native solutions preserve reference constraints and freedoms: {"conflict":true}
+  ---
+  duration_ms: 324.1026
+  type: 'test'
+  ...
+# Subtest: large sparse solve cancellation restores accepted coordinates and can be resumed
+ok 15 - large sparse solve cancellation restores accepted coordinates and can be resumed
+  ---
+  duration_ms: 114.4476
+  type: 'test'
+  ...
+# Subtest: large sparse factors solve mixed arcs, tangency, derived fillets and redundant constraints
+ok 16 - large sparse factors solve mixed arcs, tangency, derived fillets and redundant constraints
+  ---
+  duration_ms: 217.3897
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1806.6703

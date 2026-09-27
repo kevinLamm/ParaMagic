@@ -1,0 +1,7 @@
+
+DevTools listening on ws://127.0.0.1:51001/devtools/browser/2ba4075f-0069-44bf-9ebf-3d27a537741a
+[40844:66116:0927/082437.109:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+
+DevTools listening on ws://127.0.0.1:63720/devtools/browser/e9e82f24-5471-48fa-9382-76542c783629
+[65912:72520:0927/082517.097:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+Created TensorFlow Lite XNNPACK delegate for CPU.

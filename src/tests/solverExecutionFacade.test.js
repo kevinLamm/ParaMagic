@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   createSolverExecutionFacade,
   previewEntitiesForReplica,
+  solverBackendFromEnvironment,
   solverJacobianModeFromEnvironment,
   solverWorkerModeFromEnvironment,
 } from '../../packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js';
@@ -15,6 +16,28 @@ const horizontalResidual = (line) => Math.abs(line.start[1] - line.end[1]) / Mat
   1,
   Math.hypot(line.end[0] - line.start[0], line.end[1] - line.start[1]),
 );
+
+test('browser solver defaults to WASM with explicit reference overrides', () => {
+  assert.equal(solverBackendFromEnvironment({}), 'wasm');
+  assert.equal(solverBackendFromEnvironment({ location: { search: '' } }), 'wasm');
+  assert.equal(solverBackendFromEnvironment({ location: { search: '?solverBackend=unknown' } }), 'wasm');
+  assert.equal(solverBackendFromEnvironment({ location: { search: '?solverBackend=wasm' } }), 'wasm');
+  assert.equal(solverBackendFromEnvironment({ location: { search: '?solverBackend=javascript' } }), 'javascript');
+  assert.equal(solverBackendFromEnvironment({ PARAMAGIC_SOLVER_BACKEND: 'javascript', location: { search: '?solverBackend=wasm' } }), 'javascript');
+  assert.equal(solverBackendFromEnvironment({ PARAMAGIC_SOLVER_BACKEND: 'wasm', location: { search: '?solverBackend=javascript' } }), 'wasm');
+  assert.equal(solverBackendFromEnvironment({ get location() { throw Error('Unavailable'); } }), 'wasm');
+});
+
+test('normal Worker facade passes the default WASM backend into startup', async () => {
+  let startup;
+  const facade = createSolverExecutionFacade({ mode: 'worker-drag', jacobianMode: 'blocks', workerFactory: options => {
+    startup = options;
+    return new SolverWorkerClient(new LoopbackWorker(), options);
+  } });
+  await facade.verifyWorkerParity();
+  assert.deepEqual(startup, { backend: 'wasm', jacobianMode: 'blocks' });
+  facade.terminate();
+});
 
 class LoopbackWorker {
   constructor(runtime = new SolverWorkerRuntime()) {

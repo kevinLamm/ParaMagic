@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: segment selection keeps its hit node separate from the thin highlight graphic
+ok 1 - segment selection keeps its hit node separate from the thin highlight graphic
+  ---
+  duration_ms: 1.0279
+  type: 'test'
+  ...
+# Subtest: editable closed line chains match the Polyline tool segment representation
+ok 2 - editable closed line chains match the Polyline tool segment representation
+  ---
+  duration_ms: 1.8181
+  type: 'test'
+  ...
+# Subtest: every traced line segment exposes the standard midpoint feature
+ok 3 - every traced line segment exposes the standard midpoint feature
+  ---
+  duration_ms: 0.5471
+  type: 'test'
+  ...
+# Subtest: editable line chains can stage every segment through one canvas transaction
+ok 4 - editable line chains can stage every segment through one canvas transaction
+  ---
+  duration_ms: 0.1931
+  type: 'test'
+  ...
+# Subtest: circle hit targets cover the region for standard and construction circles
+ok 5 - circle hit targets cover the region for standard and construction circles
+  ---
+  duration_ms: 0.083
+  type: 'test'
+  ...
+# Subtest: drawn arcs record their point-order direction
+ok 6 - drawn arcs record their point-order direction
+  ---
+  duration_ms: 0.1072
+  type: 'test'
+  ...
+# Subtest: inserted images keep their original file data instead of using catalog reduction
+ok 7 - inserted images keep their original file data instead of using catalog reduction
+  ---
+  duration_ms: 2.3454
+  type: 'test'
+  ...
+# Subtest: image entities normalize transform and appearance data
+ok 8 - image entities normalize transform and appearance data
+  ---
+  duration_ms: 0.7135
+  type: 'test'
+  ...
+# Subtest: corner scaling preserves aspect ratio and anchors the opposite corner
+ok 9 - corner scaling preserves aspect ratio and anchors the opposite corner
+  ---
+  duration_ms: 0.4719
+  type: 'test'
+  ...
+# Subtest: rotation and flip helpers preserve the rest of the image entity
+ok 10 - rotation and flip helpers preserve the rest of the image entity
+  ---
+  duration_ms: 0.2586
+  type: 'test'
+  ...
+# Subtest: reset restores image transform to its base size without losing properties
+ok 11 - reset restores image transform to its base size without losing properties
+  ---
+  duration_ms: 0.2205
+  type: 'test'
+  ...
+# Subtest: reset restores the original image source after perspective warp
+ok 12 - reset restores the original image source after perspective warp
+  ---
+  duration_ms: 0.1351
+  type: 'test'
+  ...
+# Subtest: Base64 image data survives JSON export and inserted image IDs are remapped
+ok 13 - Base64 image data survives JSON export and inserted image IDs are remapped
+  ---
+  duration_ms: 6.4612
+  type: 'test'
+  ...
+# Subtest: the host configures the exact OpenCV script resource used by core
+ok 14 - the host configures the exact OpenCV script resource used by core
+  ---
+  duration_ms: 1.7908
+  type: 'test'
+  ...
+# Subtest: image trace settings use practical defaults and clamp user input
+ok 15 - image trace settings use practical defaults and clamp user input
+  ---
+  duration_ms: 0.1392
+  type: 'test'
+  ...
+# Subtest: image trace settings memory recalls the latest normalized slider values
+ok 16 - image trace settings memory recalls the latest normalized slider values
+  ---
+  duration_ms: 0.1882
+  type: 'test'
+  ...
+# Subtest: trace coordinates map the displayed image corners to raster corners
+ok 17 - trace coordinates map the displayed image corners to raster corners
+  ---
+  duration_ms: 0.2139
+  type: 'test'
+  ...
+# Subtest: trace coordinate conversion respects image rotation and flips
+ok 18 - trace coordinate conversion respects image rotation and flips
+  ---
+  duration_ms: 0.1477
+  type: 'test'
+  ...
+# Subtest: pixel points converted to world coordinates retain the displayed image transform
+ok 19 - pixel points converted to world coordinates retain the displayed image transform
+  ---
+  duration_ms: 0.12
+  type: 'test'
+  ...
+# Subtest: resident trace preserves exact reference contours across settings, seeds and image sizes
+ok 20 - resident trace preserves exact reference contours across settings, seeds and image sizes
+  ---
+  duration_ms: 146.4225
+  type: 'test'
+  ...
+# Subtest: detail and smoothing updates reuse only valid upstream native results
+ok 21 - detail and smoothing updates reuse only valid upstream native results
+  ---
+  duration_ms: 3.9332
+  type: 'test'
+  ...
+# Subtest: trace errors preserve reference behavior and allow a later valid selection
+ok 22 - trace errors preserve reference behavior and allow a later valid selection
+  ---
+  duration_ms: 1.8688
+  type: 'test'
+  ...
+# Subtest: trace Worker supersedes queued and in-flight requests between native stages
+ok 23 - trace Worker supersedes queued and in-flight requests between native stages
+  ---
+  duration_ms: 203.6925
+  type: 'test'
+  ...
+# Subtest: client uploads once, transfers pixels, ignores stale results and disposes pending requests
+ok 24 - client uploads once, transfers pixels, ignores stale results and disposes pending requests
+  ---
+  duration_ms: 2.3151
+  type: 'test'
+  ...
+# Subtest: source replacement during decode uploads only the latest image
+ok 25 - source replacement during decode uploads only the latest image
+  ---
+  duration_ms: 1.402
+  type: 'test'
+  ...
+# Subtest: release cancels work but keeps the initialized Worker for the next image
+ok 26 - release cancels work but keeps the initialized Worker for the next image
+  ---
+  duration_ms: 1.768
+  type: 'test'
+  ...
+# Subtest: Worker load failure is surfaced and a later request can start a fresh Worker
+ok 27 - Worker load failure is surfaced and a later request can start a fresh Worker
+  ---
+  duration_ms: 1.3809
+  type: 'test'
+  ...
+# Subtest: OpenCV initialization errors reset the Worker instead of retaining a rejected module
+ok 28 - OpenCV initialization errors reset the Worker instead of retaining a rejected module
+  ---
+  duration_ms: 1.2569
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 695.1356

@@ -1,0 +1,540 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-26T19:29:57.469Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 3,
+    "budgetMs": 5000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Production JS component solver in a local Chromium page. Headline samples are uninstrumented, budget-limited, warm-started dimension edits on initially satisfied fresh models; setup and validation excluded. Separate profiler/phase/transport runs must not be added to headline time. Wasm times and speedups are null until a replacement is measured.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [],
+  "nativeApp": [
+    {
+      "checks": [
+        "Dimension label is rendered",
+        "Dimension edit used the native Worker",
+        "Native final solve converged",
+        "Solved geometry changed",
+        "Updated dimension text is visible",
+        "SVG geometry was updated",
+        "arc geometry is rendered",
+        "circle geometry is rendered",
+        "line geometry is rendered",
+        "point geometry is rendered",
+        "Mixed constraint residuals satisfy final tolerance",
+        "Undo restores the previous dimension",
+        "Redo restores the solved dimension",
+        "Serialized drawing reload preserves the solved dimension",
+        "Dimension label is rendered",
+        "Invalid expression preserves the accepted dimension",
+        "Invalid expression is reported in the editor"
+      ],
+      "constraintTypes": [
+        "Horizontal",
+        "Distance",
+        "Fixed",
+        "Parallel",
+        "Perpendicular",
+        "Coincident",
+        "Equal",
+        "Length",
+        "Angle",
+        "Line Line Distance",
+        "Midpoint",
+        "Point-on Line",
+        "Point Line Distance",
+        "Collinear",
+        "Tangent",
+        "Radius",
+        "Horizontal Distance",
+        "Vertical Distance",
+        "Point-on Arc",
+        "Point-on Fillet",
+        "Vertical",
+        "Diameter"
+      ],
+      "change": {
+        "status": "converged",
+        "revision": 13,
+        "diagnostics": {
+          "durationMs": 2.700000047683716,
+          "backend": "wasm",
+          "initialError": 0.007830136577350743,
+          "finalError": 1.8773745016802932e-9,
+          "solveScope": {
+            "mode": "stack-set",
+            "stackIds": [
+              "037cb8b7-ba07-484d-8770-892ef57ec49f"
+            ],
+            "componentCount": 1,
+            "variableCount": 54,
+            "constraintCount": 56,
+            "entityCount": 16
+          },
+          "iterations": 4,
+          "solveMode": "final",
+          "cancellationReason": null,
+          "acceptedSteps": 4,
+          "rejectedSteps": 0,
+          "rigidFirstSolveAttempted": false,
+          "rigidFirstSolveAccepted": false,
+          "rigidFirstSolveFallback": false,
+          "restoredInteractivePreview": false,
+          "restoredInteractiveBaseline": false,
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 58,
+            "analyticalBlocks": 56,
+            "fallbackBlocks": 2,
+            "residualRows": 84,
+            "arenaBytes": 138024,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 3456,
+            "totalLinearIterations": 198,
+            "linearSolver": "native-pcg",
+            "matrixFreeComponentCount": 1,
+            "derivativeEntries": 404,
+            "linearIterations": 51,
+            "linearConverged": true
+          }
+        }
+      }
+    },
+    {
+      "backend": "javascript",
+      "checks": [
+        "Supplied drawing opens with c1 = 50",
+        "Front width geometry is rendered",
+        "c1 edit 85 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "SVG geometry changed after 50 → 85",
+        "Control displays 50",
+        "All constraints retained at 50",
+        "Rendered model needs no correction at 50",
+        "Rendered model meets final tolerance at 50",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "Undo restores the rendered width geometry",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "c1 edit 50 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 50",
+        "All constraints retained at 50",
+        "Rendered model needs no correction at 50",
+        "Rendered model meets final tolerance at 50",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "c1 edit 85 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "No solver stall error is displayed"
+      ],
+      "edits": [
+        {
+          "target": 85,
+          "elapsedMs": 1015.3999999761581,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 471.60000002384186,
+            "backend": "javascript",
+            "initialError": 4.489276498581369e-17,
+            "finalError": 4.489276498581369e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "residualL2": 6.7007346348575876e-9
+        },
+        {
+          "target": 50,
+          "elapsedMs": 1198.300000011921,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 708.7000000476837,
+            "backend": "javascript",
+            "initialError": 2.959188889825348e-17,
+            "finalError": 2.959188889825348e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "residualL2": 5.3522752719727615e-9
+        },
+        {
+          "target": 85,
+          "elapsedMs": 790.8999999761581,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 505.80000001192093,
+            "backend": "javascript",
+            "initialError": 1.1493070630769425e-16,
+            "finalError": 9.121054111062659e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 6,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 6,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 195,
+              "analyticalBlocks": 171,
+              "fallbackBlocks": 24,
+              "residualRows": 305,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 2478,
+              "matrixFreeComponentCount": 1,
+              "derivativeEntries": 1436,
+              "linearIterations": 1,
+              "linearConverged": true
+            }
+          },
+          "residualL2": 9.683327560610936e-9
+        }
+      ]
+    },
+    {
+      "backend": "wasm",
+      "checks": [
+        "Supplied drawing opens with c1 = 50",
+        "Front width geometry is rendered",
+        "c1 edit 85 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "SVG geometry changed after 50 → 85",
+        "Control displays 50",
+        "All constraints retained at 50",
+        "Rendered model needs no correction at 50",
+        "Rendered model meets final tolerance at 50",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "Undo restores the rendered width geometry",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "c1 edit 50 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 50",
+        "All constraints retained at 50",
+        "Rendered model needs no correction at 50",
+        "Rendered model meets final tolerance at 50",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "c1 edit 85 converged: Constraints converged through 18 continuation steps.",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "Control displays 85",
+        "All constraints retained at 85",
+        "Rendered model needs no correction at 85",
+        "Rendered model meets final tolerance at 85",
+        "All 193 constraints enabled",
+        "Temporary solve locks released",
+        "No solver stall error is displayed"
+      ],
+      "edits": [
+        {
+          "target": 85,
+          "elapsedMs": 1154.300000011921,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 568.1999999880791,
+            "backend": "javascript",
+            "initialError": 8.788885364374111e-17,
+            "finalError": 8.788885364374111e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "fallbackReason": "Native derived provider swell is not supported."
+            }
+          },
+          "residualL2": 9.524270087362617e-9
+        },
+        {
+          "target": 50,
+          "elapsedMs": 1164.7999999523163,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 695.6000000238419,
+            "backend": "javascript",
+            "initialError": 6.433757035635334e-17,
+            "finalError": 6.433757035635334e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "fallbackReason": "Native derived provider swell is not supported."
+            }
+          },
+          "residualL2": 8.003208125748315e-9
+        },
+        {
+          "target": 85,
+          "elapsedMs": 755.3999999761581,
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 480.2999999523163,
+            "backend": "javascript",
+            "initialError": 7.076386276497483e-17,
+            "finalError": 7.076386276497483e-17,
+            "solveScope": {
+              "mode": "stack-placement-components",
+              "stackIds": [
+                "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+                "434d4217-09bc-475b-91af-28ab3413d83f",
+                "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+                "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+                "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+              ]
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "fallbackReason": "Native derived provider swell is not supported."
+            }
+          },
+          "residualL2": 8.375099268062853e-9
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "ba101d05d700719d2c2087f89ae48f506b001db30a183e3722c0868381026c7e",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "764c1306d425c657d6fee5ab98ab22efbb42ad61942d11ea1ccf76bd1e53bab8",
+    "scripts/solver-baseline/browser.js": "9214aafb7d0bb7a43cc60c9094cb90b42892da8be5f95022c301c5e9c70bad19",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "5017893078a433d61b602bb2065b5a469341c2f2b8cf578d17a8ec0988484284",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "55aff4acb5fd6d5848d89e23d0768f4a6f37fd7b18fba7742524f053f8ca27b1",
+    "packages/paramagic-core/native/constraint_program.h": "4e7827394cc42bb7320516023c98a5ef2cd499348572292c315c3dd420253363",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "7c47d6cafa835ea8dc6e880040bccf3a1cee4d39156ab91dfbefaf0188c6e261",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "ab9c8a8a58a13a5e79d98cf9e690d1a788200e2456ba0b7ab11f1210b656286f",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "e3c567aeeddf4900ffb18a8d2c347059d4aee5beadcb64f3d192a53e2e876112",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "4ff27f211661a9dd90bd83bc585af7a7454251e96a1511c6783b632a2ce3f7fd",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "1f7161085c6a296485ba8c826b1841aace182e9d3fa1f3811dca03141804d7c5",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "be101a36400eef428af7ce7fe0bc1b35bef140da486f2750f8b1e406a2a0f5fb",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "f464952ec12f2ef93bad0c100225dcc09197cf545d31ef9bcd6c8a89e1835dfd",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "de9e33166e0392402fbe8473428b4c2de517a260baae2c24ac2a2f939e0ad88a",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "4120a9173fbb418d70a29254d704f15e494b6513dcb02a7824d1f0eb15b207a1",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "b35fd42169439c4ff9f96473ab36cc1ae909b94c8dc645bd50f760be58f3fe40"
+  },
+  "finishedAt": "2026-09-26T19:30:18.405Z"
+}

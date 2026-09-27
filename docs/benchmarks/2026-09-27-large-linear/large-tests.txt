@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: heap minimum-degree ordering and fill agree with the reference symbolic compiler
+ok 1 - heap minimum-degree ordering and fill agree with the reference symbolic compiler
+  ---
+  duration_ms: 5.6114
+  type: 'test'
+  ...
+# Subtest: sparse topology work and fill limits reject dense graphs without global dense storage
+ok 2 - sparse topology work and fill limits reject dense graphs without global dense storage
+  ---
+  duration_ms: 0.7054
+  type: 'test'
+  ...
+# Subtest: large connected edits converge and reuse native topology (shared target: false)
+ok 3 - large connected edits converge and reuse native topology (shared target: false)
+  ---
+  duration_ms: 210.6421
+  type: 'test'
+  ...
+# Subtest: large connected edits converge and reuse native topology (shared target: true)
+ok 4 - large connected edits converge and reuse native topology (shared target: true)
+  ---
+  duration_ms: 154.3581
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {}
+ok 5 - large native solutions preserve reference constraints and freedoms: {}
+  ---
+  duration_ms: 206.8767
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"floating":true}
+ok 6 - large native solutions preserve reference constraints and freedoms: {"floating":true}
+  ---
+  duration_ms: 198.2189
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"underconstrained":true}
+ok 7 - large native solutions preserve reference constraints and freedoms: {"underconstrained":true}
+  ---
+  duration_ms: 99.9983
+  type: 'test'
+  ...
+# Subtest: large native solutions preserve reference constraints and freedoms: {"conflict":true}
+ok 8 - large native solutions preserve reference constraints and freedoms: {"conflict":true}
+  ---
+  duration_ms: 275.6481
+  type: 'test'
+  ...
+# Subtest: large sparse solve cancellation restores accepted coordinates and can be resumed
+ok 9 - large sparse solve cancellation restores accepted coordinates and can be resumed
+  ---
+  duration_ms: 117.9224
+  type: 'test'
+  ...
+# Subtest: large sparse factors solve mixed arcs, tangency, derived fillets and redundant constraints
+ok 10 - large sparse factors solve mixed arcs, tangency, derived fillets and redundant constraints
+  ---
+  duration_ms: 204.165
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1567.5538

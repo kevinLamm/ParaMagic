@@ -1,0 +1,1874 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-26T17:36:50.231Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 1,
+    "budgetMs": 5000,
+    "profileCount": 0,
+    "auxiliary": false,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Paired same-Chrome JS/WASM resident numerical solves; separate fixed-iteration preview throughput and normal-tolerance final convergence. Load/validation excluded; typed-array synchronization included. No speedup for unequal incomplete work.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [
+    {
+      "count": 1000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 3.5,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "converged",
+            "iterations": 14,
+            "elapsedMs": 294.60000002384186,
+            "finalError": 1.3382523009759361e-9,
+            "timings": {
+              "residualMs": 13.900000154972076,
+              "jacobianMs": 254.19999998807907,
+              "linearSolveMs": 20.199999928474426,
+              "totalMs": 294.60000002384186
+            },
+            "validation": {
+              "residualL2": 0.00003658213089714617,
+              "maxResidual": 0.000005921984310930384,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00044648407310887706,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 931,
+              "fallbackBlocks": 103,
+              "residualRows": 1442,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 34,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 5881,
+              "symbolicCacheHit": false,
+              "derivativeEntries": 7811,
+              "preconditionerBlocks": 272,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1,
+              "linearConverged": true,
+              "linearResidual": 1.5220576401815703e-16,
+              "linearPreconditioner": "none"
+            },
+            "heapUsedBytes": 37510219
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 22.600000023841858,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "converged",
+            "iterations": 14,
+            "elapsedMs": 80.19999998807907,
+            "finalError": 1.338252301168823e-9,
+            "timings": {
+              "totalMs": 80.19999998807907,
+              "preparationMs": 1.199999988079071
+            },
+            "validation": {
+              "residualL2": 0.00003658213089978216,
+              "maxResidual": 0.000005921983259327135,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00044648406947089825,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 966,
+              "fallbackBlocks": 68,
+              "residualRows": 1442,
+              "derivativeEntries": 7811,
+              "linearIterations": 406,
+              "totalLinearIterations": 5354,
+              "linearConverged": true,
+              "arenaBytes": 1174344,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61072
+            },
+            "heapUsedBytes": 69952951
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": true,
+          "sameWork": true,
+          "maxCoordinateDifference": 5.337597031029873e-10,
+          "speedup": 3.6733167090727084
+        }
+      ]
+    },
+    {
+      "count": 1000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 22,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 13.200000047683716,
+            "finalError": 0.06555908527155067,
+            "timings": {
+              "totalMs": 13.200000047683716,
+              "preparationMs": 1.2000000476837158
+            },
+            "validation": {
+              "residualL2": 0.2560450844510616,
+              "maxResidual": 0.03607825673739029,
+              "residualCount": 1442,
+              "maxCoordinateError": 3.8257554168030765,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 966,
+              "fallbackBlocks": 68,
+              "residualRows": 1442,
+              "derivativeEntries": 7811,
+              "linearIterations": 336,
+              "totalLinearIterations": 460,
+              "linearConverged": true,
+              "arenaBytes": 1174344,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61072
+            },
+            "heapUsedBytes": 21605367
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 2.200000047683716,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 69,
+            "finalError": 0.06555908527154207,
+            "timings": {
+              "residualMs": 4.900000035762787,
+              "jacobianMs": 52.09999996423721,
+              "linearSolveMs": 5.399999976158142,
+              "totalMs": 68.90000003576279
+            },
+            "validation": {
+              "residualL2": 0.256045084451044,
+              "maxResidual": 0.036078256736793435,
+              "residualCount": 1442,
+              "maxCoordinateError": 3.8257554168149,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 931,
+              "fallbackBlocks": 103,
+              "residualRows": 1442,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 34,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 5881,
+              "symbolicCacheHit": false,
+              "derivativeEntries": 7811,
+              "preconditionerBlocks": 272,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1,
+              "linearConverged": true,
+              "linearResidual": 5.263298459196557e-16,
+              "linearPreconditioner": "none"
+            },
+            "heapUsedBytes": 39181091
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": true,
+          "maxCoordinateDifference": 5.734364094678313e-10,
+          "speedup": 5.227272708389713
+        }
+      ]
+    },
+    {
+      "count": 5000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 8.800000011920929,
+        "variables": 4644,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 4,
+            "elapsedMs": 5000.399999976158,
+            "finalError": 0.6733917456521639,
+            "timings": {
+              "residualMs": 24.200000047683716,
+              "jacobianMs": 1542.5000000596046,
+              "linearSolveMs": 2928.4999999403954,
+              "totalMs": 5000.300000011921
+            },
+            "validation": {
+              "residualL2": 0.8206045001413077,
+              "maxResidual": 0.0625,
+              "residualCount": 7236,
+              "maxCoordinateError": 21.5,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 5172,
+              "analyticalBlocks": 4655,
+              "fallbackBlocks": 517,
+              "residualRows": 7236,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 172,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 39401,
+              "preconditionerBlocks": 1376,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1000,
+              "linearConverged": false,
+              "linearResidual": 0.00013763477680122093,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 80192019
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 90.89999997615814,
+        "variables": 4644,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "converged",
+            "iterations": 69,
+            "elapsedMs": 4857.800000011921,
+            "finalError": 7.126526772630285e-8,
+            "timings": {
+              "totalMs": 4857.800000011921,
+              "preparationMs": 12.900000035762787
+            },
+            "validation": {
+              "residualL2": 0.00026695555383853155,
+              "maxResidual": 0.000025870788704196457,
+              "residualCount": 7236,
+              "maxCoordinateError": 0.008246346198575338,
+              "movedEntities": 172,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 5172,
+              "analyticalBlocks": 4775,
+              "fallbackBlocks": 397,
+              "residualRows": 7236,
+              "derivativeEntries": 39401,
+              "linearIterations": 1000,
+              "totalLinearIterations": 67562,
+              "linearConverged": false,
+              "arenaBytes": 5595112,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 306064
+            },
+            "heapUsedBytes": 55989470
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 21.49183120303678,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 5000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 88.30000001192093,
+        "variables": 4644,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 61.39999997615814,
+            "finalError": 0.37449325704861247,
+            "timings": {
+              "totalMs": 61.19999998807907,
+              "preparationMs": 13.099999964237213
+            },
+            "validation": {
+              "residualL2": 0.611958541936147,
+              "maxResidual": 0.0360790373706692,
+              "residualCount": 7236,
+              "maxCoordinateError": 21.075755528747322,
+              "movedEntities": 172,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 5172,
+              "analyticalBlocks": 4828,
+              "fallbackBlocks": 344,
+              "residualRows": 7236,
+              "derivativeEntries": 39401,
+              "linearIterations": 442,
+              "totalLinearIterations": 562,
+              "linearConverged": true,
+              "arenaBytes": 5595112,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 306064
+            },
+            "heapUsedBytes": 59399903
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 5.5,
+        "variables": 4644,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 1351.4000000357628,
+            "finalError": 0.3744932570486298,
+            "timings": {
+              "residualMs": 15.699999988079071,
+              "jacobianMs": 633.5999999642372,
+              "linearSolveMs": 672.6000000238419,
+              "totalMs": 1351.300000011921
+            },
+            "validation": {
+              "residualL2": 0.6119585419361613,
+              "maxResidual": 0.0360790373706763,
+              "residualCount": 7236,
+              "maxCoordinateError": 21.0757555287546,
+              "movedEntities": 172,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 5172,
+              "analyticalBlocks": 4655,
+              "fallbackBlocks": 517,
+              "residualRows": 7236,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 172,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 39401,
+              "preconditionerBlocks": 1376,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 442,
+              "linearConverged": true,
+              "linearResidual": 1.0687761317520462e-11,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 66297834
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": true,
+          "maxCoordinateDifference": 2.4193859990504635e-10,
+          "speedup": 22.00977199609962
+        }
+      ]
+    },
+    {
+      "count": 10000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 13.600000023841858,
+        "variables": 9288,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 2,
+            "elapsedMs": 5000.5,
+            "finalError": 1.3467834913043277,
+            "timings": {
+              "residualMs": 31.400000035762787,
+              "jacobianMs": 3474.599999964237,
+              "linearSolveMs": 1351.800000011921,
+              "totalMs": 5000.300000011921
+            },
+            "validation": {
+              "residualL2": 1.1605100134442277,
+              "maxResidual": 0.0625,
+              "residualCount": 14472,
+              "maxCoordinateError": 43,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 10344,
+              "analyticalBlocks": 9311,
+              "fallbackBlocks": 1033,
+              "residualRows": 14472,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 344,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 78861,
+              "preconditionerBlocks": 2752,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 435,
+              "linearConverged": true,
+              "linearResidual": 1.4903086188191573e-11,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 60899278
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 156.89999997615814,
+        "variables": 9288,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 36,
+            "elapsedMs": 5000.699999988079,
+            "finalError": 1.3467834913043277,
+            "timings": {
+              "totalMs": 5000.600000023842,
+              "preparationMs": 33.10000002384186
+            },
+            "validation": {
+              "residualL2": 1.1605100134442277,
+              "maxResidual": 0.0625,
+              "residualCount": 14472,
+              "maxCoordinateError": 43,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 10344,
+              "analyticalBlocks": 9656,
+              "fallbackBlocks": 688,
+              "residualRows": 14472,
+              "derivativeEntries": 78861,
+              "linearIterations": 1000,
+              "totalLinearIterations": 34051,
+              "linearConverged": false,
+              "arenaBytes": 11114504,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 612112
+            },
+            "heapUsedBytes": 142262382
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 10000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 179.10000002384186,
+        "variables": 9288,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 114.10000002384186,
+            "finalError": 0.7595416102696049,
+            "timings": {
+              "totalMs": 114,
+              "preparationMs": 22.30000001192093
+            },
+            "validation": {
+              "residualL2": 0.8715168445128245,
+              "maxResidual": 0.03607903736003237,
+              "residualCount": 14472,
+              "maxCoordinateError": 42.575755527948786,
+              "movedEntities": 344,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 10344,
+              "analyticalBlocks": 9656,
+              "fallbackBlocks": 688,
+              "residualRows": 14472,
+              "derivativeEntries": 78861,
+              "linearIterations": 435,
+              "totalLinearIterations": 553,
+              "linearConverged": true,
+              "arenaBytes": 11114504,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 612112
+            },
+            "heapUsedBytes": 66620938
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 10.5,
+        "variables": 9288,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 3980.199999988079,
+            "finalError": 0.7595416102696735,
+            "timings": {
+              "residualMs": 30.000000059604645,
+              "jacobianMs": 2569.2000000476837,
+              "linearSolveMs": 1318.699999988079,
+              "totalMs": 3980.099999964237
+            },
+            "validation": {
+              "residualL2": 0.8715168445128634,
+              "maxResidual": 0.03607903736003948,
+              "residualCount": 14472,
+              "maxCoordinateError": 42.575755527952424,
+              "movedEntities": 344,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 10344,
+              "analyticalBlocks": 9311,
+              "fallbackBlocks": 1033,
+              "residualRows": 14472,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 344,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 78861,
+              "preconditionerBlocks": 2752,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 435,
+              "linearConverged": true,
+              "linearResidual": 1.4903086188191573e-11,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 134914206
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": true,
+          "maxCoordinateDifference": 2.874003257602453e-10,
+          "speedup": 34.883435575428514
+        }
+      ]
+    },
+    {
+      "count": 25000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 28,
+        "variables": 23274,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 0,
+            "elapsedMs": 5000.600000023842,
+            "finalError": 3.3747888648381705,
+            "timings": {
+              "residualMs": 32.39999997615814,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 5000.5
+            },
+            "validation": {
+              "residualL2": 1.8370598424760454,
+              "maxResidual": 0.0625,
+              "residualCount": 36206,
+              "maxCoordinateError": 107.75,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 862,
+              "linearSolver": "iterative-pcg"
+            },
+            "heapUsedBytes": 109215730
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 453.5,
+        "variables": 23274,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 14,
+            "elapsedMs": 5001.100000023842,
+            "finalError": 3.3747888648381705,
+            "timings": {
+              "totalMs": 5000.900000035763,
+              "preparationMs": 183.60000002384186
+            },
+            "validation": {
+              "residualL2": 1.8370598424760454,
+              "maxResidual": 0.0625,
+              "residualCount": 36206,
+              "maxCoordinateError": 107.75,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 25862,
+              "analyticalBlocks": 24138,
+              "fallbackBlocks": 1724,
+              "residualRows": 36206,
+              "derivativeEntries": 197351,
+              "linearIterations": 1000,
+              "totalLinearIterations": 12537,
+              "linearConverged": false,
+              "arenaBytes": 27698952,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 1531024
+            },
+            "heapUsedBytes": 133086894
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 25000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 500.80000001192093,
+        "variables": 23274,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 415.4000000357628,
+            "finalError": 1.9191639762851043,
+            "timings": {
+              "totalMs": 415.10000002384186,
+              "preparationMs": 182
+            },
+            "validation": {
+              "residualL2": 1.385338939135349,
+              "maxResidual": 0.03607903738013363,
+              "residualCount": 36206,
+              "maxCoordinateError": 107.32575552229537,
+              "movedEntities": 862,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 25862,
+              "analyticalBlocks": 24138,
+              "fallbackBlocks": 1724,
+              "residualRows": 36206,
+              "derivativeEntries": 197351,
+              "linearIterations": 429,
+              "totalLinearIterations": 544,
+              "linearConverged": true,
+              "arenaBytes": 27698952,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 1531024
+            },
+            "heapUsedBytes": 167494450
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 23.19999998807907,
+        "variables": 23274,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 18306.69999998808,
+            "finalError": 1.9191639762850803,
+            "timings": {
+              "residualMs": 61.19999998807907,
+              "jacobianMs": 13970.5,
+              "linearSolveMs": 4032,
+              "totalMs": 18306.5
+            },
+            "validation": {
+              "residualL2": 1.3853389391353312,
+              "maxResidual": 0.03607903738014073,
+              "residualCount": 36206,
+              "maxCoordinateError": 107.32575552236813,
+              "movedEntities": 862,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 25862,
+              "analyticalBlocks": 23275,
+              "fallbackBlocks": 2587,
+              "residualRows": 36206,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 862,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 197351,
+              "preconditionerBlocks": 6896,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 429,
+              "linearConverged": true,
+              "linearResidual": 2.0771472381121557e-11,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 159100614
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": true,
+          "maxCoordinateDifference": 1.6758963028635533e-9,
+          "speedup": 44.07005295717865
+        }
+      ]
+    },
+    {
+      "count": 50000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 52.5,
+        "variables": 46548,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 0,
+            "elapsedMs": 5001.199999988079,
+            "finalError": 6.74957772967634,
+            "timings": {
+              "residualMs": 66.59999996423721,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 5000.699999988079
+            },
+            "validation": {
+              "residualL2": 2.5979949441205994,
+              "maxResidual": 0.0625,
+              "residualCount": 72412,
+              "maxCoordinateError": 215.5,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 1724,
+              "linearSolver": "iterative-pcg"
+            },
+            "heapUsedBytes": 231543306
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 1379.6000000238419,
+        "variables": 46548,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 8,
+            "elapsedMs": 5001.800000011921,
+            "finalError": 6.74957772967634,
+            "timings": {
+              "totalMs": 5001.300000011921,
+              "preparationMs": 511.80000001192093
+            },
+            "validation": {
+              "residualL2": 2.5979949441205994,
+              "maxResidual": 0.0625,
+              "residualCount": 72412,
+              "maxCoordinateError": 215.5,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 51724,
+              "analyticalBlocks": 48276,
+              "fallbackBlocks": 3448,
+              "residualRows": 72412,
+              "derivativeEntries": 394761,
+              "linearIterations": 1000,
+              "totalLinearIterations": 5649,
+              "linearConverged": false,
+              "arenaBytes": 55322184,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 3062032
+            },
+            "heapUsedBytes": 249217122
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 50000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 1337.5,
+        "variables": 46548,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 1173.9000000357628,
+            "finalError": 3.848883048415848,
+            "timings": {
+              "totalMs": 1173.4000000357628,
+              "preparationMs": 715.7000000476837
+            },
+            "validation": {
+              "residualL2": 1.9618570407694298,
+              "maxResidual": 0.036079037378286216,
+              "residualCount": 72412,
+              "maxCoordinateError": 215.0757555021264,
+              "movedEntities": 1724,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 51724,
+              "analyticalBlocks": 48276,
+              "fallbackBlocks": 3448,
+              "residualRows": 72412,
+              "derivativeEntries": 394761,
+              "linearIterations": 418,
+              "totalLinearIterations": 531,
+              "linearConverged": true,
+              "arenaBytes": 55322184,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 3062032
+            },
+            "heapUsedBytes": 257219946
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 50.40000003576279,
+        "variables": 46548,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 1,
+            "elapsedMs": 60003.5,
+            "finalError": 3.857848328984184,
+            "timings": {
+              "residualMs": 108.09999996423721,
+              "jacobianMs": 35674.200000047684,
+              "linearSolveMs": 1949.199999988079,
+              "totalMs": 60002.89999997616
+            },
+            "validation": {
+              "residualL2": 1.9641406082516708,
+              "maxResidual": 0.03718669576617373,
+              "residualCount": 72412,
+              "maxCoordinateError": 215.35139889383572,
+              "movedEntities": 1724,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 51724,
+              "analyticalBlocks": 46551,
+              "fallbackBlocks": 5173,
+              "residualRows": 72412,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 1724,
+              "linearSolver": "iterative-pcg",
+              "derivativeEntries": 394761,
+              "preconditionerBlocks": 13792,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 113,
+              "linearConverged": true,
+              "linearResidual": 1.8177564572396477e-9,
+              "linearPreconditioner": "entity-block"
+            },
+            "heapUsedBytes": 521983474
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0.27564339170930907,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 100000,
+      "mixed": true,
+      "budgetMs": 5000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 1,
+      "javascript": {
+        "residentLoadMs": 92.09999996423721,
+        "variables": 93096,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 0,
+            "elapsedMs": 5002.599999964237,
+            "finalError": 13.499155459352682,
+            "timings": {
+              "residualMs": 132.30000001192093,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 5001.5
+            },
+            "validation": {
+              "residualL2": 3.674119684952079,
+              "maxResidual": 0.0625,
+              "residualCount": 144824,
+              "maxCoordinateError": 431,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 3448,
+              "linearSolver": "iterative-pcg"
+            },
+            "heapUsedBytes": 448782746
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 4758.400000035763,
+        "variables": 93096,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "cancelled",
+            "iterations": 3,
+            "elapsedMs": 5004.699999988079,
+            "finalError": 13.499155459352682,
+            "timings": {
+              "totalMs": 5003.599999964237,
+              "preparationMs": 3545
+            },
+            "validation": {
+              "residualL2": 3.674119684952079,
+              "maxResidual": 0.0625,
+              "residualCount": 144824,
+              "maxCoordinateError": 431,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 103448,
+              "analyticalBlocks": 96552,
+              "fallbackBlocks": 6896,
+              "residualRows": 144824,
+              "derivativeEntries": 789581,
+              "linearIterations": 413,
+              "totalLinearIterations": 662,
+              "linearConverged": false,
+              "arenaBytes": 110568648,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 6124048
+            },
+            "heapUsedBytes": 688174754
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 100000,
+      "mixed": true,
+      "budgetMs": 60000,
+      "maxIterations": 2,
+      "mode": "interactive",
+      "repeats": 1,
+      "wasm": {
+        "residentLoadMs": 4432.600000023842,
+        "variables": 93096,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 2,
+            "elapsedMs": 4307.699999988079,
+            "finalError": 7.708321191658016,
+            "timings": {
+              "totalMs": 4306.699999988079,
+              "preparationMs": 3220.099999964237
+            },
+            "validation": {
+              "residualL2": 2.7763863548968764,
+              "maxResidual": 0.03607903737332663,
+              "residualCount": 144824,
+              "maxCoordinateError": 430.5757554214797,
+              "movedEntities": 3448,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 103448,
+              "analyticalBlocks": 96552,
+              "fallbackBlocks": 6896,
+              "residualRows": 144824,
+              "derivativeEntries": 789581,
+              "linearIterations": 413,
+              "totalLinearIterations": 523,
+              "linearConverged": true,
+              "arenaBytes": 110568648,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 6124048
+            },
+            "heapUsedBytes": 649673030
+          }
+        ]
+      },
+      "javascript": {
+        "residentLoadMs": 84.89999997615814,
+        "variables": 93096,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "preview",
+            "iterations": 0,
+            "elapsedMs": 60002.5,
+            "finalError": 13.499155459352682,
+            "timings": {
+              "residualMs": 128.19999998807907,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 60001.39999997616
+            },
+            "validation": {
+              "residualL2": 3.674119684952079,
+              "maxResidual": 0.0625,
+              "residualCount": 144824,
+              "maxCoordinateError": 431,
+              "movedEntities": 0,
+              "movedFraction": 0,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0,
+              "matrixFreeThreshold": 48,
+              "matrixFreeThresholdSource": "interactive",
+              "reducedArcCenters": 3448,
+              "linearSolver": "iterative-pcg"
+            },
+            "heapUsedBytes": 389076462
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": false,
+          "sameWork": false,
+          "maxCoordinateDifference": 0.42474829353159294,
+          "speedup": null
+        }
+      ]
+    },
+    {
+      "count": 1000,
+      "mixed": true,
+      "budgetMs": 30000,
+      "maxIterations": 2000,
+      "mode": "final",
+      "repeats": 3,
+      "javascript": {
+        "residentLoadMs": 3.800000011920929,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "converged",
+            "iterations": 14,
+            "elapsedMs": 293.5,
+            "finalError": 1.3382523009759361e-9,
+            "timings": {
+              "residualMs": 14.099999904632568,
+              "jacobianMs": 252.69999998807907,
+              "linearSolveMs": 20.100000143051147,
+              "totalMs": 293.5
+            },
+            "validation": {
+              "residualL2": 0.00003658213089714617,
+              "maxResidual": 0.000005921984310930384,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00044648407310887706,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 931,
+              "fallbackBlocks": 103,
+              "residualRows": 1442,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 34,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 5881,
+              "symbolicCacheHit": false,
+              "derivativeEntries": 7811,
+              "preconditionerBlocks": 272,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1,
+              "linearConverged": true,
+              "linearResidual": 1.5220576401815703e-16,
+              "linearPreconditioner": "none"
+            },
+            "heapUsedBytes": 37709991
+          },
+          {
+            "target": 84.15,
+            "status": "converged",
+            "iterations": 6,
+            "elapsedMs": 114,
+            "finalError": 1.6184200138711737e-10,
+            "timings": {
+              "residualMs": 6.000000059604645,
+              "jacobianMs": 95.99999988079071,
+              "linearSolveMs": 7.700000047683716,
+              "totalMs": 114
+            },
+            "validation": {
+              "residualL2": 0.000012721713775553876,
+              "maxResidual": 0.0000021154168337034207,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00015963682108122157,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.15
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 931,
+              "fallbackBlocks": 103,
+              "residualRows": 1442,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 34,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 5881,
+              "symbolicCacheHit": true,
+              "derivativeEntries": 7811,
+              "preconditionerBlocks": 272,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1,
+              "linearConverged": true,
+              "linearResidual": 5.0402034926708647e-17,
+              "linearPreconditioner": "none"
+            },
+            "heapUsedBytes": 70218655
+          },
+          {
+            "target": 84.175,
+            "status": "converged",
+            "iterations": 6,
+            "elapsedMs": 106.69999998807907,
+            "finalError": 1.5016486118921807e-10,
+            "timings": {
+              "residualMs": 4.699999988079071,
+              "jacobianMs": 90.60000002384186,
+              "linearSolveMs": 6.800000011920929,
+              "totalMs": 106.69999998807907
+            },
+            "validation": {
+              "residualL2": 0.00001225417729548656,
+              "maxResidual": 0.0000021185611345231337,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00015983243292794214,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.175
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 931,
+              "fallbackBlocks": 103,
+              "residualRows": 1442,
+              "matrixFreeThreshold": 192,
+              "matrixFreeThresholdSource": "final",
+              "reducedArcCenters": 34,
+              "linearSolver": "compiled-elimination",
+              "factorEntries": 5881,
+              "symbolicCacheHit": true,
+              "derivativeEntries": 7811,
+              "preconditionerBlocks": 272,
+              "largestPreconditionerBlock": 4,
+              "linearIterations": 1,
+              "linearConverged": true,
+              "linearResidual": 5.0235891339358365e-17,
+              "linearPreconditioner": "none"
+            },
+            "heapUsedBytes": 67741943
+          }
+        ]
+      },
+      "wasm": {
+        "residentLoadMs": 22.299999952316284,
+        "variables": 918,
+        "samples": [
+          {
+            "target": 84.125,
+            "status": "converged",
+            "iterations": 14,
+            "elapsedMs": 79.40000003576279,
+            "finalError": 1.338252301168823e-9,
+            "timings": {
+              "totalMs": 79.40000003576279,
+              "preparationMs": 1
+            },
+            "validation": {
+              "residualL2": 0.00003658213089978216,
+              "maxResidual": 0.000005921983259327135,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00044648406947089825,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.125
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 966,
+              "fallbackBlocks": 68,
+              "residualRows": 1442,
+              "derivativeEntries": 7811,
+              "linearIterations": 406,
+              "totalLinearIterations": 5354,
+              "linearConverged": true,
+              "arenaBytes": 1174344,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61072
+            },
+            "heapUsedBytes": 70061367
+          },
+          {
+            "target": 84.15,
+            "status": "converged",
+            "iterations": 6,
+            "elapsedMs": 31,
+            "finalError": 1.6184200329470406e-10,
+            "timings": {
+              "totalMs": 31,
+              "preparationMs": 1
+            },
+            "validation": {
+              "residualL2": 0.000012721713850527139,
+              "maxResidual": 0.00000211541686212513,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00015963682153596892,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.15
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 966,
+              "fallbackBlocks": 68,
+              "residualRows": 1442,
+              "derivativeEntries": 7811,
+              "linearIterations": 406,
+              "totalLinearIterations": 2169,
+              "linearConverged": true,
+              "arenaBytes": 1174344,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61072
+            },
+            "heapUsedBytes": 72720927
+          },
+          {
+            "target": 84.175,
+            "status": "converged",
+            "iterations": 6,
+            "elapsedMs": 31,
+            "finalError": 1.5016486065469824e-10,
+            "timings": {
+              "totalMs": 31,
+              "preparationMs": 0.9000000357627869
+            },
+            "validation": {
+              "residualL2": 0.000012254177273676495,
+              "maxResidual": 0.0000021185613334750997,
+              "residualCount": 1442,
+              "maxCoordinateError": 0.00015983243156370008,
+              "movedEntities": 34,
+              "movedFraction": 1,
+              "parameterValue": 84.175
+            },
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "linearSolver": "native-pcg",
+              "totalBlocks": 1034,
+              "analyticalBlocks": 966,
+              "fallbackBlocks": 68,
+              "residualRows": 1442,
+              "derivativeEntries": 7811,
+              "linearIterations": 402,
+              "totalLinearIterations": 2161,
+              "linearConverged": true,
+              "arenaBytes": 1174344,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61072
+            },
+            "heapUsedBytes": 75311775
+          }
+        ]
+      },
+      "comparisons": [
+        {
+          "bothConverged": true,
+          "sameWork": true,
+          "maxCoordinateDifference": 5.337597031029873e-10,
+          "speedup": 3.6964735499723402
+        },
+        {
+          "bothConverged": true,
+          "sameWork": true,
+          "maxCoordinateDifference": 1.6227374999289168e-10,
+          "speedup": 3.6774193548387095
+        },
+        {
+          "bothConverged": true,
+          "sameWork": true,
+          "maxCoordinateDifference": 1.7074341940315207e-10,
+          "speedup": 3.4419354834864215
+        }
+      ]
+    }
+  ],
+  "nativeWorkers": [
+    {
+      "count": 1000,
+      "mixed": true,
+      "load": {
+        "durationMs": 64,
+        "backend": "wasm",
+        "initialError": 2.342547233216599e-25,
+        "finalError": 2.342547233216599e-25,
+        "solveScope": {
+          "mode": "stack-partitions",
+          "stackGroupCount": 1,
+          "componentCount": 1,
+          "solvedComponentCount": 1,
+          "constrainedComponentCount": 1,
+          "largestVariableCount": 945,
+          "largestConstraintCount": 1000,
+          "variableCount": 945,
+          "constraintCount": 1000,
+          "entityCount": 280
+        },
+        "iterations": 0,
+        "solveMode": "final",
+        "cancellationReason": null,
+        "acceptedSteps": 0,
+        "rejectedSteps": 0,
+        "rigidFirstSolveAttempted": false,
+        "rigidFirstSolveAccepted": false,
+        "rigidFirstSolveFallback": false,
+        "restoredInteractivePreview": false,
+        "restoredInteractiveBaseline": false,
+        "jacobianStats": {
+          "requestedMode": "blocks",
+          "mode": "matrix-free",
+          "totalBlocks": 1035,
+          "analyticalBlocks": 0,
+          "fallbackBlocks": 0,
+          "residualRows": 1455,
+          "arenaBytes": 1203040,
+          "memoryGrowths": 1,
+          "topologyBuilds": 1,
+          "lastSyncBytes": 61176,
+          "totalLinearIterations": 0,
+          "linearSolver": "native-pcg",
+          "matrixFreeComponentCount": 1,
+          "derivativeEntries": 8042,
+          "linearIterations": 0,
+          "linearConverged": false
+        },
+        "queueMs": 0,
+        "roundTripMs": 124.30000001192093
+      },
+      "results": [
+        {
+          "status": "superseded",
+          "revision": 2,
+          "diagnostics": {
+            "durationMs": 64.60000002384186,
+            "backend": "wasm",
+            "initialError": 0.137027390103638,
+            "finalError": 0.137027390103638,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "0264cc78-ef51-430a-85fa-db5176e56049"
+              ],
+              "componentCount": 1,
+              "variableCount": 945,
+              "constraintCount": 1000,
+              "entityCount": 280
+            },
+            "iterations": 8,
+            "solveMode": "final",
+            "cancellationReason": "superseded",
+            "acceptedSteps": 5,
+            "rejectedSteps": 2,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1035,
+              "analyticalBlocks": 1000,
+              "fallbackBlocks": 35,
+              "residualRows": 1455,
+              "arenaBytes": 1203040,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61176,
+              "totalLinearIterations": 3142,
+              "linearSolver": "native-pcg",
+              "matrixFreeComponentCount": 1,
+              "derivativeEntries": 8042,
+              "linearIterations": 470,
+              "linearConverged": false
+            },
+            "queueMs": 0,
+            "roundTripMs": 64.70000004768372,
+            "supersededByRevision": 4
+          }
+        },
+        {
+          "status": "superseded",
+          "revision": 3,
+          "diagnostics": {
+            "coalesced": true
+          }
+        },
+        {
+          "status": "converged",
+          "revision": 4,
+          "diagnostics": {
+            "durationMs": 130.79999995231628,
+            "backend": "wasm",
+            "initialError": 0.26857260756884554,
+            "finalError": 3.2389190698358373e-9,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "0264cc78-ef51-430a-85fa-db5176e56049"
+              ],
+              "componentCount": 1,
+              "variableCount": 945,
+              "constraintCount": 1000,
+              "entityCount": 280
+            },
+            "iterations": 18,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 12,
+            "rejectedSteps": 6,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1035,
+              "analyticalBlocks": 1000,
+              "fallbackBlocks": 35,
+              "residualRows": 1455,
+              "arenaBytes": 1203040,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 61176,
+              "totalLinearIterations": 8023,
+              "linearSolver": "native-pcg",
+              "matrixFreeComponentCount": 1,
+              "derivativeEntries": 8042,
+              "linearIterations": 501,
+              "linearConverged": true
+            },
+            "queueMs": 16.400000035762787,
+            "roundTripMs": 131
+          }
+        }
+      ],
+      "repeat": {
+        "status": "converged",
+        "revision": 6,
+        "diagnostics": {
+          "durationMs": 45.69999998807907,
+          "backend": "wasm",
+          "initialError": 0.005486531028588919,
+          "finalError": 2.0123064318993083e-10,
+          "solveScope": {
+            "mode": "stack-set",
+            "stackIds": [
+              "0264cc78-ef51-430a-85fa-db5176e56049"
+            ],
+            "componentCount": 1,
+            "variableCount": 945,
+            "constraintCount": 1000,
+            "entityCount": 280
+          },
+          "iterations": 6,
+          "solveMode": "final",
+          "cancellationReason": null,
+          "acceptedSteps": 6,
+          "rejectedSteps": 0,
+          "rigidFirstSolveAttempted": false,
+          "rigidFirstSolveAccepted": false,
+          "rigidFirstSolveFallback": false,
+          "restoredInteractivePreview": false,
+          "restoredInteractiveBaseline": false,
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 1035,
+            "analyticalBlocks": 1000,
+            "fallbackBlocks": 35,
+            "residualRows": 1455,
+            "arenaBytes": 1203040,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 61176,
+            "totalLinearIterations": 2546,
+            "linearSolver": "native-pcg",
+            "matrixFreeComponentCount": 1,
+            "derivativeEntries": 8042,
+            "linearIterations": 502,
+            "linearConverged": true
+          },
+          "queueMs": 0,
+          "roundTripMs": 46
+        }
+      },
+      "validation": {
+        "residualL2": 0.00005691150208732679,
+        "maxResidual": 0.00000976762336080128,
+        "residualCount": 1455,
+        "maxCoordinateError": 0.0007575726513096015,
+        "movedEntities": 35,
+        "movedFraction": 1,
+        "parameterValue": 84.175
+      }
+    }
+  ],
+  "nativeApp": [],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "9a242c82879677d284000fbcc47b05d3c89ff6d205c6cf2014520d7d50e47dee",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "764c1306d425c657d6fee5ab98ab22efbb42ad61942d11ea1ccf76bd1e53bab8",
+    "scripts/solver-baseline/browser.js": "896cd818a69217afe2e42bfbcba47db450f656e04c745cc258616e09d1b33dba",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "6c94d18651b225dff7ae206e5b81aa661386cf1614c6d978c7352de78c841015",
+    "packages/paramagic-core/native/constraint_program.h": "4e7827394cc42bb7320516023c98a5ef2cd499348572292c315c3dd420253363",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "7c47d6cafa835ea8dc6e880040bccf3a1cee4d39156ab91dfbefaf0188c6e261",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "ab9c8a8a58a13a5e79d98cf9e690d1a788200e2456ba0b7ab11f1210b656286f",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "038c7e6251c8f479d52951693e3892cf07d7fa2216645953b0c5e1afbcb77e17",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "47f34e875eaa2a6895d3cfeb5653b5684f2df7f83b07aa0b0c00846211bb9b93",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "4ff27f211661a9dd90bd83bc585af7a7454251e96a1511c6783b632a2ce3f7fd",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "1f7161085c6a296485ba8c826b1841aace182e9d3fa1f3811dca03141804d7c5",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "be101a36400eef428af7ce7fe0bc1b35bef140da486f2750f8b1e406a2a0f5fb",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "f464952ec12f2ef93bad0c100225dcc09197cf545d31ef9bcd6c8a89e1835dfd",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "de9e33166e0392402fbe8473428b4c2de517a260baae2c24ac2a2f939e0ad88a",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "4120a9173fbb418d70a29254d704f15e494b6513dcb02a7824d1f0eb15b207a1",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "b35fd42169439c4ff9f96473ab36cc1ae909b94c8dc645bd50f760be58f3fe40"
+  },
+  "finishedAt": "2026-09-26T17:40:42.216Z"
+}

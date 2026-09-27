@@ -1,0 +1,2668 @@
+{
+  "environment": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+  "results": [
+    {
+      "name": "Mixed 2 initial load",
+      "actionReturnedMs": 612.6000003814697,
+      "settledMs": 700.7000002861023,
+      "before": {
+        "records": 52,
+        "svgNodes": 4359,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "after": {
+        "records": 34,
+        "svgNodes": 644,
+        "arrayItems": 22,
+        "swellPieces": 46,
+        "svgImages": 0
+      },
+      "main": {
+        "methods": {
+          "getSketchSnapshot": {
+            "calls": 5,
+            "totalMs": 2.4000000953674316,
+            "maxMs": 0.6999998092651367
+          },
+          "graph.scopeForSeeds": {
+            "calls": 34,
+            "totalMs": 0.20000028610229492,
+            "maxMs": 0.10000038146972656
+          },
+          "graph.rebuildComponentsForVariables": {
+            "calls": 26,
+            "totalMs": 13.799999713897705,
+            "maxMs": 0.9000000953674316
+          },
+          "graph.rebuild": {
+            "calls": 7,
+            "totalMs": 5.099998950958252,
+            "maxMs": 1.299999713897705
+          },
+          "solveLocal": {
+            "calls": 4,
+            "totalMs": 28.5,
+            "maxMs": 20.09999990463257
+          },
+          "solve": {
+            "calls": 4,
+            "totalMs": 29.299999713897705,
+            "maxMs": 20.199999809265137
+          },
+          "emit": {
+            "calls": 29,
+            "totalMs": 141.50000190734863,
+            "maxMs": 69.09999990463257
+          },
+          "canvas.getProcessingDrawingData": {
+            "calls": 24,
+            "totalMs": 20.499999046325684,
+            "maxMs": 1.9000000953674316
+          },
+          "loadSketch": {
+            "calls": 1,
+            "totalMs": 35.19999980926514,
+            "maxMs": 35.19999980926514
+          },
+          "facade.loadSketch": {
+            "calls": 1,
+            "totalMs": 36,
+            "maxMs": 36
+          },
+          "canvas.getDerivedPresentationNodes": {
+            "calls": 7,
+            "totalMs": 0.09999990463256836,
+            "maxMs": 0.09999990463256836
+          },
+          "canvas.syncGeometryStacking": {
+            "calls": 2,
+            "totalMs": 4.1999993324279785,
+            "maxMs": 2.3999996185302734
+          }
+        },
+        "solves": [
+          {
+            "start": 2135.4000000953674,
+            "elapsedMs": 20.199999809265137,
+            "status": "converged",
+            "iterations": 4,
+            "timings": {
+              "residualMs": 0.9000000953674316,
+              "jacobianMs": 3.799999713897705,
+              "linearSolveMs": 12.000000476837158,
+              "totalMs": 18.799999713897705
+            },
+            "scope": {
+              "mode": "component",
+              "componentKeys": [
+                "component:0452ee12-61f9-436c-b25f-488b3923eaa6",
+                "component:0110af35-391e-4b4e-9aef-f81ff2421a60",
+                "component:48d90503-854f-4929-abba-753a3788f00d",
+                "component:4f4db76e-7429-40b7-aafb-ab41cf37997a"
+              ],
+              "variableCount": 131,
+              "constraintCount": 67,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "blocks",
+              "totalBlocks": 47,
+              "analyticalBlocks": 46,
+              "fallbackBlocks": 1,
+              "residualRows": 77
+            },
+            "message": "Constraint components converged."
+          },
+          {
+            "start": 2210,
+            "elapsedMs": 4,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.40000009536743164,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.9000000953674316
+            },
+            "scope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 1,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 132,
+              "largestConstraintCount": 96,
+              "variableCount": 132,
+              "constraintCount": 96,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          },
+          {
+            "start": 2362.300000190735,
+            "elapsedMs": 3.5,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.3000001907348633,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.6000003814697266
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+              ],
+              "componentCount": 1,
+              "variableCount": 132,
+              "constraintCount": 94,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          },
+          {
+            "start": 2375.9000000953674,
+            "elapsedMs": 1.5999999046325684,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.19999980926513672,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.5999999046325684
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+              ],
+              "componentCount": 1,
+              "variableCount": 132,
+              "constraintCount": 96,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          }
+        ]
+      },
+      "workers": [
+        {
+          "receivedAt": 2717.800000190735,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 0.09999990463256836,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2733.5999999046326,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 15.699999809265137,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+              ],
+              "componentCount": 4,
+              "variableCount": 131,
+              "constraintCount": 67,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 24,
+                "totalMs": 0.7000007629394531,
+                "maxMs": 0.10000038146972656
+              },
+              "graph.rebuildComponentsForVariables": {
+                "calls": 22,
+                "totalMs": 10.799997329711914,
+                "maxMs": 0.6999998092651367
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.19999980926513672,
+                "maxMs": 0.19999980926513672
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 2.1999998092651367,
+                "maxMs": 2.1999998092651367
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 2.299999713897705,
+                "maxMs": 2.299999713897705
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.5999999046325684,
+                "maxMs": 0.5999999046325684
+              }
+            },
+            "solves": [
+              {
+                "start": 2534.300000190735,
+                "elapsedMs": 2.299999713897705,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.19999980926513672,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.9000000953674316
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+                    "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+                  ],
+                  "componentCount": 4,
+                  "variableCount": 131,
+                  "constraintCount": 67,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 2735.300000190735,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 1.5,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.7000002861022949,
+                "maxMs": 0.7000002861022949
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2735.5,
+          "command": "set-enabled-stack-ids",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 0.09999990463256836,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2744,
+          "command": "load-sketch",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 8,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 1,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 132,
+              "largestConstraintCount": 96,
+              "variableCount": 132,
+              "constraintCount": 96,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.rebuild": {
+                "calls": 2,
+                "totalMs": 1.1999998092651367,
+                "maxMs": 0.7999997138977051
+              },
+              "graph.scopeForSeeds": {
+                "calls": 1,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 2.1999998092651367,
+                "maxMs": 2.1999998092651367
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 2.299999713897705,
+                "maxMs": 2.299999713897705
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.9000000953674316,
+                "maxMs": 0.9000000953674316
+              },
+              "loadSketch": {
+                "calls": 1,
+                "totalMs": 8,
+                "maxMs": 8
+              }
+            },
+            "solves": [
+              {
+                "start": 2544.800000190735,
+                "elapsedMs": 2.299999713897705,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.2999997138977051,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.5999999046325684
+                },
+                "scope": {
+                  "mode": "stack-partitions",
+                  "stackGroupCount": 1,
+                  "componentCount": 1,
+                  "solvedComponentCount": 1,
+                  "constrainedComponentCount": 1,
+                  "largestVariableCount": 132,
+                  "largestConstraintCount": 96,
+                  "variableCount": 132,
+                  "constraintCount": 96,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 2744.5,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 0.2999997138977051,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 1,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 132,
+              "largestConstraintCount": 96,
+              "variableCount": 132,
+              "constraintCount": 96,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2744.5999999046326,
+          "command": "set-enabled-stack-ids",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 0,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2751.300000190735,
+          "command": "load-sketch",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 6.400000095367432,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 1,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 132,
+              "largestConstraintCount": 94,
+              "variableCount": 132,
+              "constraintCount": 94,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.rebuild": {
+                "calls": 2,
+                "totalMs": 1.3999996185302734,
+                "maxMs": 0.6999998092651367
+              },
+              "graph.scopeForSeeds": {
+                "calls": 1,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 2.3999996185302734,
+                "maxMs": 2.3999996185302734
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 2.5,
+                "maxMs": 2.5
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.7000002861022949,
+                "maxMs": 0.7000002861022949
+              },
+              "loadSketch": {
+                "calls": 1,
+                "totalMs": 6.400000095367432,
+                "maxMs": 6.400000095367432
+              }
+            },
+            "solves": [
+              {
+                "start": 2552.199999809265,
+                "elapsedMs": 2.5,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.2999997138977051,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.5999999046325684
+                },
+                "scope": {
+                  "mode": "stack-partitions",
+                  "stackGroupCount": 1,
+                  "componentCount": 1,
+                  "solvedComponentCount": 1,
+                  "constrainedComponentCount": 1,
+                  "largestVariableCount": 132,
+                  "largestConstraintCount": 94,
+                  "variableCount": 132,
+                  "constraintCount": 94,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 2754.5,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 2.9000000953674316,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+              ],
+              "componentCount": 1,
+              "variableCount": 132,
+              "constraintCount": 96,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 6,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "graph.rebuildComponentsForVariables": {
+                "calls": 2,
+                "totalMs": 0.9000000953674316,
+                "maxMs": 0.5
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.40000009536743164,
+                "maxMs": 0.40000009536743164
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 1.0999999046325684,
+                "maxMs": 1.0999999046325684
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 1.1999998092651367,
+                "maxMs": 1.1999998092651367
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.3000001907348633,
+                "maxMs": 0.3000001907348633
+              }
+            },
+            "solves": [
+              {
+                "start": 2556.800000190735,
+                "elapsedMs": 1.1999998092651367,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.3000001907348633,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.5999999046325684
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+                  ],
+                  "componentCount": 1,
+                  "variableCount": 132,
+                  "constraintCount": 96,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 2758.5999999046326,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 3.8999996185302734,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 23,
+                "totalMs": 0.6999993324279785,
+                "maxMs": 0.2999997138977051
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 2760.800000190735,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 2.0999999046325684,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        }
+      ],
+      "longTasks": [],
+      "execution": {
+        "mode": "worker-drag",
+        "jacobianMode": "blocks",
+        "state": "ready",
+        "error": null,
+        "parityError": "Worker status unchanged did not match local status converged.",
+        "revision": 24,
+        "acceptedRevision": 24,
+        "restartCount": 0,
+        "journal": {
+          "checkpointRevision": 0,
+          "acceptedRevision": 24,
+          "entryCount": 24,
+          "oldestRevision": 1,
+          "newestRevision": 24
+        }
+      },
+      "solverStatus": "",
+      "settlingError": null,
+      "checks": {
+        "baseEntityCount": 32,
+        "constraints": 96,
+        "identityValid": true,
+        "finitePaths": true,
+        "maximumResidual": 1.7763568394002505e-15,
+        "residualCount": 149,
+        "dimensionErrors": [],
+        "liveFillets": 2,
+        "validFillets": 2,
+        "externalSwellConstraints": 2,
+        "resolvedSwellConstraints": 2,
+        "maxSwellDistance": 0
+      }
+    },
+    {
+      "name": "Original load",
+      "actionReturnedMs": 906.1000003814697,
+      "settledMs": 1062.3000001907349,
+      "before": {
+        "records": 34,
+        "svgNodes": 644,
+        "arrayItems": 22,
+        "swellPieces": 46,
+        "svgImages": 0
+      },
+      "after": {
+        "records": 52,
+        "svgNodes": 4359,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "main": {
+        "methods": {
+          "emit": {
+            "calls": 11,
+            "totalMs": 51.799999713897705,
+            "maxMs": 19.59999990463257
+          },
+          "graph.scopeForSeeds": {
+            "calls": 76,
+            "totalMs": 0.39999961853027344,
+            "maxMs": 0.09999990463256836
+          },
+          "graph.rebuildComponentsForVariables": {
+            "calls": 46,
+            "totalMs": 8.400000095367432,
+            "maxMs": 0.6999998092651367
+          },
+          "graph.rebuild": {
+            "calls": 7,
+            "totalMs": 3.1000003814697266,
+            "maxMs": 0.7999997138977051
+          },
+          "solveLocal": {
+            "calls": 4,
+            "totalMs": 8.299999713897705,
+            "maxMs": 2.6000003814697266
+          },
+          "solve": {
+            "calls": 4,
+            "totalMs": 9.100000381469727,
+            "maxMs": 2.9000000953674316
+          },
+          "canvas.getProcessingDrawingData": {
+            "calls": 86,
+            "totalMs": 70.89999914169312,
+            "maxMs": 2.299999713897705
+          },
+          "getSketchSnapshot": {
+            "calls": 4,
+            "totalMs": 2.200000286102295,
+            "maxMs": 0.7000002861022949
+          },
+          "loadSketch": {
+            "calls": 1,
+            "totalMs": 28.5,
+            "maxMs": 28.5
+          },
+          "facade.loadSketch": {
+            "calls": 1,
+            "totalMs": 29.799999713897705,
+            "maxMs": 29.799999713897705
+          },
+          "canvas.getDerivedPresentationNodes": {
+            "calls": 20,
+            "totalMs": 0.40000009536743164,
+            "maxMs": 0.10000038146972656
+          },
+          "canvas.syncGeometryStacking": {
+            "calls": 2,
+            "totalMs": 8.200000286102295,
+            "maxMs": 5
+          }
+        },
+        "solves": [
+          {
+            "start": 94121.09999990463,
+            "elapsedMs": 2,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.2999997138977051,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.5999999046325684
+            },
+            "scope": {
+              "mode": "component",
+              "componentKeys": [
+                "component:000d888e-fe8b-4785-a6a6-86e11e6a927e"
+              ],
+              "variableCount": 132,
+              "constraintCount": 94,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          },
+          {
+            "start": 94139.90000009537,
+            "elapsedMs": 2.8000001907348633,
+            "status": "unchanged",
+            "iterations": 0,
+            "scope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 3,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 131,
+              "largestConstraintCount": 89,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            }
+          },
+          {
+            "start": 94410.59999990463,
+            "elapsedMs": 2.9000000953674316,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.09999990463256836,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.6999998092651367
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+              ],
+              "componentCount": 4,
+              "variableCount": 131,
+              "constraintCount": 67,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          },
+          {
+            "start": 94440.59999990463,
+            "elapsedMs": 1.4000000953674316,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.19999980926513672,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.5999999046325684
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          }
+        ]
+      },
+      "workers": [
+        {
+          "receivedAt": 95046.2000002861,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 2.200000286102295,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.40000009536743164,
+                "maxMs": 0.40000009536743164
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 95077.09999990463,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 4.5,
+            "solveScope": {
+              "mode": "component",
+              "componentKeys": [
+                "component:03145042-be38-41c3-b949-8002d7005f81"
+              ],
+              "variableCount": 132,
+              "constraintCount": 94,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0.10000038146972656,
+                "maxMs": 0.10000038146972656
+              },
+              "graph.rebuildComponentsForVariables": {
+                "calls": 2,
+                "totalMs": 2,
+                "maxMs": 1.0999999046325684
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.5,
+                "maxMs": 0.5
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 1.700000286102295,
+                "maxMs": 1.700000286102295
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 1.700000286102295,
+                "maxMs": 1.700000286102295
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.2999997138977051,
+                "maxMs": 0.2999997138977051
+              }
+            },
+            "solves": [
+              {
+                "start": 94852.69999980927,
+                "elapsedMs": 1.700000286102295,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.3000001907348633,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.5999999046325684
+                },
+                "scope": {
+                  "mode": "component",
+                  "componentKeys": [
+                    "component:03145042-be38-41c3-b949-8002d7005f81"
+                  ],
+                  "variableCount": 132,
+                  "constraintCount": 94,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 95078.40000009537,
+          "command": "set-enabled-stack-ids",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 0.09999990463256836,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 95088.2000002861,
+          "command": "load-sketch",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 9.100000381469727,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 3,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 131,
+              "largestConstraintCount": 89,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.rebuild": {
+                "calls": 2,
+                "totalMs": 1,
+                "maxMs": 0.7000002861022949
+              },
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 2.3000001907348633,
+                "maxMs": 2.3000001907348633
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 2.5,
+                "maxMs": 2.5
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.9000000953674316,
+                "maxMs": 0.9000000953674316
+              },
+              "loadSketch": {
+                "calls": 1,
+                "totalMs": 9.100000381469727,
+                "maxMs": 9.100000381469727
+              }
+            },
+            "solves": [
+              {
+                "start": 94888.90000009537,
+                "elapsedMs": 2.5,
+                "status": "unchanged",
+                "iterations": 0,
+                "scope": {
+                  "mode": "stack-partitions",
+                  "stackGroupCount": 3,
+                  "componentCount": 1,
+                  "solvedComponentCount": 1,
+                  "constrainedComponentCount": 1,
+                  "largestVariableCount": 131,
+                  "largestConstraintCount": 89,
+                  "variableCount": 131,
+                  "constraintCount": 89,
+                  "entityCount": 30
+                }
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 95088.80000019073,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 0.40000009536743164,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 3,
+              "componentCount": 1,
+              "solvedComponentCount": 1,
+              "constrainedComponentCount": 1,
+              "largestVariableCount": 131,
+              "largestConstraintCount": 89,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 95088.90000009537,
+          "command": "set-enabled-stack-ids",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 0,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 95096.7000002861,
+          "command": "load-sketch",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 7.199999809265137,
+            "solveScope": {
+              "mode": "stack-partitions",
+              "stackGroupCount": 3,
+              "componentCount": 4,
+              "solvedComponentCount": 3,
+              "constrainedComponentCount": 3,
+              "largestVariableCount": 82,
+              "largestConstraintCount": 43,
+              "variableCount": 131,
+              "constraintCount": 67,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.rebuild": {
+                "calls": 2,
+                "totalMs": 1.200000286102295,
+                "maxMs": 0.9000000953674316
+              },
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 2.200000286102295,
+                "maxMs": 2.200000286102295
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 2.3000001907348633,
+                "maxMs": 2.3000001907348633
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.7999997138977051,
+                "maxMs": 0.7999997138977051
+              },
+              "loadSketch": {
+                "calls": 1,
+                "totalMs": 7.199999809265137,
+                "maxMs": 7.199999809265137
+              }
+            },
+            "solves": [
+              {
+                "start": 94897.59999990463,
+                "elapsedMs": 2.3000001907348633,
+                "status": "unchanged",
+                "iterations": 0,
+                "scope": {
+                  "mode": "stack-partitions",
+                  "stackGroupCount": 3,
+                  "componentCount": 4,
+                  "solvedComponentCount": 3,
+                  "constrainedComponentCount": 3,
+                  "largestVariableCount": 82,
+                  "largestConstraintCount": 43,
+                  "variableCount": 131,
+                  "constraintCount": 67,
+                  "entityCount": 30
+                }
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 95106,
+          "command": "set-dimension-enabled-states",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 9.199999809265137,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 0,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 46,
+                "totalMs": 0.2999997138977051,
+                "maxMs": 0.09999990463256836
+              },
+              "graph.rebuildComponentsForVariables": {
+                "calls": 22,
+                "totalMs": 6.799999713897705,
+                "maxMs": 0.40000009536743164
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.20000028610229492,
+                "maxMs": 0.20000028610229492
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 1,
+                "maxMs": 1
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 1.0999999046325684,
+                "maxMs": 1.0999999046325684
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.3000001907348633,
+                "maxMs": 0.3000001907348633
+              }
+            },
+            "solves": [
+              {
+                "start": 94908.5,
+                "elapsedMs": 1.0999999046325684,
+                "status": "unchanged",
+                "iterations": 0,
+                "timings": {
+                  "residualMs": 0.09999990463256836,
+                  "jacobianMs": 0,
+                  "linearSolveMs": 0,
+                  "totalMs": 0.6999998092651367
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                    "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+                  ],
+                  "componentCount": 1,
+                  "variableCount": 131,
+                  "constraintCount": 89,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "not-required",
+                  "totalBlocks": 0,
+                  "analyticalBlocks": 0,
+                  "fallbackBlocks": 0,
+                  "residualRows": 0
+                },
+                "message": "Constraints already satisfied."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 95125,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 18.59999990463257,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 3,
+                "totalMs": 0.3000001907348633,
+                "maxMs": 0.3000001907348633
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 95141.7000002861,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 16.299999713897705,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        }
+      ],
+      "longTasks": [],
+      "execution": {
+        "mode": "worker-drag",
+        "jacobianMode": "blocks",
+        "state": "ready",
+        "error": null,
+        "parityError": "Worker status unchanged did not match local status converged.",
+        "revision": 34,
+        "acceptedRevision": 34,
+        "restartCount": 0,
+        "journal": {
+          "checkpointRevision": 0,
+          "acceptedRevision": 34,
+          "entryCount": 34,
+          "oldestRevision": 1,
+          "newestRevision": 34
+        }
+      },
+      "solverStatus": "",
+      "settlingError": null,
+      "checks": {
+        "baseEntityCount": 30,
+        "constraints": 89,
+        "identityValid": true,
+        "finitePaths": true,
+        "maximumResidual": 8.593505372203742e-9,
+        "residualCount": 151,
+        "dimensionErrors": [],
+        "liveFillets": 0,
+        "validFillets": 0
+      }
+    },
+    {
+      "name": "Rectangle_Ottoman: c1 = 88.5",
+      "actionReturnedMs": 2.5,
+      "settledMs": 1041.1999998092651,
+      "before": {
+        "records": 52,
+        "svgNodes": 4359,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "after": {
+        "records": 52,
+        "svgNodes": 3886,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "main": {
+        "methods": {
+          "getSketchSnapshot": {
+            "calls": 4,
+            "totalMs": 2.40000057220459,
+            "maxMs": 0.7000002861022949
+          },
+          "canvas.getDrawingData": {
+            "calls": 3,
+            "totalMs": 2.799999713897705,
+            "maxMs": 1
+          },
+          "canvas.getDerivedPresentationNodes": {
+            "calls": 32,
+            "totalMs": 1.3000006675720215,
+            "maxMs": 0.20000028610229492
+          },
+          "canvas.getProcessingDrawingData": {
+            "calls": 91,
+            "totalMs": 77.40000200271606,
+            "maxMs": 1.5
+          },
+          "emit": {
+            "calls": 2,
+            "totalMs": 130.69999980926514,
+            "maxMs": 105.09999990463257
+          },
+          "canvas.syncGeometryStacking": {
+            "calls": 4,
+            "totalMs": 22.799999713897705,
+            "maxMs": 7.399999618530273
+          },
+          "canvas.applySolverSnapshot": {
+            "calls": 1,
+            "totalMs": 54.90000009536743,
+            "maxMs": 54.90000009536743
+          },
+          "canvas.notifyObjectChange": {
+            "calls": 1,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "graph.scopeForSeeds": {
+            "calls": 3,
+            "totalMs": 0.09999990463256836,
+            "maxMs": 0.09999990463256836
+          },
+          "graph.rebuild": {
+            "calls": 1,
+            "totalMs": 0.5,
+            "maxMs": 0.5
+          },
+          "solveLocal": {
+            "calls": 1,
+            "totalMs": 1.5999999046325684,
+            "maxMs": 1.5999999046325684
+          },
+          "solve": {
+            "calls": 1,
+            "totalMs": 1.9000000953674316,
+            "maxMs": 1.9000000953674316
+          }
+        },
+        "solves": [
+          {
+            "start": 95969.09999990463,
+            "elapsedMs": 1.9000000953674316,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.19999980926513672,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.5
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          }
+        ]
+      },
+      "workers": [
+        {
+          "receivedAt": 95451.7000002861,
+          "command": "update-parameter",
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 190.69999980926514,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 27,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 27,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "blocks",
+              "totalBlocks": 95,
+              "analyticalBlocks": 91,
+              "fallbackBlocks": 4,
+              "residualRows": 151
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.2999997138977051,
+                "maxMs": 0.2999997138977051
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 189,
+                "maxMs": 189
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 189.09999990463257,
+                "maxMs": 189.09999990463257
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.3000001907348633,
+                "maxMs": 0.3000001907348633
+              },
+              "updateParameter": {
+                "calls": 1,
+                "totalMs": 190.40000009536743,
+                "maxMs": 190.40000009536743
+              }
+            },
+            "solves": [
+              {
+                "start": 95066,
+                "elapsedMs": 189.09999990463257,
+                "status": "converged",
+                "iterations": 27,
+                "timings": {
+                  "residualMs": 4.600002288818359,
+                  "jacobianMs": 25.399999141693115,
+                  "linearSolveMs": 155.99999856948853,
+                  "totalMs": 187.80000019073486
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                    "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+                  ],
+                  "componentCount": 1,
+                  "variableCount": 131,
+                  "constraintCount": 89,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "blocks",
+                  "totalBlocks": 95,
+                  "analyticalBlocks": 91,
+                  "fallbackBlocks": 4,
+                  "residualRows": 151
+                },
+                "message": "Constraint components converged."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 96253,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 18.5,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 96255.90000009537,
+          "command": "apply-geometry",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 0.2999997138977051,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 1,
+                "totalMs": 0,
+                "maxMs": 0
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 96272.40000009537,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 16.199999809265137,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        }
+      ],
+      "longTasks": [
+        {
+          "start": 95451.7000002861,
+          "duration": 781
+        }
+      ],
+      "execution": {
+        "mode": "worker-drag",
+        "jacobianMode": "blocks",
+        "state": "ready",
+        "error": null,
+        "parityError": "Worker status unchanged did not match local status converged.",
+        "revision": 38,
+        "acceptedRevision": 38,
+        "restartCount": 0,
+        "journal": {
+          "checkpointRevision": 0,
+          "acceptedRevision": 38,
+          "entryCount": 38,
+          "oldestRevision": 1,
+          "newestRevision": 38
+        }
+      },
+      "solverStatus": "",
+      "settlingError": null,
+      "checks": {
+        "requested": 88.5,
+        "committed": 88.5,
+        "committedCorrectly": true,
+        "invalidControls": 0,
+        "identityValid": true,
+        "maximumResidual": 7.45528825088634e-9,
+        "residualCount": 151,
+        "dimensionErrors": [],
+        "finitePaths": true,
+        "liveFillets": 0,
+        "validFillets": 0
+      }
+    },
+    {
+      "name": "Rectangle_Ottoman: c1 = 88",
+      "actionReturnedMs": 2.0999999046325684,
+      "settledMs": 993.0999999046326,
+      "before": {
+        "records": 52,
+        "svgNodes": 3886,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "after": {
+        "records": 52,
+        "svgNodes": 3886,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "main": {
+        "methods": {
+          "getSketchSnapshot": {
+            "calls": 3,
+            "totalMs": 1.8000001907348633,
+            "maxMs": 0.7000002861022949
+          },
+          "canvas.getDrawingData": {
+            "calls": 2,
+            "totalMs": 1.9000000953674316,
+            "maxMs": 1
+          },
+          "canvas.getDerivedPresentationNodes": {
+            "calls": 32,
+            "totalMs": 1.7000007629394531,
+            "maxMs": 0.5
+          },
+          "canvas.getProcessingDrawingData": {
+            "calls": 91,
+            "totalMs": 73.39999866485596,
+            "maxMs": 1.5999999046325684
+          },
+          "emit": {
+            "calls": 2,
+            "totalMs": 125.2000002861023,
+            "maxMs": 100.60000038146973
+          },
+          "canvas.syncGeometryStacking": {
+            "calls": 4,
+            "totalMs": 20.399999618530273,
+            "maxMs": 6.599999904632568
+          },
+          "canvas.applySolverSnapshot": {
+            "calls": 1,
+            "totalMs": 55.60000038146973,
+            "maxMs": 55.60000038146973
+          },
+          "canvas.notifyObjectChange": {
+            "calls": 1,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "graph.scopeForSeeds": {
+            "calls": 3,
+            "totalMs": 0.09999990463256836,
+            "maxMs": 0.09999990463256836
+          },
+          "graph.rebuild": {
+            "calls": 1,
+            "totalMs": 0.5,
+            "maxMs": 0.5
+          },
+          "solveLocal": {
+            "calls": 1,
+            "totalMs": 1.5999999046325684,
+            "maxMs": 1.5999999046325684
+          },
+          "solve": {
+            "calls": 1,
+            "totalMs": 1.8000001907348633,
+            "maxMs": 1.8000001907348633
+          }
+        },
+        "solves": [
+          {
+            "start": 97010.5,
+            "elapsedMs": 1.8000001907348633,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.20000028610229492,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.5
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          }
+        ]
+      },
+      "workers": [
+        {
+          "receivedAt": 96510,
+          "command": "update-parameter",
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 180.40000009536743,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 27,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 27,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "blocks",
+              "totalBlocks": 95,
+              "analyticalBlocks": 91,
+              "fallbackBlocks": 4,
+              "residualRows": 151
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0,
+                "maxMs": 0
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.40000009536743164,
+                "maxMs": 0.40000009536743164
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 178.90000009536743,
+                "maxMs": 178.90000009536743
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 179.09999990463257,
+                "maxMs": 179.09999990463257
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.40000009536743164,
+                "maxMs": 0.40000009536743164
+              },
+              "updateParameter": {
+                "calls": 1,
+                "totalMs": 180.2000002861023,
+                "maxMs": 180.2000002861023
+              }
+            },
+            "solves": [
+              {
+                "start": 96134.30000019073,
+                "elapsedMs": 179.09999990463257,
+                "status": "converged",
+                "iterations": 27,
+                "timings": {
+                  "residualMs": 4.700000762939453,
+                  "jacobianMs": 19.299999237060547,
+                  "linearSolveMs": 153.10000085830688,
+                  "totalMs": 178
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                    "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+                  ],
+                  "componentCount": 1,
+                  "variableCount": 131,
+                  "constraintCount": 89,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "blocks",
+                  "totalBlocks": 95,
+                  "analyticalBlocks": 91,
+                  "fallbackBlocks": 4,
+                  "residualRows": 151
+                },
+                "message": "Constraint components converged."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 97278.2000002861,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 17.5,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 97280.80000019073,
+          "command": "apply-geometry",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 0.2999997138977051,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 1,
+                "totalMs": 0,
+                "maxMs": 0
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 97297.7000002861,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 16.600000381469727,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        }
+      ],
+      "longTasks": [
+        {
+          "start": 96510,
+          "duration": 750
+        }
+      ],
+      "execution": {
+        "mode": "worker-drag",
+        "jacobianMode": "blocks",
+        "state": "ready",
+        "error": null,
+        "parityError": "Worker status unchanged did not match local status converged.",
+        "revision": 42,
+        "acceptedRevision": 42,
+        "restartCount": 0,
+        "journal": {
+          "checkpointRevision": 0,
+          "acceptedRevision": 42,
+          "entryCount": 42,
+          "oldestRevision": 1,
+          "newestRevision": 42
+        }
+      },
+      "solverStatus": "",
+      "settlingError": null,
+      "checks": {
+        "requested": 88,
+        "committed": 88,
+        "committedCorrectly": true,
+        "invalidControls": 0,
+        "identityValid": true,
+        "maximumResidual": 6.714857494058274e-9,
+        "residualCount": 151,
+        "dimensionErrors": [],
+        "finitePaths": true,
+        "liveFillets": 0,
+        "validFillets": 0
+      }
+    },
+    {
+      "name": "Rectangle_Ottoman: c2 = 53.5",
+      "actionReturnedMs": 2.3000001907348633,
+      "settledMs": 888.4000000953674,
+      "before": {
+        "records": 52,
+        "svgNodes": 3886,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "after": {
+        "records": 52,
+        "svgNodes": 3886,
+        "arrayItems": 161,
+        "swellPieces": 6,
+        "svgImages": 519
+      },
+      "main": {
+        "methods": {
+          "getSketchSnapshot": {
+            "calls": 3,
+            "totalMs": 1.9000000953674316,
+            "maxMs": 0.6999998092651367
+          },
+          "canvas.getDrawingData": {
+            "calls": 2,
+            "totalMs": 1.8000001907348633,
+            "maxMs": 1
+          },
+          "canvas.getDerivedPresentationNodes": {
+            "calls": 32,
+            "totalMs": 1.4000005722045898,
+            "maxMs": 0.20000028610229492
+          },
+          "canvas.getProcessingDrawingData": {
+            "calls": 91,
+            "totalMs": 72.90000104904175,
+            "maxMs": 1.8000001907348633
+          },
+          "emit": {
+            "calls": 2,
+            "totalMs": 121.30000019073486,
+            "maxMs": 97.90000009536743
+          },
+          "canvas.syncGeometryStacking": {
+            "calls": 4,
+            "totalMs": 21.100000381469727,
+            "maxMs": 6.700000286102295
+          },
+          "canvas.applySolverSnapshot": {
+            "calls": 1,
+            "totalMs": 55.799999713897705,
+            "maxMs": 55.799999713897705
+          },
+          "canvas.notifyObjectChange": {
+            "calls": 1,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "graph.scopeForSeeds": {
+            "calls": 3,
+            "totalMs": 0,
+            "maxMs": 0
+          },
+          "graph.rebuild": {
+            "calls": 1,
+            "totalMs": 2.3999996185302734,
+            "maxMs": 2.3999996185302734
+          },
+          "solveLocal": {
+            "calls": 1,
+            "totalMs": 3.5999999046325684,
+            "maxMs": 3.5999999046325684
+          },
+          "solve": {
+            "calls": 1,
+            "totalMs": 3.8000001907348633,
+            "maxMs": 3.8000001907348633
+          }
+        },
+        "solves": [
+          {
+            "start": 97923,
+            "elapsedMs": 3.8000001907348633,
+            "status": "unchanged",
+            "iterations": 0,
+            "timings": {
+              "residualMs": 0.20000028610229492,
+              "jacobianMs": 0,
+              "linearSolveMs": 0,
+              "totalMs": 0.6000003814697266
+            },
+            "scope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "jacobian": {
+              "requestedMode": "blocks",
+              "mode": "not-required",
+              "totalBlocks": 0,
+              "analyticalBlocks": 0,
+              "fallbackBlocks": 0,
+              "residualRows": 0
+            },
+            "message": "Constraints already satisfied."
+          }
+        ]
+      },
+      "workers": [
+        {
+          "receivedAt": 97416.80000019073,
+          "command": "update-parameter",
+          "status": "converged",
+          "diagnostics": {
+            "durationMs": 66.30000019073486,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+              ],
+              "componentCount": 1,
+              "variableCount": 131,
+              "constraintCount": 89,
+              "entityCount": 30
+            },
+            "iterations": 9,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 8,
+            "rejectedSteps": 1,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "blocks",
+              "totalBlocks": 95,
+              "analyticalBlocks": 92,
+              "fallbackBlocks": 3,
+              "residualRows": 151
+            }
+          },
+          "auditTrace": {
+            "methods": {
+              "graph.scopeForSeeds": {
+                "calls": 3,
+                "totalMs": 0.09999990463256836,
+                "maxMs": 0.09999990463256836
+              },
+              "graph.rebuild": {
+                "calls": 1,
+                "totalMs": 0.19999980926513672,
+                "maxMs": 0.19999980926513672
+              },
+              "solveLocal": {
+                "calls": 1,
+                "totalMs": 64.40000009536743,
+                "maxMs": 64.40000009536743
+              },
+              "solve": {
+                "calls": 1,
+                "totalMs": 64.5,
+                "maxMs": 64.5
+              },
+              "emit": {
+                "calls": 1,
+                "totalMs": 0.6999998092651367,
+                "maxMs": 0.6999998092651367
+              },
+              "updateParameter": {
+                "calls": 1,
+                "totalMs": 66,
+                "maxMs": 66
+              }
+            },
+            "solves": [
+              {
+                "start": 97155.30000019073,
+                "elapsedMs": 64.5,
+                "status": "converged",
+                "iterations": 9,
+                "timings": {
+                  "residualMs": 1.3000001907348633,
+                  "jacobianMs": 5.700000762939453,
+                  "linearSolveMs": 55.499999046325684,
+                  "totalMs": 63.60000038146973
+                },
+                "scope": {
+                  "mode": "stack-set",
+                  "stackIds": [
+                    "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+                    "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+                  ],
+                  "componentCount": 1,
+                  "variableCount": 131,
+                  "constraintCount": 89,
+                  "entityCount": 30
+                },
+                "jacobian": {
+                  "requestedMode": "blocks",
+                  "mode": "blocks",
+                  "totalBlocks": 95,
+                  "analyticalBlocks": 92,
+                  "fallbackBlocks": 3,
+                  "residualRows": 151
+                },
+                "message": "Constraint components converged."
+              }
+            ]
+          }
+        },
+        {
+          "receivedAt": 98190.59999990463,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 16,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 98193.30000019073,
+          "command": "apply-geometry",
+          "status": "unchanged",
+          "diagnostics": {
+            "durationMs": 0.19999980926513672,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {
+              "emit": {
+                "calls": 1,
+                "totalMs": 0,
+                "maxMs": 0
+              }
+            },
+            "solves": []
+          }
+        },
+        {
+          "receivedAt": 98209.90000009537,
+          "command": "update-model",
+          "status": "completed",
+          "diagnostics": {
+            "durationMs": 16.40000009536743,
+            "solveScope": null,
+            "iterations": 0,
+            "solveMode": null,
+            "cancellationReason": null,
+            "acceptedSteps": 0,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": null
+          },
+          "auditTrace": {
+            "methods": {},
+            "solves": []
+          }
+        }
+      ],
+      "longTasks": [
+        {
+          "start": 97416.80000019073,
+          "duration": 757
+        }
+      ],
+      "execution": {
+        "mode": "worker-drag",
+        "jacobianMode": "blocks",
+        "state": "ready",
+        "error": null,
+        "parityError": "Worker status unchanged did not match local status converged.",
+        "revision": 46,
+        "acceptedRevision": 46,
+        "restartCount": 0,
+        "journal": {
+          "checkpointRevision": 0,
+          "acceptedRevision": 46,
+          "entryCount": 46,
+          "oldestRevision": 1,
+          "newestRevision": 46
+        }
+      },
+      "solverStatus": "",
+      "settlingError": null,
+      "checks": {
+        "requested": 53.5,
+        "committed": 53.5,
+        "committedCorrectly": true,
+        "invalidControls": 0,
+        "identityValid": true,
+        "maximumResidual": 5.690655673478661e-9,
+        "residualCount": 151,
+        "dimensionErrors": [],
+        "finitePaths": true,
+        "liveFillets": 0,
+        "validFillets": 0
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,431 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-27T12:04:57.209Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      4000000
+    ],
+    "samples": 1,
+    "budgetMs": 5000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "wasmComparison": false,
+    "frontAppOnly": false,
+    "frontWorkerOnly": false,
+    "frontSamples": 1,
+    "corePipelineOnly": false,
+    "builtTarget": null,
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Trace Region in local Chromium; first invocation and detail/smoothing/tolerance changes on the same raster. Phase instrumentation is separate from uninstrumented samples.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [],
+  "nativeApp": [],
+  "corePipeline": [],
+  "trace": [
+    {
+      "backend": "reference",
+      "sample": 0,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 4921.700000047684,
+      "preparationMs": 24.299999952316284,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 1150.8000000715256,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {
+            "imread": 8.399999976158142,
+            "cvtColor": 6.799999952316284,
+            "inRange": 11.700000047683716,
+            "connectedComponents": 13.600000023841858,
+            "morphologyEx": 17.899999976158142,
+            "findContours": 9.299999952316284,
+            "approxPolyDP": 0.3999999761581421
+          }
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 1192,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {
+            "imread": 5.100000023841858,
+            "cvtColor": 3.100000023841858,
+            "inRange": 7.399999976158142,
+            "connectedComponents": 4.600000023841858,
+            "morphologyEx": 18.299999952316284,
+            "findContours": 3.399999976158142,
+            "approxPolyDP": 0.10000002384185791
+          }
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 1134.2999999523163,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "phases": {
+            "imread": 5.099999904632568,
+            "cvtColor": 3.1999999284744263,
+            "inRange": 8.400000095367432,
+            "connectedComponents": 3.899999976158142,
+            "morphologyEx": 189.10000002384186,
+            "findContours": 3.3000000715255737,
+            "approxPolyDP": 0
+          }
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 955.7999999523163,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "phases": {
+            "imread": 5.399999976158142,
+            "cvtColor": 3.399999976158142,
+            "inRange": 7.5,
+            "connectedComponents": 4.100000023841858,
+            "morphologyEx": 187.19999992847443,
+            "findContours": 3.399999976158142,
+            "approxPolyDP": 0
+          }
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "80d2a67bd8fa3394dceacfa0c349c7c093b47400b42aa9a513e1696d435a9b81",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "c8ebe5b01b84d63e07274750537d01d1284f0be08b844c87ef54d80b5336ac6b",
+    "scripts/solver-baseline/browser.js": "b79055cc089317c6799b01a357b0282d3ab5bc644492e1b8e60b1ed8868b6e14",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "2e094cef0a547d58b25e8f82e6af90bd6526e862da02b9788888435060454864",
+    "scripts/solver-baseline/front-worker.js": "5bf46f822db78d265858d04502e0e9dc674e3120f882b16b107422670970a196",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "4c4969710cce2614460f40cc5fcb22c96753195f73a574437e8afc90ac8d89e3",
+    "packages/paramagic-core/native/constraint_program.h": "a206fbcbe97056000d390d855e5c3a8968c66e3cb484a86725ebf1920ff14493",
+    "packages/paramagic-core/native/swell_geometry.h": "8e62dacca8e666d5e0f69a4fb85f7ecbeb1a3dd92cf9b15d6851ff161e5a040d",
+    "packages/paramagic-core/native/sparse_elimination.h": "e30c11e26176ac86b3da4794bfb14febc68e82dc96c6db858f546112e79ad3d9",
+    "packages/paramagic-core/native/graph_kernel.h": "cde4eff526cce43c7442f7229d846f6093e317f40026a8f324d1ad6efa856999",
+    "packages/paramagic-core/native/parameter_kernel.h": "c662a1e5f3f8d1bc5ca90b85f04b1d6e8fe52b070a82510d26c0c61e66a24b92",
+    "packages/paramagic-core/native/continuation.h": "52326aeefc4582e659903705dcf846c26efeac75aaa6fce124c2654f71ad497c",
+    "packages/paramagic-core/src/modules/solver/WasmGraph.js": "2145332c262246c5a8a72b98988eeea42ebac3aa4b7b782b8e904e024a1708ae",
+    "packages/paramagic-core/src/modules/solver/WasmParameters.js": "555e125682b6ef3868631de70d15d8721dbd9c177ca031243b43c4a2da7615a7",
+    "packages/paramagic-core/src/modules/solver/WasmContinuation.js": "e203ed116818539f1ec37d405c13d149a7b74268cf6c1cebb36e82243272afb6",
+    "packages/paramagic-core/src/modules/solver/StackPlacementSolver.js": "6aa1ce7e32b9acbfee3e3296102a5e0b84a55afc1cdedd0c3814a50b5a87db79",
+    "scripts/solver-baseline/core-pipeline.js": "55388cdd2d423bbfb7946fe2c38ffc784ffa1e11d3a702a322f5e78d8fa7c855",
+    "packages/paramagic-core/src/modules/SwellGeometry.js": "05cb2fcbdb6302efd145b33734d5fd8e2290c6f8550ef62da3535d30cb025696",
+    "packages/paramagic-core/src/modules/solver/WasmSwellModel.js": "61158d3cfb6e0570aab8231d13ab3c8776d84c8ee1d14bb73b1b38d66a7d13d3",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "db2694f9bac46ab942933dc159fe00de6b0596197deb67cab9d52bdeebb8e336",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "7693553ac4bfa5a7b6207657d11441476a90d718a256c0357b6c5ecfa2b52334",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "65fa796f2c0fa2d6106263d71fefe3cc98751b1ac98cfadf14adf08335bca752",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "efcc6f4812eb7f6ab10480cfd1788896a792e1c803ceeb092ceaf1dc04c5dfae",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "68551b7f1ab121d2785f53404b2ba157767bf2c3fdf3586d886480e79a36a263",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "20cebfb7ead721c8807866523286671ea049965811391a30f0a82c176336a3f6",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "e6ff79936b09ea8e2ad874f4b202267108eb0f7dc5fc5197306cdc341dcc28c4",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "8b8b2231898e5a555233e31fbadf5eb1a648b792d8fbc19c2da2c4648621f877",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "2c9643dd3e609964c94226ef53721e87828ba2cbb0f0b9c4b101036fa255cb8c",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "90e530a6cdf66501b0fa614617e89b14072b1a7b28ba0d02d81e3a88fc8f60f1"
+  },
+  "finishedAt": "2026-09-27T12:05:13.224Z"
+}

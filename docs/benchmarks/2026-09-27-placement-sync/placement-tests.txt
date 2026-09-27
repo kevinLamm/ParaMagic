@@ -1,0 +1,382 @@
+TAP version 13
+# Subtest: browser solver defaults to WASM with explicit reference overrides
+ok 1 - browser solver defaults to WASM with explicit reference overrides
+  ---
+  duration_ms: 1.0045
+  type: 'test'
+  ...
+# Subtest: normal Worker facade passes the default WASM backend into startup
+ok 2 - normal Worker facade passes the default WASM backend into startup
+  ---
+  duration_ms: 7.6827
+  type: 'test'
+  ...
+# Subtest: solver execution facade defaults to the synchronous controller path
+ok 3 - solver execution facade defaults to the synchronous controller path
+  ---
+  duration_ms: 1.2565
+  type: 'test'
+  ...
+# Subtest: preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+ok 4 - preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+  ---
+  duration_ms: 0.591
+  type: 'test'
+  ...
+# Subtest: shadow facade mirrors committed and coalesced drag mutations with full parity
+ok 5 - shadow facade mirrors committed and coalesced drag mutations with full parity
+  ---
+  duration_ms: 4.5024
+  type: 'test'
+  ...
+# Subtest: worker-authoritative drag applies only the newest coalesced delta
+ok 6 - worker-authoritative drag applies only the newest coalesced delta
+  ---
+  duration_ms: 2.7774
+  type: 'test'
+  ...
+# Subtest: worker-authoritative constraint add and remove update the local replica without local solves
+ok 7 - worker-authoritative constraint add and remove update the local replica without local solves
+  ---
+  duration_ms: 6.218
+  type: 'test'
+  ...
+# Subtest: constraint batches return immediately after one local solve and resynchronize the Worker
+ok 8 - constraint batches return immediately after one local solve and resynchronize the Worker
+  ---
+  duration_ms: 3.5359
+  type: 'test'
+  ...
+# Subtest: worker-authoritative parameter updates synchronize renamed dependents without a local solve
+ok 9 - worker-authoritative parameter updates synchronize renamed dependents without a local solve
+  ---
+  duration_ms: 4.4097
+  type: 'test'
+  ...
+# Subtest: worker-authoritative control updates coalesce to the newest absolute parameter value
+ok 10 - worker-authoritative control updates coalesce to the newest absolute parameter value
+  ---
+  duration_ms: 2.4405
+  type: 'test'
+  ...
+# Subtest: worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+ok 11 - worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+  ---
+  duration_ms: 8.8296
+  type: 'test'
+  ...
+# Subtest: shadow facade recreates a failed worker from the latest synchronous checkpoint
+ok 12 - shadow facade recreates a failed worker from the latest synchronous checkpoint
+  ---
+  duration_ms: 4.4139
+  type: 'test'
+  ...
+# Subtest: shadow facade bounds restart attempts before retaining synchronous fallback
+ok 13 - shadow facade bounds restart attempts before retaining synchronous fallback
+  ---
+  duration_ms: 1.8949
+  type: 'test'
+  ...
+# Subtest: solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+ok 14 - solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+  ---
+  duration_ms: 0.1571
+  type: 'test'
+  ...
+# Subtest: solver facade exposes guarded block Jacobian configuration without changing its execution mode
+ok 15 - solver facade exposes guarded block Jacobian configuration without changing its execution mode
+  ---
+  duration_ms: 0.2165
+  type: 'test'
+  ...
+# Subtest: presentation mutations retain the worker model and graph and flush before a following edit
+ok 16 - presentation mutations retain the worker model and graph and flush before a following edit
+  ---
+  duration_ms: 2.1242
+  type: 'test'
+  ...
+# Subtest: worker checkpoints include derived fillets before their constraints are restored
+ok 17 - worker checkpoints include derived fillets before their constraints are restored
+  ---
+  duration_ms: 3.1013
+  type: 'test'
+  ...
+# Subtest: solver worker protocol validates versioned request envelopes
+ok 18 - solver worker protocol validates versioned request envelopes
+  ---
+  duration_ms: 1.4261
+  type: 'test'
+  ...
+# Subtest: worker runtime applies guarded block Jacobians and returns usage diagnostics
+ok 19 - worker runtime applies guarded block Jacobians and returns usage diagnostics
+  ---
+  duration_ms: 10.3422
+  type: 'test'
+  ...
+# Subtest: browser worker client initializes the bundled Worker with its selected modes
+ok 20 - browser worker client initializes the bundled Worker with its selected modes
+  ---
+  duration_ms: 0.3397
+  type: 'test'
+  ...
+# Subtest: solver worker returns every affected parameter after a rename
+ok 21 - solver worker returns every affected parameter after a rename
+  ---
+  duration_ms: 3.4099
+  type: 'test'
+  ...
+# Subtest: solver worker runtime owns sketch state and returns changed-entity deltas
+ok 22 - solver worker runtime owns sketch state and returns changed-entity deltas
+  ---
+  duration_ms: 2.9371
+  type: 'test'
+  ...
+# Subtest: solver worker returns accepted and removed constraint deltas
+ok 23 - solver worker returns accepted and removed constraint deltas
+  ---
+  duration_ms: 2.3119
+  type: 'test'
+  ...
+# Subtest: solver worker runtime rejects older interactive generations
+ok 24 - solver worker runtime rejects older interactive generations
+  ---
+  duration_ms: 0.2745
+  type: 'test'
+  ...
+# Subtest: solver worker runtime returns directly edited unconstrained geometry in its delta
+ok 25 - solver worker runtime returns directly edited unconstrained geometry in its delta
+  ---
+  duration_ms: 0.8116
+  type: 'test'
+  ...
+# Subtest: solver worker uses a bounded preview solve for drag and a normal final solve on commit
+ok 26 - solver worker uses a bounded preview solve for drag and a normal final solve on commit
+  ---
+  duration_ms: 2.2892
+  type: 'test'
+  ...
+# Subtest: solver worker restores the pre-drag baseline when the strict final solve fails
+ok 27 - solver worker restores the pre-drag baseline when the strict final solve fails
+  ---
+  duration_ms: 0.6187
+  type: 'test'
+  ...
+# Subtest: solver worker final result resynchronizes every entity from the affected drag component
+ok 28 - solver worker final result resynchronizes every entity from the affected drag component
+  ---
+  duration_ms: 0.2755
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces drag updates and suppresses superseded in-flight results
+ok 29 - solver worker client coalesces drag updates and suppresses superseded in-flight results
+  ---
+  duration_ms: 0.4034
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces only explicitly keyed parameter updates
+ok 30 - solver worker client coalesces only explicitly keyed parameter updates
+  ---
+  duration_ms: 0.1329
+  type: 'test'
+  ...
+# Subtest: solver worker client keeps committed mutations ordered and non-droppable
+ok 31 - solver worker client keeps committed mutations ordered and non-droppable
+  ---
+  duration_ms: 0.1104
+  type: 'test'
+  ...
+# Subtest: pointer input invalidates an in-flight preview before the next frame dispatch
+ok 32 - pointer input invalidates an in-flight preview before the next frame dispatch
+  ---
+  duration_ms: 0.1454
+  type: 'test'
+  ...
+# Subtest: no-active-Stack geometry drag translates its Stack frame and commits once
+ok 33 - no-active-Stack geometry drag translates its Stack frame and commits once
+  ---
+  duration_ms: 1.8791
+  type: 'test'
+  ...
+# Subtest: dragging a closed geometry region translates its single owning Stack
+ok 34 - dragging a closed geometry region translates its single owning Stack
+  ---
+  duration_ms: 0.3663
+  type: 'test'
+  ...
+# Subtest: a closed region spanning multiple Stacks cannot choose an arbitrary Stack to drag
+ok 35 - a closed region spanning multiple Stacks cannot choose an arbitrary Stack to drag
+  ---
+  duration_ms: 0.1499
+  type: 'test'
+  ...
+# Subtest: Stack canvas drag stays unavailable while a Stack or another canvas tool is active
+ok 36 - Stack canvas drag stays unavailable while a Stack or another canvas tool is active
+  ---
+  duration_ms: 0.1322
+  type: 'test'
+  ...
+# Subtest: hovering any Stack-owned canvas entity reports the whole Stack when none is active
+ok 37 - hovering any Stack-owned canvas entity reports the whole Stack when none is active
+  ---
+  duration_ms: 0.18
+  type: 'test'
+  ...
+# Subtest: cancelling a Stack canvas drag restores its placement snapshot without committing
+ok 38 - cancelling a Stack canvas drag restores its placement snapshot without committing
+  ---
+  duration_ms: 0.1954
+  type: 'test'
+  ...
+# Subtest: empty persisted Global frames resolve to the identity coordinate system
+ok 39 - empty persisted Global frames resolve to the identity coordinate system
+  ---
+  duration_ms: 1.161
+  type: 'test'
+  ...
+# Subtest: global parallel rotates the inactive Stack without changing any local shape
+ok 40 - global parallel rotates the inactive Stack without changing any local shape
+  ---
+  duration_ms: 12.0613
+  type: 'test'
+  ...
+# Subtest: a new global relationship solves every Stack in the connected placement component
+ok 41 - a new global relationship solves every Stack in the connected placement component
+  ---
+  duration_ms: 3.2575
+  type: 'test'
+  ...
+# Subtest: dragging either Stack holds its frame and solves the complete related placement component
+ok 42 - dragging either Stack holds its frame and solves the complete related placement component
+  ---
+  duration_ms: 2.3052
+  type: 'test'
+  ...
+# Subtest: global dragging translates Stacks joined by an active-Stack cross-Stack Collinear constraint in real time
+ok 43 - global dragging translates Stacks joined by an active-Stack cross-Stack Collinear constraint in real time
+  ---
+  duration_ms: 1.8348
+  type: 'test'
+  ...
+# Subtest: global transform constraints solve through active-Stack cross-Stack entity relationships
+ok 44 - global transform constraints solve through active-Stack cross-Stack entity relationships
+  ---
+  duration_ms: 3.6337
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+ok 45 - active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+  ---
+  duration_ms: 2.7967
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+ok 46 - active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+  ---
+  duration_ms: 9.6357
+  type: 'test'
+  ...
+# Subtest: saved placement roles survive activation changes and a drawing round trip
+ok 47 - saved placement roles survive activation changes and a drawing round trip
+  ---
+  duration_ms: 4.1886
+  type: 'test'
+  ...
+# Subtest: an impossible global equal-length relationship fails without deforming either Stack
+ok 48 - an impossible global equal-length relationship fails without deforming either Stack
+  ---
+  duration_ms: 2.2876
+  type: 'test'
+  ...
+# Subtest: collinear placement translates and rotates every entity while keeping the reference still
+ok 49 - collinear placement translates and rotates every entity while keeping the reference still
+  ---
+  duration_ms: 1.4463
+  type: 'test'
+  ...
+# Subtest: global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+ok 50 - global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+  ---
+  duration_ms: 20.0254
+  type: 'test'
+  ...
+# Subtest: a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+ok 51 - a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+  ---
+  duration_ms: 5.6178
+  type: 'test'
+  ...
+# Subtest: global layer is permanent and cannot become the active drawable Stack
+ok 52 - global layer is permanent and cannot become the active drawable Stack
+  ---
+  duration_ms: 0.7193
+  type: 'test'
+  ...
+# Subtest: removing geometry also removes its global relationships from an initialized graph
+ok 53 - removing geometry also removes its global relationships from an initialized graph
+  ---
+  duration_ms: 1.2906
+  type: 'test'
+  ...
+# Subtest: DXF preserves the placement and local horizontal direction of a rotated dimension
+ok 54 - DXF preserves the placement and local horizontal direction of a rotated dimension
+  ---
+  duration_ms: 0.8973
+  type: 'test'
+  ...
+# Subtest: canvas axes use the active Stack frame and return to global when none is active
+ok 55 - canvas axes use the active Stack frame and return to global when none is active
+  ---
+  duration_ms: 0.2417
+  type: 'test'
+  ...
+# Subtest: worker placement results carry frames before the main controller imports world geometry
+ok 56 - worker placement results carry frames before the main controller imports world geometry
+  ---
+  duration_ms: 2.3871
+  type: 'test'
+  ...
+# Subtest: failed placement transactions restore frames, annotations, and local shape together
+ok 57 - failed placement transactions restore frames, annotations, and local shape together
+  ---
+  duration_ms: 2.0178
+  type: 'test'
+  ...
+# Subtest: moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+ok 58 - moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+  ---
+  duration_ms: 0.9765
+  type: 'test'
+  ...
+# Subtest: javascript: collective relocation survives an immediate control edit without reloading the Worker
+ok 59 - javascript: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 26.5394
+  type: 'test'
+  ...
+# Subtest: javascript: cancelled placement and journal recovery retain the accepted canvas location
+ok 60 - javascript: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 11.7578
+  type: 'test'
+  ...
+# Subtest: wasm: collective relocation survives an immediate control edit without reloading the Worker
+ok 61 - wasm: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 12.8631
+  type: 'test'
+  ...
+# Subtest: wasm: cancelled placement and journal recovery retain the accepted canvas location
+ok 62 - wasm: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 10.7775
+  type: 'test'
+  ...
+1..62
+# tests 62
+# suites 0
+# pass 62
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 227.1505

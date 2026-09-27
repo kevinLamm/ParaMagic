@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: segment selection keeps its hit node separate from the thin highlight graphic
+ok 1 - segment selection keeps its hit node separate from the thin highlight graphic
+  ---
+  duration_ms: 0.8646
+  type: 'test'
+  ...
+# Subtest: editable closed line chains match the Polyline tool segment representation
+ok 2 - editable closed line chains match the Polyline tool segment representation
+  ---
+  duration_ms: 1.8205
+  type: 'test'
+  ...
+# Subtest: every traced line segment exposes the standard midpoint feature
+ok 3 - every traced line segment exposes the standard midpoint feature
+  ---
+  duration_ms: 0.5664
+  type: 'test'
+  ...
+# Subtest: editable line chains can stage every segment through one canvas transaction
+ok 4 - editable line chains can stage every segment through one canvas transaction
+  ---
+  duration_ms: 0.1867
+  type: 'test'
+  ...
+# Subtest: circle hit targets cover the region for standard and construction circles
+ok 5 - circle hit targets cover the region for standard and construction circles
+  ---
+  duration_ms: 0.0825
+  type: 'test'
+  ...
+# Subtest: drawn arcs record their point-order direction
+ok 6 - drawn arcs record their point-order direction
+  ---
+  duration_ms: 0.1098
+  type: 'test'
+  ...
+# Subtest: the host configures the exact OpenCV script resource used by core
+ok 7 - the host configures the exact OpenCV script resource used by core
+  ---
+  duration_ms: 1.7565
+  type: 'test'
+  ...
+# Subtest: image trace settings use practical defaults and clamp user input
+ok 8 - image trace settings use practical defaults and clamp user input
+  ---
+  duration_ms: 0.1382
+  type: 'test'
+  ...
+# Subtest: image trace settings memory recalls the latest normalized slider values
+ok 9 - image trace settings memory recalls the latest normalized slider values
+  ---
+  duration_ms: 0.1868
+  type: 'test'
+  ...
+# Subtest: trace coordinates map the displayed image corners to raster corners
+ok 10 - trace coordinates map the displayed image corners to raster corners
+  ---
+  duration_ms: 0.2266
+  type: 'test'
+  ...
+# Subtest: trace coordinate conversion respects image rotation and flips
+ok 11 - trace coordinate conversion respects image rotation and flips
+  ---
+  duration_ms: 0.1533
+  type: 'test'
+  ...
+# Subtest: pixel points converted to world coordinates retain the displayed image transform
+ok 12 - pixel points converted to world coordinates retain the displayed image transform
+  ---
+  duration_ms: 0.1206
+  type: 'test'
+  ...
+# Subtest: resident trace preserves exact reference contours across settings, seeds and image sizes
+ok 13 - resident trace preserves exact reference contours across settings, seeds and image sizes
+  ---
+  duration_ms: 148.1378
+  type: 'test'
+  ...
+# Subtest: detail and smoothing updates reuse only valid upstream native results
+ok 14 - detail and smoothing updates reuse only valid upstream native results
+  ---
+  duration_ms: 3.9577
+  type: 'test'
+  ...
+# Subtest: trace errors preserve reference behavior and allow a later valid selection
+ok 15 - trace errors preserve reference behavior and allow a later valid selection
+  ---
+  duration_ms: 2.0959
+  type: 'test'
+  ...
+# Subtest: trace Worker supersedes queued and in-flight requests between native stages
+ok 16 - trace Worker supersedes queued and in-flight requests between native stages
+  ---
+  duration_ms: 216.0285
+  type: 'test'
+  ...
+# Subtest: client uploads once, transfers pixels, ignores stale results and disposes pending requests
+ok 17 - client uploads once, transfers pixels, ignores stale results and disposes pending requests
+  ---
+  duration_ms: 2.3515
+  type: 'test'
+  ...
+# Subtest: source replacement during decode uploads only the latest image
+ok 18 - source replacement during decode uploads only the latest image
+  ---
+  duration_ms: 1.6154
+  type: 'test'
+  ...
+# Subtest: release cancels work but keeps the initialized Worker for the next image
+ok 19 - release cancels work but keeps the initialized Worker for the next image
+  ---
+  duration_ms: 1.5552
+  type: 'test'
+  ...
+# Subtest: Worker load failure is surfaced and a later request can start a fresh Worker
+ok 20 - Worker load failure is surfaced and a later request can start a fresh Worker
+  ---
+  duration_ms: 1.5114
+  type: 'test'
+  ...
+# Subtest: OpenCV initialization errors reset the Worker instead of retaining a rejected module
+ok 21 - OpenCV initialization errors reset the Worker instead of retaining a rejected module
+  ---
+  duration_ms: 1.5112
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 706.2705

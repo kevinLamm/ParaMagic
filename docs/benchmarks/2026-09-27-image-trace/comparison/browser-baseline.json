@@ -1,0 +1,5930 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-27T12:25:56.618Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000000,
+      4000000,
+      12000000
+    ],
+    "samples": 3,
+    "budgetMs": 5000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "wasmComparison": false,
+    "frontAppOnly": false,
+    "frontWorkerOnly": false,
+    "frontSamples": 1,
+    "corePipelineOnly": false,
+    "builtTarget": "client",
+    "traceOnly": true,
+    "traceAppOnly": false,
+    "traceBackend": "both",
+    "traceComplex": false,
+    "tracePhases": false,
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Trace Region in local Chromium; first invocation and detail/smoothing/tolerance changes on the same raster. Phase instrumentation is separate from uninstrumented samples.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [],
+  "nativeApp": [],
+  "corePipeline": [],
+  "trace": [
+    {
+      "backend": "reference",
+      "sample": 0,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 165.19999992847443,
+      "preparationMs": 6.200000047683716,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 186,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 198.39999997615814,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 242.70000004768372,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 239.79999995231628,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 0,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 202.20000004768372,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 20.899999976158142,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 20.100000023841858,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.2999999523162842,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.10000002384185791,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 49.700000047683716,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 49.40000009536743,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 53.60000002384186,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 53.39999997615814,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 1,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 199.79999995231628,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 20.899999976158142,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 20,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.30000007152557373,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.10000002384185791,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 49.39999997615814,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 49.10000002384186,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 53.89999997615814,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 53.49999988079071,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 1,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 171.09999990463257,
+      "preparationMs": 6.900000095367432,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 179.39999997615814,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 192.79999995231628,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 236.80000007152557,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 235.5,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 2,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 168.30000007152557,
+      "preparationMs": 7.199999928474426,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 183.10000002384186,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 196.30000007152557,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 235.39999997615814,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 239.60000002384186,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 2,
+      "width": 1155,
+      "height": 866,
+      "pixels": 1000230,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 202.29999995231628,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 21.299999952316284,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1014,
+              322
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 20.200000047683716,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.10000002384185791,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              176,
+              216
+            ],
+            [
+              174,
+              225
+            ],
+            [
+              231,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446391.5,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.10000002384185791,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 49.39999997615814,
+          "points": [
+            [
+              963,
+              208
+            ],
+            [
+              939,
+              181
+            ],
+            [
+              897,
+              151
+            ],
+            [
+              858,
+              136
+            ],
+            [
+              807,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              822,
+              708
+            ],
+            [
+              874,
+              694
+            ],
+            [
+              916,
+              670
+            ],
+            [
+              962,
+              623
+            ],
+            [
+              991,
+              573
+            ],
+            [
+              1011,
+              517
+            ],
+            [
+              1022,
+              456
+            ],
+            [
+              1023,
+              381
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              991,
+              255
+            ]
+          ],
+          "areaPixels": 446384,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 49.10000002384186,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 54.10000002384186,
+          "points": [
+            [
+              962,
+              207
+            ],
+            [
+              940,
+              182
+            ],
+            [
+              904,
+              155
+            ],
+            [
+              861,
+              137
+            ],
+            [
+              808,
+              130
+            ],
+            [
+              175,
+              217
+            ],
+            [
+              232,
+              777
+            ],
+            [
+              828,
+              707
+            ],
+            [
+              876,
+              693
+            ],
+            [
+              921,
+              666
+            ],
+            [
+              958,
+              628
+            ],
+            [
+              989,
+              577
+            ],
+            [
+              1010,
+              520
+            ],
+            [
+              1022,
+              455
+            ],
+            [
+              1023,
+              383
+            ],
+            [
+              1014,
+              322
+            ],
+            [
+              994,
+              262
+            ]
+          ],
+          "areaPixels": 446106,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 53.700000047683716,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 0,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 167.39999997615814,
+      "preparationMs": 22.90000009536743,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 685,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 803.1000000238419,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 932.8999999761581,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 936.8000000715256,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 0,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 224.5,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 56.89999997615814,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 56,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.2999999523162842,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.19999992847442627,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 198.20000004768372,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 197.89999997615814,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 204.89999997615814,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 204.79999995231628,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 1,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 223.29999995231628,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 56.800000071525574,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 55.799999952316284,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.2999999523162842,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.10000002384185791,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 195.70000004768372,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 195.60000002384186,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 207.39999997615814,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 207.10000002384186,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 1,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 170.5,
+      "preparationMs": 22.600000023841858,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 679.8999999761581,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 755,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 925.8000000715256,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 925.1999999284744,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 2,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 170,
+      "preparationMs": 22.600000023841858,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 678.8999999761581,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 759.7999999523163,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 932.9000000953674,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 936.0999999046326,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 2,
+      "width": 2309,
+      "height": 1732,
+      "pixels": 3999188,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 220.5,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 57.5,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2027,
+              640
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 56.299999833106995,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.2999999523162842,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              433
+            ],
+            [
+              462,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789252,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.10000002384185791,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 197.70000004768372,
+          "points": [
+            [
+              1925,
+              415
+            ],
+            [
+              1863,
+              349
+            ],
+            [
+              1784,
+              297
+            ],
+            [
+              1698,
+              268
+            ],
+            [
+              1613,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1661,
+              1414
+            ],
+            [
+              1762,
+              1383
+            ],
+            [
+              1842,
+              1333
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1977,
+              1158
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              902
+            ],
+            [
+              2046,
+              765
+            ],
+            [
+              2027,
+              640
+            ],
+            [
+              1987,
+              521
+            ]
+          ],
+          "areaPixels": 1789243,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 197.40000009536743,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 204.79999995231628,
+          "points": [
+            [
+              1924,
+              414
+            ],
+            [
+              1858,
+              345
+            ],
+            [
+              1777,
+              294
+            ],
+            [
+              1693,
+              267
+            ],
+            [
+              1614,
+              260
+            ],
+            [
+              348,
+              434
+            ],
+            [
+              463,
+              1556
+            ],
+            [
+              1667,
+              1413
+            ],
+            [
+              1757,
+              1385
+            ],
+            [
+              1843,
+              1332
+            ],
+            [
+              1913,
+              1261
+            ],
+            [
+              1981,
+              1149
+            ],
+            [
+              2021,
+              1038
+            ],
+            [
+              2045,
+              900
+            ],
+            [
+              2046,
+              766
+            ],
+            [
+              2028,
+              645
+            ],
+            [
+              1986,
+              519
+            ]
+          ],
+          "areaPixels": 1788737,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 204.40000009536743,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 0,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 166.5,
+      "preparationMs": 63.700000047683716,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 2001,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 2336.5999999046326,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 2829.7000000476837,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 2792.899999976158,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 0,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 296,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 153.30000007152557,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 151.10000002384186,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.5,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.30000007152557373,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 579.3999999761581,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 579.2999999523163,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 622.5,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 622.1000000238419,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 1,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 281.2999999523163,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 153,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 150.60000002384186,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.5,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.20000004768371582,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 579.2000000476837,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 579,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 618.7999999523163,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 618.0999999046326,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 1,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 166,
+      "preparationMs": 63.799999952316284,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 2065,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 2356.3000000715256,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 2892.399999976158,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 2888.899999976158,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "reference",
+      "sample": 2,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 164.20000004768372,
+      "preparationMs": 62.5,
+      "workerSetupMs": null,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 2033,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 2370.100000023842,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 2884.1999999284744,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 2898.8000000715256,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "phases": {}
+        }
+      ]
+    },
+    {
+      "backend": "worker",
+      "sample": 2,
+      "width": 4000,
+      "height": 3000,
+      "pixels": 12000000,
+      "initializationMs": 0,
+      "preparationMs": 0,
+      "workerSetupMs": 295,
+      "rows": [
+        {
+          "name": "first",
+          "elapsedMs": 159.69999992847443,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3505,
+              1080
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 156.5000001192093,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 1
+          },
+          "phases": {}
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 0.5,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              601,
+              750
+            ],
+            [
+              800,
+              2698
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374277,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 0.20000004768371582,
+            "stages": [],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 1,
+            "contourExtractions": 1,
+            "selections": 1,
+            "approximations": 2
+          },
+          "phases": {}
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 600.3000000715256,
+          "points": [
+            [
+              3326,
+              707
+            ],
+            [
+              3209,
+              589
+            ],
+            [
+              3077,
+              508
+            ],
+            [
+              2956,
+              467
+            ],
+            [
+              2799,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2867,
+              2452
+            ],
+            [
+              3033,
+              2405
+            ],
+            [
+              3180,
+              2319
+            ],
+            [
+              3314,
+              2186
+            ],
+            [
+              3428,
+              2001
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1566
+            ],
+            [
+              3543,
+              1298
+            ],
+            [
+              3505,
+              1080
+            ],
+            [
+              3426,
+              866
+            ]
+          ],
+          "areaPixels": 5374266,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 600.2000000476837,
+            "stages": [
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 1,
+            "masks": 1,
+            "smoothings": 2,
+            "contourExtractions": 2,
+            "selections": 2,
+            "approximations": 3
+          },
+          "phases": {}
+        },
+        {
+          "name": "tolerance",
+          "elapsedMs": 622.6999999284744,
+          "points": [
+            [
+              3329,
+              711
+            ],
+            [
+              3215,
+              594
+            ],
+            [
+              3081,
+              510
+            ],
+            [
+              2951,
+              466
+            ],
+            [
+              2800,
+              450
+            ],
+            [
+              602,
+              751
+            ],
+            [
+              801,
+              2697
+            ],
+            [
+              2866,
+              2452
+            ],
+            [
+              3035,
+              2404
+            ],
+            [
+              3181,
+              2318
+            ],
+            [
+              3317,
+              2182
+            ],
+            [
+              3426,
+              2005
+            ],
+            [
+              3502,
+              1798
+            ],
+            [
+              3543,
+              1565
+            ],
+            [
+              3543,
+              1300
+            ],
+            [
+              3502,
+              1069
+            ],
+            [
+              3433,
+              881
+            ]
+          ],
+          "areaPixels": 5373405,
+          "diagnostics": {
+            "backend": "opencv-wasm-worker",
+            "processingMs": 621.8999999761581,
+            "stages": [
+              "threshold",
+              "components",
+              "mask",
+              "smoothing",
+              "contours",
+              "selection"
+            ],
+            "uploads": 1,
+            "segmentations": 2,
+            "masks": 2,
+            "smoothings": 3,
+            "contourExtractions": 3,
+            "selections": 3,
+            "approximations": 4
+          },
+          "phases": {}
+        }
+      ]
+    }
+  ],
+  "traceApp": [],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "45be094fe3b1c27826b95dea9447a0255cff9627124591620ad4ab9d79a87b05",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "c8ebe5b01b84d63e07274750537d01d1284f0be08b844c87ef54d80b5336ac6b",
+    "scripts/solver-baseline/browser.js": "1ffc9a3d0444450497fe727f24a94c48db8b80235eb1400b396524c1e2642c1f",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "2e094cef0a547d58b25e8f82e6af90bd6526e862da02b9788888435060454864",
+    "scripts/solver-baseline/front-worker.js": "5bf46f822db78d265858d04502e0e9dc674e3120f882b16b107422670970a196",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "4c4969710cce2614460f40cc5fcb22c96753195f73a574437e8afc90ac8d89e3",
+    "packages/paramagic-core/native/constraint_program.h": "a206fbcbe97056000d390d855e5c3a8968c66e3cb484a86725ebf1920ff14493",
+    "packages/paramagic-core/native/swell_geometry.h": "8e62dacca8e666d5e0f69a4fb85f7ecbeb1a3dd92cf9b15d6851ff161e5a040d",
+    "packages/paramagic-core/native/sparse_elimination.h": "e30c11e26176ac86b3da4794bfb14febc68e82dc96c6db858f546112e79ad3d9",
+    "packages/paramagic-core/native/graph_kernel.h": "cde4eff526cce43c7442f7229d846f6093e317f40026a8f324d1ad6efa856999",
+    "packages/paramagic-core/native/parameter_kernel.h": "c662a1e5f3f8d1bc5ca90b85f04b1d6e8fe52b070a82510d26c0c61e66a24b92",
+    "packages/paramagic-core/native/continuation.h": "52326aeefc4582e659903705dcf846c26efeac75aaa6fce124c2654f71ad497c",
+    "packages/paramagic-core/src/modules/solver/WasmGraph.js": "2145332c262246c5a8a72b98988eeea42ebac3aa4b7b782b8e904e024a1708ae",
+    "packages/paramagic-core/src/modules/solver/WasmParameters.js": "555e125682b6ef3868631de70d15d8721dbd9c177ca031243b43c4a2da7615a7",
+    "packages/paramagic-core/src/modules/solver/WasmContinuation.js": "e203ed116818539f1ec37d405c13d149a7b74268cf6c1cebb36e82243272afb6",
+    "packages/paramagic-core/src/modules/solver/StackPlacementSolver.js": "6aa1ce7e32b9acbfee3e3296102a5e0b84a55afc1cdedd0c3814a50b5a87db79",
+    "scripts/solver-baseline/core-pipeline.js": "55388cdd2d423bbfb7946fe2c38ffc784ffa1e11d3a702a322f5e78d8fa7c855",
+    "packages/paramagic-core/src/modules/SwellGeometry.js": "05cb2fcbdb6302efd145b33734d5fd8e2290c6f8550ef62da3535d30cb025696",
+    "scripts/image-trace/measure.js": "e8e28916b0970c205abcd2c8c6f5b905d53a39412955e34fd02eb00263f2aee2",
+    "scripts/image-trace/app.js": "2d8c7156257230f83853998ab65125f7619a535f71018ac63fd532ff57f39600",
+    "packages/paramagic-core/src/modules/ImageTrace.js": "2b971a5c605d6b53b6010afedf6b216d63e98efbd033d2d5caa21bd02ad2a568",
+    "packages/paramagic-core/src/modules/ImageTraceClient.js": "2786e8bb88d59695bfe8cb04bd55f02d7d0252b511f10935c1cdf6e265f62ea3",
+    "packages/paramagic-core/src/modules/ImageTraceKernel.js": "d76dd50033975970cf970b0eba30dcc9dc4c67d39d31b50260cdee3aa77e4d16",
+    "packages/paramagic-core/src/modules/ImageTraceWorker.js": "4a077d1c57a909526b9518a9e5400e7849bc1424a23bae82503d043ce0b7749d",
+    "packages/paramagic-core/src/modules/ImageTraceWorkerRuntime.js": "6f3f15d4a0649997b005ae15a199ce4a5fd3b8b1cbad448b2fe4cea9f404233c",
+    "packages/paramagic-core/src/modules/ImageSystem.js": "40d94779747aa780e881b5305f8135dc8b98921e9e65f4c2180c95432e0b2f59",
+    "packages/paramagic-core/src/modules/solver/WasmSwellModel.js": "61158d3cfb6e0570aab8231d13ab3c8776d84c8ee1d14bb73b1b38d66a7d13d3",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "db2694f9bac46ab942933dc159fe00de6b0596197deb67cab9d52bdeebb8e336",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "7693553ac4bfa5a7b6207657d11441476a90d718a256c0357b6c5ecfa2b52334",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "65fa796f2c0fa2d6106263d71fefe3cc98751b1ac98cfadf14adf08335bca752",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "efcc6f4812eb7f6ab10480cfd1788896a792e1c803ceeb092ceaf1dc04c5dfae",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "68551b7f1ab121d2785f53404b2ba157767bf2c3fdf3586d886480e79a36a263",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "20cebfb7ead721c8807866523286671ea049965811391a30f0a82c176336a3f6",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "e6ff79936b09ea8e2ad874f4b202267108eb0f7dc5fc5197306cdc341dcc28c4",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "8b8b2231898e5a555233e31fbadf5eb1a648b792d8fbc19c2da2c4648621f877",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "2c9643dd3e609964c94226ef53721e87828ba2cbb0f0b9c4b101036fa255cb8c",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "90e530a6cdf66501b0fa614617e89b14072b1a7b28ba0d02d81e3a88fc8f60f1"
+  },
+  "finishedAt": "2026-09-27T12:27:00.002Z"
+}

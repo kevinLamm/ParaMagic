@@ -2,7 +2,6 @@ import { createStackViewTool } from '../packages/paramagic-core/src/modules/Stac
 import { createPanelDock } from '../packages/paramagic-core/src/modules/PanelDock.js';
 import {
   ARRAY_TOOL_ICONS,
-  DOCUMENT_VARIABLE_SPECS,
   DrawingHistory,
   DUPLICATE_ICON,
   OBJECT_VISIBILITY_ICON,
@@ -87,6 +86,8 @@ import { configureImageCatalogResources, configureOpenCvResources } from '@param
 import { drawingBrowserTitle, imageCatalogResources, openCvResources } from './app-config.js';
 import { createPrintDialog } from './PrintDialog.js';
 import { showDrawingDiagnostics } from './DrawingDiagnosticsDialog.js';
+import { createDrawingPropertiesDialogs } from './DrawingPropertiesDialog.js';
+import { openPublishDialog } from './DrawingPublishDialog.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
@@ -95,6 +96,7 @@ configureOpenCvResources(openCvResources);
 const iconPaths = {
   New: '<path d="M12 5v14M5 12h14"/>',
   Save: '<path d="M5 4h12l3 3v13H5z"/><path d="M8 4v6h8V4M8 20v-7h9v7"/>',
+  Publish: '<path d="M12 16V3m-4 4 4-4 4 4M5 14v6h14v-6"/>',
   Undo: '<path d="M9 7l-5 5 5 5"/><path d="M5 12h8a6 6 0 0 1 6 6"/>',
   Redo: '<path d="M15 7l5 5-5 5"/><path d="M19 12h-8a6 6 0 0 0-6 6"/>',
   Cut: '<circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><path d="M9 15L18 4M15 15L6 4"/>',
@@ -202,6 +204,7 @@ app.innerHTML = `
           ${appMenuButton('Open', 'id="openButton"')}
           ${appMenuButton('Save', 'id="saveButton"')}
           ${appMenuButton('Save As', 'id="saveAsButton"')}
+          ${appMenuButton('Publish', 'id="publishButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
@@ -764,7 +767,7 @@ document.getElementById('insertImageButton').addEventListener('click', () => {
   window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'image' } }));
   document.getElementById('imageFileInput').click();
 });
-document.getElementById('drawingPropertiesButton').addEventListener('click', openDrawingPropertiesModal);
+document.getElementById('drawingPropertiesButton').addEventListener('click', () => drawingPropertiesDialogs.openProperties());
 document.getElementById('imageFileInput').addEventListener('change', async (event) => {
   const file = event.target.files[0];
   event.target.value = '';
@@ -782,107 +785,6 @@ document.getElementById('imageFileInput').addEventListener('change', async (even
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-}
-
-const drawingUnitOptions = [
-  ['in', 'Inches'],
-  ['mm', 'Millimeters'],
-  ['cm', 'Centimeters'],
-  ['m', 'Meters'],
-  ['ft', 'Feet'],
-];
-
-function openDrawingPropertiesModal() {
-  const properties = canvasController.getDrawingProperties();
-  const options = (selected) => drawingUnitOptions
-    .map(([value, label]) => `<option value="${value}" ${value === selected ? 'selected' : ''}>${label}</option>`)
-    .join('');
-  modal(`<div class="drawing-properties-modal-content">
-    <h2>Drawing Properties</h2>
-    <p class="drawing-properties-note">Dimension and parameter expressions use the drawing unit automatically. Unit suffixes are not required.</p>
-    <label class="drawing-property-field" for="drawingUnitProperty">
-      <span>Drawing Units</span>
-      <select id="drawingUnitProperty">${options(properties.drawingUnit)}</select>
-    </label>
-    <label class="drawing-property-field" for="dxfExportUnitProperty">
-      <span>DXF Export Unit</span>
-      <select id="dxfExportUnitProperty">${options(properties.dxfExportUnit)}</select>
-    </label>
-    <label class="drawing-property-field" for="filletRadiusProperty">
-      <span>Fillet Radius</span>
-      <input id="filletRadiusProperty" type="number" min="0.000001" step="any" value="${escapeHtml(properties.filletRadius)}" />
-    </label>
-    <button type="button" class="document-variables-button" id="documentVariablesButton">Document Variables…</button>
-    <p class="drawing-properties-footnote">The DXF setting changes exported coordinates only; it does not resize the drawing.</p>
-  </div>`);
-  const backdrop = document.querySelector('.modal-backdrop');
-  backdrop.querySelector('.modal').classList.add('drawing-properties-modal');
-  const drawingUnit = backdrop.querySelector('#drawingUnitProperty');
-  const dxfExportUnit = backdrop.querySelector('#dxfExportUnitProperty');
-  const filletRadius = backdrop.querySelector('#filletRadiusProperty');
-  backdrop.querySelector('#documentVariablesButton').addEventListener('click', () => {
-    backdrop.remove();
-    openDocumentVariablesModal();
-  });
-  notchTools.mountDrawingPropertiesControl(backdrop.querySelector('.drawing-properties-modal-content'));
-  const apply = () => canvasController.setDrawingProperties({
-    drawingUnit: drawingUnit.value,
-    dxfExportUnit: dxfExportUnit.value,
-    filletRadius: filletRadius.value,
-  });
-  drawingUnit.addEventListener('change', apply);
-  dxfExportUnit.addEventListener('change', apply);
-  const applyFilletRadius = () => {
-    const value = Number(filletRadius.value);
-    if (Number.isFinite(value) && value > 0) apply();
-  };
-  filletRadius.addEventListener('input', applyFilletRadius);
-  filletRadius.addEventListener('change', () => {
-    if (Number(filletRadius.value) > 0) return;
-    filletRadius.value = canvasController.getDrawingProperties().filletRadius;
-  });
-  drawingUnit.focus();
-}
-
-function openDocumentVariablesModal() {
-  const values = new Map(canvasController.getDocumentVariables().map((entry) => [entry.name, entry]));
-  const specs = DOCUMENT_VARIABLE_SPECS.map((spec) => {
-    const entry = values.get(spec.name);
-    const value = typeof entry?.value === 'number'
-      ? formatUnitlessValue(entry.value, entry.unit)
-      : entry?.value ?? '';
-    return { ...spec, value };
-  });
-  const rows = specs.map((spec) => `
-    <tr data-document-variable="${escapeHtml(spec.name)}">
-      <td><code>${escapeHtml(spec.name)}</code><small>${escapeHtml(spec.label)}</small></td>
-      <td><input class="document-variable-value" aria-label="${escapeHtml(spec.label)}" value="${escapeHtml(spec.value)}" ${spec.readOnly ? 'readonly' : ''} /></td>
-      <td><span class="document-variable-state">${spec.readOnly ? 'Automatic' : 'Editable'}</span></td>
-    </tr>`).join('');
-  modal(`<div class="document-variables-modal-content">
-    <div class="document-variables-heading"><button type="button" id="documentVariablesBack" class="document-variables-back">‹ Drawing Properties</button><h2>Document Variables</h2></div>
-    <p class="drawing-properties-note">Use variables such as <code>[DrawingNumber]</code> and <code>[CurrentDate]</code> in text fields and parameter expressions.</p>
-    <div class="document-variables-table-scroll">
-      <table class="document-variables-table" aria-label="Document variables">
-        <thead><tr><th>Variable</th><th>Value</th><th>Source</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`);
-  const backdrop = document.querySelector('.modal-backdrop');
-  backdrop.querySelector('.modal').classList.add('document-variables-modal');
-  const specByName = new Map(specs.map((spec) => [spec.name, spec]));
-  backdrop.querySelectorAll('[data-document-variable]').forEach((row) => {
-    const spec = specByName.get(row.dataset.documentVariable);
-    if (!spec || spec.readOnly) return;
-    row.querySelector('.document-variable-value').addEventListener('input', (event) => {
-      canvasController.setDocumentMetadata({ [spec.key]: event.target.value });
-    });
-  });
-  backdrop.querySelector('#documentVariablesBack').addEventListener('click', () => {
-    backdrop.remove();
-    openDrawingPropertiesModal();
-  });
 }
 
 function openParametersModal(solver, canvas, drawingName = 'Untitled Drawing', controlItems = []) {
@@ -1228,7 +1130,7 @@ function activateStoredConstraint() {
   constraintToggle.setAttribute('aria-pressed', 'true');
   constraintToggle.classList.add('active');
   window.dispatchEvent(new CustomEvent('paramagic:tool-activated', { detail: { source: 'constraint' } }));
-  constraintController?.setActiveConstraint(selected);
+  if (constraintController?.setActiveConstraint(selected) === false) deactivateConstraintSelection();
 }
 
 function completeConstraintSelection() {
@@ -1334,6 +1236,12 @@ const printDialogController = createPrintDialog({
   getDimensionView: () => document.getElementById('dimensionTextMode')?.dataset.dimensionTextMode || 'named-value',
 });
 document.getElementById('printButton').addEventListener('click', () => printDialogController.open());
+const drawingPropertiesDialogs = createDrawingPropertiesDialogs({
+  canvas: canvasController,
+  modal,
+  mountAdditionalProperties: (host) => notchTools.mountDrawingPropertiesControl(host),
+});
+document.getElementById('publishButton').addEventListener('click', () => openPublishDialog({ modal, canvas: canvasController }));
 controlToolsController = createControlTools({
   toolbar: document.getElementById('controlsToggle'),
   canvas: canvasController,
@@ -1816,9 +1724,6 @@ stackTreePanelController = createStackTreePanel({
   getDrawingName: currentDrawingName,
   onSaveAs: saveStackAs,
   onImport: drawingClipboard.importStack,
-  onRemove: (stackId) => {
-    canvasController.removeStack(stackId);
-  },
 });
 
 sidePanelDockController = createPanelDock({

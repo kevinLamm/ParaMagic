@@ -1,0 +1,6513 @@
+{
+  "format": "ParaMagic Drawing",
+  "version": 4,
+  "name": "Rectangle_Ottoman",
+  "stackArchitectureVersion": 6,
+  "drawingUnit": "in",
+  "dxfExportUnit": "in",
+  "filletRadius": 25.4,
+  "entities": [
+    {
+      "id": "2c26b42b-e450-4481-952d-d923cd624fea",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "composite": {
+        "id": "39cb423d-5ae0-494e-ad26-7d02251a1f8b",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 0,
+        "count": 4
+      },
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        0.869703255302511,
+        -2416.6370368368134
+      ],
+      "end": [
+        2185.2697032553006,
+        -2416.6370368368134
+      ],
+      "sourceRecordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "composite": {
+        "id": "39cb423d-5ae0-494e-ad26-7d02251a1f8b",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 1,
+        "count": 4
+      },
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        2210.6697032555485,
+        -2391.2370368368133
+      ],
+      "end": [
+        2210.6697032555485,
+        -1095.8370368368141
+      ],
+      "sourceRecordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "e9d9c0f8-4624-4489-8498-c153705c4808",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "composite": {
+        "id": "39cb423d-5ae0-494e-ad26-7d02251a1f8b",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 2,
+        "count": 4
+      },
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        2185.2697032553006,
+        -1070.4370368368138
+      ],
+      "end": [
+        0.8697032553029658,
+        -1070.4370368368138
+      ],
+      "sourceRecordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "composite": {
+        "id": "39cb423d-5ae0-494e-ad26-7d02251a1f8b",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 3,
+        "count": 4
+      },
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        -24.530296744448606,
+        -1095.8370368368135
+      ],
+      "end": [
+        -24.53029674444963,
+        -2391.237036836814
+      ],
+      "sourceRecordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "af66d986-abf0-407b-b314-b042438ceb7f",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible",
+        "fillOpacity"
+      ],
+      "composite": {
+        "id": "b49c983d-ff0d-4dd6-bcdc-6bdafd0ba789",
+        "kind": "polyline",
+        "closed": true,
+        "index": 0,
+        "count": 4
+      },
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "0",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false,
+        "fillColor": "#ffffff",
+        "fillOpacity": 0,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        178.6697032469924,
+        -2302.3370368368137
+      ],
+      "end": [
+        64.36970325554785,
+        -2162.6370368368134
+      ],
+      "sourceRecordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible",
+        "fillOpacity"
+      ],
+      "composite": {
+        "id": "b49c983d-ff0d-4dd6-bcdc-6bdafd0ba789",
+        "kind": "polyline",
+        "closed": true,
+        "index": 1,
+        "count": 4
+      },
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "0",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false,
+        "fillColor": "#ffffff",
+        "fillOpacity": 0,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        64.3697032555475,
+        -2162.6370368368134
+      ],
+      "end": [
+        178.66970324699355,
+        -2022.9370368368136
+      ],
+      "sourceRecordId": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible",
+        "fillOpacity"
+      ],
+      "composite": {
+        "id": "b49c983d-ff0d-4dd6-bcdc-6bdafd0ba789",
+        "kind": "polyline",
+        "closed": true,
+        "index": 2,
+        "count": 4
+      },
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "0",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false,
+        "fillColor": "#ffffff",
+        "fillOpacity": 0,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        178.66970324699344,
+        -2022.9370368368136
+      ],
+      "end": [
+        292.96970323844494,
+        -2162.6370368368134
+      ],
+      "sourceRecordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible",
+        "fillOpacity"
+      ],
+      "composite": {
+        "id": "b49c983d-ff0d-4dd6-bcdc-6bdafd0ba789",
+        "kind": "polyline",
+        "closed": true,
+        "index": 3,
+        "count": 4
+      },
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "0",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false,
+        "fillColor": "#ffffff",
+        "fillOpacity": 0,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        292.9697032384448,
+        -2162.6370368368134
+      ],
+      "end": [
+        178.6697032469915,
+        -2302.3370368368137
+      ],
+      "sourceRecordId": "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible"
+      ],
+      "construction": true,
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "start": [
+        178.66970324699355,
+        -2302.3370368368137
+      ],
+      "end": [
+        178.6697032469939,
+        -2022.9370368368136
+      ],
+      "sourceRecordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible"
+      ],
+      "construction": true,
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount) > 0 && (DiamondColumnCount) > 0)",
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "start": [
+        64.36970325554546,
+        -2162.6370368368134
+      ],
+      "end": [
+        292.9697032384453,
+        -2162.6370368368134
+      ],
+      "sourceRecordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+      "type": "arc",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        0.8697032553027384,
+        -2416.6370368368134
+      ],
+      "arcPoint": [
+        -17.090808986675825,
+        -2409.197549078865
+      ],
+      "end": [
+        -24.53029674445031,
+        -2391.237036836814
+      ],
+      "center": [
+        0.8697032555490978,
+        -2391.237036836814
+      ],
+      "radius": 25.399999999999523,
+      "ccw": false,
+      "major": false,
+      "sourceRecordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+      "type": "arc",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        2185.269703255301,
+        -2416.6370368368134
+      ],
+      "arcPoint": [
+        2203.230215497598,
+        -2409.19754907904
+      ],
+      "end": [
+        2210.669703255548,
+        -2391.2370368368133
+      ],
+      "center": [
+        2185.269703255547,
+        -2391.2370368368133
+      ],
+      "radius": 25.400000000000546,
+      "ccw": true,
+      "major": false,
+      "sourceRecordId": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "0a07186e-805d-42d1-b449-8d38d9801f12",
+      "type": "arc",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        2210.669703255548,
+        -1095.8370368368141
+      ],
+      "arcPoint": [
+        2203.230215497598,
+        -1077.8765245945874
+      ],
+      "end": [
+        2185.2697032553006,
+        -1070.4370368368138
+      ],
+      "center": [
+        2185.269703255547,
+        -1095.8370368368141
+      ],
+      "radius": 25.40000000000066,
+      "ccw": true,
+      "major": false,
+      "sourceRecordId": "0a07186e-805d-42d1-b449-8d38d9801f12",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "b227a813-7682-407a-aa8e-a0200f566fbd",
+      "type": "arc",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill",
+        "fillOpacity",
+        "visible"
+      ],
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 650,
+        "fillImagePixelHeight": 650,
+        "fillOpacityExpression": "100",
+        "visible": true,
+        "visibleManuallyEnabled": true,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1
+      },
+      "start": [
+        0.8697032553031931,
+        -1070.4370368368138
+      ],
+      "arcPoint": [
+        -17.090808986675484,
+        -1077.876524594763
+      ],
+      "end": [
+        -24.5302967444494,
+        -1095.8370368368135
+      ],
+      "center": [
+        0.8697032555500073,
+        -1095.8370368368135
+      ],
+      "radius": 25.399999999999523,
+      "ccw": true,
+      "major": false,
+      "sourceRecordId": "b227a813-7682-407a-aa8e-a0200f566fbd",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "9a51ca0c-e372-499b-9071-acd78520bb91",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible"
+      ],
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((((DiamondRowCount) > 0 && (1) > 0)) && ((2) > 0))",
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "start": [
+        64.36970325554739,
+        -2162.6370368368134
+      ],
+      "end": [
+        -24.53029674444963,
+        -2162.6370368368134
+      ],
+      "sourceRecordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "d94bdd37-39ef-43c4-a329-645518090194",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible"
+      ],
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((((1) > 0 && (DiamondColumnCount) > 0)) && ((2) > 0))",
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "start": [
+        178.6697032469907,
+        -2302.3370368368137
+      ],
+      "end": [
+        178.66970324699355,
+        -2416.6370368368134
+      ],
+      "sourceRecordId": "d94bdd37-39ef-43c4-a329-645518090194",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+      "type": "line",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [],
+      "construction": true,
+      "start": [
+        1093.0697032553016,
+        -2416.6370368368134
+      ],
+      "end": [
+        1093.0697032553016,
+        -1070.4370368368138
+      ],
+      "sourceRecordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+      "type": "circle",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fillOpacity",
+        "fill",
+        "visible"
+      ],
+      "appearance": {
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((DiamondRowCount+1) > 0 && (DiamondColumnCount) > 0)",
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "fillOpacityExpression": "100",
+        "fillExpression": "basic/Fabric/Seamless_Coral.png",
+        "fillImageWidthExpression": "7 in",
+        "fillImageHeightExpression": "7 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0.5",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/Seamless_Coral.png",
+        "fillImageAspectRatio": 1,
+        "fillImagePixelWidth": 185,
+        "fillImagePixelHeight": 185,
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "center": [
+        178.6697032469906,
+        -2302.3370368368137
+      ],
+      "radius": 9.524999999999999,
+      "sourceRecordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+      "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+    },
+    {
+      "id": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "3c9bc2c6-1b54-4c5e-be34-eef8a5b167f8",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 0,
+        "count": 4,
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        38.96970325654388,
+        -765.6370368368139
+      ],
+      "end": [
+        2147.1697125344817,
+        -765.6370368368139
+      ],
+      "sourceRecordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "3c9bc2c6-1b54-4c5e-be34-eef8a5b167f8",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 1,
+        "count": 4,
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        2172.5697125335414,
+        -740.2370368368138
+      ],
+      "end": [
+        2172.5697125335364,
+        -664.0370368368139
+      ],
+      "sourceRecordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "3c9bc2c6-1b54-4c5e-be34-eef8a5b167f8",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 2,
+        "count": 4,
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        },
+        "swellSegments": {
+          "0": {
+            "enabled": true,
+            "swellEnabled": false,
+            "offsetExpression": "0",
+            "swellOffsetExpression": "1.5",
+            "startTransitionExpression": "4",
+            "endTransitionExpression": "4"
+          }
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        2172.569712533529,
+        -664.0370368368139
+      ],
+      "end": [
+        13.56970325684008,
+        -664.0370368368139
+      ],
+      "sourceRecordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "3c9bc2c6-1b54-4c5e-be34-eef8a5b167f8",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 3,
+        "count": 4,
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        13.569703256832273,
+        -664.0370368368139
+      ],
+      "end": [
+        13.569703256742264,
+        -740.2370368367842
+      ],
+      "sourceRecordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "091eae67-52fa-4b82-a262-bf313d57280e",
+      "type": "arc",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "f7f5d4ce-b737-44e4-b5d7-f32c60c9d696",
+        "kind": "swell-arc",
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        },
+        "swellFillet": {
+          "sourceEndpoints": [
+            {
+              "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+              "index": 2
+            },
+            {
+              "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+              "index": 0
+            }
+          ]
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        2147.169712534481,
+        -765.6370368368139
+      ],
+      "arcPoint": [
+        2165.130224776014,
+        -758.1975490786224
+      ],
+      "end": [
+        2172.5697125335446,
+        -740.2370368368138
+      ],
+      "center": [
+        2147.169712533547,
+        -740.2370368368155
+      ],
+      "radius": 25.399999999997874,
+      "ccw": true,
+      "major": false,
+      "sourceRecordId": "091eae67-52fa-4b82-a262-bf313d57280e",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+      "type": "arc",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "construction": true,
+      "composite": {
+        "id": "d1858660-d078-4507-ab03-69e587a4d097",
+        "kind": "swell-arc",
+        "swell": {
+          "enabled": true,
+          "swellEnabled": true,
+          "offsetExpression": "0.5",
+          "swellOffsetExpression": "1.5",
+          "startTransitionExpression": "4",
+          "endTransitionExpression": "4"
+        },
+        "swellFillet": {
+          "sourceEndpoints": [
+            {
+              "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+              "index": 0
+            },
+            {
+              "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+              "index": 2
+            }
+          ]
+        }
+      },
+      "appearance": {
+        "zIndex": 0,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        38.96970325654403,
+        -765.6370368368139
+      ],
+      "arcPoint": [
+        21.00919101452295,
+        -758.197549078872
+      ],
+      "end": [
+        13.569703256741652,
+        -740.2370368367842
+      ],
+      "center": [
+        38.96970325674108,
+        -740.2370368368142
+      ],
+      "radius": 25.39999999999953,
+      "ccw": false,
+      "major": false,
+      "sourceRecordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "visible"
+      ],
+      "appearance": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "((1) > 0 && (DiamondColumnCount) > 0)",
+        "zIndex": 1,
+        "visible": true,
+        "visibleManuallyEnabled": false
+      },
+      "start": [
+        178.66970324695185,
+        -803.7370368368138
+      ],
+      "end": [
+        178.66970324695103,
+        -664.0370368368139
+      ],
+      "sourceRecordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "8c4ada1e-8115-4588-af99-62970ff35461",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "stroke",
+        "fill"
+      ],
+      "composite": {
+        "id": "b6a69e29-67b8-4502-974f-29b99f6a1b09",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 0,
+        "count": 4
+      },
+      "appearance": {
+        "zIndex": 2,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "strokeExpression": "basic/Fabric/Seamless_Coral.png",
+        "strokeImageWidthExpression": "0.3 in",
+        "strokeImageHeightExpression": "0.3 in",
+        "strokeType": "image",
+        "strokeImageReference": "basic/Fabric/Seamless_Coral.png",
+        "strokeImageAspectRatio": 1,
+        "strokeImagePixelWidth": 185,
+        "strokeImagePixelHeight": 185,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        0.8697032567824508,
+        -664.0370368368139
+      ],
+      "end": [
+        2185.2697125335626,
+        -664.0370368368139
+      ],
+      "sourceRecordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "composite": {
+        "id": "b6a69e29-67b8-4502-974f-29b99f6a1b09",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 1,
+        "count": 4
+      },
+      "appearance": {
+        "zIndex": 2,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        2185.2697125335617,
+        -664.0370368368139
+      ],
+      "end": [
+        2185.2697125335703,
+        -648.162036836814
+      ],
+      "sourceRecordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "stroke",
+        "fill"
+      ],
+      "composite": {
+        "id": "b6a69e29-67b8-4502-974f-29b99f6a1b09",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 2,
+        "count": 4
+      },
+      "appearance": {
+        "zIndex": 2,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "strokeExpression": "basic/Fabric/Seamless_Coral.png",
+        "strokeImageWidthExpression": "0.3 in",
+        "strokeImageHeightExpression": "0.3 in",
+        "strokeType": "image",
+        "strokeImageReference": "basic/Fabric/Seamless_Coral.png",
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        2185.269712533571,
+        -648.162036836814
+      ],
+      "end": [
+        0.8697032567807605,
+        -648.162036836814
+      ],
+      "sourceRecordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [
+        "fill"
+      ],
+      "composite": {
+        "id": "b6a69e29-67b8-4502-974f-29b99f6a1b09",
+        "kind": "rectangle",
+        "closed": true,
+        "index": 3,
+        "count": 4
+      },
+      "appearance": {
+        "zIndex": 2,
+        "fillColor": "#ffffff",
+        "fillOpacity": 1,
+        "strokeColor": "#202020",
+        "strokeOpacity": 1,
+        "strokeThickness": 1.5,
+        "fillExpression": "basic/Fabric/36981_106.webp",
+        "fillImageWidthExpression": "8 in",
+        "fillImageHeightExpression": "8 in",
+        "fillImageMode": "tile",
+        "fillImageRotationAngle": 0,
+        "fillImageScaleExpression": "100",
+        "fillImageLeftExpression": "0",
+        "fillImageTopExpression": "0",
+        "fillType": "image",
+        "fillImageReference": "basic/Fabric/36981_106.webp"
+      },
+      "start": [
+        0.8697032567809132,
+        -648.162036836814
+      ],
+      "end": [
+        0.8697032567826034,
+        -664.0370368368139
+      ],
+      "sourceRecordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    },
+    {
+      "id": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+      "type": "line",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "classId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "classPropertyOverrides": [],
+      "appearance": {
+        "zIndex": 3
+      },
+      "start": [
+        -299.1881905662118,
+        -346.5370368368139
+      ],
+      "end": [
+        2584.618051130753,
+        -346.5370368368139
+      ],
+      "sourceRecordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+      "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+    }
+  ],
+  "constraints": [
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "3a124626-8be3-4a6e-83f5-49dbbd128b82",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "3a124626-8be3-4a6e-83f5-49dbbd128b82"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "8b99a6e8-9bfc-4c53-9813-e3abf4bba80e",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "8b99a6e8-9bfc-4c53-9813-e3abf4bba80e"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "ea8c3f34-68c2-45f6-a513-dba1f8e49ba5",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "ea8c3f34-68c2-45f6-a513-dba1f8e49ba5"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "b8227765-6e1f-4801-86b4-57ae3c98ab07",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "b8227765-6e1f-4801-86b4-57ae3c98ab07"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "bdc32596-a694-4910-99b7-4926cd8aa68c",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "bdc32596-a694-4910-99b7-4926cd8aa68c"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "49b5d535-a31f-4f15-9c66-a966515721ae",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "49b5d535-a31f-4f15-9c66-a966515721ae"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "9159ad0e-af60-46b9-91a8-c78381c83302",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "9159ad0e-af60-46b9-91a8-c78381c83302"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "17054a4f-069b-4096-b2b1-f2e93b66f006",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "17054a4f-069b-4096-b2b1-f2e93b66f006"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "dc9d791d-5540-497d-bfc2-bc4f3bc5cb50",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "dc9d791d-5540-497d-bfc2-bc4f3bc5cb50"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "58934dbc-6ac4-499c-b49b-fe0a0bd77078",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "58934dbc-6ac4-499c-b49b-fe0a0bd77078"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "68901fe2-0b17-4490-9e2d-fb85c4b5304d",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "68901fe2-0b17-4490-9e2d-fb85c4b5304d"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "1461177b-48ee-43f1-b836-13fa69b461fb",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "1461177b-48ee-43f1-b836-13fa69b461fb"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "id": "ec79f7e9-d77f-4e25-b992-9af15c3b8ded",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "ec79f7e9-d77f-4e25-b992-9af15c3b8ded"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "id": "53e0733c-487b-4d45-b828-55870f581997",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "53e0733c-487b-4d45-b828-55870f581997"
+    },
+    {
+      "type": "Distance",
+      "source": "dimension",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        }
+      },
+      "featureRefs": [],
+      "dimensionRef": "2eec92a3-aa76-4840-b420-c350e0d192bc",
+      "direction": [
+        0.9999999999943224,
+        0.0000033698191342230853
+      ],
+      "id": "01706bf9-611c-439a-a7b3-8d6f1356da09",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "01706bf9-611c-439a-a7b3-8d6f1356da09"
+    },
+    {
+      "type": "Vertical Distance",
+      "source": "dimension",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        }
+      },
+      "featureRefs": [],
+      "dimensionRef": "30b7ab89-fa77-4274-b379-2a1c012c13ee",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "id": "bd9d26c5-3d31-4af5-943c-c7d1447f91e7",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "bd9d26c5-3d31-4af5-943c-c7d1447f91e7"
+    },
+    {
+      "type": "Point-on Line",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "entityType": "line",
+          "index": 1
+        },
+        {
+          "kind": "segment",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "id": "05b79047-d631-48c1-9135-72a149983892",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "05b79047-d631-48c1-9135-72a149983892"
+    },
+    {
+      "type": "Point Line Distance",
+      "source": "dimension",
+      "subtype": "vertical",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "point",
+          "type": "point",
+          "recordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "a2943e53-faad-4fc5-bed7-579106f406cf",
+      "id": "b509e411-70db-42cc-9ac7-7bb329037d0d",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "b509e411-70db-42cc-9ac7-7bb329037d0d"
+    },
+    {
+      "id": "35cc1cf7-6d11-4bcc-b860-d18967ccb6b5",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "35cc1cf7-6d11-4bcc-b860-d18967ccb6b5"
+    },
+    {
+      "id": "a1ca9621-fc6f-4c78-be4d-fd0ec407b19b",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a1ca9621-fc6f-4c78-be4d-fd0ec407b19b"
+    },
+    {
+      "id": "faad1826-c1d4-4ef8-84a3-5a9911555a54",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "faad1826-c1d4-4ef8-84a3-5a9911555a54"
+    },
+    {
+      "id": "cff35e27-8685-40de-b1d0-db2260545e2a",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "cff35e27-8685-40de-b1d0-db2260545e2a"
+    },
+    {
+      "id": "fe6b48a9-b51b-4d5d-b947-9c3662e7825e",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "fe6b48a9-b51b-4d5d-b947-9c3662e7825e"
+    },
+    {
+      "id": "95975f8f-2dd1-48b8-aecc-31d85ba92b54",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "95975f8f-2dd1-48b8-aecc-31d85ba92b54"
+    },
+    {
+      "id": "2094a798-da57-49dc-9d78-1bc7db408d99",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "2094a798-da57-49dc-9d78-1bc7db408d99"
+    },
+    {
+      "id": "249bc24a-2da3-4073-b5f0-15177d3ebf61",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "249bc24a-2da3-4073-b5f0-15177d3ebf61"
+    },
+    {
+      "id": "cd752f33-abc5-4094-81ca-d33ce6a62d83",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "cd752f33-abc5-4094-81ca-d33ce6a62d83"
+    },
+    {
+      "id": "cd3ebb80-58ac-4664-8862-43ab84e9dcf0",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "cd3ebb80-58ac-4664-8862-43ab84e9dcf0"
+    },
+    {
+      "id": "5730145b-c377-48d1-ab22-7d1a5e1432c4",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "5730145b-c377-48d1-ab22-7d1a5e1432c4"
+    },
+    {
+      "id": "8b2e4b1e-0ece-4b63-aefd-9eab00b31c5d",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "8b2e4b1e-0ece-4b63-aefd-9eab00b31c5d"
+    },
+    {
+      "id": "9127b20c-378a-4fc4-a5e0-96f00545ad37",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "9127b20c-378a-4fc4-a5e0-96f00545ad37"
+    },
+    {
+      "id": "2c7e89c6-a3f0-4726-ad00-deb040481670",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "2c7e89c6-a3f0-4726-ad00-deb040481670"
+    },
+    {
+      "id": "e2bc949a-9064-4fe4-a6dc-fac9fa36fcbb",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e2bc949a-9064-4fe4-a6dc-fac9fa36fcbb"
+    },
+    {
+      "id": "a8d9aebc-4e0f-4d95-abfc-4077f39ebf91",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a8d9aebc-4e0f-4d95-abfc-4077f39ebf91"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928"
+        }
+      ],
+      "dimensionRef": "9055bc95-cafd-4170-84b7-8529db061c93",
+      "direction": [
+        0.8281994451399939,
+        -0.5604334742588154
+      ],
+      "id": "4ecce9d1-8665-488c-b72a-9b55526326f1",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "4ecce9d1-8665-488c-b72a-9b55526326f1"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12"
+        }
+      ],
+      "dimensionRef": "ccd27481-cd64-4f18-ad5a-dce8ef3ac8b4",
+      "direction": [
+        0.9435083122305916,
+        0.33134885657231455
+      ],
+      "id": "9b6ab73e-fbf2-4922-8552-7c3ee5746690",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "9b6ab73e-fbf2-4922-8552-7c3ee5746690"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd"
+        }
+      ],
+      "dimensionRef": "897ce603-4644-49e1-b4f8-dfcfdb5dc55f",
+      "direction": [
+        -0.6679239274757931,
+        0.7442295526954782
+      ],
+      "id": "385d92d6-0a4b-4aa6-9e40-71c0ed3be2c1",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "385d92d6-0a4b-4aa6-9e40-71c0ed3be2c1"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7"
+        }
+      ],
+      "dimensionRef": "f576e91d-9a37-4f1c-b70a-d1b3eb7ec275",
+      "direction": [
+        -0.39341240355031504,
+        -0.9193621053386768
+      ],
+      "id": "a06038e1-0400-4a2b-9c39-40fec1a1ef8e",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a06038e1-0400-4a2b-9c39-40fec1a1ef8e"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        0.9999999999999767,
+        2.1573857880074088e-7
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "a8105a1d-3f75-40e8-abd4-4d6dbad35ec8",
+      "id": "5fda165c-df09-4661-8264-73cef0ad02fb",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "5fda165c-df09-4661-8264-73cef0ad02fb"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "fd63c05e-eb50-4e4d-a098-ae94ec74dadb",
+      "id": "84990e06-98bb-40ef-af99-21b86663d359",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "84990e06-98bb-40ef-af99-21b86663d359"
+    },
+    {
+      "type": "Point Line Distance",
+      "source": "dimension",
+      "subtype": "vertical",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "point",
+          "type": "point",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "dc3fc7ef-1bff-46ce-9aaf-caec5d9c2ffc",
+      "id": "c7d49ad8-584e-4658-9af6-5503f65b1f69",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c7d49ad8-584e-4658-9af6-5503f65b1f69"
+    },
+    {
+      "type": "Point Line Distance",
+      "source": "dimension",
+      "subtype": "horizontal",
+      "orientation": 1,
+      "direction": [
+        1,
+        0
+      ],
+      "featureRefs": [
+        {
+          "kind": "point",
+          "type": "point",
+          "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+          "index": 2
+        },
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "970fa59f-2085-4310-a42e-3c81f0cdba74",
+      "id": "1066f3d9-d45c-4503-9fb6-57ff6dfcccac",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "1066f3d9-d45c-4503-9fb6-57ff6dfcccac"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "e2450d22-35e8-4e5d-806c-6528676a1705",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e2450d22-35e8-4e5d-806c-6528676a1705"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "05c47de8-4715-4b4f-ad38-9022765ea4a6",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "05c47de8-4715-4b4f-ad38-9022765ea4a6"
+    },
+    {
+      "type": "Point-on Line",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+          "entityType": "line",
+          "index": 2
+        },
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "id": "c894802a-3d12-48a7-8af5-556ebf17bdc7",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c894802a-3d12-48a7-8af5-556ebf17bdc7"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "d94bdd37-39ef-43c4-a329-645518090194",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "54f573e1-0223-45c7-aa7b-f2d05d21f5e4",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "54f573e1-0223-45c7-aa7b-f2d05d21f5e4"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "d94bdd37-39ef-43c4-a329-645518090194",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "d0b0ecb1-323d-464f-b886-aaff89169932",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "d0b0ecb1-323d-464f-b886-aaff89169932"
+    },
+    {
+      "type": "Point-on Line",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "d94bdd37-39ef-43c4-a329-645518090194",
+          "entityType": "line",
+          "index": 2
+        },
+        {
+          "kind": "segment",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "id": "e418fcda-15a6-4f0c-a94e-f9d00d2b1d3d",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e418fcda-15a6-4f0c-a94e-f9d00d2b1d3d"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+          "index": 1
+        }
+      ],
+      "source": "auto",
+      "id": "1b55700a-1477-4b47-b10a-c751b44ca19b",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "1b55700a-1477-4b47-b10a-c751b44ca19b"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 1
+        }
+      ],
+      "source": "auto",
+      "id": "75f40c97-3d60-42db-bac1-ff204c782e88",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "75f40c97-3d60-42db-bac1-ff204c782e88"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "c98e33bd-a919-48cf-8318-3ebc6f52ca25",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c98e33bd-a919-48cf-8318-3ebc6f52ca25"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "d94bdd37-39ef-43c4-a329-645518090194",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "35cd9760-b22d-4feb-905a-2a182244a869",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "35cd9760-b22d-4feb-905a-2a182244a869"
+    },
+    {
+      "type": "Diameter",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+        }
+      ],
+      "dimensionRef": "8a4f807e-38f6-4055-9e49-beadf8be7b6e",
+      "direction": [
+        0.5311987332113091,
+        -0.8472472518897305
+      ],
+      "id": "3c85d8ae-618a-4344-8626-f5e779f59499",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "3c85d8ae-618a-4344-8626-f5e779f59499"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "e14705da-2400-4148-92d1-7ef4774010a8",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e14705da-2400-4148-92d1-7ef4774010a8"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "c4984a71-cc16-4351-a605-07b21d8d1d2b",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c4984a71-cc16-4351-a605-07b21d8d1d2b"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "a8206521-1f79-40ae-8b73-f767c6e25c69",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a8206521-1f79-40ae-8b73-f767c6e25c69"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "92ec7fc1-7ec8-4a79-8281-ade52b256a3d",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "92ec7fc1-7ec8-4a79-8281-ade52b256a3d"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "a4d00a65-3b21-420d-8296-f17f2e601e1a",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a4d00a65-3b21-420d-8296-f17f2e601e1a"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "25038d87-a65f-4b40-b851-96f9abc2795a",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "25038d87-a65f-4b40-b851-96f9abc2795a"
+    },
+    {
+      "id": "6251478d-9190-5a33-87b2-8a1b8b00add7",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "6251478d-9190-5a33-87b2-8a1b8b00add7"
+    },
+    {
+      "id": "16d3b0fd-d052-5727-a0c7-6f947b6cfde2",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "16d3b0fd-d052-5727-a0c7-6f947b6cfde2"
+    },
+    {
+      "id": "701cd941-525e-52c7-ae28-bb032cc57cb5",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "091eae67-52fa-4b82-a262-bf313d57280e",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "701cd941-525e-52c7-ae28-bb032cc57cb5"
+    },
+    {
+      "id": "4aab362e-4bea-5141-ac4f-86e857b77435",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "091eae67-52fa-4b82-a262-bf313d57280e",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "4aab362e-4bea-5141-ac4f-86e857b77435"
+    },
+    {
+      "id": "1bf7b08d-ebfb-570a-9a03-f2039b7397ac",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+          "index": 0
+        }
+      ],
+      "source": "fillet",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "1bf7b08d-ebfb-570a-9a03-f2039b7397ac"
+    },
+    {
+      "id": "d0a13883-0eb2-5476-b8d4-9760d92ca88a",
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+          "index": 2
+        }
+      ],
+      "source": "fillet",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "d0a13883-0eb2-5476-b8d4-9760d92ca88a"
+    },
+    {
+      "id": "cdd0ad0b-de4e-5e34-be25-a6824ab86e69",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+        "index": 0
+      },
+      "tangentOrientation": 1,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "cdd0ad0b-de4e-5e34-be25-a6824ab86e69"
+    },
+    {
+      "id": "804f6e22-edae-5395-ad21-9f9f1d9100c7",
+      "type": "Tangent",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 0
+        },
+        {
+          "kind": "arc",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6"
+        }
+      ],
+      "source": "fillet",
+      "tangentPoint": {
+        "kind": "point",
+        "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6",
+        "index": 2
+      },
+      "tangentOrientation": 1,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "804f6e22-edae-5395-ad21-9f9f1d9100c7"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        -1,
+        -7.809428542591112e-10
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "d9db7c6a-ae6f-4f44-a6f5-131b2fcc62d8",
+      "id": "c4d0471c-1b1d-45bc-b1cf-c0846d53fe2f",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+      ],
+      "coordinateSpace": "global",
+      "solveDomain": "entity",
+      "enabled": true,
+      "sourceRelationshipId": "c4d0471c-1b1d-45bc-b1cf-c0846d53fe2f"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e"
+        }
+      ],
+      "dimensionRef": "3edb94c6-d158-46b9-aa8c-406d864edb80",
+      "direction": [
+        0.7582286697370371,
+        -0.6519887149244251
+      ],
+      "id": "6e1fd069-8eeb-4e2d-a8a8-a4d1d5f6c478",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "6e1fd069-8eeb-4e2d-a8a8-a4d1d5f6c478"
+    },
+    {
+      "type": "Radius",
+      "source": "dimension",
+      "featureRefs": [
+        {
+          "kind": "circle",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6"
+        }
+      ],
+      "dimensionRef": "2002b95f-1413-45e7-96a9-9a4b867eeea4",
+      "direction": [
+        -0.7817273646724446,
+        -0.6236203390864307
+      ],
+      "id": "c58e1f66-d115-40db-976f-311be4344837",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "c58e1f66-d115-40db-976f-311be4344837"
+    },
+    {
+      "type": "Distance",
+      "source": "dimension",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        }
+      },
+      "featureRefs": [],
+      "dimensionRef": "5aaf84dd-671d-47c6-af32-2aa9eac6e257",
+      "direction": [
+        -1,
+        0
+      ],
+      "id": "1421801e-8310-4dc7-a61d-e290d896d073",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "1421801e-8310-4dc7-a61d-e290d896d073"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "ba8adc94-9efb-4fba-adaa-6acc006ffc36",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "ba8adc94-9efb-4fba-adaa-6acc006ffc36"
+    },
+    {
+      "type": "Collinear",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "d94bdd37-39ef-43c4-a329-645518090194",
+          "entityType": "line",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "solveDomain": "entity",
+      "id": "b38fdc93-cfbd-40e2-93f5-0153b7371405",
+      "participantStackIds": [
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+      ],
+      "coordinateSpace": "global",
+      "enabled": true,
+      "sourceRelationshipId": "b38fdc93-cfbd-40e2-93f5-0153b7371405"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "a148510e-d75f-4064-aece-25ce1751affc",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "a148510e-d75f-4064-aece-25ce1751affc"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "2b5bd95b-f94c-4e02-9882-357e992922ed",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "2b5bd95b-f94c-4e02-9882-357e992922ed"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "bf4ac843-5937-4501-947b-db2da45e6307",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "bf4ac843-5937-4501-947b-db2da45e6307"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "55be0c06-e799-4908-b74b-16ef387781f5",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "55be0c06-e799-4908-b74b-16ef387781f5"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "811026a4-c779-4f51-a5e8-db4644edbb86",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "811026a4-c779-4f51-a5e8-db4644edbb86"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+          "index": 0
+        },
+        {
+          "kind": "point",
+          "recordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+          "index": 2
+        }
+      ],
+      "source": "auto",
+      "id": "f9f1ba6d-c872-4b46-bffd-9b46f1774acf",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "f9f1ba6d-c872-4b46-bffd-9b46f1774acf"
+    },
+    {
+      "type": "Coincident",
+      "featureRefs": [
+        {
+          "kind": "point",
+          "recordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+          "index": 2
+        },
+        {
+          "kind": "point",
+          "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "e1e5a647-c924-43cb-a60e-c40a5df11051",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e1e5a647-c924-43cb-a60e-c40a5df11051"
+    },
+    {
+      "type": "Vertical",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "e3d56b3a-374f-4ea5-b242-47f39a8d0887",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "e3d56b3a-374f-4ea5-b242-47f39a8d0887"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        1,
+        0
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "be9e8a49-2c73-4d57-b456-2f2aeaa883e6",
+      "id": "93448536-8ee2-4e87-97d4-085b13c0545f",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "93448536-8ee2-4e87-97d4-085b13c0545f"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        -1,
+        0
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "e3af246c-2fee-443f-9636-37563eb313fe",
+      "id": "12504a74-eb35-497b-a9db-b98e17ea800f",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "12504a74-eb35-497b-a9db-b98e17ea800f"
+    },
+    {
+      "type": "Collinear",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "entityType": "line",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+          "entityType": "line",
+          "index": 0
+        }
+      ],
+      "source": "geometric",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "id": "5eb12a0f-b8e3-45b6-87eb-8d3dde891e57",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "5eb12a0f-b8e3-45b6-87eb-8d3dde891e57"
+    },
+    {
+      "type": "Horizontal",
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+          "index": 0
+        }
+      ],
+      "source": "auto",
+      "id": "5cab726a-e4a6-45fd-a8bd-3fd67faa12dd",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "5cab726a-e4a6-45fd-a8bd-3fd67faa12dd"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "9c6bdaf4-b40f-4f18-bf2c-c08aed87a883",
+      "id": "8cc2bcab-0ffb-4839-9fb5-d5c3562efbf7",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "8cc2bcab-0ffb-4839-9fb5-d5c3562efbf7"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        2.4996567656596542e-17,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "3afb8bb4-c280-49bc-931e-4f68f757412f",
+      "id": "63613c28-0e69-4402-83d5-313022237269",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "63613c28-0e69-4402-83d5-313022237269"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        0,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "033910fa-f874-4e46-9993-58334dd434bb",
+      "id": "139fd874-40a8-4b98-bc8e-54465349441b",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "enabled": true,
+      "sourceRelationshipId": "139fd874-40a8-4b98-bc8e-54465349441b"
+    },
+    {
+      "type": "Line Line Distance",
+      "source": "dimension",
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        2.331176954593506e-16,
+        1
+      ],
+      "featureRefs": [
+        {
+          "kind": "segment",
+          "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+          "index": 0
+        },
+        {
+          "kind": "segment",
+          "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+          "index": 0
+        }
+      ],
+      "dimensionRef": "04147424-7c89-40d5-bfa0-8f94c376b6a7",
+      "id": "08064593-7385-4397-8038-67a432804f63",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+      ],
+      "coordinateSpace": "global",
+      "solveDomain": "entity",
+      "enabled": true,
+      "sourceRelationshipId": "08064593-7385-4397-8038-67a432804f63"
+    }
+  ],
+  "parameters": [
+    {
+      "id": "2eec92a3-aa76-4840-b420-c350e0d192bc",
+      "name": "d1",
+      "expression": "c3",
+      "value": 228.6,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "5154d97b-9ad9-4d52-a3b0-83c07a444086",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 0,
+      "sourceDimensionId": "2eec92a3-aa76-4840-b420-c350e0d192bc"
+    },
+    {
+      "id": "30b7ab89-fa77-4274-b379-2a1c012c13ee",
+      "name": "d2",
+      "expression": "Diamond Height",
+      "value": 279.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "4fa853bb-fa05-45b7-8eef-a0b78020aed9",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 1,
+      "sourceDimensionId": "30b7ab89-fa77-4274-b379-2a1c012c13ee"
+    },
+    {
+      "id": "a2943e53-faad-4fc5-bed7-579106f406cf",
+      "name": "d3",
+      "expression": "d2/2",
+      "value": 139.7,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "04418473-0382-4fa3-a4c1-8ba0d98a4763",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 2,
+      "sourceDimensionId": "a2943e53-faad-4fc5-bed7-579106f406cf"
+    },
+    {
+      "id": "9055bc95-cafd-4170-84b7-8529db061c93",
+      "name": "d4",
+      "expression": "1 in",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "8a0e7a53-77e8-4636-8d18-09f2797fda9a",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 3,
+      "sourceDimensionId": "9055bc95-cafd-4170-84b7-8529db061c93"
+    },
+    {
+      "id": "ccd27481-cd64-4f18-ad5a-dce8ef3ac8b4",
+      "name": "d5",
+      "expression": "1 in",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "2bed1aec-4f96-4ae3-838f-1f845a06cf8b",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 4,
+      "sourceDimensionId": "ccd27481-cd64-4f18-ad5a-dce8ef3ac8b4"
+    },
+    {
+      "id": "897ce603-4644-49e1-b4f8-dfcfdb5dc55f",
+      "name": "d6",
+      "expression": "1 in",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "65a6bbed-702f-4011-bf73-da9e9f65bc59",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 5,
+      "sourceDimensionId": "897ce603-4644-49e1-b4f8-dfcfdb5dc55f"
+    },
+    {
+      "id": "f576e91d-9a37-4f1c-b70a-d1b3eb7ec275",
+      "name": "d7",
+      "expression": "1 in",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "54575ba0-9484-4692-9af3-3a745aece19c",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 6,
+      "sourceDimensionId": "f576e91d-9a37-4f1c-b70a-d1b3eb7ec275"
+    },
+    {
+      "id": "a3096454-15ea-490e-9cd2-fab8cb5ae8a8",
+      "name": "c1",
+      "expression": "MinMax(22, 100, 88, 0.5)",
+      "value": 88,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 7,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "9315cc5b-3f99-4f4b-a69d-200bc003d098",
+      "name": "c2",
+      "expression": "MinMax(22, 100, 53, 0.5)",
+      "value": 53,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 8,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "a8105a1d-3f75-40e8-abd4-4d6dbad35ec8",
+      "name": "d8",
+      "expression": "c1",
+      "value": 2235.2,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "d5fadf39-8c3d-40df-964d-b96a853621a7",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 9,
+      "sourceDimensionId": "a8105a1d-3f75-40e8-abd4-4d6dbad35ec8"
+    },
+    {
+      "id": "fd63c05e-eb50-4e4d-a098-ae94ec74dadb",
+      "name": "d9",
+      "expression": "c2",
+      "value": 1346.1999999999998,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "af63ac18-ff05-492a-b832-6ca4bf716a63",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 10,
+      "sourceDimensionId": "fd63c05e-eb50-4e4d-a098-ae94ec74dadb"
+    },
+    {
+      "id": "dc3fc7ef-1bff-46ce-9aaf-caec5d9c2ffc",
+      "name": "d10",
+      "expression": "(c2-(DiamondRowCount*d2@Top))/2",
+      "value": 114.3,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "58587595-599a-49a6-b7e4-f74e1b34031d",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 11,
+      "sourceDimensionId": "dc3fc7ef-1bff-46ce-9aaf-caec5d9c2ffc"
+    },
+    {
+      "id": "970fa59f-2085-4310-a42e-3c81f0cdba74",
+      "name": "d11",
+      "expression": "(c1-(DiamondColumnCount*d1@Top))/2",
+      "value": 88.89999999999999,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "89d3c3f2-e5ff-4f19-b9bc-c70484b45595",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 12,
+      "sourceDimensionId": "970fa59f-2085-4310-a42e-3c81f0cdba74"
+    },
+    {
+      "id": "5611bd70-6773-4907-a168-90b875e02cc0",
+      "name": "DiamondColumnCount",
+      "expression": "round((c1-DiamondRowEdgeLength)/d1@top)",
+      "value": 228.6,
+      "kind": "user",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 13
+    },
+    {
+      "id": "519b3d9f-d567-46c5-922d-f302fa71874f",
+      "name": "DiamondRowCount",
+      "expression": "round((c2-DiamondColumnEdgeLength)/d2@top)",
+      "value": 101.6,
+      "kind": "user",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 14
+    },
+    {
+      "id": "c2c10f7f-de15-433c-ad3a-35d8dd8916df",
+      "name": "c3",
+      "expression": "MinMax(5, 10, 9, 0.5)",
+      "value": 9,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 15,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "637d630e-4f81-4e56-95e9-2358fca4a091",
+      "name": "Diamond Height",
+      "expression": "c3+2",
+      "value": 279.4,
+      "kind": "user",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 16
+    },
+    {
+      "id": "1c8bfddc-0497-449c-a342-178a5db884e6",
+      "name": "DiamondColumnEdgeLength",
+      "expression": "round(max(Diamond Height/1.125,5))",
+      "value": 254,
+      "kind": "user",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 17
+    },
+    {
+      "id": "d9d05064-695e-4fd2-b780-b0eaae46b001",
+      "name": "DiamondRowEdgeLength",
+      "expression": "round(max(c3/1.125,5))",
+      "value": 203.2,
+      "kind": "user",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 18
+    },
+    {
+      "id": "8a4f807e-38f6-4055-9e49-beadf8be7b6e",
+      "name": "d13",
+      "expression": "0.75",
+      "value": 19.049999999999997,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "49a84f80-0a44-40e6-ba92-e4f66eb77380",
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "error": null,
+      "order": 19,
+      "sourceDimensionId": "8a4f807e-38f6-4055-9e49-beadf8be7b6e"
+    },
+    {
+      "id": "76be3282-02ff-487a-a1a2-38ea99a540fa",
+      "name": "c4",
+      "expression": "MinMax(12, 22, 18, 0.5)",
+      "value": 18,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 20,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "321dfba2-4919-4df6-b74f-11f9aca2a413",
+      "name": "c5",
+      "expression": "MinMax(1, c4-5, 12, 1)",
+      "value": 12,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 21,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "d9db7c6a-ae6f-4f44-a6f5-131b2fcc62d8",
+      "name": "d1",
+      "expression": "1.5",
+      "value": 38.099999999999994,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "e6c77c94-28fa-42d0-8295-ff4f8804a923",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+      ],
+      "error": null,
+      "order": 22,
+      "sourceDimensionId": "d9db7c6a-ae6f-4f44-a6f5-131b2fcc62d8"
+    },
+    {
+      "id": "3edb94c6-d158-46b9-aa8c-406d864edb80",
+      "name": "d2",
+      "expression": "1",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "cb174f9f-5a5f-46fd-9902-c0f97c80c6e3",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 23,
+      "sourceDimensionId": "3edb94c6-d158-46b9-aa8c-406d864edb80"
+    },
+    {
+      "id": "2002b95f-1413-45e7-96a9-9a4b867eeea4",
+      "name": "d3",
+      "expression": "1",
+      "value": 25.4,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "b650a545-35f4-4476-84bb-f350c2141b7e",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 24,
+      "sourceDimensionId": "2002b95f-1413-45e7-96a9-9a4b867eeea4"
+    },
+    {
+      "id": "5aaf84dd-671d-47c6-af32-2aa9eac6e257",
+      "name": "d1",
+      "expression": "c1-3",
+      "value": 2159,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "12c1a5c2-9876-48f5-9c16-dd7779b949f6",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 25,
+      "sourceDimensionId": "5aaf84dd-671d-47c6-af32-2aa9eac6e257"
+    },
+    {
+      "id": "f11d395b-8b22-4dad-ac0c-45f7213a4937",
+      "name": "c6",
+      "expression": "\"Block Leg\"",
+      "value": "Block Leg",
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 26,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "0b91b94d-6917-4534-b533-a66233dcdf50",
+      "name": "c7",
+      "expression": "FALSE",
+      "value": false,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 27,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "d14e45c4-5d6b-4ff2-b40c-b14690231c2b",
+      "name": "c9",
+      "expression": "\"Cup\"",
+      "value": "Cup",
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 28,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "afa2776f-8867-4ee1-9939-b06e77dcf801",
+      "name": "c10",
+      "expression": "\"Antique Brass\"",
+      "value": "Antique Brass",
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 29,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "4d658c98-8345-4b58-9da9-fb5cc9a6d381",
+      "name": "c11",
+      "expression": "MinMax(0, c4-c5, 4, 1)",
+      "value": 4,
+      "kind": "control",
+      "driving": false,
+      "computed": false,
+      "unit": null,
+      "error": null,
+      "order": 30,
+      "usesDrawingUnit": false
+    },
+    {
+      "id": "be9e8a49-2c73-4d57-b456-2f2aeaa883e6",
+      "name": "d4",
+      "expression": "0.5",
+      "value": 12.7,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "e628672a-94f4-4632-89d6-3e743d200301",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 31,
+      "sourceDimensionId": "be9e8a49-2c73-4d57-b456-2f2aeaa883e6"
+    },
+    {
+      "id": "e3af246c-2fee-443f-9636-37563eb313fe",
+      "name": "d5",
+      "expression": "0.5",
+      "value": 12.7,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "1abf3540-fca8-4a1d-8c65-a2bea57f000f",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 32,
+      "sourceDimensionId": "e3af246c-2fee-443f-9636-37563eb313fe"
+    },
+    {
+      "id": "9c6bdaf4-b40f-4f18-bf2c-c08aed87a883",
+      "name": "d6",
+      "expression": "c4-1.5",
+      "value": 419.09999999999997,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "fb607c91-3f01-471b-917f-b114639bace6",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 33,
+      "sourceDimensionId": "9c6bdaf4-b40f-4f18-bf2c-c08aed87a883"
+    },
+    {
+      "id": "3afb8bb4-c280-49bc-931e-4f68f757412f",
+      "name": "d7",
+      "expression": "5.5-1.5",
+      "value": 101.6,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "d5552258-a00c-41cb-aeb6-ef8cebdb92da",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 34,
+      "sourceDimensionId": "3afb8bb4-c280-49bc-931e-4f68f757412f"
+    },
+    {
+      "id": "033910fa-f874-4e46-9993-58334dd434bb",
+      "name": "d8",
+      "expression": "c5-0.125",
+      "value": 301.625,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "ff1c2e92-cd32-4ac1-bf72-ca792430e8fd",
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "error": null,
+      "order": 35,
+      "sourceDimensionId": "033910fa-f874-4e46-9993-58334dd434bb"
+    },
+    {
+      "id": "04147424-7c89-40d5-bfa0-8f94c376b6a7",
+      "name": "d2",
+      "expression": "12 in",
+      "value": 304.79999999999995,
+      "kind": "dimension",
+      "driving": true,
+      "computed": false,
+      "enabled": true,
+      "unit": "in",
+      "annotationId": "84ca4f8a-93e8-411d-90bb-ec55bc8769b2",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+      ],
+      "error": null,
+      "order": 36,
+      "sourceDimensionId": "04147424-7c89-40d5-bfa0-8f94c376b6a7"
+    }
+  ],
+  "dimensionAnnotations": [
+    {
+      "id": "5154d97b-9ad9-4d52-a3b0-83c07a444086",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "aligned",
+      "direction": [
+        0.9999999999943224,
+        0.0000033698191342230853
+      ],
+      "start": [
+        64.36970325554546,
+        -2162.6370368368134
+      ],
+      "end": [
+        292.9697032384453,
+        -2162.6370368368134
+      ],
+      "measureStart": [
+        64.36970325554546,
+        -2162.6370368368134
+      ],
+      "measureEnd": [
+        292.9697032384453,
+        -2162.6370368368134
+      ],
+      "label": [
+        178.66970324699537,
+        -2534.7752573188927
+      ],
+      "text": "9 in",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        },
+        "measureStart": {
+          "type": "segment-start",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        },
+        "measureEnd": {
+          "type": "segment-end",
+          "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+          "index": 0
+        }
+      },
+      "measuredValue": 228.59999998289982,
+      "useRenderedMeasurement": false,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "2eec92a3-aa76-4840-b420-c350e0d192bc",
+      "dimensionName": "d1",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "2eec92a3-aa76-4840-b420-c350e0d192bc",
+      "includeInValueOnly": true,
+      "offsetDirection": [
+        0,
+        -1
+      ],
+      "offsetDistance": 372.1382204820793
+    },
+    {
+      "id": "4fa853bb-fa05-45b7-8eef-a0b78020aed9",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "vertical",
+      "direction": [
+        0,
+        1
+      ],
+      "start": [
+        178.66970324699355,
+        -2302.3370368368137
+      ],
+      "end": [
+        178.6697032469939,
+        -2022.9370368368136
+      ],
+      "measureStart": [
+        178.66970324699355,
+        -2302.3370368368137
+      ],
+      "measureEnd": [
+        178.6697032469939,
+        -2022.9370368368136
+      ],
+      "label": [
+        -102.3741549066441,
+        -2162.6370368368134
+      ],
+      "text": "11 in",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        "measureStart": {
+          "type": "segment-start",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        },
+        "measureEnd": {
+          "type": "segment-end",
+          "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+          "index": 0
+        }
+      },
+      "measuredValue": 279.4000000000001,
+      "useRenderedMeasurement": false,
+      "orientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "30b7ab89-fa77-4274-b379-2a1c012c13ee",
+      "dimensionName": "d2",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "30b7ab89-fa77-4274-b379-2a1c012c13ee",
+      "includeInValueOnly": true,
+      "offsetDirection": [
+        -1,
+        0
+      ],
+      "offsetDistance": 281.04385815363764
+    },
+    {
+      "id": "04418473-0382-4fa3-a4c1-8ba0d98a4763",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "vertical",
+      "direction": [
+        0,
+        1
+      ],
+      "start": [
+        178.66970324699344,
+        -2162.6370368368134
+      ],
+      "end": [
+        178.66970324699344,
+        -2022.9370368368136
+      ],
+      "measureStart": [
+        178.66970324699344,
+        -2162.6370368368134
+      ],
+      "measureEnd": [
+        178.66970324699344,
+        -2022.9370368368136
+      ],
+      "label": [
+        266.30877772385793,
+        -2092.7870368368135
+      ],
+      "text": "5.5 in",
+      "anchors": {
+        "pointToSegment": {
+          "point": {
+            "type": "point",
+            "recordId": "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+            "index": 0
+          },
+          "segment": {
+            "kind": "segment",
+            "recordId": "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401",
+            "index": 0
+          }
+        }
+      },
+      "measuredValue": 139.69999999999982,
+      "useRenderedMeasurement": false,
+      "orientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "a2943e53-faad-4fc5-bed7-579106f406cf",
+      "dimensionName": "d3",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "a2943e53-faad-4fc5-bed7-579106f406cf",
+      "firstSegment": {
+        "start": [
+          64.36970325554546,
+          -2162.6370368368134
+        ],
+        "end": [
+          292.9697032384453,
+          -2162.6370368368134
+        ]
+      },
+      "offsetDirection": [
+        1,
+        0
+      ],
+      "offsetDistance": 87.6390744768645
+    },
+    {
+      "id": "8a0e7a53-77e8-4636-8d18-09f2797fda9a",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        0.8281994451399886,
+        -0.5604334742588234
+      ],
+      "center": [
+        2185.269703255547,
+        -2391.2370368368133
+      ],
+      "radius": 25.400000000000546,
+      "elbow": [
+        2245.7155523026872,
+        -2432.1400794370015
+      ],
+      "label": [
+        2269.1333437867966,
+        -2432.1400794370015
+      ],
+      "text": "1 in",
+      "measuredValue": 25.400000000000546,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "e507622f-7bd9-460e-9e05-8e509e6f5928"
+        }
+      },
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "9055bc95-cafd-4170-84b7-8529db061c93",
+      "dimensionName": "d4",
+      "managedDimensionText": true,
+      "target": [
+        1719.7012934491866,
+        -2425.8741053153517
+      ],
+      "sourceRelationshipId": "9055bc95-cafd-4170-84b7-8529db061c93",
+      "offsetDirection": [
+        0.8281994451399886,
+        -0.5604334742588234
+      ],
+      "offsetDistance": 47.58465291403665
+    },
+    {
+      "id": "2bed1aec-4f96-4ae3-838f-1f845a06cf8b",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        0.0673401234362364,
+        0.9977300776139769
+      ],
+      "center": [
+        2185.269703255547,
+        -1095.8370368368141
+      ],
+      "radius": 25.40000000000066,
+      "elbow": [
+        2192.539114447207,
+        -988.1314102005606
+      ],
+      "label": [
+        2215.956905931316,
+        -988.1314102005606
+      ],
+      "text": "1 in",
+      "measuredValue": 25.40000000000066,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "0a07186e-805d-42d1-b449-8d38d9801f12"
+        }
+      },
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "ccd27481-cd64-4f18-ad5a-dce8ef3ac8b4",
+      "dimensionName": "d5",
+      "managedDimensionText": true,
+      "target": [
+        1722.630138646211,
+        -1438.0228340354565
+      ],
+      "sourceRelationshipId": "ccd27481-cd64-4f18-ad5a-dce8ef3ac8b4",
+      "offsetDirection": [
+        0.0673401234362364,
+        0.9977300776139769
+      ],
+      "offsetDistance": 82.55066627020571
+    },
+    {
+      "id": "65a6bbed-702f-4011-bf73-da9e9f65bc59",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        -0.6679239274757919,
+        0.7442295526954793
+      ],
+      "center": [
+        0.8697032555500073,
+        -1095.8370368368135
+      ],
+      "radius": 25.399999999999523,
+      "elbow": [
+        -47.92333905445082,
+        -1041.469731580573
+      ],
+      "label": [
+        -71.34113053856015,
+        -1041.469731580573
+      ],
+      "text": "1 in",
+      "measuredValue": 25.399999999999523,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "b227a813-7682-407a-aa8e-a0200f566fbd"
+        }
+      },
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "897ce603-4644-49e1-b4f8-dfcfdb5dc55f",
+      "dimensionName": "d6",
+      "managedDimensionText": true,
+      "target": [
+        208.49975902147935,
+        -1427.535664470613
+      ],
+      "sourceRelationshipId": "897ce603-4644-49e1-b4f8-dfcfdb5dc55f",
+      "offsetDirection": [
+        -0.6679239274757919,
+        0.7442295526954793
+      ],
+      "offsetDistance": 47.651795725299245
+    },
+    {
+      "id": "54575ba0-9484-4692-9af3-3a745aece19c",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        -0.39341240355030904,
+        -0.9193621053386795
+      ],
+      "center": [
+        0.8697032555490978,
+        -2391.237036836814
+      ],
+      "radius": 25.399999999999523,
+      "elbow": [
+        -19.703569950997803,
+        -2439.314544302742
+      ],
+      "label": [
+        -43.12136143510713,
+        -2439.314544302742
+      ],
+      "text": "1 in",
+      "measuredValue": 25.399999999999523,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "0979ac30-9eb0-4e74-a9f4-333c24da41b7"
+        }
+      },
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "f576e91d-9a37-4f1c-b70a-d1b3eb7ec275",
+      "dimensionName": "d7",
+      "managedDimensionText": true,
+      "target": [
+        215.47235130457307,
+        -2434.990892542588
+      ],
+      "sourceRelationshipId": "f576e91d-9a37-4f1c-b70a-d1b3eb7ec275",
+      "offsetDirection": [
+        -0.39341240355030904,
+        -0.9193621053386795
+      ],
+      "offsetDistance": 26.89441934439716
+    },
+    {
+      "id": "d5fadf39-8c3d-40df-964d-b96a853621a7",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        1,
+        -8.137926823308241e-16
+      ],
+      "start": [
+        -24.53029674444963,
+        -2391.2370368368115
+      ],
+      "end": [
+        2210.6697032555485,
+        -2391.2370368368133
+      ],
+      "measureStart": [
+        -24.53029674444963,
+        -2391.2370368368115
+      ],
+      "measureEnd": [
+        2210.6697032555485,
+        -2391.2370368368133
+      ],
+      "label": [
+        1093.0697032555493,
+        -2698.7720163322097
+      ],
+      "text": "88 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "3bf72f19-0d3a-48b4-ae9e-ce2171b48c72",
+            "index": 0
+          },
+          "referenceEndpoint": "end",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 2235.199999999998,
+      "useRenderedMeasurement": false,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "a8105a1d-3f75-40e8-abd4-4d6dbad35ec8",
+      "dimensionName": "d8",
+      "managedDimensionText": true,
+      "includeInValueOnly": true,
+      "sourceRelationshipId": "a8105a1d-3f75-40e8-abd4-4d6dbad35ec8",
+      "firstSegment": {
+        "start": [
+          -24.530296744448606,
+          -1095.8370368368135
+        ],
+        "end": [
+          -24.53029674444963,
+          -2391.237036836814
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          2210.6697032555485,
+          -2391.2370368368133
+        ],
+        "end": [
+          2210.6697032555485,
+          -1095.8370368368141
+        ]
+      },
+      "offsetDirection": [
+        -8.137926823308241e-16,
+        -1
+      ],
+      "offsetDistance": 307.5349794953972
+    },
+    {
+      "id": "af63ac18-ff05-492a-b832-6ca4bf716a63",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "start": [
+        2185.2697032553006,
+        -2416.6370368368134
+      ],
+      "end": [
+        2185.2697032553006,
+        -1070.4370368368138
+      ],
+      "measureStart": [
+        2185.2697032553006,
+        -2416.6370368368134
+      ],
+      "measureEnd": [
+        2185.2697032553006,
+        -1070.4370368368138
+      ],
+      "label": [
+        2513.733293750387,
+        -1743.5370368368137
+      ],
+      "text": "53 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+            "index": 0
+          },
+          "referenceEndpoint": "end",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 1346.1999999999996,
+      "useRenderedMeasurement": false,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "fd63c05e-eb50-4e4d-a098-ae94ec74dadb",
+      "dimensionName": "d9",
+      "managedDimensionText": true,
+      "includeInValueOnly": true,
+      "sourceRelationshipId": "fd63c05e-eb50-4e4d-a098-ae94ec74dadb",
+      "firstSegment": {
+        "start": [
+          0.869703255302511,
+          -2416.6370368368134
+        ],
+        "end": [
+          2185.2697032553006,
+          -2416.6370368368134
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          2185.2697032553006,
+          -1070.4370368368138
+        ],
+        "end": [
+          0.8697032553029658,
+          -1070.4370368368138
+        ]
+      },
+      "offsetDirection": [
+        1,
+        -1.6890036803092568e-16
+      ],
+      "offsetDistance": 328.4635904950864
+    },
+    {
+      "id": "58587595-599a-49a6-b7e4-f74e1b34031d",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "vertical",
+      "direction": [
+        0,
+        1
+      ],
+      "start": [
+        178.66970324699355,
+        -2416.6370368368134
+      ],
+      "end": [
+        178.66970324699355,
+        -2302.3370368368137
+      ],
+      "measureStart": [
+        178.66970324699355,
+        -2416.6370368368134
+      ],
+      "measureEnd": [
+        178.66970324699355,
+        -2302.3370368368137
+      ],
+      "label": [
+        -104.08298057593004,
+        -2359.487036836814
+      ],
+      "text": "4.5 in",
+      "anchors": {
+        "pointToSegment": {
+          "point": {
+            "type": "point",
+            "recordId": "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+            "index": 0
+          },
+          "segment": {
+            "kind": "segment",
+            "recordId": "2c26b42b-e450-4481-952d-d923cd624fea",
+            "index": 0
+          }
+        }
+      },
+      "measuredValue": 114.29999999999973,
+      "useRenderedMeasurement": false,
+      "orientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "dc3fc7ef-1bff-46ce-9aaf-caec5d9c2ffc",
+      "dimensionName": "d10",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "dc3fc7ef-1bff-46ce-9aaf-caec5d9c2ffc",
+      "firstSegment": {
+        "start": [
+          0.869703255302511,
+          -2416.6370368368134
+        ],
+        "end": [
+          2185.2697032553006,
+          -2416.6370368368134
+        ]
+      },
+      "includeInValueOnly": true,
+      "offsetDirection": [
+        -1,
+        0
+      ],
+      "offsetDistance": 282.7526838229236
+    },
+    {
+      "id": "89d3c3f2-e5ff-4f19-b9bc-c70484b45595",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "horizontal",
+      "direction": [
+        1,
+        0
+      ],
+      "start": [
+        -24.5302967444494,
+        -2162.6370368368134
+      ],
+      "end": [
+        64.36970325554785,
+        -2162.6370368368134
+      ],
+      "measureStart": [
+        -24.5302967444494,
+        -2162.6370368368134
+      ],
+      "measureEnd": [
+        64.36970325554785,
+        -2162.6370368368134
+      ],
+      "label": [
+        19.919703255549166,
+        -2534.924223787213
+      ],
+      "text": "3.5 in",
+      "anchors": {
+        "pointToSegment": {
+          "point": {
+            "type": "point",
+            "recordId": "af66d986-abf0-407b-b314-b042438ceb7f",
+            "index": 2
+          },
+          "segment": {
+            "kind": "segment",
+            "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+            "index": 0
+          }
+        }
+      },
+      "measuredValue": 88.89999999999725,
+      "useRenderedMeasurement": false,
+      "orientation": 1,
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "970fa59f-2085-4310-a42e-3c81f0cdba74",
+      "dimensionName": "d11",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "970fa59f-2085-4310-a42e-3c81f0cdba74",
+      "firstSegment": {
+        "start": [
+          -24.530296744448606,
+          -1095.8370368368135
+        ],
+        "end": [
+          -24.53029674444963,
+          -2391.237036836814
+        ]
+      },
+      "includeInValueOnly": true,
+      "offsetDirection": [
+        0,
+        -1
+      ],
+      "offsetDistance": 372.2871869503997
+    },
+    {
+      "id": "49a84f80-0a44-40e6-ba92-e4f66eb77380",
+      "type": "radius-dimension",
+      "subtype": "diameter",
+      "dimensionMode": "driving",
+      "direction": [
+        0.8300835561566908,
+        -0.5576390318102402
+      ],
+      "center": [
+        178.6697032469906,
+        -2302.3370368368137
+      ],
+      "radius": 9.524999999999999,
+      "elbow": [
+        206.25378487833518,
+        -2320.867653977932
+      ],
+      "label": [
+        229.6715763624445,
+        -2320.867653977932
+      ],
+      "text": "0.75 in",
+      "measuredValue": 19.049999999999997,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+        }
+      },
+      "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 852.0155678629876,
+        "y": -1388.0252396573005,
+        "rotation": 0
+      },
+      "dimensionId": "8a4f807e-38f6-4055-9e49-beadf8be7b6e",
+      "dimensionName": "d13",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "8a4f807e-38f6-4055-9e49-beadf8be7b6e",
+      "offsetDirection": [
+        0.8300835561566908,
+        -0.5576390318102402
+      ],
+      "offsetDistance": 23.70548797528248
+    },
+    {
+      "id": "e6c77c94-28fa-42d0-8295-ff4f8804a923",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          13.569703256832273,
+          -664.0370368368139
+        ],
+        "end": [
+          13.569703256742264,
+          -740.2370368367842
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          -24.530296744448606,
+          -1095.8370368368135
+        ],
+        "end": [
+          -24.53029674444963,
+          -2391.237036836814
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        -1,
+        1.1816269747204495e-12
+      ],
+      "start": [
+        13.569703256322217,
+        -1095.8370368368585
+      ],
+      "end": [
+        -24.530296744448606,
+        -1095.8370368368135
+      ],
+      "measureStart": [
+        13.569703256322217,
+        -1095.8370368368585
+      ],
+      "measureEnd": [
+        -24.530296744448606,
+        -1095.8370368368135
+      ],
+      "label": [
+        -5.480296743803615,
+        -876.1578995795751
+      ],
+      "text": "1.5 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "bb974e48-8007-4ed9-a370-a0e4f3f75d68",
+            "index": 0
+          },
+          "referenceEndpoint": "end",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 38.10000000077082,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        1.1816269747204495e-12,
+        1
+      ],
+      "offsetDistance": 219.67913725726083,
+      "solveDomain": "entity",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c"
+      ],
+      "coordinateSpace": "global",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "d9db7c6a-ae6f-4f44-a6f5-131b2fcc62d8",
+      "dimensionName": "d1",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "d9db7c6a-ae6f-4f44-a6f5-131b2fcc62d8"
+    },
+    {
+      "id": "cb174f9f-5a5f-46fd-9902-c0f97c80c6e3",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        0.7582286697370371,
+        -0.6519887149244251
+      ],
+      "center": [
+        2147.169712533547,
+        -740.2370368368155
+      ],
+      "radius": 25.399999999997874,
+      "elbow": [
+        2243.9326564438575,
+        -823.4419458179901
+      ],
+      "label": [
+        2267.350447927967,
+        -823.4419458179901
+      ],
+      "text": "1 in",
+      "measuredValue": 25.399999999997874,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "091eae67-52fa-4b82-a262-bf313d57280e"
+        }
+      },
+      "offsetDirection": [
+        0.7582286697370371,
+        -0.6519887149244251
+      ],
+      "offsetDistance": 102.21709992299591,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "3edb94c6-d158-46b9-aa8c-406d864edb80",
+      "dimensionName": "d2",
+      "managedDimensionText": true,
+      "target": [
+        2166.4287207448665,
+        -756.7975501958945
+      ],
+      "sourceRelationshipId": "3edb94c6-d158-46b9-aa8c-406d864edb80"
+    },
+    {
+      "id": "b650a545-35f4-4476-84bb-f350c2141b7e",
+      "type": "radius-dimension",
+      "subtype": "radius",
+      "dimensionMode": "driving",
+      "direction": [
+        -0.7817273646724446,
+        -0.6236203390864307
+      ],
+      "center": [
+        38.96970325674108,
+        -740.2370368368142
+      ],
+      "radius": 25.39999999999953,
+      "elbow": [
+        -94.37449800276829,
+        -846.6119186212176
+      ],
+      "label": [
+        -117.7922894868776,
+        -846.6119186212176
+      ],
+      "text": "1 in",
+      "measuredValue": 25.39999999999953,
+      "useRenderedMeasurement": false,
+      "anchors": {
+        "center": {
+          "type": "center",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6"
+        },
+        "radius": {
+          "type": "radius",
+          "recordId": "82ac285d-35d1-4761-9f98-6e85a4fd88f6"
+        }
+      },
+      "offsetDirection": [
+        -0.7817273646724446,
+        -0.6236203390864307
+      ],
+      "offsetDistance": 145.1763508936174,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "2002b95f-1413-45e7-96a9-9a4b867eeea4",
+      "dimensionName": "d3",
+      "managedDimensionText": true,
+      "target": [
+        19.11382819406135,
+        -756.0769934496093
+      ],
+      "sourceRelationshipId": "2002b95f-1413-45e7-96a9-9a4b867eeea4"
+    },
+    {
+      "id": "12c1a5c2-9876-48f5-9c16-dd7779b949f6",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "subtype": "aligned",
+      "direction": [
+        -1,
+        0
+      ],
+      "start": [
+        2172.569712533529,
+        -664.0370368368139
+      ],
+      "end": [
+        13.56970325684008,
+        -664.0370368368139
+      ],
+      "measureStart": [
+        2172.569712533529,
+        -664.0370368368139
+      ],
+      "measureEnd": [
+        13.56970325684008,
+        -664.0370368368139
+      ],
+      "label": [
+        1093.0697078951846,
+        -522.7340028050799
+      ],
+      "text": "85 in",
+      "anchors": {
+        "start": {
+          "type": "segment-start",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        },
+        "end": {
+          "type": "segment-end",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        },
+        "measureStart": {
+          "type": "segment-start",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        },
+        "measureEnd": {
+          "type": "segment-end",
+          "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+          "index": 0
+        }
+      },
+      "measuredValue": 2159.000009276689,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        0,
+        1
+      ],
+      "offsetDistance": 141.30303403173406,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "5aaf84dd-671d-47c6-af32-2aa9eac6e257",
+      "dimensionName": "d1",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "5aaf84dd-671d-47c6-af32-2aa9eac6e257"
+    },
+    {
+      "id": "e628672a-94f4-4632-89d6-3e743d200301",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          0.8697032567809132,
+          -648.162036836814
+        ],
+        "end": [
+          0.8697032567826034,
+          -664.0370368368139
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          13.569703256832273,
+          -664.0370368368139
+        ],
+        "end": [
+          13.569703256742264,
+          -740.2370368367842
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        1,
+        1.0742063406724857e-13
+      ],
+      "start": [
+        0.8697032567826034,
+        -664.0370368368152
+      ],
+      "end": [
+        13.569703256832273,
+        -664.0370368368139
+      ],
+      "measureStart": [
+        0.8697032567826034,
+        -664.0370368368152
+      ],
+      "measureEnd": [
+        13.569703256832273,
+        -664.0370368368139
+      ],
+      "label": [
+        7.219703256791918,
+        -519.5566818983682
+      ],
+      "text": "0.5 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "c0b17b61-6741-4939-9a24-0c7a881ccf85",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "92de0fe7-8a57-46c8-90e5-faf8af4aa5c9",
+            "index": 0
+          },
+          "referenceEndpoint": "start",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 12.700000000049672,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        -1.0742063406724857e-13,
+        1
+      ],
+      "offsetDistance": 144.4803549384464,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "be9e8a49-2c73-4d57-b456-2f2aeaa883e6",
+      "dimensionName": "d4",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "be9e8a49-2c73-4d57-b456-2f2aeaa883e6"
+    },
+    {
+      "id": "1abf3540-fca8-4a1d-8c65-a2bea57f000f",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          2185.2697125335617,
+          -664.0370368368139
+        ],
+        "end": [
+          2185.2697125335703,
+          -648.162036836814
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          2172.5697125335414,
+          -740.2370368368138
+        ],
+        "end": [
+          2172.5697125335364,
+          -664.0370368368139
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        -1,
+        5.460548898428954e-13
+      ],
+      "start": [
+        2185.2697125335617,
+        -664.0370368368208
+      ],
+      "end": [
+        2172.5697125335364,
+        -664.0370368368139
+      ],
+      "measureStart": [
+        2185.2697125335617,
+        -664.0370368368208
+      ],
+      "measureEnd": [
+        2172.5697125335364,
+        -664.0370368368139
+      ],
+      "label": [
+        2178.919712533563,
+        -638.4579477110011
+      ],
+      "text": "0.5 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "8f0b412e-dd7e-4f38-afc2-8c6a274750f2",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "a25f194b-1922-4d16-a87d-88aefa0c9ab2",
+            "index": 0
+          },
+          "referenceEndpoint": "start",
+          "measuredEndpoint": "end"
+        }
+      },
+      "measuredValue": 12.700000000025284,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        5.460548898428954e-13,
+        1
+      ],
+      "offsetDistance": 25.579089125816267,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "e3af246c-2fee-443f-9636-37563eb313fe",
+      "dimensionName": "d5",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "e3af246c-2fee-443f-9636-37563eb313fe"
+    },
+    {
+      "id": "fb607c91-3f01-471b-917f-b114639bace6",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          38.96970325654388,
+          -765.6370368368139
+        ],
+        "end": [
+          2147.1697125344817,
+          -765.6370368368139
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          -299.1881905662118,
+          -346.5370368368139
+        ],
+        "end": [
+          2584.618051130753,
+          -346.5370368368139
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        0,
+        1
+      ],
+      "start": [
+        -299.1881905662118,
+        -765.6370368368139
+      ],
+      "end": [
+        -299.1881905662118,
+        -346.5370368368139
+      ],
+      "measureStart": [
+        -299.1881905662118,
+        -765.6370368368139
+      ],
+      "measureEnd": [
+        -299.1881905662118,
+        -346.5370368368139
+      ],
+      "label": [
+        -357.62999259998946,
+        -556.0870368368139
+      ],
+      "text": "16.5 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+            "index": 0
+          },
+          "referenceEndpoint": "start",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 419.09999999999997,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        -1,
+        0
+      ],
+      "offsetDistance": 58.44180203377766,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "9c6bdaf4-b40f-4f18-bf2c-c08aed87a883",
+      "dimensionName": "d6",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "9c6bdaf4-b40f-4f18-bf2c-c08aed87a883"
+    },
+    {
+      "id": "d5552258-a00c-41cb-aeb6-ef8cebdb92da",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          38.96970325654388,
+          -765.6370368368139
+        ],
+        "end": [
+          2147.1697125344817,
+          -765.6370368368139
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          0.8697032567824508,
+          -664.0370368368139
+        ],
+        "end": [
+          2185.2697125335626,
+          -664.0370368368139
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": 1,
+      "direction": [
+        6.993530863780512e-17,
+        1
+      ],
+      "start": [
+        0.8697032567824436,
+        -765.6370368368139
+      ],
+      "end": [
+        0.8697032567824508,
+        -664.0370368368139
+      ],
+      "measureStart": [
+        0.8697032567824436,
+        -765.6370368368139
+      ],
+      "measureEnd": [
+        0.8697032567824508,
+        -664.0370368368139
+      ],
+      "label": [
+        -94.81857156898093,
+        -714.8370368368139
+      ],
+      "text": "4 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "8c4ada1e-8115-4588-af99-62970ff35461",
+            "index": 0
+          },
+          "referenceEndpoint": "start",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 101.60000000000002,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        -1,
+        6.993530863780512e-17
+      ],
+      "offsetDistance": 95.68827482576337,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "3afb8bb4-c280-49bc-931e-4f68f757412f",
+      "dimensionName": "d7",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "3afb8bb4-c280-49bc-931e-4f68f757412f"
+    },
+    {
+      "id": "ff1c2e92-cd32-4ac1-bf72-ca792430e8fd",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          2185.269712533571,
+          -648.162036836814
+        ],
+        "end": [
+          0.8697032567807605,
+          -648.162036836814
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          -299.1881905662118,
+          -346.5370368368139
+        ],
+        "end": [
+          2584.618051130753,
+          -346.5370368368139
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        -1.884572527502959e-15,
+        1
+      ],
+      "start": [
+        -299.18819056621123,
+        -648.162036836814
+      ],
+      "end": [
+        -299.1881905662118,
+        -346.5370368368139
+      ],
+      "measureStart": [
+        -299.18819056621123,
+        -648.162036836814
+      ],
+      "measureEnd": [
+        -299.1881905662118,
+        -346.5370368368139
+      ],
+      "label": [
+        -152.02394631760222,
+        -497.3495368368137
+      ],
+      "text": "11.875 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "2ee8355d-b5b3-4064-b8a5-e30efe3c5689",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "fce471ad-e0f8-4094-9dc0-2f54b6fbc0b9",
+            "index": 0
+          },
+          "referenceEndpoint": "end",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 301.62500000000006,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        1,
+        1.884572527502959e-15
+      ],
+      "offsetDistance": 147.1642442486093,
+      "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "participantStackIds": [],
+      "coordinateSpace": "local",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "033910fa-f874-4e46-9993-58334dd434bb",
+      "dimensionName": "d8",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "033910fa-f874-4e46-9993-58334dd434bb"
+    },
+    {
+      "id": "84ca4f8a-93e8-411d-90bb-ec55bc8769b2",
+      "type": "dimension-line",
+      "dimensionMode": "driving",
+      "measurementKind": "parallel-edge-distance",
+      "firstSegment": {
+        "start": [
+          2185.2697032553006,
+          -1070.4370368368138
+        ],
+        "end": [
+          0.8697032553029658,
+          -1070.4370368368138
+        ]
+      },
+      "secondSegment": {
+        "start": [
+          38.96970325654388,
+          -765.6370368368139
+        ],
+        "end": [
+          2147.1697125344817,
+          -765.6370368368139
+        ]
+      },
+      "subtype": "aligned",
+      "orientation": -1,
+      "direction": [
+        2.2379298764097647e-15,
+        1
+      ],
+      "start": [
+        38.9697032565432,
+        -1070.4370368368138
+      ],
+      "end": [
+        38.96970325654388,
+        -765.6370368368139
+      ],
+      "measureStart": [
+        38.9697032565432,
+        -1070.4370368368138
+      ],
+      "measureEnd": [
+        38.96970325654388,
+        -765.6370368368139
+      ],
+      "label": [
+        288.9448581890251,
+        -918.0370368368144
+      ],
+      "text": "12 in",
+      "anchors": {
+        "lineToLine": {
+          "reference": {
+            "kind": "segment",
+            "recordId": "e9d9c0f8-4624-4489-8498-c153705c4808",
+            "index": 0
+          },
+          "measured": {
+            "kind": "segment",
+            "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+            "index": 0
+          },
+          "referenceEndpoint": "end",
+          "measuredEndpoint": "start"
+        }
+      },
+      "measuredValue": 304.79999999999995,
+      "useRenderedMeasurement": false,
+      "offsetDirection": [
+        1,
+        -2.2379298764097647e-15
+      ],
+      "offsetDistance": 249.97515493248162,
+      "solveDomain": "entity",
+      "stackId": "00000000-0000-4000-8000-000000000001",
+      "participantStackIds": [
+        "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+        "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63"
+      ],
+      "coordinateSpace": "global",
+      "coordinateFrame": {
+        "x": 0,
+        "y": 0,
+        "rotation": 0
+      },
+      "dimensionId": "04147424-7c89-40d5-bfa0-8f94c376b6a7",
+      "dimensionName": "d2",
+      "managedDimensionText": true,
+      "sourceRelationshipId": "04147424-7c89-40d5-bfa0-8f94c376b6a7"
+    }
+  ],
+  "documentMetadata": {
+    "documentTitle": "",
+    "drawingNumber": "",
+    "revision": "",
+    "revisionDescription": "",
+    "approvalStatus": "",
+    "author": "",
+    "designer": "",
+    "checker": "",
+    "approver": "",
+    "company": "",
+    "project": "",
+    "customer": "",
+    "jobNumber": "",
+    "partNumber": "",
+    "sheetSize": "",
+    "drawingScale": "",
+    "projectionStandard": "",
+    "material": "",
+    "finish": "",
+    "density": "",
+    "thickness": "",
+    "userName": "",
+    "createdDate": "2026-09-06",
+    "modifiedDate": "2026-09-07",
+    "revisionDate": "2026-09-06"
+  },
+  "documentContext": {
+    "fileName": "Rectangle_Ottoman",
+    "filePath": "",
+    "contentKind": "drawing",
+    "displayName": ""
+  },
+  "classes": [
+    {
+      "id": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+      "name": "X",
+      "systemRole": "default-class",
+      "removable": false,
+      "duplicable": false,
+      "properties": {
+        "fillExpression": "#ffffff",
+        "fillOpacityExpression": "100",
+        "strokeExpression": "#202020",
+        "strokeThickness": 1.5,
+        "strokeOpacityExpression": "100",
+        "visibleExpression": "TRUE",
+        "fontName": "Arial",
+        "fontSize": 28,
+        "fontColor": "#202020",
+        "multiline": true,
+        "textAlign": "left",
+        "textVerticalAlign": "top"
+      }
+    }
+  ],
+  "activeClassId": "eb0afd72-ba66-4b3a-b037-cc951ccd00fa",
+  "extensions": {
+    "stacks": {
+      "version": 6,
+      "activeStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+      "stacks": [
+        {
+          "id": "1068235f-c4e1-461c-bc3b-2d87dbb55878",
+          "name": "Views",
+          "systemRole": "default-stack",
+          "removable": true,
+          "kind": "stack",
+          "sourceStackId": "8763e2d2-f53b-4246-899d-91e83ca3a83c",
+          "parentStackId": null,
+          "order": 0,
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0
+          }
+        },
+        {
+          "id": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "kind": "stack",
+          "sourceStackId": null,
+          "parentStackId": "1068235f-c4e1-461c-bc3b-2d87dbb55878",
+          "order": 0,
+          "name": "Top",
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "removable": true,
+          "frame": {
+            "x": 852.0155678629876,
+            "y": -1388.0252396573005,
+            "rotation": 0
+          }
+        },
+        {
+          "id": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "kind": "stack",
+          "sourceStackId": null,
+          "parentStackId": "1068235f-c4e1-461c-bc3b-2d87dbb55878",
+          "order": 1,
+          "name": "Front",
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "removable": true,
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0
+          }
+        },
+        {
+          "id": "36cc99ae-3339-4bcf-983e-3085caed7630",
+          "kind": "stack",
+          "sourceStackId": null,
+          "parentStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "order": 0,
+          "name": "Turned Leg",
+          "visible": true,
+          "enabled": true,
+          "enabledExpression": "",
+          "removable": true,
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "rotation": 0
+          }
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000001",
+          "kind": "global",
+          "name": "Global",
+          "enabled": true,
+          "parentStackId": null,
+          "order": 1,
+          "sourceStackId": "00000000-0000-4000-8000-000000000001",
+          "visible": true,
+          "enabledExpression": "",
+          "removable": false
+        }
+      ]
+    },
+    "controls": {
+      "version": 3,
+      "items": [
+        {
+          "id": "5bb91f0b-6ac9-4271-bec9-1fd8c5f9fdee",
+          "controlType": "horizontal-scrollbar",
+          "label": "Width",
+          "configurationExpression": "MinMax(22, 100, 88, 0.5)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "a3096454-15ea-490e-9cd2-fab8cb5ae8a8",
+          "parameterName": "c1"
+        },
+        {
+          "id": "af895ae1-9ea7-4579-a208-27144783555c",
+          "controlType": "horizontal-scrollbar",
+          "label": "Depth",
+          "configurationExpression": "MinMax(22, 100, 53, 0.5)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "9315cc5b-3f99-4f4b-a69d-200bc003d098",
+          "parameterName": "c2"
+        },
+        {
+          "id": "529ae4d5-b8b2-4c39-89dd-69000969b981",
+          "controlType": "horizontal-scrollbar",
+          "label": "Height",
+          "configurationExpression": "MinMax(12, 22, 18, 0.5)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "76be3282-02ff-487a-a1a2-38ea99a540fa",
+          "parameterName": "c4"
+        },
+        {
+          "id": "c6748511-5fdb-4ea7-b94d-ee0339167b31",
+          "controlType": "horizontal-scrollbar",
+          "label": "Diamond Width",
+          "configurationExpression": "MinMax(5, 10, 9, 0.5)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "c2c10f7f-de15-433c-ad3a-35d8dd8916df",
+          "parameterName": "c3"
+        },
+        {
+          "id": "aaf201fd-93e7-4128-bf4e-8293a4c7d148",
+          "controlType": "horizontal-scrollbar",
+          "label": "Base/Leg Height",
+          "configurationExpression": "MinMax(1, c4-5, 12, 1)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "321dfba2-4919-4df6-b74f-11f9aca2a413",
+          "parameterName": "c5"
+        },
+        {
+          "id": "f4812334-7e34-4f74-a815-13e004fb910e",
+          "controlType": "options",
+          "label": "Leg Type",
+          "configurationExpression": "{Turned Leg|Taper Leg|Block Leg|Flare Leg|Hidden Leg}",
+          "selectedIndex": 2,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "f11d395b-8b22-4dad-ac0c-45f7213a4937",
+          "parameterName": "c6"
+        },
+        {
+          "id": "1a87f173-01be-4f89-aa21-9009c025fed9",
+          "controlType": "checkbox",
+          "label": "Base Rail",
+          "configurationExpression": "FALSE",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "0b91b94d-6917-4534-b533-a66233dcdf50",
+          "parameterName": "c7"
+        },
+        {
+          "id": "cd6151af-e831-4ee7-8061-13af07809616",
+          "controlType": "dropdown",
+          "label": "Leg Decor",
+          "configurationExpression": "{Cup|Cup and Caster|Caster|None}",
+          "selectedIndex": 0,
+          "visible": false,
+          "visibleExpression": "c6==\"Turned Leg\" || c6==\"Taper Leg\"",
+          "parameterId": "d14e45c4-5d6b-4ff2-b40c-b14690231c2b",
+          "parameterName": "c9"
+        },
+        {
+          "id": "5ae795ef-9c10-4e62-bb9d-f4e885bf11ff",
+          "controlType": "options",
+          "label": "Leg Decor Color",
+          "configurationExpression": "{Antique Brass|Nickel|Satin Charcoal}",
+          "selectedIndex": 0,
+          "visible": false,
+          "visibleExpression": "c9!=\"None\" && c6==\"Turned Leg\" || c6==\"Taper Leg\"",
+          "parameterId": "afa2776f-8867-4ee1-9939-b06e77dcf801",
+          "parameterName": "c10"
+        },
+        {
+          "id": "9b7542ef-4e6f-490a-9783-806752553407",
+          "controlType": "horizontal-scrollbar",
+          "label": "Bottom Border Height",
+          "configurationExpression": "MinMax(0, c4-c5, 4, 1)",
+          "selectedIndex": 0,
+          "visible": true,
+          "visibleExpression": "",
+          "parameterId": "4d658c98-8345-4b58-9da9-fb5cc9a6d381",
+          "parameterName": "c11"
+        }
+      ]
+    },
+    "notchTools": {
+      "version": 1,
+      "defaultNotchType": "v-notch"
+    },
+    "arrayTools": {
+      "version": 6,
+      "arrays": [
+        {
+          "id": "7f7a5dab-00c3-4319-946c-28e222eefc10",
+          "sourceDefinitionId": "b2f64b4f-4e37-4e0e-8d09-7e1478f2a1b2",
+          "sourceStackId": "b0a2693d-3be1-42b9-a723-586eab2f1cef",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "rectangular",
+          "sourceIds": [
+            "af66d986-abf0-407b-b314-b042438ceb7f",
+            "50a38826-0ec3-4ce4-bb38-e68569c727f1",
+            "23effc8d-0a92-4941-a497-7f2ff87e5f3e",
+            "9b61d990-3dd5-4ebe-97cf-eb38d8fb5bb9",
+            "4b6b39d7-b3ff-4888-87bb-df261ee78398",
+            "8b3a7174-7be4-4fdf-97db-9ec8c6d4e401"
+          ],
+          "sourceRefs": [],
+          "rowCountExpression": "DiamondRowCount",
+          "columnCountExpression": "DiamondColumnCount",
+          "rowSpacingExpression": "0",
+          "columnSpacingExpression": "0",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        },
+        {
+          "id": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+          "sourceDefinitionId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "rectangular",
+          "sourceIds": [
+            "9a51ca0c-e372-499b-9071-acd78520bb91"
+          ],
+          "sourceRefs": [],
+          "rowCountExpression": "DiamondRowCount",
+          "columnCountExpression": "1",
+          "rowSpacingExpression": "d2",
+          "columnSpacingExpression": "20",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        },
+        {
+          "id": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+          "sourceDefinitionId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "rectangular",
+          "sourceIds": [
+            "d94bdd37-39ef-43c4-a329-645518090194"
+          ],
+          "sourceRefs": [],
+          "rowCountExpression": "1",
+          "columnCountExpression": "DiamondColumnCount",
+          "rowSpacingExpression": "0",
+          "columnSpacingExpression": "d1",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        },
+        {
+          "id": "2ea45a23-7d63-4e14-b826-141744fd47a9",
+          "sourceDefinitionId": "2ea45a23-7d63-4e14-b826-141744fd47a9",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "circular",
+          "sourceIds": [
+            "9a51ca0c-e372-499b-9071-acd78520bb91"
+          ],
+          "sourceRefs": [
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 1
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 2
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 3
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 4
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 5
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 6
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 7
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 8
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 9
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 10
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 11
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "992da73d-700b-4e48-9e9f-bbc0459acc16",
+              "placementIndex": 12
+            }
+          ],
+          "rowCountExpression": "2",
+          "columnCountExpression": "2",
+          "rowSpacingExpression": "20",
+          "columnSpacingExpression": "20",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "2",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": [
+            1093.0697032553016,
+            -1743.5370368368135
+          ],
+          "centerRef": {
+            "kind": "point",
+            "recordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+            "index": 1
+          },
+          "parentVisibleExpression": "((DiamondRowCount) > 0 && (1) > 0)",
+          "parentVisibleManuallyEnabled": false
+        },
+        {
+          "id": "0a6736cd-6689-475d-b33b-6e218864f2a3",
+          "sourceDefinitionId": "0a6736cd-6689-475d-b33b-6e218864f2a3",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "circular",
+          "sourceIds": [
+            "d94bdd37-39ef-43c4-a329-645518090194"
+          ],
+          "sourceRefs": [
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 1
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 2
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 3
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 4
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 5
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 6
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 7
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 8
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 9
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 10
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 11
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 12
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 13
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 14
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 15
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 16
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 17
+            },
+            {
+              "kind": "array-placement",
+              "arrayId": "3e46eaae-5300-4828-9c84-aa5bcf3d79c9",
+              "placementIndex": 18
+            }
+          ],
+          "rowCountExpression": "2",
+          "columnCountExpression": "2",
+          "rowSpacingExpression": "20",
+          "columnSpacingExpression": "20",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "2",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": [
+            1093.0697032553016,
+            -1743.5370368368135
+          ],
+          "centerRef": {
+            "kind": "point",
+            "recordId": "dab3bf8b-7960-4bb0-b52b-1521a7e1e42f",
+            "index": 1
+          },
+          "parentVisibleExpression": "((1) > 0 && (DiamondColumnCount) > 0)",
+          "parentVisibleManuallyEnabled": false
+        },
+        {
+          "id": "035f1104-5b37-4caa-8f76-d874b0482fe6",
+          "sourceDefinitionId": "035f1104-5b37-4caa-8f76-d874b0482fe6",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "rectangular",
+          "sourceIds": [
+            "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+          ],
+          "sourceRefs": [],
+          "rowCountExpression": "DiamondRowCount+1",
+          "columnCountExpression": "DiamondColumnCount",
+          "rowSpacingExpression": "d2-d13",
+          "columnSpacingExpression": "d1-d13",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        },
+        {
+          "id": "7bf3222c-4055-4166-897c-d48da3227f3e",
+          "sourceDefinitionId": "7bf3222c-4055-4166-897c-d48da3227f3e",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "arrayType": "rectangular",
+          "sourceIds": [],
+          "sourceRefs": [
+            {
+              "kind": "linked-copy",
+              "copyId": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679"
+            }
+          ],
+          "rowCountExpression": "DiamondRowCount",
+          "columnCountExpression": "DiamondColumnCount+1",
+          "rowSpacingExpression": "d2",
+          "columnSpacingExpression": "d1",
+          "rowCentroidSpacing": true,
+          "columnCentroidSpacing": true,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        },
+        {
+          "id": "035eabf9-e0f0-4588-b1f7-4303850a0123",
+          "sourceDefinitionId": "035eabf9-e0f0-4588-b1f7-4303850a0123",
+          "sourceStackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "arrayType": "rectangular",
+          "sourceIds": [
+            "add20c06-7bd2-4235-be5d-1d013b4a47da"
+          ],
+          "sourceRefs": [],
+          "rowCountExpression": "1",
+          "columnCountExpression": "DiamondColumnCount",
+          "rowSpacingExpression": "20",
+          "columnSpacingExpression": "d1@Top",
+          "rowCentroidSpacing": false,
+          "columnCentroidSpacing": false,
+          "rowDirection": "down",
+          "columnDirection": "right",
+          "countExpression": "6",
+          "fullCircle": true,
+          "stopAngleExpression": "180",
+          "centerPoint": null,
+          "centerRef": null,
+          "parentVisibleExpression": "",
+          "parentVisibleManuallyEnabled": true
+        }
+      ]
+    },
+    "linkedCopyTools": {
+      "version": 4,
+      "copies": [
+        {
+          "id": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679",
+          "sourceDefinitionId": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679",
+          "sourceStackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "type": "duplicate",
+          "sourceIds": [
+            "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+          ],
+          "anchor": [
+            64.36965875289206,
+            -2162.6369462002685
+          ],
+          "linear": {
+            "a": 1,
+            "b": 0,
+            "c": 0,
+            "d": 1
+          },
+          "coordinateFrame": {
+            "x": 852.0155678629876,
+            "y": -1388.0252396573005,
+            "rotation": 0
+          },
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "visible": true,
+          "visibleManuallyEnabled": true,
+          "visibleExpression": "",
+          "zIndex": 18
+        }
+      ],
+      "positionConstraints": [
+        {
+          "id": "a2015163-8a52-414d-8384-f5200f019da5",
+          "sourceRelationshipId": "a2015163-8a52-414d-8384-f5200f019da5",
+          "type": "Coincident",
+          "source": "geometric",
+          "stackId": "008aaf5b-eb0b-4fe5-9fec-fc69d9b4726c",
+          "participantStackIds": [],
+          "featureRefs": [
+            {
+              "kind": "point",
+              "recordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+              "index": 0
+            },
+            {
+              "kind": "point",
+              "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+              "derivedFeature": {
+                "provider": "linked-copy",
+                "copyId": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679",
+                "sourceId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+              },
+              "index": 0
+            }
+          ],
+          "externalDrivingTarget": {
+            "type": "linked-position",
+            "recordId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+            "derivedFeature": {
+              "provider": "linked-copy",
+              "copyId": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679",
+              "sourceId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352"
+            },
+            "copyId": "3cd0912b-b0e8-4489-bf13-7e43dbfb7679",
+            "sourceId": "120bf3a6-ee7e-47ac-8f6a-ed1cd5a99352",
+            "pointIndex": 0,
+            "otherAnchor": {
+              "type": "point",
+              "recordId": "9a51ca0c-e372-499b-9071-acd78520bb91",
+              "index": 0
+            },
+            "axis": "horizontal",
+            "axisSign": 1,
+            "perpendicularOffset": 0
+          }
+        }
+      ]
+    },
+    "swell": {
+      "version": 2,
+      "constraints": [
+        {
+          "type": "Point-on Line",
+          "featureRefs": [
+            {
+              "kind": "point",
+              "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+              "entityType": "line",
+              "index": 2
+            },
+            {
+              "kind": "segment",
+              "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+              "derivedFeature": {
+                "provider": "swell",
+                "segmentIndex": 0,
+                "role": "offset",
+                "ordinal": 0
+              },
+              "entityType": "line",
+              "index": 0
+            }
+          ],
+          "source": "geometric",
+          "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "solveDomain": "entity",
+          "participantStackIds": [],
+          "id": "eeeb47c3-badf-42e4-9a36-e5f3641f56f2",
+          "externalTarget": {
+            "type": "swell-derived",
+            "derivedRef": {
+              "kind": "segment",
+              "recordId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed",
+              "index": 0,
+              "derivedFeature": {
+                "provider": "swell",
+                "segmentIndex": 0,
+                "role": "offset",
+                "ordinal": 0
+              }
+            },
+            "movableRef": {
+              "kind": "point",
+              "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+              "index": 2
+            },
+            "sourceId": "b692ba4b-e30e-4ba1-81cd-87854c62c6ed"
+          },
+          "sourceRelationshipId": "eeeb47c3-badf-42e4-9a36-e5f3641f56f2"
+        },
+        {
+          "type": "Point-on Line",
+          "featureRefs": [
+            {
+              "kind": "point",
+              "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+              "entityType": "line",
+              "index": 0
+            },
+            {
+              "kind": "segment",
+              "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+              "derivedFeature": {
+                "provider": "swell",
+                "segmentIndex": 0,
+                "role": "swell",
+                "ordinal": 0
+              },
+              "entityType": "line",
+              "index": 0
+            }
+          ],
+          "source": "geometric",
+          "stackId": "4fa0f5b9-33b9-4699-a4fd-b6e388ffbb63",
+          "solveDomain": "entity",
+          "participantStackIds": [],
+          "id": "20c5d01f-74b1-40b2-ba56-d0341dbfbefc",
+          "externalTarget": {
+            "type": "swell-derived",
+            "derivedRef": {
+              "kind": "segment",
+              "recordId": "1603610c-7d7b-4720-9852-9b8d3a22a16d",
+              "index": 0,
+              "derivedFeature": {
+                "provider": "swell",
+                "segmentIndex": 0,
+                "role": "swell",
+                "ordinal": 0
+              }
+            },
+            "movableRef": {
+              "kind": "point",
+              "recordId": "add20c06-7bd2-4235-be5d-1d013b4a47da",
+              "index": 0
+            },
+            "sourceId": "1603610c-7d7b-4720-9852-9b8d3a22a16d"
+          },
+          "sourceRelationshipId": "20c5d01f-74b1-40b2-ba56-d0341dbfbefc"
+        }
+      ]
+    }
+  },
+  "drawingId": "8ffafc0c-c26b-4df0-8419-c64576a50beb",
+  "identityArchitectureVersion": 1
+}

@@ -19,9 +19,10 @@ test('active-Stack header tools disable together and close their open menus', ()
     { classList: { remove: (name) => removedClasses.push(name) } },
     { classList: { remove: (name) => removedClasses.push(name) } },
   ];
+  const constraints = ['Length', 'Equal', 'Horizontal', 'Vertical', 'Coincident'].map(constraint => ({ ...fakeControl(), dataset: { constraint } }));
   const root = {
     querySelectorAll(selector) {
-      return selector.includes('data-drawing-tool') ? controls : menus;
+      return selector === '[data-constraint]' ? constraints : selector.includes('data-drawing-tool') ? controls : menus;
     },
   };
 
@@ -29,7 +30,9 @@ test('active-Stack header tools disable together and close their open menus', ()
   assert.deepEqual(controls.map(({ disabled }) => disabled), [true, true]);
   assert.equal(controls[1].getAttribute('aria-expanded'), 'false');
   assert.deepEqual(removedClasses, ['open', 'open']);
+  assert.deepEqual(constraints.map(control=>control.disabled), [true, true, false, false, false]);
 
   assert.deepEqual(setActiveStackToolAvailability(root, 'stack-a'), { available: true, controls });
   assert.deepEqual(controls.map(({ disabled }) => disabled), [false, false]);
+  assert.ok(constraints.every(control=>!control.disabled));
 });

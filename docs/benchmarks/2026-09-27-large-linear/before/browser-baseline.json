@@ -1,0 +1,989 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-27T13:56:19.245Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 1,
+    "budgetMs": 3000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "wasmComparison": false,
+    "frontAppOnly": false,
+    "frontWorkerOnly": false,
+    "frontSamples": 1,
+    "corePipelineOnly": false,
+    "builtTarget": null,
+    "frontBackends": [
+      "javascript",
+      "wasm"
+    ],
+    "failWasmLoad": false,
+    "traceOnly": false,
+    "traceAppOnly": false,
+    "traceBackend": "reference",
+    "traceComplex": false,
+    "tracePhases": false,
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Connected-chain final numerical solves, preserving the normal residual threshold. Load and topology preparation are separate. Unfinished runs are budget observations, not speedups. Original JS evaluates all final residuals.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [],
+  "nativeApp": [],
+  "corePipeline": [],
+  "trace": [],
+  "traceApp": [],
+  "linear": [
+    {
+      "count": 1000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 1332,
+      "setup": {
+        "buildMs": 6.799999952316284,
+        "graphMs": 3.200000047683716,
+        "scopeMs": 0.2999999523162842
+      },
+      "loadMs": 0.8999999761581421,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3000.2000000476837,
+          "status": "cancelled",
+          "iterations": 21,
+          "acceptedSteps": 21,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 10.200000047683716,
+            "jacobianMs": 38.300000071525574,
+            "linearSolveMs": 2886.9999997615814,
+            "totalMs": 3000.2000000476837
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 1000,
+            "analyticalBlocks": 999,
+            "fallbackBlocks": 1,
+            "residualRows": 1333,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 5318,
+            "preconditionerBlocks": 333,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 738,
+            "linearConverged": true,
+            "linearResidual": 1.604691933745664e-14,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.054189391294779815,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 1333,
+            "maxCoordinateError": 41.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 1000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 1332,
+      "setup": {
+        "buildMs": 6.600000023841858,
+        "graphMs": 3.1999999284744263,
+        "scopeMs": 0.20000004768371582
+      },
+      "loadMs": 4.899999976158142,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 1000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 1333,
+        "derivativeEntries": 5318,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 500008,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 5328
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 775.8999999761581,
+          "status": "converged",
+          "iterations": 70,
+          "acceptedSteps": 70,
+          "rejectedSteps": 0,
+          "timings": {
+            "totalMs": 775.8999999761581,
+            "preparationMs": 0.6000000238418579
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 1000,
+            "analyticalBlocks": 1000,
+            "fallbackBlocks": 0,
+            "residualRows": 1333,
+            "derivativeEntries": 5318,
+            "linearIterations": 741,
+            "totalLinearIterations": 49052,
+            "linearConverged": true,
+            "arenaBytes": 500008,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.0009589500536003523,
+            "maxResidual": 0.0000742966046018312,
+            "residualCount": 1333,
+            "maxCoordinateError": 0.6628817073979008,
+            "movedEntities": 333,
+            "movedFraction": 1,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 5000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 6664,
+      "setup": {
+        "buildMs": 32.40000009536743,
+        "graphMs": 14.299999952316284,
+        "scopeMs": 1.399999976158142
+      },
+      "loadMs": 3.600000023841858,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3000.5,
+          "status": "cancelled",
+          "iterations": 6,
+          "acceptedSteps": 6,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 12.400000095367432,
+            "jacobianMs": 56.39999997615814,
+            "linearSolveMs": 2264.100000023842,
+            "totalMs": 3000.2999999523163
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 5000,
+            "analyticalBlocks": 4999,
+            "fallbackBlocks": 1,
+            "residualRows": 6666,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 26648,
+            "preconditionerBlocks": 1666,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 1000,
+            "linearConverged": false,
+            "linearResidual": 4.719069135434495e-10,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.12120754486899109,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 6666,
+            "maxCoordinateError": 208.25,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 5000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 6664,
+      "setup": {
+        "buildMs": 32.60000002384186,
+        "graphMs": 13.899999976158142,
+        "scopeMs": 1.3000000715255737
+      },
+      "loadMs": 16.399999976158142,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 5000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 6666,
+        "derivativeEntries": 26648,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 2195744,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 26656
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3000.5999999046326,
+          "status": "cancelled",
+          "iterations": 41,
+          "acceptedSteps": 40,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "totalMs": 3000.5,
+            "preparationMs": 3.399999976158142
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 5000,
+            "analyticalBlocks": 5000,
+            "fallbackBlocks": 0,
+            "residualRows": 6666,
+            "derivativeEntries": 26648,
+            "linearIterations": 1000,
+            "totalLinearIterations": 36456,
+            "linearConverged": false,
+            "arenaBytes": 2195744,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.12120754486899109,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 6666,
+            "maxCoordinateError": 208.25,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 10000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 13332,
+      "setup": {
+        "buildMs": 64.79999995231628,
+        "graphMs": 31.200000047683716,
+        "scopeMs": 2.299999952316284
+      },
+      "loadMs": 6.200000047683716,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3000.5,
+          "status": "cancelled",
+          "iterations": 5,
+          "acceptedSteps": 5,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 17.90000009536743,
+            "jacobianMs": 99.90000021457672,
+            "linearSolveMs": 2265.799999833107,
+            "totalMs": 3000.2999999523163
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 10000,
+            "analyticalBlocks": 9999,
+            "fallbackBlocks": 1,
+            "residualRows": 13333,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 53318,
+            "preconditionerBlocks": 3333,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 659,
+            "linearConverged": true,
+            "linearResidual": 9.546694981296882e-13,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.17143907417801313,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 13333,
+            "maxCoordinateError": 416.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 10000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 13332,
+      "setup": {
+        "buildMs": 63,
+        "graphMs": 31.5,
+        "scopeMs": 2.3000000715255737
+      },
+      "loadMs": 24.600000023841858,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 10000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 13333,
+        "derivativeEntries": 53318,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 4316008,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 53328
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3000.5,
+          "status": "cancelled",
+          "iterations": 22,
+          "acceptedSteps": 21,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "totalMs": 3000.5,
+            "preparationMs": 4.200000047683716
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 10000,
+            "analyticalBlocks": 10000,
+            "fallbackBlocks": 0,
+            "residualRows": 13333,
+            "derivativeEntries": 53318,
+            "linearIterations": 1000,
+            "totalLinearIterations": 17568,
+            "linearConverged": false,
+            "arenaBytes": 4316008,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.17143907417801313,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 13333,
+            "maxCoordinateError": 416.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 25000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 33332,
+      "setup": {
+        "buildMs": 161.20000004768372,
+        "graphMs": 85.39999997615814,
+        "scopeMs": 6.699999928474426
+      },
+      "loadMs": 10.300000071525574,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3001,
+          "status": "cancelled",
+          "iterations": 4,
+          "acceptedSteps": 4,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 28.200000166893005,
+            "jacobianMs": 228.80000019073486,
+            "linearSolveMs": 2137.600000023842,
+            "totalMs": 3000.600000023842
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 25000,
+            "analyticalBlocks": 24999,
+            "fallbackBlocks": 1,
+            "residualRows": 33333,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 133318,
+            "preconditionerBlocks": 8333,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 218,
+            "linearConverged": true,
+            "linearResidual": 9.7855266217422e-13,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.2710771099371178,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 33333,
+            "maxCoordinateError": 1041.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 25000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 33332,
+      "setup": {
+        "buildMs": 156.59999990463257,
+        "graphMs": 88.90000009536743,
+        "scopeMs": 6.599999904632568
+      },
+      "loadMs": 59.199999928474426,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 25000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 33333,
+        "derivativeEntries": 133318,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 10676008,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 133328
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3001.600000023842,
+          "status": "cancelled",
+          "iterations": 11,
+          "acceptedSteps": 10,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "totalMs": 3001.2999999523163,
+            "preparationMs": 8.299999952316284
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 25000,
+            "analyticalBlocks": 25000,
+            "fallbackBlocks": 0,
+            "residualRows": 33333,
+            "derivativeEntries": 133318,
+            "linearIterations": 1000,
+            "totalLinearIterations": 6938,
+            "linearConverged": false,
+            "arenaBytes": 10676008,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.2710771099371178,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 33333,
+            "maxCoordinateError": 1041.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 50000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 66664,
+      "setup": {
+        "buildMs": 321.90000009536743,
+        "graphMs": 191.29999995231628,
+        "scopeMs": 14.799999952316284
+      },
+      "loadMs": 25.300000071525574,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3001.899999976158,
+          "status": "cancelled",
+          "iterations": 3,
+          "acceptedSteps": 3,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 41.39999997615814,
+            "jacobianMs": 324.4999998807907,
+            "linearSolveMs": 1511.0000001192093,
+            "totalMs": 3001
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 50000,
+            "analyticalBlocks": 49999,
+            "fallbackBlocks": 1,
+            "residualRows": 66666,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 266648,
+            "preconditionerBlocks": 16666,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 71,
+            "linearConverged": true,
+            "linearResidual": 8.164137520782879e-13,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.38336092532200655,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 66666,
+            "maxCoordinateError": 2083.25,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 50000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 66664,
+      "setup": {
+        "buildMs": 321.5,
+        "graphMs": 193.09999990463257,
+        "scopeMs": 13.900000095367432
+      },
+      "loadMs": 108.70000004768372,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 50000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 66666,
+        "derivativeEntries": 266648,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 21275744,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 266656
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3002.1999999284744,
+          "status": "cancelled",
+          "iterations": 8,
+          "acceptedSteps": 7,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "totalMs": 3001.899999976158,
+            "preparationMs": 20.5
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 50000,
+            "analyticalBlocks": 50000,
+            "fallbackBlocks": 0,
+            "residualRows": 66666,
+            "derivativeEntries": 266648,
+            "linearIterations": 1000,
+            "totalLinearIterations": 3442,
+            "linearConverged": false,
+            "arenaBytes": 21275744,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.38336092532200655,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 66666,
+            "maxCoordinateError": 2083.25,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 100000,
+      "backend": "javascript",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 133332,
+      "setup": {
+        "buildMs": 712.6000000238419,
+        "graphMs": 382.6999999284744,
+        "scopeMs": 35.700000047683716
+      },
+      "loadMs": 43.199999928474426,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "not-required",
+        "totalBlocks": 0,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 0
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3003.600000023842,
+          "status": "cancelled",
+          "iterations": 2,
+          "acceptedSteps": 2,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "residualMs": 74.59999990463257,
+            "jacobianMs": 491.60000002384186,
+            "linearSolveMs": 1139.3000000715256,
+            "totalMs": 3001.7999999523163
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 100000,
+            "analyticalBlocks": 99999,
+            "fallbackBlocks": 1,
+            "residualRows": 133333,
+            "matrixFreeThreshold": 192,
+            "matrixFreeThresholdSource": "final",
+            "linearSolver": "iterative-pcg",
+            "derivativeEntries": 533318,
+            "preconditionerBlocks": 33333,
+            "largestPreconditionerBlock": 4,
+            "linearIterations": 26,
+            "linearConverged": true,
+            "linearResidual": 2.544860780871912e-13,
+            "linearPreconditioner": "entity-block"
+          },
+          "validation": {
+            "residualL2": 0.5421623524520605,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 133333,
+            "maxCoordinateError": 4166.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    },
+    {
+      "count": 100000,
+      "backend": "wasm",
+      "sample": 0,
+      "sharedTarget": true,
+      "tolerance": 0.001,
+      "budgetMs": 3000,
+      "variables": 133332,
+      "setup": {
+        "buildMs": 710.1000000238419,
+        "graphMs": 394.5,
+        "scopeMs": 38.5
+      },
+      "loadMs": 225.10000002384186,
+      "loadStats": {
+        "requestedMode": "blocks",
+        "mode": "matrix-free",
+        "linearSolver": "native-pcg",
+        "factorEntries": 0,
+        "totalBlocks": 100000,
+        "analyticalBlocks": 0,
+        "fallbackBlocks": 0,
+        "residualRows": 133333,
+        "derivativeEntries": 533318,
+        "linearIterations": 0,
+        "totalLinearIterations": 0,
+        "linearConverged": false,
+        "arenaBytes": 42476008,
+        "memoryGrowths": 1,
+        "topologyBuilds": 1,
+        "lastSyncBytes": 533328
+      },
+      "edits": [
+        {
+          "target": 84.125,
+          "elapsedMs": 3004.899999976158,
+          "status": "cancelled",
+          "iterations": 6,
+          "acceptedSteps": 5,
+          "rejectedSteps": 0,
+          "cancellationReason": "time-budget",
+          "timings": {
+            "totalMs": 3003.600000023842,
+            "preparationMs": 29.799999952316284
+          },
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "linearSolver": "native-pcg",
+            "factorEntries": 0,
+            "totalBlocks": 100000,
+            "analyticalBlocks": 100000,
+            "fallbackBlocks": 0,
+            "residualRows": 133333,
+            "derivativeEntries": 533318,
+            "linearIterations": 662,
+            "totalLinearIterations": 1456,
+            "linearConverged": false,
+            "arenaBytes": 42476008,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 8
+          },
+          "validation": {
+            "residualL2": 0.5421623524520605,
+            "maxResidual": 0.002969560350518514,
+            "residualCount": 133333,
+            "maxCoordinateError": 4166.625,
+            "movedEntities": 0,
+            "movedFraction": 0,
+            "parameterValue": 84.125
+          }
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "6667ac0bbaa7874ca1ec4bdd38bf9fe06e6cf5876d2aa3ca25839bc187e776e3",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "c8ebe5b01b84d63e07274750537d01d1284f0be08b844c87ef54d80b5336ac6b",
+    "scripts/solver-baseline/linear.js": "1a9c2e11ca3bfa5c4f9868b2b7c69ca5251109f88651bdde44ee6af6b6c3c0c1",
+    "scripts/solver-baseline/browser.js": "79e2ab8c4f1b3fbff64235040cf68e670326c7791bef1e31540b2c5d454ecba3",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "0fa8db218a3cfb0fec8c4700480b1a515a4675af7455895373d8b11e7866ff05",
+    "scripts/solver-baseline/front-worker.js": "5bf46f822db78d265858d04502e0e9dc674e3120f882b16b107422670970a196",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "4c4969710cce2614460f40cc5fcb22c96753195f73a574437e8afc90ac8d89e3",
+    "packages/paramagic-core/native/constraint_program.h": "a206fbcbe97056000d390d855e5c3a8968c66e3cb484a86725ebf1920ff14493",
+    "packages/paramagic-core/native/swell_geometry.h": "8e62dacca8e666d5e0f69a4fb85f7ecbeb1a3dd92cf9b15d6851ff161e5a040d",
+    "packages/paramagic-core/native/sparse_elimination.h": "e30c11e26176ac86b3da4794bfb14febc68e82dc96c6db858f546112e79ad3d9",
+    "packages/paramagic-core/native/graph_kernel.h": "cde4eff526cce43c7442f7229d846f6093e317f40026a8f324d1ad6efa856999",
+    "packages/paramagic-core/native/parameter_kernel.h": "c662a1e5f3f8d1bc5ca90b85f04b1d6e8fe52b070a82510d26c0c61e66a24b92",
+    "packages/paramagic-core/native/continuation.h": "52326aeefc4582e659903705dcf846c26efeac75aaa6fce124c2654f71ad497c",
+    "packages/paramagic-core/src/modules/solver/WasmGraph.js": "2145332c262246c5a8a72b98988eeea42ebac3aa4b7b782b8e904e024a1708ae",
+    "packages/paramagic-core/src/modules/solver/WasmParameters.js": "555e125682b6ef3868631de70d15d8721dbd9c177ca031243b43c4a2da7615a7",
+    "packages/paramagic-core/src/modules/solver/WasmContinuation.js": "e203ed116818539f1ec37d405c13d149a7b74268cf6c1cebb36e82243272afb6",
+    "packages/paramagic-core/src/modules/solver/StackPlacementSolver.js": "6aa1ce7e32b9acbfee3e3296102a5e0b84a55afc1cdedd0c3814a50b5a87db79",
+    "scripts/solver-baseline/core-pipeline.js": "55388cdd2d423bbfb7946fe2c38ffc784ffa1e11d3a702a322f5e78d8fa7c855",
+    "packages/paramagic-core/src/modules/SwellGeometry.js": "05cb2fcbdb6302efd145b33734d5fd8e2290c6f8550ef62da3535d30cb025696",
+    "scripts/image-trace/measure.js": "e8e28916b0970c205abcd2c8c6f5b905d53a39412955e34fd02eb00263f2aee2",
+    "scripts/image-trace/app.js": "2d8c7156257230f83853998ab65125f7619a535f71018ac63fd532ff57f39600",
+    "packages/paramagic-core/src/modules/ImageTrace.js": "2b971a5c605d6b53b6010afedf6b216d63e98efbd033d2d5caa21bd02ad2a568",
+    "packages/paramagic-core/src/modules/ImageTraceClient.js": "2786e8bb88d59695bfe8cb04bd55f02d7d0252b511f10935c1cdf6e265f62ea3",
+    "packages/paramagic-core/src/modules/ImageTraceKernel.js": "d76dd50033975970cf970b0eba30dcc9dc4c67d39d31b50260cdee3aa77e4d16",
+    "packages/paramagic-core/src/modules/ImageTraceWorker.js": "4a077d1c57a909526b9518a9e5400e7849bc1424a23bae82503d043ce0b7749d",
+    "packages/paramagic-core/src/modules/ImageTraceWorkerRuntime.js": "6f3f15d4a0649997b005ae15a199ce4a5fd3b8b1cbad448b2fe4cea9f404233c",
+    "packages/paramagic-core/src/modules/ImageSystem.js": "73b9bd18c55adaa77c22fb8cce77e5b71dee385be44010d35e024031514b12cf",
+    "packages/paramagic-core/src/modules/solver/WasmSwellModel.js": "61158d3cfb6e0570aab8231d13ab3c8776d84c8ee1d14bb73b1b38d66a7d13d3",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "db2694f9bac46ab942933dc159fe00de6b0596197deb67cab9d52bdeebb8e336",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "7693553ac4bfa5a7b6207657d11441476a90d718a256c0357b6c5ecfa2b52334",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "65fa796f2c0fa2d6106263d71fefe3cc98751b1ac98cfadf14adf08335bca752",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "efcc6f4812eb7f6ab10480cfd1788896a792e1c803ceeb092ceaf1dc04c5dfae",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "68551b7f1ab121d2785f53404b2ba157767bf2c3fdf3586d886480e79a36a263",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "20cebfb7ead721c8807866523286671ea049965811391a30f0a82c176336a3f6",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "e6ff79936b09ea8e2ad874f4b202267108eb0f7dc5fc5197306cdc341dcc28c4",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "8b8b2231898e5a555233e31fbadf5eb1a648b792d8fbc19c2da2c4648621f877",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "2c9643dd3e609964c94226ef53721e87828ba2cbb0f0b9c4b101036fa255cb8c",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "aebff33ff8499ce9a10c951820ba8724101d1cab3ce00ad362b665e70e49252e"
+  },
+  "finishedAt": "2026-09-27T13:57:06.669Z"
+}

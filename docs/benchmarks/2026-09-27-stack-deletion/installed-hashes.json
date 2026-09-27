@@ -1,0 +1,10 @@
+{
+  "packages/paramagic-core/src/modules/StackSystem.js": "473eb4d7c6af4e79972d16659ea94239507b753f7084ce76bcd76f5479cdc944",
+  "packages/paramagic-core/src/modules/StackTreePanel.js": "a957e395d76788de4128479074d77fdf77aa2b61416fc7a7b4481abd2a6f9782",
+  "packages/paramagic-core/src/modules/infiniteCanvas.js": "e21706adbe0ae17a33a0ab563b6450b0b54c63069ac463b5ed4903e2ec7ed3d4",
+  "packages/paramagic-core/src/modules/StackDeletion.js": "d4080b8ef66eb1e445a65ec78893b90989ccb5593945104c7b8eeed7d0169858",
+  "packages/paramagic-core/src/modules/StackDeleteDialog.js": "4c6277a4e446a115999d2b1a105d5d768d715a8b09d67f0b91e52e4b5d177196",
+  "src/main.js": "4c027d050e319abbfe67b16be4e782eaa991d9adf21d788f711a36f256c98f76",
+  "src/styles/app.css": "50bda0f18f095b76afaaaba87b2630ddfbb90f19986c9dcc376e5f14b5bb7f3a",
+  "src/tests/stackDeletion.test.js": "df6e7f7c8674220a62ad4bde6e4e37e4e70919b3b83c87a42f5f5242b20aa2c9"
+}

@@ -1,0 +1,539 @@
+[
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 0,
+    "operation": "c1=82",
+    "elapsedMs": 94.0317,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.00031678642548795644,
+    "squaredResidual": 3.3824064463418235e-7,
+    "timings": {
+      "residualMs": 5.1651999999999845,
+      "jacobianMs": 20.383400000000023,
+      "linearSolveMs": 58.821299999999994,
+      "totalMs": 88.33770000000001
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 224,
+      "linearConverged": true
+    },
+    "committed": 82
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 0,
+    "operation": "c1=80",
+    "elapsedMs": 82.67750000000001,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.0002847916261945471,
+    "squaredResidual": 2.1575227352933754e-7,
+    "timings": {
+      "residualMs": 4.887800000000027,
+      "jacobianMs": 12.5257,
+      "linearSolveMs": 56.43959999999993,
+      "totalMs": 76.8424
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 258,
+      "linearConverged": true
+    },
+    "committed": 80
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 0,
+    "operation": "c2=11",
+    "elapsedMs": 48.67750000000001,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00005484294010631383,
+    "squaredResidual": 1.479972084071923e-8,
+    "timings": {
+      "residualMs": 2.29849999999999,
+      "jacobianMs": 8.98980000000006,
+      "linearSolveMs": 29.432499999999948,
+      "totalMs": 42.93580000000003
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 262,
+      "linearConverged": true
+    },
+    "committed": 11
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 0,
+    "operation": "c2=10",
+    "elapsedMs": 49.046100000000024,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00006649161507526616,
+    "squaredResidual": 1.9763015287415555e-8,
+    "timings": {
+      "residualMs": 2.5287999999999897,
+      "jacobianMs": 7.831200000000081,
+      "linearSolveMs": 31.090299999999957,
+      "totalMs": 43.33730000000003
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 253,
+      "linearConverged": true
+    },
+    "committed": 10
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 0,
+    "operation": "Add circle and point-on-line constraint",
+    "elapsedMs": 22.111400000000003,
+    "status": "converged",
+    "maxResidual": 0.000057811129011800706,
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 2,
+      "variableCount": 267,
+      "constraintCount": 195,
+      "entityCount": 61
+    }
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 1,
+    "operation": "c1=82",
+    "elapsedMs": 62.95519999999999,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.00031678642548795644,
+    "squaredResidual": 3.3824064463418235e-7,
+    "timings": {
+      "residualMs": 3.2817999999999756,
+      "jacobianMs": 10.13530000000003,
+      "linearSolveMs": 42.849000000000046,
+      "totalMs": 58.238
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 224,
+      "linearConverged": true
+    },
+    "committed": 82
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 1,
+    "operation": "c1=80",
+    "elapsedMs": 71.82919999999996,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.0002847916261945471,
+    "squaredResidual": 2.1575227352933754e-7,
+    "timings": {
+      "residualMs": 3.2674999999999272,
+      "jacobianMs": 10.202499999999873,
+      "linearSolveMs": 51.021799999999985,
+      "totalMs": 66.26410000000004
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 258,
+      "linearConverged": true
+    },
+    "committed": 80
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 1,
+    "operation": "c2=11",
+    "elapsedMs": 47.54669999999999,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00005484294010631383,
+    "squaredResidual": 1.479972084071923e-8,
+    "timings": {
+      "residualMs": 2.3359999999996717,
+      "jacobianMs": 8.072300000000155,
+      "linearSolveMs": 30.096799999999917,
+      "totalMs": 42.273700000000076
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 262,
+      "linearConverged": true
+    },
+    "committed": 11
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 1,
+    "operation": "c2=10",
+    "elapsedMs": 47.04920000000004,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00006649161507526616,
+    "squaredResidual": 1.9763015287415555e-8,
+    "timings": {
+      "residualMs": 2.6393999999999096,
+      "jacobianMs": 6.590499999999906,
+      "linearSolveMs": 30.630199999999945,
+      "totalMs": 41.61400000000003
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 253,
+      "linearConverged": true
+    },
+    "committed": 10
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 1,
+    "operation": "Add circle and point-on-line constraint",
+    "elapsedMs": 20.343099999999936,
+    "status": "converged",
+    "maxResidual": 0.000057811129011800706,
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 2,
+      "variableCount": 267,
+      "constraintCount": 195,
+      "entityCount": 61
+    }
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 2,
+    "operation": "c1=82",
+    "elapsedMs": 64.23049999999989,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.00031678642548795644,
+    "squaredResidual": 3.3824064463418235e-7,
+    "timings": {
+      "residualMs": 3.4503999999998314,
+      "jacobianMs": 9.001199999999926,
+      "linearSolveMs": 43.99450000000013,
+      "totalMs": 58.560100000000034
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 224,
+      "linearConverged": true
+    },
+    "committed": 82
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 2,
+    "operation": "c1=80",
+    "elapsedMs": 62.919200000000046,
+    "status": "converged",
+    "iterations": 7,
+    "maxResidual": 0.0002847916261945471,
+    "squaredResidual": 2.1575227352933754e-7,
+    "timings": {
+      "residualMs": 2.81579999999974,
+      "jacobianMs": 8.687199999999962,
+      "linearSolveMs": 44.34860000000003,
+      "totalMs": 57.9769
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 208,
+      "fallbackBlocks": 2,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 258,
+      "linearConverged": true
+    },
+    "committed": 80
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 2,
+    "operation": "c2=11",
+    "elapsedMs": 46.66840000000002,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00005484294010631383,
+    "squaredResidual": 1.479972084071923e-8,
+    "timings": {
+      "residualMs": 1.8660000000002128,
+      "jacobianMs": 6.343200000000024,
+      "linearSolveMs": 31.50890000000004,
+      "totalMs": 41.40250000000003
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 262,
+      "linearConverged": true
+    },
+    "committed": 11
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 2,
+    "operation": "c2=10",
+    "elapsedMs": 44.94839999999999,
+    "status": "converged",
+    "iterations": 5,
+    "maxResidual": 0.00006649161507526616,
+    "squaredResidual": 1.9763015287415555e-8,
+    "timings": {
+      "residualMs": 2.1248999999999114,
+      "jacobianMs": 6.691900000000146,
+      "linearSolveMs": 29.859600000000114,
+      "totalMs": 40.262899999999945
+    },
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 1,
+      "variableCount": 264,
+      "constraintCount": 194,
+      "entityCount": 60
+    },
+    "jacobian": {
+      "requestedMode": "blocks",
+      "mode": "matrix-free",
+      "totalBlocks": 210,
+      "analyticalBlocks": 209,
+      "fallbackBlocks": 1,
+      "residualRows": 301,
+      "matrixFreeComponentCount": 1,
+      "derivativeEntries": 1768,
+      "linearIterations": 253,
+      "linearConverged": true
+    },
+    "committed": 10
+  },
+  {
+    "count": 4,
+    "connected": true,
+    "sample": 2,
+    "operation": "Add circle and point-on-line constraint",
+    "elapsedMs": 18.114599999999996,
+    "status": "converged",
+    "maxResidual": 0.000057811129011800706,
+    "scope": {
+      "mode": "stack-set",
+      "stackIds": [
+        "3b4104ca-22dc-4d9b-8da1-1bd42e9847fc"
+      ],
+      "componentCount": 2,
+      "variableCount": 267,
+      "constraintCount": 195,
+      "entityCount": 61
+    }
+  }
+]

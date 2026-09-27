@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-26T15:29:43.865Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 3,
+    "budgetMs": 5000,
+    "profileCount": 0,
+    "auxiliary": false,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Production JS component solver in a local Chromium page. Headline samples are uninstrumented, budget-limited, warm-started dimension edits on initially satisfied fresh models; setup and validation excluded. Separate profiler/phase/transport runs must not be added to headline time. Wasm times and speedups are null until a replacement is measured.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [
+    {
+      "count": 1000,
+      "load": {
+        "durationMs": 38.40000003576279,
+        "backend": "wasm",
+        "initialError": 0,
+        "finalError": 0,
+        "solveScope": {
+          "mode": "stack-partitions",
+          "stackGroupCount": 1,
+          "componentCount": 1,
+          "solvedComponentCount": 1,
+          "constrainedComponentCount": 1,
+          "largestVariableCount": 1332,
+          "largestConstraintCount": 1000,
+          "variableCount": 1332,
+          "constraintCount": 1000,
+          "entityCount": 333
+        },
+        "iterations": 0,
+        "solveMode": "final",
+        "cancellationReason": null,
+        "acceptedSteps": 0,
+        "rejectedSteps": 0,
+        "rigidFirstSolveAttempted": false,
+        "rigidFirstSolveAccepted": false,
+        "rigidFirstSolveFallback": false,
+        "restoredInteractivePreview": false,
+        "restoredInteractiveBaseline": false,
+        "jacobianStats": {
+          "requestedMode": "blocks",
+          "mode": "matrix-free",
+          "totalBlocks": 1000,
+          "analyticalBlocks": 0,
+          "fallbackBlocks": 0,
+          "residualRows": 1333,
+          "arenaBytes": 490352,
+          "memoryGrowths": 1,
+          "topologyBuilds": 1,
+          "lastSyncBytes": 58664,
+          "totalLinearIterations": 0,
+          "linearSolver": "native-pcg",
+          "matrixFreeComponentCount": 1,
+          "derivativeEntries": 5318,
+          "linearIterations": 0,
+          "linearConverged": false
+        },
+        "queueMs": 0,
+        "roundTripMs": 49.80000001192093
+      },
+      "results": [
+        {
+          "status": "superseded",
+          "revision": 2,
+          "diagnostics": {
+            "durationMs": 63.40000003576279,
+            "backend": "wasm",
+            "initialError": 0.0029364901288987584,
+            "finalError": 0.0029364901288987584,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "7e49e78b-25bd-4e98-8414-880f59bee290"
+              ],
+              "componentCount": 1,
+              "variableCount": 1332,
+              "constraintCount": 1000,
+              "entityCount": 333
+            },
+            "iterations": 8,
+            "solveMode": "final",
+            "cancellationReason": "superseded",
+            "acceptedSteps": 7,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1000,
+              "analyticalBlocks": 1000,
+              "fallbackBlocks": 0,
+              "residualRows": 1333,
+              "arenaBytes": 490352,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 58664,
+              "totalLinearIterations": 2816,
+              "linearSolver": "native-pcg",
+              "matrixFreeComponentCount": 1,
+              "derivativeEntries": 5318,
+              "linearIterations": 740,
+              "linearConverged": false
+            },
+            "queueMs": 0,
+            "roundTripMs": 63.60000002384186,
+            "supersededByRevision": 4
+          }
+        },
+        {
+          "status": "superseded",
+          "revision": 3,
+          "diagnostics": {
+            "coalesced": true
+          }
+        },
+        {
+          "status": "converged",
+          "revision": 4,
+          "diagnostics": {
+            "durationMs": 1085.800000011921,
+            "backend": "wasm",
+            "initialError": 0.005745273440812847,
+            "finalError": 9.900836652557402e-7,
+            "solveScope": {
+              "mode": "stack-set",
+              "stackIds": [
+                "7e49e78b-25bd-4e98-8414-880f59bee290"
+              ],
+              "componentCount": 1,
+              "variableCount": 1332,
+              "constraintCount": 1000,
+              "entityCount": 333
+            },
+            "iterations": 75,
+            "solveMode": "final",
+            "cancellationReason": null,
+            "acceptedSteps": 75,
+            "rejectedSteps": 0,
+            "rigidFirstSolveAttempted": false,
+            "rigidFirstSolveAccepted": false,
+            "rigidFirstSolveFallback": false,
+            "restoredInteractivePreview": false,
+            "restoredInteractiveBaseline": false,
+            "jacobianStats": {
+              "requestedMode": "blocks",
+              "mode": "matrix-free",
+              "totalBlocks": 1000,
+              "analyticalBlocks": 1000,
+              "fallbackBlocks": 0,
+              "residualRows": 1333,
+              "arenaBytes": 490352,
+              "memoryGrowths": 1,
+              "topologyBuilds": 1,
+              "lastSyncBytes": 58664,
+              "totalLinearIterations": 52762,
+              "linearSolver": "native-pcg",
+              "matrixFreeComponentCount": 1,
+              "derivativeEntries": 5318,
+              "linearIterations": 739,
+              "linearConverged": true
+            },
+            "queueMs": 20.30000001192093,
+            "roundTripMs": 1086.0999999642372
+          }
+        }
+      ],
+      "repeat": {
+        "status": "converged",
+        "revision": 6,
+        "diagnostics": {
+          "durationMs": 614.5,
+          "backend": "wasm",
+          "initialError": 0.00013777415772578698,
+          "finalError": 9.43620473587092e-7,
+          "solveScope": {
+            "mode": "stack-set",
+            "stackIds": [
+              "7e49e78b-25bd-4e98-8414-880f59bee290"
+            ],
+            "componentCount": 1,
+            "variableCount": 1332,
+            "constraintCount": 1000,
+            "entityCount": 333
+          },
+          "iterations": 45,
+          "solveMode": "final",
+          "cancellationReason": null,
+          "acceptedSteps": 45,
+          "rejectedSteps": 0,
+          "rigidFirstSolveAttempted": false,
+          "rigidFirstSolveAccepted": false,
+          "rigidFirstSolveFallback": false,
+          "restoredInteractivePreview": false,
+          "restoredInteractiveBaseline": false,
+          "jacobianStats": {
+            "requestedMode": "blocks",
+            "mode": "matrix-free",
+            "totalBlocks": 1000,
+            "analyticalBlocks": 1000,
+            "fallbackBlocks": 0,
+            "residualRows": 1333,
+            "arenaBytes": 490352,
+            "memoryGrowths": 1,
+            "topologyBuilds": 1,
+            "lastSyncBytes": 58664,
+            "totalLinearIterations": 30467,
+            "linearSolver": "native-pcg",
+            "matrixFreeComponentCount": 1,
+            "derivativeEntries": 5318,
+            "linearIterations": 737,
+            "linearConverged": true
+          },
+          "queueMs": 0,
+          "roundTripMs": 614.8999999761581
+        }
+      },
+      "validation": {
+        "residualL2": 0.0009950294795913037,
+        "maxResidual": 0.00007709198274103858,
+        "residualCount": 1333,
+        "maxCoordinateError": 0.6882307580963243,
+        "movedEntities": 333,
+        "movedFraction": 1,
+        "parameterValue": 84.175
+      }
+    }
+  ],
+  "nativeApp": [],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "914f1c417ec87b9dbf72dcece5b0c7984b0e675494348a2ce165bafec737cf2b",
+    "scripts/solver-baseline/fixtures.js": "72be22eed7483cba41b7313c4d095076f1c3c9399e650366dcfcc6178341381a",
+    "scripts/solver-baseline/measure.js": "764c1306d425c657d6fee5ab98ab22efbb42ad61942d11ea1ccf76bd1e53bab8",
+    "scripts/solver-baseline/browser.js": "9fd83ff1419441e012d4fd8c87cac17046902b8aca5a8e80d14272db2c84ab30",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/wasm.js": "298c945109328dbf225451d95a7eb41c6275720e8c4d62591d045ccf8ade4536",
+    "packages/paramagic-core/native/solver.cpp": "c2775fea5582a279b5869faec9f32bb82911bfd5f7a00167e7d8a496a43d889f",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "2221d0c738e829edc3d9208b73aea4a05fda9a3c0603bacd2642846456bc858a",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "742f76c219ad7a6f677b1ebd45893c51b519351389e74c0176927abf162cff81",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "47f34e875eaa2a6895d3cfeb5653b5684f2df7f83b07aa0b0c00846211bb9b93",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "4ff27f211661a9dd90bd83bc585af7a7454251e96a1511c6783b632a2ce3f7fd",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "1f7161085c6a296485ba8c826b1841aace182e9d3fa1f3811dca03141804d7c5",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "be101a36400eef428af7ce7fe0bc1b35bef140da486f2750f8b1e406a2a0f5fb",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "f464952ec12f2ef93bad0c100225dcc09197cf545d31ef9bcd6c8a89e1835dfd",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "de9e33166e0392402fbe8473428b4c2de517a260baae2c24ac2a2f939e0ad88a",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "4120a9173fbb418d70a29254d704f15e494b6513dcb02a7824d1f0eb15b207a1",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "b35fd42169439c4ff9f96473ab36cc1ae909b94c8dc645bd50f760be58f3fe40"
+  },
+  "finishedAt": "2026-09-26T15:29:51.240Z"
+}

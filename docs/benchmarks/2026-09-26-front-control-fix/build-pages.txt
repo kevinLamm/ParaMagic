@@ -1,0 +1,31 @@
+
+> paramagic@0.1.0 prebuild:pages
+> npm run build:solver
+
+
+> paramagic@0.1.0 build:solver
+> node scripts/build-solver-wasm.mjs
+
+Verified ParaMagic WASM (76564 bytes, ABI 2).
+
+> paramagic@0.1.0 build:pages
+> node scripts/validate-app.js && vite build --mode github-pages
+
+Validated 15 required files, syntax-checked 242 JavaScript files, audited 106 production files, and verified 7 extension UUID schemas.
+vite v8.2.2 building client environment for github-pages...
+transforming...
+✓ 110 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-pages/index.html                                          0.61 kB │ gzip:   0.40 kB
+dist-pages/assets/solver-DRAWtGSr.wasm                        76.56 kB │ gzip:  30.21 kB
+dist-pages/assets/MontserratLight-6YemM-CCBnFAy6.otf         227.30 kB
+dist-pages/assets/MontserratExtrabold-VGO60-CS85DtgK.ttf     277.35 kB
+dist-pages/assets/SolverWorker-BM6DeJ3m.js                   279.04 kB
+dist-pages/assets/opencv-AjJB4fSW.js                      13,298.86 kB
+dist-pages/assets/index-BcqG5tlS.css                          98.30 kB │ gzip:  16.29 kB
+dist-pages/assets/cpexcel.full-CAlsa5X_.js                   442.90 kB │ gzip: 173.98 kB
+dist-pages/assets/xlsx-DwRHmDrW.js                           492.52 kB │ gzip: 160.52 kB
+dist-pages/assets/index-DqSP6eb-.js                        1,184.61 kB │ gzip: 340.36 kB
+
+✓ built in 498ms

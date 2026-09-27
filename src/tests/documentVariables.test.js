@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { resolveTextFields } from '../../packages/paramagic-core/src/modules/TextTools.js';
 import { DOCUMENT_VARIABLE_SPECS, buildDocumentVariables } from '../../packages/paramagic-core/src/modules/DocumentVariables.js';
 import { SolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
+import { parseParamagicDocument, serializeParamagicDocument } from '../../packages/paramagic-core/src/document.js';
 
 test('document variables expose automatic drawing values and editable metadata', () => {
   const variables = buildDocumentVariables({
@@ -70,6 +71,52 @@ test('document metadata persists through solver snapshots', () => {
   assert.equal(restored.getDocumentMetadata().revision, 'B');
   assert.equal(restored.getDocumentMetadata().projectionStandard, 'First angle');
   assert.equal(restored.documentVariables().find((entry) => entry.name === 'FileName').value, 'Mounting Plate');
+});
+
+test('multiline Drawing Description persists as searchable metadata and a document variable', () => {
+  const description = 'Front view — Café chair\nUpholstery: blue & white\n<sample> "Revision B"';
+  const solver = new SolverController();
+  solver.setDocumentMetadata({ drawingDescription: description });
+  const content = serializeParamagicDocument(solver.getSketchSnapshot(), 'Chair');
+  // A future server can index the stored text without constructing a solver.
+  assert.equal(JSON.parse(content).documentMetadata.drawingDescription, description);
+  const restored = new SolverController();
+  restored.loadSketch(parseParamagicDocument(content));
+  assert.equal(restored.getDocumentMetadata().drawingDescription, description);
+  const entry = restored.documentVariables().find(({ name }) => name === 'DrawingDescription');
+  assert.equal(entry.readOnly, false);
+  assert.equal(entry.value, description);
+  assert.equal(restored.evaluateParameterExpression('DrawingDescription'), description);
+  assert.equal(resolveTextFields('[DrawingDescription]', restored.documentVariables(), ({ value }) => value), description);
+});
+
+test('older files default Drawing Description to blank and it can be cleared independently', () => {
+  const solver = new SolverController();
+  solver.loadSketch(parseParamagicDocument(JSON.stringify({
+    format: 'ParaMagic Drawing', version: 4, entities: [], documentMetadata: { documentTitle: 'Chair' },
+  })));
+  assert.equal(solver.getDocumentMetadata().drawingDescription, '');
+  solver.setDocumentMetadata({ drawingDescription: 'First line\nSecond line' });
+  solver.setDocumentMetadata({ drawingDescription: '' });
+  assert.equal(solver.getDocumentMetadata().drawingDescription, '');
+  assert.equal(solver.getDocumentMetadata().documentTitle, 'Chair');
+});
+
+test('Developer(s) is persisted as text and available as the Developers document variable', () => {
+  const solver = new SolverController();
+  assert.equal(solver.getDocumentMetadata().developers, '');
+  const developers = 'Kevin; Renée & "Design <Team>"';
+  solver.setDocumentMetadata({ drawingDescription: 'Chair front view', developers });
+  const saved = serializeParamagicDocument(solver.getSketchSnapshot(), 'Chair');
+  assert.equal(JSON.parse(saved).documentMetadata.developers, developers);
+  const restored = new SolverController();
+  restored.loadSketch(parseParamagicDocument(saved));
+  assert.equal(restored.getDocumentMetadata().developers, developers);
+  assert.equal(restored.evaluateParameterExpression('Developers'), developers);
+  assert.equal(resolveTextFields('[Developers]', restored.documentVariables(), ({ value }) => value), developers);
+  restored.setDocumentMetadata({ developers: '' });
+  assert.equal(restored.getDocumentMetadata().developers, '');
+  assert.equal(restored.getDocumentMetadata().drawingDescription, 'Chair front view');
 });
 
 test('disabled Stack geometry is excluded from drawing bounding variables', () => {

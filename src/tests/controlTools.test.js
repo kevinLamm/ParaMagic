@@ -5,6 +5,7 @@ import {
   CONTROL_VISIBILITY_EXPRESSION_PLACEHOLDER,
   controlExpressionForValue,
   controlPanelState,
+  controlPanelRows,
   controlRowMarkup,
   controlToolTypes,
   controlVisibilityState,
@@ -16,7 +17,8 @@ import {
   parseMinMaxExpression,
   resolveControlChoices,
   snapMinMaxValue,
-} from '../../packages/paramagic-core/src/modules/CanvasUIControls.js';
+} from '../../packages/paramagic-core/src/modules/ControlTools.js';
+import { cloneDrawingIdentityGraph } from '../../packages/paramagic-core/src/modules/DrawingIdentitySystem.js';
 import { SolverController } from '../../packages/paramagic-core/src/modules/solver/SolverController.js';
 
 test('the Controls panel exposes the requested userform controls', () => {
@@ -26,6 +28,7 @@ test('the Controls panel exposes the requested userform controls', () => {
     'Numeric Textbox',
     'Options',
     'Dropdown',
+    'Container',
   ]);
 });
 
@@ -445,4 +448,140 @@ test('removing a panel control removes its parameter', () => {
   assert.ok(solver.dimensions.get(item.parameterId));
   assert.equal(model.remove(item.id), true);
   assert.equal(solver.dimensions.get(item.parameterId), null);
+});
+
+test('Container expansion is a boolean control parameter usable by other expressions', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const container = model.add('Container', { label: 'Dimensions' });
+  const numeric = model.add('Numeric Textbox', { configurationExpression: 'If(c1, 12, 5)' });
+  assert.equal(container.parameterName, 'c1');
+  assert.equal(numeric.parameterName, 'c2');
+  assert.equal(model.state(container.id).value, true);
+  assert.equal(model.state(numeric.id).value, 12);
+  model.setValue(container.id, false);
+  assert.equal(model.state(container.id).value, false);
+  assert.equal(model.state(numeric.id).value, 5);
+  assert.equal(solver.dimensions.get(container.parameterId).usesDrawingUnit, false);
+  assert.equal(model.get(container.id).configurationExpression, 'FALSE');
+});
+
+test('moving controls into and out of nested Containers preserves subtrees and parameter identities', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const outer = model.add('Container');
+  const inner = model.add('Container');
+  const child = model.add('Numeric Textbox', { configurationExpression: '42' });
+  const last = model.add('Checkbox');
+  model.move(child.id, inner.id);
+  model.move(inner.id, outer.id);
+  assert.deepEqual(model.list().map(({ id }) => id), [outer.id, inner.id, child.id, last.id]);
+  assert.equal(model.get(child.id).parentContainerId, inner.id);
+  assert.equal(model.move(outer.id, inner.id), false);
+  assert.equal(model.move(inner.id, inner.id), false);
+  assert.equal(model.move(inner.id, child.id), false);
+  model.move(inner.id, null, outer.id);
+  assert.deepEqual(model.list().map(({ id }) => id), [inner.id, child.id, outer.id, last.id]);
+  assert.equal(model.get(inner.id).parentContainerId, null);
+  assert.equal(model.get(child.id).parameterId, child.parameterId);
+  assert.equal(model.state(child.id).value, 42);
+  model.move(child.id, null);
+  assert.equal(model.get(child.id).parentContainerId, null);
+  assert.equal(model.list().at(-1).id, child.id);
+});
+
+test('deleting a Container promotes only its children in place and keeps all their parameters', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const outer = model.add('Container');
+  const first = model.add('Checkbox', { parentContainerId: outer.id });
+  const nested = model.add('Container', { parentContainerId: outer.id });
+  const child = model.add('Numeric Textbox', { parentContainerId: nested.id, configurationExpression: '17' });
+  const last = model.add('Dropdown', { parentContainerId: outer.id });
+  model.remove(nested.id);
+  assert.deepEqual(model.list().map(({ id }) => id), [outer.id, first.id, child.id, last.id]);
+  assert.equal(model.get(child.id).parentContainerId, outer.id);
+  assert.equal(model.state(child.id).value, 17);
+  assert.equal(solver.dimensions.get(nested.parameterId), null);
+  model.remove(outer.id);
+  assert.ok(model.list().every((item) => item.parentContainerId === null));
+  for (const item of [first, child, last]) assert.ok(solver.dimensions.get(item.parameterId));
+});
+
+test('Container visibility and expansion apply to the entire subtree outside edit mode', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const toggle = model.add('Checkbox', { configurationExpression: 'TRUE' });
+  const outer = model.add('Container', { visible: false, visibleExpression: toggle.parameterName });
+  const inner = model.add('Container', { parentContainerId: outer.id });
+  const child = model.add('Checkbox', { parentContainerId: inner.id });
+  const ids = (editing = false) => controlPanelRows(model.list(), solver, editing).map(({ item }) => item.id);
+  assert.deepEqual(ids(), [toggle.id, outer.id, inner.id, child.id]);
+  model.setValue(inner.id, false);
+  assert.deepEqual(ids(), [toggle.id, outer.id, inner.id]);
+  model.setValue(outer.id, false);
+  assert.deepEqual(ids(), [toggle.id, outer.id]);
+  model.setValue(toggle.id, false);
+  assert.deepEqual(ids(), [toggle.id]);
+  assert.equal(ids(true).length, 4);
+});
+
+test('Container label, visibility, order, membership, and expansion survive serialization', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const container = model.add('Container', { label: 'Measurements', visible: false, visibleExpression: 'TRUE' });
+  const child = model.add('Numeric Textbox', { parentContainerId: container.id, configurationExpression: '8' });
+  model.setValue(container.id, false);
+  const saved = model.serialize();
+  const restored = createControlPanelModel({ solver: new SolverController() });
+  restored.restore(JSON.parse(JSON.stringify(saved)));
+  assert.deepEqual(restored.serialize(), saved);
+  assert.equal(restored.state(container.id).value, false);
+  assert.equal(restored.get(child.id).parentContainerId, container.id);
+});
+
+test('older control data stays at the top level and invalid Container links cannot hide controls', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  model.restore({ version: 3, items: [
+    { id: 'a', controlType: 'Container', parentContainerId: 'b' },
+    { id: 'b', controlType: 'Container', parentContainerId: 'a' },
+    { id: 'c', controlType: 'Checkbox', parentContainerId: 'missing' },
+    { id: 'd', controlType: 'Checkbox', parentContainerId: 'c' },
+    { id: 'legacy', controlType: 'Checkbox' },
+  ] });
+  assert.equal(model.list().length, 5);
+  assert.equal(controlPanelRows(model.list(), solver, false).length, 5);
+  for (const id of ['c', 'd', 'legacy']) assert.equal(model.get(id).parentContainerId, null);
+});
+
+test('Container identity references are remapped when a drawing is cloned', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const container = model.add('Container');
+  model.add('Checkbox', { parentContainerId: container.id });
+  const result = cloneDrawingIdentityGraph({ parameters: solver.parameters(), extensions: { controls: model.serialize() } });
+  const drawing = result.drawing;
+  const [parent, child] = drawing.extensions.controls.items;
+  assert.notEqual(parent.id, container.id);
+  assert.equal(child.parentContainerId, parent.id);
+  assert.ok(drawing.parameters.some(({ id }) => id === child.parameterId));
+});
+
+test('Container shows a disclosure arrow only outside edit mode and keeps the normal editing fields', () => {
+  const solver = new SolverController();
+  const model = createControlPanelModel({ solver });
+  const item = model.add('Container', { visible: false, label: 'Sizes', visibleExpression: 'TRUE' });
+  const edit = controlRowMarkup(item, model.state(item.id), true);
+  assert.match(edit, /data-control-label/);
+  assert.match(edit, /data-control-visibility-expression/);
+  assert.match(edit, /data-control-remove/);
+  assert.match(edit, /data-control-drop/);
+  assert.doesNotMatch(edit, /data-control-collapse|data-control-expression|data-control-value/);
+  const runtime = controlRowMarkup(item, model.state(item.id), false);
+  assert.match(runtime, /aria-expanded="true"/);
+  assert.match(runtime, /Collapse Sizes/);
+  assert.doesNotMatch(runtime, /data-control-label|data-control-remove|data-control-drop/);
+  model.setValue(item.id, false);
+  assert.match(controlRowMarkup(model.get(item.id), model.state(item.id), false), /aria-expanded="false"/);
 });

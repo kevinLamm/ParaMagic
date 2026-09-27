@@ -325,9 +325,12 @@ test('committing a Smart Dimension preserves its selected highlight through the 
   const canvas = {
     addDimension(entity) { calls.push(['add', entity]); },
     getActiveStackId() { return null; },
+    getRecordStackId(id) { return id === 'line-a' ? 'a' : 'b'; },
     suppressNextCanvasSelectionClear() { calls.push(['suppress']); },
   };
-  const candidate = { type: 'dimension-line', dimensionMode: 'driven' };
+  const candidate = { type: 'dimension-line', dimensionMode: 'driven', anchors: {
+    start: { recordId: 'line-a', index: 0 }, end: { recordId: 'line-b', index: 0 },
+  } };
 
   assert.equal(commitSmartDimensionCandidate(canvas, candidate, { preserveSelectionThroughClick: true }), true);
   assert.deepEqual(calls, [

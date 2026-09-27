@@ -1,0 +1,34 @@
+{
+  "tolerance": 1e-8,
+  "maxCoordinateDifference": 0,
+  "results": [
+    {
+      "backend": "javascript",
+      "status": "converged",
+      "iterations": 8,
+      "validation": {
+        "residualL2": 3.952382084321804e-9,
+        "maxResidual": 1.761617307719509e-9,
+        "residualCount": 40,
+        "maxCoordinateError": 4.739297310152324e-7,
+        "movedEntities": 10,
+        "movedFraction": 1,
+        "parameterValue": 84.125
+      }
+    },
+    {
+      "backend": "wasm",
+      "status": "converged",
+      "iterations": 8,
+      "validation": {
+        "residualL2": 3.952382084321804e-9,
+        "maxResidual": 1.761617307719509e-9,
+        "residualCount": 40,
+        "maxCoordinateError": 4.739297310152324e-7,
+        "movedEntities": 10,
+        "movedFraction": 1,
+        "parameterValue": 84.125
+      }
+    }
+  ]
+}

@@ -1,0 +1,412 @@
+TAP version 13
+# Subtest: no-active-Stack geometry drag translates its Stack frame and commits once
+ok 1 - no-active-Stack geometry drag translates its Stack frame and commits once
+  ---
+  duration_ms: 1.8503
+  type: 'test'
+  ...
+# Subtest: dragging a closed geometry region translates its single owning Stack
+ok 2 - dragging a closed geometry region translates its single owning Stack
+  ---
+  duration_ms: 0.2657
+  type: 'test'
+  ...
+# Subtest: a closed region spanning multiple Stacks cannot choose an arbitrary Stack to drag
+ok 3 - a closed region spanning multiple Stacks cannot choose an arbitrary Stack to drag
+  ---
+  duration_ms: 0.1284
+  type: 'test'
+  ...
+# Subtest: Stack canvas drag stays unavailable while a Stack or another canvas tool is active
+ok 4 - Stack canvas drag stays unavailable while a Stack or another canvas tool is active
+  ---
+  duration_ms: 0.1266
+  type: 'test'
+  ...
+# Subtest: hovering any Stack-owned canvas entity reports the whole Stack when none is active
+ok 5 - hovering any Stack-owned canvas entity reports the whole Stack when none is active
+  ---
+  duration_ms: 0.1991
+  type: 'test'
+  ...
+# Subtest: cancelling a Stack canvas drag restores its placement snapshot without committing
+ok 6 - cancelling a Stack canvas drag restores its placement snapshot without committing
+  ---
+  duration_ms: 0.1843
+  type: 'test'
+  ...
+# Subtest: empty persisted Global frames resolve to the identity coordinate system
+ok 7 - empty persisted Global frames resolve to the identity coordinate system
+  ---
+  duration_ms: 0.9642
+  type: 'test'
+  ...
+# Subtest: global parallel rotates the inactive Stack without changing any local shape
+ok 8 - global parallel rotates the inactive Stack without changing any local shape
+  ---
+  duration_ms: 11.8125
+  type: 'test'
+  ...
+# Subtest: a new global relationship solves every Stack in the connected placement component
+ok 9 - a new global relationship solves every Stack in the connected placement component
+  ---
+  duration_ms: 3.0916
+  type: 'test'
+  ...
+# Subtest: dragging either Stack holds its frame and solves the complete related placement component
+ok 10 - dragging either Stack holds its frame and solves the complete related placement component
+  ---
+  duration_ms: 2.733
+  type: 'test'
+  ...
+# Subtest: global dragging allows sliding Stacks joined by an active-Stack cross-Stack Collinear constraint
+ok 11 - global dragging allows sliding Stacks joined by an active-Stack cross-Stack Collinear constraint
+  ---
+  duration_ms: 1.7796
+  type: 'test'
+  ...
+# Subtest: global transform constraints solve through active-Stack cross-Stack entity relationships
+ok 12 - global transform constraints solve through active-Stack cross-Stack entity relationships
+  ---
+  duration_ms: 3.3288
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+ok 13 - active-Stack cross-Stack parallel solves entity geometry without moving Stack frames
+  ---
+  duration_ms: 2.9676
+  type: 'test'
+  ...
+# Subtest: active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+ok 14 - active-Stack cross-Stack driving dimensions reshape entities instead of moving Stack frames
+  ---
+  duration_ms: 10.3272
+  type: 'test'
+  ...
+# Subtest: saved placement roles survive activation changes and a drawing round trip
+ok 15 - saved placement roles survive activation changes and a drawing round trip
+  ---
+  duration_ms: 4.2512
+  type: 'test'
+  ...
+# Subtest: an impossible global equal-length relationship fails without deforming either Stack
+ok 16 - an impossible global equal-length relationship fails without deforming either Stack
+  ---
+  duration_ms: 1.4096
+  type: 'test'
+  ...
+# Subtest: collinear placement translates and rotates every entity while keeping the reference still
+ok 17 - collinear placement translates and rotates every entity while keeping the reference still
+  ---
+  duration_ms: 1.5584
+  type: 'test'
+  ...
+# Subtest: global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+ok 18 - global driving dimensions move a whole Stack; local dimensions still change its shape after rotation
+  ---
+  duration_ms: 20.8154
+  type: 'test'
+  ...
+# Subtest: a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+ok 19 - a global-origin driving dimension transforms its whole Stack and preserves its annotation geometry
+  ---
+  duration_ms: 6.109
+  type: 'test'
+  ...
+# Subtest: global layer is permanent and cannot become the active drawable Stack
+ok 20 - global layer is permanent and cannot become the active drawable Stack
+  ---
+  duration_ms: 0.7546
+  type: 'test'
+  ...
+# Subtest: removing geometry also removes its global relationships from an initialized graph
+ok 21 - removing geometry also removes its global relationships from an initialized graph
+  ---
+  duration_ms: 1.2481
+  type: 'test'
+  ...
+# Subtest: DXF preserves the placement and local horizontal direction of a rotated dimension
+ok 22 - DXF preserves the placement and local horizontal direction of a rotated dimension
+  ---
+  duration_ms: 0.8735
+  type: 'test'
+  ...
+# Subtest: canvas axes use the active Stack frame and return to global when none is active
+ok 23 - canvas axes use the active Stack frame and return to global when none is active
+  ---
+  duration_ms: 0.2104
+  type: 'test'
+  ...
+# Subtest: worker placement results carry frames before the main controller imports world geometry
+ok 24 - worker placement results carry frames before the main controller imports world geometry
+  ---
+  duration_ms: 2.5102
+  type: 'test'
+  ...
+# Subtest: failed placement transactions restore frames, annotations, and local shape together
+ok 25 - failed placement transactions restore frames, annotations, and local shape together
+  ---
+  duration_ms: 2.1204
+  type: 'test'
+  ...
+# Subtest: moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+ok 26 - moving a Stack frame translates all geometry and its local dimensions without deforming local shape
+  ---
+  duration_ms: 1.0065
+  type: 'test'
+  ...
+# Subtest: JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+ok 27 - JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 12.4995
+  type: 'test'
+  ...
+# Subtest: JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+ok 28 - JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 3.9425
+  type: 'test'
+  ...
+# Subtest: JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+ok 29 - JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 5.3143
+  type: 'test'
+  ...
+# Subtest: JavaScript: independent dimension directions stay independent through three connected Stacks
+ok 30 - JavaScript: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.5331
+  type: 'test'
+  ...
+# Subtest: JavaScript: a driven measurement does not couple Stack movement
+ok 31 - JavaScript: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 1.4113
+  type: 'test'
+  ...
+# Subtest: JavaScript: disabled relationships do not couple Stack movement
+ok 32 - JavaScript: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 1.8911
+  type: 'test'
+  ...
+# Subtest: JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 33 - JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 4.2163
+  type: 'test'
+  ...
+# Subtest: WASM: Parallel connects rotation without grouping translations, dragging either Stack
+ok 34 - WASM: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 5.2688
+  type: 'test'
+  ...
+# Subtest: WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+ok 35 - WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 2.7117
+  type: 'test'
+  ...
+# Subtest: WASM: horizontal dimension preserves spacing without coupling vertical movement
+ok 36 - WASM: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 4.1117
+  type: 'test'
+  ...
+# Subtest: WASM: independent dimension directions stay independent through three connected Stacks
+ok 37 - WASM: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.5871
+  type: 'test'
+  ...
+# Subtest: WASM: a driven measurement does not couple Stack movement
+ok 38 - WASM: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 0.9145
+  type: 'test'
+  ...
+# Subtest: WASM: disabled relationships do not couple Stack movement
+ok 39 - WASM: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 1.9034
+  type: 'test'
+  ...
+# Subtest: WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 40 - WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 2.8328
+  type: 'test'
+  ...
+# Subtest: javascript: collective relocation survives an immediate control edit without reloading the Worker
+ok 41 - javascript: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 27.158
+  type: 'test'
+  ...
+# Subtest: javascript: cancelled placement and journal recovery retain the accepted canvas location
+ok 42 - javascript: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 12.3802
+  type: 'test'
+  ...
+# Subtest: javascript: geometry edits between collective moves use the correct frame
+ok 43 - javascript: geometry edits between collective moves use the correct frame
+  ---
+  duration_ms: 6.5601
+  type: 'test'
+  ...
+# Subtest: wasm: collective relocation survives an immediate control edit without reloading the Worker
+ok 44 - wasm: collective relocation survives an immediate control edit without reloading the Worker
+  ---
+  duration_ms: 12.6495
+  type: 'test'
+  ...
+# Subtest: wasm: cancelled placement and journal recovery retain the accepted canvas location
+ok 45 - wasm: cancelled placement and journal recovery retain the accepted canvas location
+  ---
+  duration_ms: 12.1708
+  type: 'test'
+  ...
+# Subtest: wasm: geometry edits between collective moves use the correct frame
+ok 46 - wasm: geometry edits between collective moves use the correct frame
+  ---
+  duration_ms: 6.7926
+  type: 'test'
+  ...
+# Subtest: JavaScript: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+ok 47 - JavaScript: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+  ---
+  duration_ms: 14.7413
+  type: 'test'
+  ...
+# Subtest: JavaScript: Vertical rotates a whole Stack from 40,0 without deforming its objects
+ok 48 - JavaScript: Vertical rotates a whole Stack from 40,0 without deforming its objects
+  ---
+  duration_ms: 3.7167
+  type: 'test'
+  ...
+# Subtest: JavaScript: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+ok 49 - JavaScript: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+  ---
+  duration_ms: 2.6935
+  type: 'test'
+  ...
+# Subtest: JavaScript: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+ok 50 - JavaScript: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+  ---
+  duration_ms: 2.6562
+  type: 'test'
+  ...
+# Subtest: JavaScript: local constraints survive global rotation and contradictory axes roll back
+ok 51 - JavaScript: local constraints survive global rotation and contradictory axes roll back
+  ---
+  duration_ms: 5.161
+  type: 'test'
+  ...
+# Subtest: JavaScript: global Fixed point holds its world position without locking local variables
+ok 52 - JavaScript: global Fixed point holds its world position without locking local variables
+  ---
+  duration_ms: 2.4048
+  type: 'test'
+  ...
+# Subtest: JavaScript: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+ok 53 - JavaScript: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+  ---
+  duration_ms: 2.4233
+  type: 'test'
+  ...
+# Subtest: JavaScript: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+ok 54 - JavaScript: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+  ---
+  duration_ms: 1.2583
+  type: 'test'
+  ...
+# Subtest: JavaScript: a driving distance between Stacks moves frames and an internal dimension is rejected
+ok 55 - JavaScript: a driving distance between Stacks moves frames and an internal dimension is rejected
+  ---
+  duration_ms: 31.3596
+  type: 'test'
+  ...
+# Subtest: JavaScript: active-Stack Horizontal retains local geometry editing
+ok 56 - JavaScript: active-Stack Horizontal retains local geometry editing
+  ---
+  duration_ms: 1.6639
+  type: 'test'
+  ...
+# Subtest: WASM: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+ok 57 - WASM: Horizontal rotates a whole Stack from 0,40 without deforming its objects
+  ---
+  duration_ms: 7.7785
+  type: 'test'
+  ...
+# Subtest: WASM: Vertical rotates a whole Stack from 40,0 without deforming its objects
+ok 58 - WASM: Vertical rotates a whole Stack from 40,0 without deforming its objects
+  ---
+  duration_ms: 2.9885
+  type: 'test'
+  ...
+# Subtest: WASM: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+ok 59 - WASM: Horizontal rotates a whole Stack from -40,15 without deforming its objects
+  ---
+  duration_ms: 2.447
+  type: 'test'
+  ...
+# Subtest: WASM: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+ok 60 - WASM: Vertical rotates a whole Stack from 20,-40 without deforming its objects
+  ---
+  duration_ms: 3.0621
+  type: 'test'
+  ...
+# Subtest: WASM: local constraints survive global rotation and contradictory axes roll back
+ok 61 - WASM: local constraints survive global rotation and contradictory axes roll back
+  ---
+  duration_ms: 3.7422
+  type: 'test'
+  ...
+# Subtest: WASM: global Fixed point holds its world position without locking local variables
+ok 62 - WASM: global Fixed point holds its world position without locking local variables
+  ---
+  duration_ms: 2.4358
+  type: 'test'
+  ...
+# Subtest: WASM: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+ok 63 - WASM: global Fixed edge fixes the Stack frame and prevents conflicting rotation
+  ---
+  duration_ms: 1.9589
+  type: 'test'
+  ...
+# Subtest: WASM: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+ok 64 - WASM: Length, Equal and same-Stack relations cannot deform geometry in transform mode
+  ---
+  duration_ms: 0.9605
+  type: 'test'
+  ...
+# Subtest: WASM: a driving distance between Stacks moves frames and an internal dimension is rejected
+ok 65 - WASM: a driving distance between Stacks moves frames and an internal dimension is rejected
+  ---
+  duration_ms: 11.6464
+  type: 'test'
+  ...
+# Subtest: WASM: active-Stack Horizontal retains local geometry editing
+ok 66 - WASM: active-Stack Horizontal retains local geometry editing
+  ---
+  duration_ms: 1.666
+  type: 'test'
+  ...
+# Subtest: Smart Dimensions in transform mode accept cross-Stack angles/distances and the origin, excluding internal and external shape edits
+ok 67 - Smart Dimensions in transform mode accept cross-Stack angles/distances and the origin, excluding internal and external shape edits
+  ---
+  duration_ms: 0.2112
+  type: 'test'
+  ...
+1..67
+# tests 67
+# suites 0
+# pass 67
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 214.9775

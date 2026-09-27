@@ -1,0 +1,1264 @@
+TAP version 13
+# Subtest: rectangular arrays follow the local axes of a rotated Stack
+ok 1 - rectangular arrays follow the local axes of a rotated Stack
+  ---
+  duration_ms: 2.033
+  type: 'test'
+  ...
+# Subtest: array definitions normalize independent row and column spacing expressions
+ok 2 - array definitions normalize independent row and column spacing expressions
+  ---
+  duration_ms: 0.4427
+  type: 'test'
+  ...
+# Subtest: Array sources mirror canonical entity and window selections
+ok 3 - Array sources mirror canonical entity and window selections
+  ---
+  duration_ms: 0.1317
+  type: 'test'
+  ...
+# Subtest: Array window selection tests rendered geometry instead of the placement bounding box
+ok 4 - Array window selection tests rendered geometry instead of the placement bounding box
+  ---
+  duration_ms: 0.1833
+  type: 'test'
+  ...
+# Subtest: Array source window selection retains contained derivative objects
+ok 5 - Array source window selection retains contained derivative objects
+  ---
+  duration_ms: 0.2671
+  type: 'test'
+  ...
+# Subtest: Array source selection accepts persistent derivatives while rejecting dimensions and controls
+ok 6 - Array source selection accepts persistent derivatives while rejecting dimensions and controls
+  ---
+  duration_ms: 0.1421
+  type: 'test'
+  ...
+# Subtest: Array derivative source references normalize and deduplicate every supported kind
+ok 7 - Array derivative source references normalize and deduplicate every supported kind
+  ---
+  duration_ms: 0.3164
+  type: 'test'
+  ...
+# Subtest: Array definitions render derivative parents before dependents and identify cycles
+ok 8 - Array definitions render derivative parents before dependents and identify cycles
+  ---
+  duration_ms: 0.2733
+  type: 'test'
+  ...
+# Subtest: rectangular offsets follow left, center, right and up, center, down directions
+ok 9 - rectangular offsets follow left, center, right and up, center, down directions
+  ---
+  duration_ms: 0.3478
+  type: 'test'
+  ...
+# Subtest: equal rectangular spacing values produce equal edge gaps for a non-square object
+ok 10 - equal rectangular spacing values produce equal edge gaps for a non-square object
+  ---
+  duration_ms: 0.2407
+  type: 'test'
+  ...
+# Subtest: rectangular centroid spacing can be enabled independently for rows and columns
+ok 11 - rectangular centroid spacing can be enabled independently for rows and columns
+  ---
+  duration_ms: 0.1187
+  type: 'test'
+  ...
+# Subtest: circular angles distribute a full circle without duplicating 360 degrees
+ok 12 - circular angles distribute a full circle without duplicating 360 degrees
+  ---
+  duration_ms: 0.1154
+  type: 'test'
+  ...
+# Subtest: array dimension identities remain stable and placement transforms match rendered copies
+ok 13 - array dimension identities remain stable and placement transforms match rendered copies
+  ---
+  duration_ms: 0.6304
+  type: 'test'
+  ...
+# Subtest: rectangular array placements materialize active source circles as stable Boolean cutters
+ok 14 - rectangular array placements materialize active source circles as stable Boolean cutters
+  ---
+  duration_ms: 0.713
+  type: 'test'
+  ...
+# Subtest: array Boolean copies inherit Subtract only from their original source object
+ok 15 - array Boolean copies inherit Subtract only from their original source object
+  ---
+  duration_ms: 1.0756
+  type: 'test'
+  ...
+# Subtest: selected array properties expose visibility without a Subtract property
+ok 16 - selected array properties expose visibility without a Subtract property
+  ---
+  duration_ms: 0.1574
+  type: 'test'
+  ...
+# Subtest: circular array cutters rotate analytic composite boundaries without moving the source placement
+ok 17 - circular array cutters rotate analytic composite boundaries without moving the source placement
+  ---
+  duration_ms: 0.6909
+  type: 'test'
+  ...
+# Subtest: inactive derivative source Stacks remain visible to dependent Arrays
+ok 18 - inactive derivative source Stacks remain visible to dependent Arrays
+  ---
+  duration_ms: 0.1839
+  type: 'test'
+  ...
+# Subtest: circular arrays derive radius from the selected-object centroid and count the original
+ok 19 - circular arrays derive radius from the selected-object centroid and count the original
+  ---
+  duration_ms: 0.2021
+  type: 'test'
+  ...
+# Subtest: zero-count arrays have no placements and gate parent visibility to FALSE
+ok 20 - zero-count arrays have no placements and gate parent visibility to FALSE
+  ---
+  duration_ms: 0.2337
+  type: 'test'
+  ...
+# Subtest: array paint order follows its highest-positioned source object
+ok 21 - array paint order follows its highest-positioned source object
+  ---
+  duration_ms: 0.0965
+  type: 'test'
+  ...
+# Subtest: a circular array center is a persistent solver point that accepts point constraints
+ok 22 - a circular array center is a persistent solver point that accepts point constraints
+  ---
+  duration_ms: 10.125
+  type: 'test'
+  ...
+# Subtest: a circular array center accepts a driving point-to-point dimension
+ok 23 - a circular array center accepts a driving point-to-point dimension
+  ---
+  duration_ms: 5.5494
+  type: 'test'
+  ...
+# Subtest: partial circular arrays use the original as zero and a signed stop-angle sweep
+ok 24 - partial circular arrays use the original as zero and a signed stop-angle sweep
+  ---
+  duration_ms: 0.1567
+  type: 'test'
+  ...
+# Subtest: legacy circular arrays migrate away from radius and absolute start angle
+ok 25 - legacy circular arrays migrate away from radius and absolute start angle
+  ---
+  duration_ms: 0.1597
+  type: 'test'
+  ...
+# Subtest: array expressions resolve existing parameter names without creating parameters
+ok 26 - array expressions resolve existing parameter names without creating parameters
+  ---
+  duration_ms: 0.1826
+  type: 'test'
+  ...
+# Subtest: array expressions resolve real repository parameter names
+ok 27 - array expressions resolve real repository parameter names
+  ---
+  duration_ms: 0.8478
+  type: 'test'
+  ...
+# Subtest: array validation rejects fractional counts and positive circular arrays without a center
+ok 28 - array validation rejects fractional counts and positive circular arrays without a center
+  ---
+  duration_ms: 0.2953
+  type: 'test'
+  ...
+# Subtest: drawing I/O preserves, remaps, and merges array extension data
+ok 29 - drawing I/O preserves, remaps, and merges array extension data
+  ---
+  duration_ms: 9.6143
+  type: 'test'
+  ...
+# Subtest: detects horizontal and vertical segments at commit time
+ok 30 - detects horizontal and vertical segments at commit time
+  ---
+  duration_ms: 1.6174
+  type: 'test'
+  ...
+# Subtest: horizontal and vertical auto constraints use a 1.5 degree threshold
+ok 31 - horizontal and vertical auto constraints use a 1.5 degree threshold
+  ---
+  duration_ms: 0.2336
+  type: 'test'
+  ...
+# Subtest: detects the closest parallel or perpendicular existing segment
+ok 32 - detects the closest parallel or perpendicular existing segment
+  ---
+  duration_ms: 0.3342
+  type: 'test'
+  ...
+# Subtest: creates Coincident only from an explicit object snap
+ok 33 - creates Coincident only from an explicit object snap
+  ---
+  duration_ms: 0.4219
+  type: 'test'
+  ...
+# Subtest: maps a rectangle second click to its opposite corner
+ok 34 - maps a rectangle second click to its opposite corner
+  ---
+  duration_ms: 0.1533
+  type: 'test'
+  ...
+# Subtest: detects concentric circles and arcs using their derived centers
+ok 35 - detects concentric circles and arcs using their derived centers
+  ---
+  duration_ms: 0.2214
+  type: 'test'
+  ...
+# Subtest: commits every auto constraint from one rectangle in a single solver batch
+ok 36 - commits every auto constraint from one rectangle in a single solver batch
+  ---
+  duration_ms: 0.2759
+  type: 'test'
+  ...
+# Subtest: detects the complete editable rectangle chain as one eight-constraint transaction
+ok 37 - detects the complete editable rectangle chain as one eight-constraint transaction
+  ---
+  duration_ms: 0.2053
+  type: 'test'
+  ...
+# Subtest: constraint graph separates disconnected geometry and merges bridged components
+ok 38 - constraint graph separates disconnected geometry and merges bridged components
+  ---
+  duration_ms: 5.1779
+  type: 'test'
+  ...
+# Subtest: an active Stack solve includes inactive geometry only through transitive constraints
+ok 39 - an active Stack solve includes inactive geometry only through transitive constraints
+  ---
+  duration_ms: 1.1194
+  type: 'test'
+  ...
+# Subtest: interactive updates return only the edited dependency component for presentation
+ok 40 - interactive updates return only the edited dependency component for presentation
+  ---
+  duration_ms: 7.3116
+  type: 'test'
+  ...
+# Subtest: record-scoped constraint lookup avoids enumerating unrelated constraints
+ok 41 - record-scoped constraint lookup avoids enumerating unrelated constraints
+  ---
+  duration_ms: 1.0312
+  type: 'test'
+  ...
+# Subtest: entity removal incrementally deletes its variables and splits only the touched component
+ok 42 - entity removal incrementally deletes its variables and splits only the touched component
+  ---
+  duration_ms: 1.5333
+  type: 'test'
+  ...
+# Subtest: curve point insertion remaps indexed constraints without rebuilding unrelated components
+ok 43 - curve point insertion remaps indexed constraints without rebuilding unrelated components
+  ---
+  duration_ms: 4.1868
+  type: 'test'
+  ...
+# Subtest: derived feature source changes reconnect only constraints that reference that feature
+ok 44 - derived feature source changes reconnect only constraints that reference that feature
+  ---
+  duration_ms: 1.5663
+  type: 'test'
+  ...
+# Subtest: constraint graph includes anchor, meta-variable, intrinsic arc, and derived-fillet dependencies
+ok 45 - constraint graph includes anchor, meta-variable, intrinsic arc, and derived-fillet dependencies
+  ---
+  duration_ms: 0.9965
+  type: 'test'
+  ...
+# Subtest: a scoped model solves only its selected component using authoritative variables
+ok 46 - a scoped model solves only its selected component using authoritative variables
+  ---
+  duration_ms: 0.8989
+  type: 'test'
+  ...
+# Subtest: a free-floating component uses and releases a translation gauge during solving
+ok 47 - a free-floating component uses and releases a translation gauge during solving
+  ---
+  duration_ms: 2.5298
+  type: 'test'
+  ...
+# Subtest: explicit drag locks take precedence over a temporary translation gauge
+ok 48 - explicit drag locks take precedence over a temporary translation gauge
+  ---
+  duration_ms: 1.0223
+  type: 'test'
+  ...
+# Subtest: a canvas-origin relationship takes precedence over a temporary translation gauge
+ok 49 - a canvas-origin relationship takes precedence over a temporary translation gauge
+  ---
+  duration_ms: 0.5528
+  type: 'test'
+  ...
+# Subtest: an explicit Fixed constraint takes precedence over a temporary translation gauge
+ok 50 - an explicit Fixed constraint takes precedence over a temporary translation gauge
+  ---
+  duration_ms: 0.7222
+  type: 'test'
+  ...
+# Subtest: controller entity updates solve only the seeded connected component
+ok 51 - controller entity updates solve only the seeded connected component
+  ---
+  duration_ms: 2.9046
+  type: 'test'
+  ...
+# Subtest: dimension edits snapshot and solve only their affected component
+ok 52 - dimension edits snapshot and solve only their affected component
+  ---
+  duration_ms: 9.4309
+  type: 'test'
+  ...
+# Subtest: global solves partition disconnected constrained geometry into independent components
+ok 53 - global solves partition disconnected constrained geometry into independent components
+  ---
+  duration_ms: 13.8384
+  type: 'test'
+  ...
+# Subtest: global component solving rolls back earlier components when a later component fails
+ok 54 - global component solving rolls back earlier components when a later component fails
+  ---
+  duration_ms: 2.4092
+  type: 'test'
+  ...
+# Subtest: drawing load restores constraints in bulk and indexes variables directly
+ok 55 - drawing load restores constraints in bulk and indexes variables directly
+  ---
+  duration_ms: 14.8559
+  type: 'test'
+  ...
+# Subtest: the sketch model variable index tracks geometry variable additions and removals
+ok 56 - the sketch model variable index tracks geometry variable additions and removals
+  ---
+  duration_ms: 0.3157
+  type: 'test'
+  ...
+# Subtest: legacy drawing declarations and references migrate to one UUID graph
+ok 57 - legacy drawing declarations and references migrate to one UUID graph
+  ---
+  duration_ms: 3.6888
+  type: 'test'
+  ...
+# Subtest: identity remapping clones declarations and internal references atomically
+ok 58 - identity remapping clones declarations and internal references atomically
+  ---
+  duration_ms: 0.6581
+  type: 'test'
+  ...
+# Subtest: independent Save As cloning creates a disjoint graph while ordinary migration preserves IDs
+ok 59 - independent Save As cloning creates a disjoint graph while ordinary migration preserves IDs
+  ---
+  duration_ms: 0.4479
+  type: 'test'
+  ...
+# Subtest: independent Save As cloning remaps every nested Stack parent to the cloned tree
+ok 60 - independent Save As cloning remaps every nested Stack parent to the cloned tree
+  ---
+  duration_ms: 3.0233
+  type: 'test'
+  ...
+# Subtest: independent Save As returns the exact validated drawing represented by the written bytes
+ok 61 - independent Save As returns the exact validated drawing represented by the written bytes
+  ---
+  duration_ms: 4.3317
+  type: 'test'
+  ...
+# Subtest: identity audit rejects extension identities without an owning schema
+ok 62 - identity audit rejects extension identities without an owning schema
+  ---
+  duration_ms: 0.469
+  type: 'test'
+  ...
+# Subtest: identity migration does not rewrite ordinary text that resembles an ID
+ok 63 - identity migration does not rewrite ordinary text that resembles an ID
+  ---
+  duration_ms: 0.2007
+  type: 'test'
+  ...
+# Subtest: canonical UUID declarations are preserved during migration
+ok 64 - canonical UUID declarations are preserved during migration
+  ---
+  duration_ms: 0.1468
+  type: 'test'
+  ...
+# Subtest: ordinary save and open preserve every canonical UUID exactly
+ok 65 - ordinary save and open preserve every canonical UUID exactly
+  ---
+  duration_ms: 1.631
+  type: 'test'
+  ...
+# Subtest: Swell-derived dimension anchors persist through their source entity identity
+ok 66 - Swell-derived dimension anchors persist through their source entity identity
+  ---
+  duration_ms: 2.1227
+  type: 'test'
+  ...
+# Subtest: Swell constraints save through source RecordIDs and remap on Save As
+ok 67 - Swell constraints save through source RecordIDs and remap on Save As
+  ---
+  duration_ms: 2.5218
+  type: 'test'
+  ...
+# Subtest: every derived dimension provider exposes the same source-backed identity contract
+ok 68 - every derived dimension provider exposes the same source-backed identity contract
+  ---
+  duration_ms: 0.2838
+  type: 'test'
+  ...
+# Subtest: Duplicate constraints save through source RecordIDs and remap their derivative selector on Save As
+ok 69 - Duplicate constraints save through source RecordIDs and remap their derivative selector on Save As
+  ---
+  duration_ms: 2.2321
+  type: 'test'
+  ...
+# Subtest: canonical files fail closed before malformed declarations can be regenerated
+ok 70 - canonical files fail closed before malformed declarations can be regenerated
+  ---
+  duration_ms: 1.3025
+  type: 'test'
+  ...
+# Subtest: canonical files reject dangling references before entering the live drawing
+ok 71 - canonical files reject dangling references before entering the live drawing
+  ---
+  duration_ms: 0.3876
+  type: 'test'
+  ...
+# Subtest: canonical identity audit rejects references to the wrong record kind
+ok 72 - canonical identity audit rejects references to the wrong record kind
+  ---
+  duration_ms: 0.3265
+  type: 'test'
+  ...
+# Subtest: canonical identity audit requires exactly one Default Stack and Default Class role
+ok 73 - canonical identity audit requires exactly one Default Stack and Default Class role
+  ---
+  duration_ms: 0.5051
+  type: 'test'
+  ...
+# Subtest: fillet presentation updates only changed sources and their dependent fillets
+ok 74 - fillet presentation updates only changed sources and their dependent fillets
+  ---
+  duration_ms: 1.0402
+  type: 'test'
+  ...
+# Subtest: line-line fillet derives tangent points without changing source endpoints
+ok 75 - line-line fillet derives tangent points without changing source endpoints
+  ---
+  duration_ms: 0.8782
+  type: 'test'
+  ...
+# Subtest: regular fillet constraints convert a line corner into a solved arc
+ok 76 - regular fillet constraints convert a line corner into a solved arc
+  ---
+  duration_ms: 19.0081
+  type: 'test'
+  ...
+# Subtest: evaluated fillet geometry trims display lines and adds an arc
+ok 77 - evaluated fillet geometry trims display lines and adds an arc
+  ---
+  duration_ms: 0.3019
+  type: 'test'
+  ...
+# Subtest: evaluated fillet geometry preserves construction fillets as construction arcs
+ok 78 - evaluated fillet geometry preserves construction fillets as construction arcs
+  ---
+  duration_ms: 0.1819
+  type: 'test'
+  ...
+# Subtest: a fillet touching a Swell source inherits its Swell definition
+ok 79 - a fillet touching a Swell source inherits its Swell definition
+  ---
+  duration_ms: 0.2792
+  type: 'test'
+  ...
+# Subtest: fillet source endpoints can remain connected by their original Coincident constraint
+ok 80 - fillet source endpoints can remain connected by their original Coincident constraint
+  ---
+  duration_ms: 0.4686
+  type: 'test'
+  ...
+# Subtest: fillet rejects radii that consume either source line
+ok 81 - fillet rejects radii that consume either source line
+  ---
+  duration_ms: 0.2219
+  type: 'test'
+  ...
+# Subtest: fillet topology replaces the virtual sharp corner with the derived arc
+ok 82 - fillet topology replaces the virtual sharp corner with the derived arc
+  ---
+  duration_ms: 1.0537
+  type: 'test'
+  ...
+# Subtest: line-arc fillet trims the line and arc from their shared corner
+ok 83 - line-arc fillet trims the line and arc from their shared corner
+  ---
+  duration_ms: 0.7537
+  type: 'test'
+  ...
+# Subtest: line-arc fillet keeps the source arc internally tangent to the fillet arc
+ok 84 - line-arc fillet keeps the source arc internally tangent to the fillet arc
+  ---
+  duration_ms: 3.3913
+  type: 'test'
+  ...
+# Subtest: curve-line fillet trims the curve endpoint along its tangent
+ok 85 - curve-line fillet trims the curve endpoint along its tangent
+  ---
+  duration_ms: 0.2495
+  type: 'test'
+  ...
+# Subtest: arc-arc fillet trims both arcs from the shared corner
+ok 86 - arc-arc fillet trims both arcs from the shared corner
+  ---
+  duration_ms: 0.2532
+  type: 'test'
+  ...
+# Subtest: arc-curve fillet trims both sources from the shared corner
+ok 87 - arc-curve fillet trims both sources from the shared corner
+  ---
+  duration_ms: 0.1602
+  type: 'test'
+  ...
+# Subtest: curve-curve fillet trims both curve endpoints along their tangents
+ok 88 - curve-curve fillet trims both curve endpoints along their tangents
+  ---
+  duration_ms: 0.1207
+  type: 'test'
+  ...
+# Subtest: normal solves use the reduced 1e-3 convergence tolerance
+ok 89 - normal solves use the reduced 1e-3 convergence tolerance
+  ---
+  duration_ms: 2.4732
+  type: 'test'
+  ...
+# Subtest: driving-dimension solve steps use the normal reduced tolerance
+ok 90 - driving-dimension solve steps use the normal reduced tolerance
+  ---
+  duration_ms: 3.4277
+  type: 'test'
+  ...
+# Subtest: a numerical solve samples parameters once instead of once per Jacobian column
+ok 91 - a numerical solve samples parameters once instead of once per Jacobian column
+  ---
+  duration_ms: 1.6686
+  type: 'test'
+  ...
+# Subtest: block Jacobian mode matches dense convergence and reports mixed usage
+ok 92 - block Jacobian mode matches dense convergence and reports mixed usage
+  ---
+  duration_ms: 3.6902
+  type: 'test'
+  ...
+# Subtest: matrix-free block solve matches dense convergence when forced below its automatic threshold
+ok 93 - matrix-free block solve matches dense convergence when forced below its automatic threshold
+  ---
+  duration_ms: 2.2727
+  type: 'test'
+  ...
+# Subtest: interactive block solves switch to matrix-free work at the lower drag threshold
+ok 94 - interactive block solves switch to matrix-free work at the lower drag threshold
+  ---
+  duration_ms: 8.709
+  type: 'test'
+  ...
+# Subtest: large matrix-free components use entity-block preconditioning
+ok 95 - large matrix-free components use entity-block preconditioning
+  ---
+  duration_ms: 2.9154
+  type: 'test'
+  ...
+# Subtest: point-on and tangent fixtures retain dense/block convergence parity
+ok 96 - point-on and tangent fixtures retain dense/block convergence parity
+  ---
+  duration_ms: 10.1591
+  type: 'test'
+  ...
+# Subtest: serialized mixed drawing retains dense/block geometry parity after an edit
+ok 97 - serialized mixed drawing retains dense/block geometry parity after an edit
+  ---
+  duration_ms: 17.1174
+  type: 'test'
+  ...
+# Subtest: serialized arc-heavy drawing retains dense/block parity across derived fillet components
+ok 98 - serialized arc-heavy drawing retains dense/block parity across derived fillet components
+  ---
+  duration_ms: 29.6001
+  type: 'test'
+  ...
+# Subtest: the built-in canvas origin resolves as an immutable solver point
+ok 99 - the built-in canvas origin resolves as an immutable solver point
+  ---
+  duration_ms: 2.8708
+  type: 'test'
+  ...
+# Subtest: table solver bindings preserve rectangular corners when constrained
+ok 100 - table solver bindings preserve rectangular corners when constrained
+  ---
+  duration_ms: 0.7012
+  type: 'test'
+  ...
+# Subtest: table drag updates survive the solver drag release snapshot
+ok 101 - table drag updates survive the solver drag release snapshot
+  ---
+  duration_ms: 0.8694
+  type: 'test'
+  ...
+# Subtest: unsatisfiable interactive geometry previews restore the last valid component
+ok 102 - unsatisfiable interactive geometry previews restore the last valid component
+  ---
+  duration_ms: 2.7405
+  type: 'test'
+  ...
+# Subtest: Gaussian elimination uses partial pivoting
+ok 103 - Gaussian elimination uses partial pivoting
+  ---
+  duration_ms: 0.0757
+  type: 'test'
+  ...
+# Subtest: matrix helpers and numerical Jacobian match known values
+ok 104 - matrix helpers and numerical Jacobian match known values
+  ---
+  duration_ms: 0.1781
+  type: 'test'
+  ...
+# Subtest: variables leave the active set when fixed or temporarily locked
+ok 105 - variables leave the active set when fixed or temporarily locked
+  ---
+  duration_ms: 0.0568
+  type: 'test'
+  ...
+# Subtest: linear solver rejects singular and near-zero pivots
+ok 106 - linear solver rejects singular and near-zero pivots
+  ---
+  duration_ms: 0.3189
+  type: 'test'
+  ...
+# Subtest: LM rejects non-improving steps, reaches its limit, and rolls back
+ok 107 - LM rejects non-improving steps, reaches its limit, and rolls back
+  ---
+  duration_ms: 0.1352
+  type: 'test'
+  ...
+# Subtest: LM stops a stalled final solve before exhausting a large iteration budget
+ok 108 - LM stops a stalled final solve before exhausting a large iteration budget
+  ---
+  duration_ms: 0.1416
+  type: 'test'
+  ...
+# Subtest: interactive LM retains its best improving state when its iteration budget expires
+ok 109 - interactive LM retains its best improving state when its iteration budget expires
+  ---
+  duration_ms: 0.1148
+  type: 'test'
+  ...
+# Subtest: LM cooperatively cancels during numerical work and restores strict final solves
+ok 110 - LM cooperatively cancels during numerical work and restores strict final solves
+  ---
+  duration_ms: 0.1909
+  type: 'test'
+  ...
+# Subtest: dimension repository evaluates units and dependency expressions
+ok 111 - dimension repository evaluates units and dependency expressions
+  ---
+  duration_ms: 1.7616
+  type: 'test'
+  ...
+# Subtest: geometry bindings round-trip current primitives with stable IDs
+ok 112 - geometry bindings round-trip current primitives with stable IDs
+  ---
+  duration_ms: 0.5781
+  type: 'test'
+  ...
+# Subtest: geometry bindings preserve explicit stack ownership without adding it to legacy entities
+ok 113 - geometry bindings preserve explicit stack ownership without adding it to legacy entities
+  ---
+  duration_ms: 0.0956
+  type: 'test'
+  ...
+# Subtest: arc bindings preserve large-radius circle metadata through shallow arc points
+ok 114 - arc bindings preserve large-radius circle metadata through shallow arc points
+  ---
+  duration_ms: 0.119
+  type: 'test'
+  ...
+# Subtest: arc bindings reuse metrics until a solver variable changes
+ok 115 - arc bindings reuse metrics until a solver variable changes
+  ---
+  duration_ms: 0.0987
+  type: 'test'
+  ...
+# Subtest: entity appearances persist through sketch snapshots and exclude construction geometry
+ok 116 - entity appearances persist through sketch snapshots and exclude construction geometry
+  ---
+  duration_ms: 1.8231
+  type: 'test'
+  ...
+# Subtest: edited entity stroke colors persist through solver appearance updates
+ok 117 - edited entity stroke colors persist through solver appearance updates
+  ---
+  duration_ms: 0.3196
+  type: 'test'
+  ...
+# Subtest: geometry class ownership and property overrides round-trip through the solver model
+ok 118 - geometry class ownership and property overrides round-trip through the solver model
+  ---
+  duration_ms: 0.6866
+  type: 'test'
+  ...
+# Subtest: LM solver satisfies a horizontal constraint
+ok 119 - LM solver satisfies a horizontal constraint
+  ---
+  duration_ms: 0.6153
+  type: 'test'
+  ...
+# Subtest: Length locks a line length while allowing its angle and position to change
+ok 120 - Length locks a line length while allowing its angle and position to change
+  ---
+  duration_ms: 1.2722
+  type: 'test'
+  ...
+# Subtest: Length locks an arc length rather than its radius or sweep independently
+ok 121 - Length locks an arc length rather than its radius or sweep independently
+  ---
+  duration_ms: 1.065
+  type: 'test'
+  ...
+# Subtest: fixed variables reject an incompatible constraint without changing geometry
+ok 122 - fixed variables reject an incompatible constraint without changing geometry
+  ---
+  duration_ms: 1.0664
+  type: 'test'
+  ...
+# Subtest: drag locks hold edited variables while connected geometry solves
+ok 123 - drag locks hold edited variables while connected geometry solves
+  ---
+  duration_ms: 0.9465
+  type: 'test'
+  ...
+# Subtest: driving distance uses the central dimension repository
+ok 124 - driving distance uses the central dimension repository
+  ---
+  duration_ms: 1.013
+  type: 'test'
+  ...
+# Subtest: a driving circle diameter sets the circle radius to half the entered value
+ok 125 - a driving circle diameter sets the circle radius to half the entered value
+  ---
+  duration_ms: 4.866
+  type: 'test'
+  ...
+# Subtest: new driving dimensions use the dimension solve path before committing
+ok 126 - new driving dimensions use the dimension solve path before committing
+  ---
+  duration_ms: 1.0409
+  type: 'test'
+  ...
+# Subtest: large driving-dimension edits use automatic continuation through constrained arc geometry
+ok 127 - large driving-dimension edits use automatic continuation through constrained arc geometry
+  ---
+  duration_ms: 165.9262
+  type: 'test'
+  ...
+# Subtest: driving dimensions can replace a deleted-reference expression through continuation
+ok 128 - driving dimensions can replace a deleted-reference expression through continuation
+  ---
+  duration_ms: 7.0038
+  type: 'test'
+  ...
+# Subtest: failed dimension continuation restores the original expression and geometry atomically
+ok 129 - failed dimension continuation restores the original expression and geometry atomically
+  ---
+  duration_ms: 1.5704
+  type: 'test'
+  ...
+# Subtest: a failed edit names the driving dimensions that close an axis-distance loop
+ok 130 - a failed edit names the driving dimensions that close an axis-distance loop
+  ---
+  duration_ms: 8.5864
+  type: 'test'
+  ...
+# Subtest: dimension dependency state disables and restores its solver constraint
+ok 131 - dimension dependency state disables and restores its solver constraint
+  ---
+  duration_ms: 1.4538
+  type: 'test'
+  ...
+# Subtest: driving arc radius can grow very large while endpoints remain fixed
+ok 132 - driving arc radius can grow very large while endpoints remain fixed
+  ---
+  duration_ms: 7.1902
+  type: 'test'
+  ...
+# Subtest: a driving arc radius can equal exactly half its fixed chord
+ok 133 - a driving arc radius can equal exactly half its fixed chord
+  ---
+  duration_ms: 1.7883
+  type: 'test'
+  ...
+# Subtest: an exact half-chord arc remains solvable when its connected chord is made collinear
+ok 134 - an exact half-chord arc remains solvable when its connected chord is made collinear
+  ---
+  duration_ms: 7.315
+  type: 'test'
+  ...
+# Subtest: external driving dimensions register editable expressions without solver geometry constraints
+ok 135 - external driving dimensions register editable expressions without solver geometry constraints
+  ---
+  duration_ms: 0.5637
+  type: 'test'
+  ...
+# Subtest: fillet radius migration restores a solver constraint before radius edits
+ok 136 - fillet radius migration restores a solver constraint before radius edits
+  ---
+  duration_ms: 16.2647
+  type: 'test'
+  ...
+# Subtest: arc-heavy dimension edits remain well-conditioned with shallow large-radius arcs
+ok 137 - arc-heavy dimension edits remain well-conditioned with shallow large-radius arcs
+  ---
+  duration_ms: 126.4483
+  type: 'test'
+  ...
+# Subtest: serialized sketches retain stable entity and constraint references
+ok 138 - serialized sketches retain stable entity and constraint references
+  ---
+  duration_ms: 1.0609
+  type: 'test'
+  ...
+# Subtest: drawing properties persist and unitless dimension input uses the drawing unit
+ok 139 - drawing properties persist and unitless dimension input uses the drawing unit
+  ---
+  duration_ms: 3.3743
+  type: 'test'
+  ...
+# Subtest: legacy drawings without a DXF export unit inherit their drawing unit
+ok 140 - legacy drawings without a DXF export unit inherit their drawing unit
+  ---
+  duration_ms: 0.3591
+  type: 'test'
+  ...
+# Subtest: drawing properties default the fillet radius to one drawing unit and persist it
+ok 141 - drawing properties default the fillet radius to one drawing unit and persist it
+  ---
+  duration_ms: 0.4535
+  type: 'test'
+  ...
+# Subtest: driven rendered measurements persist for multi-curve-length dimensions
+ok 142 - driven rendered measurements persist for multi-curve-length dimensions
+  ---
+  duration_ms: 0.8728
+  type: 'test'
+  ...
+# Subtest: redundant constraints remain stable
+ok 143 - redundant constraints remain stable
+  ---
+  duration_ms: 0.6694
+  type: 'test'
+  ...
+# Subtest: fixed geometry cannot be moved by an edit transaction
+ok 144 - fixed geometry cannot be moved by an edit transaction
+  ---
+  duration_ms: 0.5642
+  type: 'test'
+  ...
+# Subtest: fixing a line midpoint locks only the midpoint and allows its length to change
+ok 145 - fixing a line midpoint locks only the midpoint and allows its length to change
+  ---
+  duration_ms: 3.2339
+  type: 'test'
+  ...
+# Subtest: solver execution facade defaults to the synchronous controller path
+ok 146 - solver execution facade defaults to the synchronous controller path
+  ---
+  duration_ms: 6.1309
+  type: 'test'
+  ...
+# Subtest: preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+ok 147 - preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+  ---
+  duration_ms: 1.3073
+  type: 'test'
+  ...
+# Subtest: shadow facade mirrors committed and coalesced drag mutations with full parity
+ok 148 - shadow facade mirrors committed and coalesced drag mutations with full parity
+  ---
+  duration_ms: 9.761
+  type: 'test'
+  ...
+# Subtest: worker-authoritative drag applies only the newest coalesced delta
+ok 149 - worker-authoritative drag applies only the newest coalesced delta
+  ---
+  duration_ms: 5.253
+  type: 'test'
+  ...
+# Subtest: worker-authoritative constraint add and remove update the local replica without local solves
+ok 150 - worker-authoritative constraint add and remove update the local replica without local solves
+  ---
+  duration_ms: 7.2596
+  type: 'test'
+  ...
+# Subtest: constraint batches return immediately after one local solve and resynchronize the Worker
+ok 151 - constraint batches return immediately after one local solve and resynchronize the Worker
+  ---
+  duration_ms: 5.0547
+  type: 'test'
+  ...
+# Subtest: worker-authoritative parameter updates synchronize renamed dependents without a local solve
+ok 152 - worker-authoritative parameter updates synchronize renamed dependents without a local solve
+  ---
+  duration_ms: 5.1583
+  type: 'test'
+  ...
+# Subtest: worker-authoritative control updates coalesce to the newest absolute parameter value
+ok 153 - worker-authoritative control updates coalesce to the newest absolute parameter value
+  ---
+  duration_ms: 2.2373
+  type: 'test'
+  ...
+# Subtest: worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+ok 154 - worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+  ---
+  duration_ms: 10.9179
+  type: 'test'
+  ...
+# Subtest: shadow facade recreates a failed worker from the latest synchronous checkpoint
+ok 155 - shadow facade recreates a failed worker from the latest synchronous checkpoint
+  ---
+  duration_ms: 5.081
+  type: 'test'
+  ...
+# Subtest: shadow facade bounds restart attempts before retaining synchronous fallback
+ok 156 - shadow facade bounds restart attempts before retaining synchronous fallback
+  ---
+  duration_ms: 11.8589
+  type: 'test'
+  ...
+# Subtest: solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+ok 157 - solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+  ---
+  duration_ms: 0.2781
+  type: 'test'
+  ...
+# Subtest: solver facade exposes guarded block Jacobian configuration without changing its execution mode
+ok 158 - solver facade exposes guarded block Jacobian configuration without changing its execution mode
+  ---
+  duration_ms: 0.2649
+  type: 'test'
+  ...
+# Subtest: solver worker protocol validates versioned request envelopes
+ok 159 - solver worker protocol validates versioned request envelopes
+  ---
+  duration_ms: 1.8614
+  type: 'test'
+  ...
+# Subtest: worker runtime applies guarded block Jacobians and returns usage diagnostics
+ok 160 - worker runtime applies guarded block Jacobians and returns usage diagnostics
+  ---
+  duration_ms: 14.2173
+  type: 'test'
+  ...
+# Subtest: browser worker client forwards block mode through the Worker module URL
+ok 161 - browser worker client forwards block mode through the Worker module URL
+  ---
+  duration_ms: 0.6101
+  type: 'test'
+  ...
+# Subtest: solver worker returns every affected parameter after a rename
+ok 162 - solver worker returns every affected parameter after a rename
+  ---
+  duration_ms: 3.9467
+  type: 'test'
+  ...
+# Subtest: solver worker runtime owns sketch state and returns changed-entity deltas
+ok 163 - solver worker runtime owns sketch state and returns changed-entity deltas
+  ---
+  duration_ms: 2.9729
+  type: 'test'
+  ...
+# Subtest: solver worker returns accepted and removed constraint deltas
+ok 164 - solver worker returns accepted and removed constraint deltas
+  ---
+  duration_ms: 2.8609
+  type: 'test'
+  ...
+# Subtest: solver worker runtime rejects older interactive generations
+ok 165 - solver worker runtime rejects older interactive generations
+  ---
+  duration_ms: 0.2749
+  type: 'test'
+  ...
+# Subtest: solver worker runtime returns directly edited unconstrained geometry in its delta
+ok 166 - solver worker runtime returns directly edited unconstrained geometry in its delta
+  ---
+  duration_ms: 0.8446
+  type: 'test'
+  ...
+# Subtest: solver worker uses a bounded preview solve for drag and a normal final solve on commit
+ok 167 - solver worker uses a bounded preview solve for drag and a normal final solve on commit
+  ---
+  duration_ms: 1.958
+  type: 'test'
+  ...
+# Subtest: solver worker restores the pre-drag baseline when the strict final solve fails
+ok 168 - solver worker restores the pre-drag baseline when the strict final solve fails
+  ---
+  duration_ms: 0.4427
+  type: 'test'
+  ...
+# Subtest: solver worker final result resynchronizes every entity from the affected drag component
+ok 169 - solver worker final result resynchronizes every entity from the affected drag component
+  ---
+  duration_ms: 0.2591
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces drag updates and suppresses superseded in-flight results
+ok 170 - solver worker client coalesces drag updates and suppresses superseded in-flight results
+  ---
+  duration_ms: 0.3664
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces only explicitly keyed parameter updates
+ok 171 - solver worker client coalesces only explicitly keyed parameter updates
+  ---
+  duration_ms: 0.1346
+  type: 'test'
+  ...
+# Subtest: solver worker client keeps committed mutations ordered and non-droppable
+ok 172 - solver worker client keeps committed mutations ordered and non-droppable
+  ---
+  duration_ms: 0.1161
+  type: 'test'
+  ...
+# Subtest: new Swell entities default to offset-only while legacy definitions retain Swell mode
+ok 173 - new Swell entities default to offset-only while legacy definitions retain Swell mode
+  ---
+  duration_ms: 3.3214
+  type: 'test'
+  ...
+# Subtest: negative Swell expressions reverse direction while retaining positive distances
+ok 174 - negative Swell expressions reverse direction while retaining positive distances
+  ---
+  duration_ms: 0.6854
+  type: 'test'
+  ...
+# Subtest: turning Swell off preserves its expressions and turning it back on restores the transition geometry
+ok 175 - turning Swell off preserves its expressions and turning it back on restores the transition geometry
+  ---
+  duration_ms: 0.7525
+  type: 'test'
+  ...
+# Subtest: Swell decoration forces construction while preserving solver-round-trippable metadata
+ok 176 - Swell decoration forces construction while preserving solver-round-trippable metadata
+  ---
+  duration_ms: 0.6729
+  type: 'test'
+  ...
+# Subtest: Swell line uses right-side base offset, transition arcs, and a central swell line
+ok 177 - Swell line uses right-side base offset, transition arcs, and a central swell line
+  ---
+  duration_ms: 0.9026
+  type: 'test'
+  ...
+# Subtest: overlapping transition distances shrink proportionally no lower than half
+ok 178 - overlapping transition distances shrink proportionally no lower than half
+  ---
+  duration_ms: 0.2358
+  type: 'test'
+  ...
+# Subtest: Swell Offset at or below Offset produces an ordinary offset
+ok 179 - Swell Offset at or below Offset produces an ordinary offset
+  ---
+  duration_ms: 0.2131
+  type: 'test'
+  ...
+# Subtest: Coincident construction endpoints miter their Swell offset sets
+ok 180 - Coincident construction endpoints miter their Swell offset sets
+  ---
+  duration_ms: 0.9193
+  type: 'test'
+  ...
+# Subtest: Coincident line and arc offsets share the same joined endpoint
+ok 181 - Coincident line and arc offsets share the same joined endpoint
+  ---
+  duration_ms: 0.7025
+  type: 'test'
+  ...
+# Subtest: a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+ok 182 - a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+  ---
+  duration_ms: 0.6702
+  type: 'test'
+  ...
+# Subtest: Coincident arc offsets intersect at one shared endpoint
+ok 183 - Coincident arc offsets intersect at one shared endpoint
+  ---
+  duration_ms: 0.3751
+  type: 'test'
+  ...
+# Subtest: circles and closed line chains offset outward regardless of segment direction
+ok 184 - circles and closed line chains offset outward regardless of segment direction
+  ---
+  duration_ms: 1.1341
+  type: 'test'
+  ...
+# Subtest: closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+ok 185 - closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+  ---
+  duration_ms: 0.2354
+  type: 'test'
+  ...
+# Subtest: arc offsets are concentric and follow the right side of their stored direction
+ok 186 - arc offsets are concentric and follow the right side of their stored direction
+  ---
+  duration_ms: 0.2467
+  type: 'test'
+  ...
+# Subtest: connected line, arc, and spline Swell objects join into one closed outward boundary
+ok 187 - connected line, arc, and spline Swell objects join into one closed outward boundary
+  ---
+  duration_ms: 2.9309
+  type: 'test'
+  ...
+# Subtest: legacy polyline entities can retain per-segment Swell settings
+ok 188 - legacy polyline entities can retain per-segment Swell settings
+  ---
+  duration_ms: 0.1362
+  type: 'test'
+  ...
+# Subtest: closed Swell geometry exposes stable analytic boundary features for downstream tools
+ok 189 - closed Swell geometry exposes stable analytic boundary features for downstream tools
+  ---
+  duration_ms: 1.015
+  type: 'test'
+  ...
+# Subtest: the Swell panel uses expression inputs and offers Swell only for line-based geometry
+ok 190 - the Swell panel uses expression inputs and offers Swell only for line-based geometry
+  ---
+  duration_ms: 1.0367
+  type: 'test'
+  ...
+# Subtest: a mixed Swell object exposes controls from its line-capable geometry
+ok 191 - a mixed Swell object exposes controls from its line-capable geometry
+  ---
+  duration_ms: 0.6831
+  type: 'test'
+  ...
+# Subtest: arc, circle, and spline-only Swell selections hide the Swell controls
+ok 192 - arc, circle, and spline-only Swell selections hide the Swell controls
+  ---
+  duration_ms: 0.1328
+  type: 'test'
+  ...
+# Subtest: Swell expressions are visible for enabled or mixed line selections, but not disabled ones
+ok 193 - Swell expressions are visible for enabled or mixed line selections, but not disabled ones
+  ---
+  duration_ms: 0.0644
+  type: 'test'
+  ...
+# Subtest: hidden Swell controls are removed from the panel layout
+ok 194 - hidden Swell controls are removed from the panel layout
+  ---
+  duration_ms: 0.0823
+  type: 'test'
+  ...
+# Subtest: new Swell geometry remembers the last expression entered in every field
+ok 195 - new Swell geometry remembers the last expression entered in every field
+  ---
+  duration_ms: 0.1036
+  type: 'test'
+  ...
+# Subtest: a Swell circle fill resolves its analytic edge for Seam Line
+ok 196 - a Swell circle fill resolves its analytic edge for Seam Line
+  ---
+  duration_ms: 0.3756
+  type: 'test'
+  ...
+# Subtest: Swell properties stay hidden while Duplicate, Symmetric, or Array is active
+ok 197 - Swell properties stay hidden while Duplicate, Symmetric, or Array is active
+  ---
+  duration_ms: 0.1265
+  type: 'test'
+  ...
+# Subtest: Swell offset pieces expose ordinary geometry-style point handles
+ok 198 - Swell offset pieces expose ordinary geometry-style point handles
+  ---
+  duration_ms: 0.3434
+  type: 'test'
+  ...
+# Subtest: a complete connected Swell boundary enables fill properties for every source type
+ok 199 - a complete connected Swell boundary enables fill properties for every source type
+  ---
+  duration_ms: 0.385
+  type: 'test'
+  ...
+# Subtest: Swell offset pieces expose analytic features to Smart Dimensions
+ok 200 - Swell offset pieces expose analytic features to Smart Dimensions
+  ---
+  duration_ms: 0.3934
+  type: 'test'
+  ...
+# Subtest: Swell derivative regions and strokes expose image appearance controls
+ok 201 - Swell derivative regions and strokes expose image appearance controls
+  ---
+  duration_ms: 0.4525
+  type: 'test'
+  ...
+# Subtest: Swell image strokes expose analytic path sampling for derived geometry
+ok 202 - Swell image strokes expose analytic path sampling for derived geometry
+  ---
+  duration_ms: 0.4898
+  type: 'test'
+  ...
+# Subtest: Smart Driving Dimension accepts Swell-derived points but not immutable edges
+ok 203 - Smart Driving Dimension accepts Swell-derived points but not immutable edges
+  ---
+  duration_ms: 0.0928
+  type: 'test'
+  ...
+# Subtest: external entity point constraints retain a reactive Swell-derived target
+ok 204 - external entity point constraints retain a reactive Swell-derived target
+  ---
+  duration_ms: 0.233
+  type: 'test'
+  ...
+# Subtest: legacy Swell constraints normalize transient piece UUIDs to portable source references
+ok 205 - legacy Swell constraints normalize transient piece UUIDs to portable source references
+  ---
+  duration_ms: 0.1583
+  type: 'test'
+  ...
+# Subtest: persisted Swell derivative features use a real source RecordID plus a provider selector
+ok 206 - persisted Swell derivative features use a real source RecordID plus a provider selector
+  ---
+  duration_ms: 0.0865
+  type: 'test'
+  ...
+# Subtest: Swell-derived concentric constraints move the external round feature
+ok 207 - Swell-derived concentric constraints move the external round feature
+  ---
+  duration_ms: 1.2908
+  type: 'test'
+  ...
+# Subtest: Swell Seam Line presentation mounts in the visible derived record
+ok 208 - Swell Seam Line presentation mounts in the visible derived record
+  ---
+  duration_ms: 0.1476
+  type: 'test'
+  ...
+# Subtest: Swell derivative groups inherit hidden Stack presentation after a rebuild
+ok 209 - Swell derivative groups inherit hidden Stack presentation after a rebuild
+  ---
+  duration_ms: 0.1196
+  type: 'test'
+  ...
+1..209
+# tests 209
+# suites 0
+# pass 209
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 619.3025

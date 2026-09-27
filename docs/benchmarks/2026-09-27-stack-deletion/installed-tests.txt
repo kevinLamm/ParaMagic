@@ -1,0 +1,424 @@
+TAP version 13
+# Subtest: moving children preserves their frames, IDs and subtrees at the deleted parent position
+ok 1 - moving children preserves their frames, IDs and subtrees at the deleted parent position
+  ---
+  duration_ms: 6.4891
+  type: 'test'
+  ...
+# Subtest: moving children of a top-level Stack promotes them to the drawing root
+ok 2 - moving children of a top-level Stack promotes them to the drawing root
+  ---
+  duration_ms: 1.3575
+  type: 'test'
+  ...
+# Subtest: delete children includes hidden and disabled descendants and excludes outside Stacks
+ok 3 - delete children includes hidden and disabled descendants and excludes outside Stacks
+  ---
+  duration_ms: 1.2701
+  type: 'test'
+  ...
+# Subtest: invalid removal modes and the Global layer cannot mutate Stack state
+ok 4 - invalid removal modes and the Global layer cannot mutate Stack state
+  ---
+  duration_ms: 1.0573
+  type: 'test'
+  ...
+# Subtest: Stack delete removes only applicable constraints and passes explicit records to deletion
+ok 5 - Stack delete removes only applicable constraints and passes explicit records to deletion
+  ---
+  duration_ms: 14.0311
+  type: 'test'
+  ...
+# Subtest: Stack move removes only applicable constraints and passes explicit records to deletion
+ok 6 - Stack move removes only applicable constraints and passes explicit records to deletion
+  ---
+  duration_ms: 4.0409
+  type: 'test'
+  ...
+# Subtest: Stack delete confirmation sequence [null]
+ok 7 - Stack delete confirmation sequence [null]
+  ---
+  duration_ms: 0.6803
+  type: 'test'
+  ...
+# Subtest: Stack delete confirmation sequence ["confirm",null]
+ok 8 - Stack delete confirmation sequence ["confirm",null]
+  ---
+  duration_ms: 0.5923
+  type: 'test'
+  ...
+# Subtest: Stack delete confirmation sequence ["confirm","move"]
+ok 9 - Stack delete confirmation sequence ["confirm","move"]
+  ---
+  duration_ms: 0.7006
+  type: 'test'
+  ...
+# Subtest: Stack delete confirmation sequence ["confirm","delete"]
+ok 10 - Stack delete confirmation sequence ["confirm","delete"]
+  ---
+  duration_ms: 0.6755
+  type: 'test'
+  ...
+# Subtest: a Stack without children needs only the first confirmation
+ok 11 - a Stack without children needs only the first confirmation
+  ---
+  duration_ms: 0.7236
+  type: 'test'
+  ...
+# Subtest: disposing the panel while confirmation is pending cancels deletion
+ok 12 - disposing the panel while confirmation is pending cancels deletion
+  ---
+  duration_ms: 0.4812
+  type: 'test'
+  ...
+# Subtest: independent Stacks remain separate solver contexts
+ok 13 - independent Stacks remain separate solver contexts
+  ---
+  duration_ms: 1.2511
+  type: 'test'
+  ...
+# Subtest: cross-Stack relationships merge their full transitive participant set
+ok 14 - cross-Stack relationships merge their full transitive participant set
+  ---
+  duration_ms: 0.224
+  type: 'test'
+  ...
+# Subtest: disabled Stacks and touching relationships contribute no participation nodes
+ok 15 - disabled Stacks and touching relationships contribute no participation nodes
+  ---
+  duration_ms: 0.1498
+  type: 'test'
+  ...
+# Subtest: Stack solve aggregation reports one affected-set failure without losing prior independent results
+ok 16 - Stack solve aggregation reports one affected-set failure without losing prior independent results
+  ---
+  duration_ms: 0.2387
+  type: 'test'
+  ...
+# Subtest: interactive Stack partition previews remain previews instead of being decorated as failures
+ok 17 - interactive Stack partition previews remain previews instead of being decorated as failures
+  ---
+  duration_ms: 0.1545
+  type: 'test'
+  ...
+# Subtest: controller edits solve only the edited Stack while preserving duplicate local dimension names
+ok 18 - controller edits solve only the edited Stack while preserving duplicate local dimension names
+  ---
+  duration_ms: 13.8569
+  type: 'test'
+  ...
+# Subtest: controller follows transitive cross-Stack participants as one affected solve set
+ok 19 - controller follows transitive cross-Stack participants as one affected solve set
+  ---
+  duration_ms: 4.6971
+  type: 'test'
+  ...
+# Subtest: controller excludes disabled Stack variables and cross-Stack residuals from solve diagnostics
+ok 20 - controller excludes disabled Stack variables and cross-Stack residuals from solve diagnostics
+  ---
+  duration_ms: 2.0128
+  type: 'test'
+  ...
+# Subtest: entity-level cross-Stack constraints propagate solved geometry through every related Stack
+ok 21 - entity-level cross-Stack constraints propagate solved geometry through every related Stack
+  ---
+  duration_ms: 4.4419
+  type: 'test'
+  ...
+# Subtest: controller derives cross-Stack constraint participation from referenced entities when cached metadata is missing
+ok 22 - controller derives cross-Stack constraint participation from referenced entities when cached metadata is missing
+  ---
+  duration_ms: 1.2814
+  type: 'test'
+  ...
+# Subtest: cross-Stack dimension parameters inherit live participants and become unavailable with either Stack disabled
+ok 23 - cross-Stack dimension parameters inherit live participants and become unavailable with either Stack disabled
+  ---
+  duration_ms: 2.1054
+  type: 'test'
+  ...
+# Subtest: full solves do not refresh driven dimensions owned by disabled Stacks
+ok 24 - full solves do not refresh driven dimensions owned by disabled Stacks
+  ---
+  duration_ms: 0.9542
+  type: 'test'
+  ...
+# Subtest: incremental solves refresh driven dimensions only in the affected Stack set
+ok 25 - incremental solves refresh driven dimensions only in the affected Stack set
+  ---
+  duration_ms: 0.8
+  type: 'test'
+  ...
+# Subtest: subtree data removal accepts multiple owner Stacks as one operation
+ok 26 - subtree data removal accepts multiple owner Stacks as one operation
+  ---
+  duration_ms: 2.2984
+  type: 'test'
+  ...
+# Subtest: Stack deletion removes touching dimensions and constraints while leaving a global dangling-reference error
+ok 27 - Stack deletion removes touching dimensions and constraints while leaving a global dangling-reference error
+  ---
+  duration_ms: 2.6581
+  type: 'test'
+  ...
+# Subtest: failed Stack solves identify the participating Stack names and offending relationship
+ok 28 - failed Stack solves identify the participating Stack names and offending relationship
+  ---
+  duration_ms: 0.9396
+  type: 'test'
+  ...
+# Subtest: canvas Stack interaction resolves ownership from the nearest Stack presentation node
+ok 29 - canvas Stack interaction resolves ownership from the nearest Stack presentation node
+  ---
+  duration_ms: 1.4973
+  type: 'test'
+  ...
+# Subtest: inactive canvas records select their Stack on click without activating it on double click
+ok 30 - inactive canvas records select their Stack on click without activating it on double click
+  ---
+  duration_ms: 0.2742
+  type: 'test'
+  ...
+# Subtest: canvas geometry clicks do not select a Stack when no Stack is active
+ok 31 - canvas geometry clicks do not select a Stack when no Stack is active
+  ---
+  duration_ms: 0.0852
+  type: 'test'
+  ...
+# Subtest: Global layer controls receive clicks while a drawable Stack remains active
+ok 32 - Global layer controls receive clicks while a drawable Stack remains active
+  ---
+  duration_ms: 0.2345
+  type: 'test'
+  ...
+# Subtest: the second captured geometry click only selects its inactive Stack
+ok 33 - the second captured geometry click only selects its inactive Stack
+  ---
+  duration_ms: 0.163
+  type: 'test'
+  ...
+# Subtest: nearby pointer presses never activate an inactive Stack
+ok 34 - nearby pointer presses never activate an inactive Stack
+  ---
+  duration_ms: 0.1185
+  type: 'test'
+  ...
+# Subtest: separate clicks do not activate an inactive Stack outside the double-click gesture
+ok 35 - separate clicks do not activate an inactive Stack outside the double-click gesture
+  ---
+  duration_ms: 0.1879
+  type: 'test'
+  ...
+# Subtest: cross-Stack dimension and constraint tool clicks remain owned by the active tool
+ok 36 - cross-Stack dimension and constraint tool clicks remain owned by the active tool
+  ---
+  duration_ms: 0.1308
+  type: 'test'
+  ...
+# Subtest: inactive Stack hit testing is blocked for drawing and ordinary feature tools only
+ok 37 - inactive Stack hit testing is blocked for drawing and ordinary feature tools only
+  ---
+  duration_ms: 0.3575
+  type: 'test'
+  ...
+# Subtest: Stack hover overlay mounts foreground clones and clears them with the hover state
+ok 38 - Stack hover overlay mounts foreground clones and clears them with the hover state
+  ---
+  duration_ms: 0.7978
+  type: 'test'
+  ...
+# Subtest: fallback ownership role belongs to an ordinary removable Stack
+ok 39 - fallback ownership role belongs to an ordinary removable Stack
+  ---
+  duration_ms: 1.1629
+  type: 'test'
+  ...
+# Subtest: a new drawing starts with only a fresh active Stack 1
+ok 40 - a new drawing starts with only a fresh active Stack 1
+  ---
+  duration_ms: 1.4888
+  type: 'test'
+  ...
+# Subtest: new entities inherit the active stack and unknown stack IDs migrate to default
+ok 41 - new entities inherit the active stack and unknown stack IDs migrate to default
+  ---
+  duration_ms: 1.1598
+  type: 'test'
+  ...
+# Subtest: hidden stacks hide records and remove them from selection without deleting them
+ok 42 - hidden stacks hide records and remove them from selection without deleting them
+  ---
+  duration_ms: 0.8982
+  type: 'test'
+  ...
+# Subtest: inactive Stack records are dimmed and disabled until a dimension or constraint tool is active
+ok 43 - inactive Stack records are dimmed and disabled until a dimension or constraint tool is active
+  ---
+  duration_ms: 0.7081
+  type: 'test'
+  ...
+# Subtest: relationship tools retain inactive ownership on fill boundaries and derived presentations
+ok 44 - relationship tools retain inactive ownership on fill boundaries and derived presentations
+  ---
+  duration_ms: 0.5824
+  type: 'test'
+  ...
+# Subtest: a relationship record owned by an enabled Stack is disabled when any participant Stack is disabled
+ok 45 - a relationship record owned by an enabled Stack is disabled when any participant Stack is disabled
+  ---
+  duration_ms: 0.3994
+  type: 'test'
+  ...
+# Subtest: no active Stack exposes entity interaction only while a relation tool is active
+ok 46 - no active Stack exposes entity interaction only while a relation tool is active
+  ---
+  duration_ms: 0.2483
+  type: 'test'
+  ...
+# Subtest: hovering a Stack applies a presentation-only highlight to all of its records
+ok 47 - hovering a Stack applies a presentation-only highlight to all of its records
+  ---
+  duration_ms: 0.2877
+  type: 'test'
+  ...
+# Subtest: stacks can be reordered directly to a dragged list index
+ok 48 - stacks can be reordered directly to a dragged list index
+  ---
+  duration_ms: 1.8591
+  type: 'test'
+  ...
+# Subtest: drawing-extension restoration notifies stack panel subscribers
+ok 49 - drawing-extension restoration notifies stack panel subscribers
+  ---
+  duration_ms: 0.5727
+  type: 'test'
+  ...
+# Subtest: Stack creation and rename enforce case-insensitive unique display names
+ok 50 - Stack creation and rename enforce case-insensitive unique display names
+  ---
+  duration_ms: 0.3802
+  type: 'test'
+  ...
+# Subtest: automatic Stack names advance from the initial Stack 1
+ok 51 - automatic Stack names advance from the initial Stack 1
+  ---
+  duration_ms: 0.2361
+  type: 'test'
+  ...
+# Subtest: manual Stack enablement remains independent from its preserved expression
+ok 52 - manual Stack enablement remains independent from its preserved expression
+  ---
+  duration_ms: 0.3613
+  type: 'test'
+  ...
+# Subtest: Stack manager creates child and sibling nodes and reparents without changing identity
+ok 53 - Stack manager creates child and sibling nodes and reparents without changing identity
+  ---
+  duration_ms: 0.8505
+  type: 'test'
+  ...
+# Subtest: selection and activation remain independent from effective Stack enablement
+ok 54 - selection and activation remain independent from effective Stack enablement
+  ---
+  duration_ms: 0.4154
+  type: 'test'
+  ...
+# Subtest: subtree deletion reports every owned record and removes descendants atomically
+ok 55 - subtree deletion reports every owned record and removes descendants atomically
+  ---
+  duration_ms: 0.8079
+  type: 'test'
+  ...
+# Subtest: deleting the last Stack creates and activates a fresh Stack 1
+ok 56 - deleting the last Stack creates and activates a fresh Stack 1
+  ---
+  duration_ms: 0.3305
+  type: 'test'
+  ...
+# Subtest: clearing a drawing creates and activates a new Stack 1 UUID
+ok 57 - clearing a drawing creates and activates a new Stack 1 UUID
+  ---
+  duration_ms: 0.2825
+  type: 'test'
+  ...
+# Subtest: drawing containers cannot own geometry or become the active Stack
+ok 58 - drawing containers cannot own geometry or become the active Stack
+  ---
+  duration_ms: 0.2752
+  type: 'test'
+  ...
+# Subtest: collapsed Stack descendants are absent from the visible tree order
+ok 59 - collapsed Stack descendants are absent from the visible tree order
+  ---
+  duration_ms: 2.2746
+  type: 'test'
+  ...
+# Subtest: visibility control is available only while a Stack is effectively enabled
+ok 60 - visibility control is available only while a Stack is effectively enabled
+  ---
+  duration_ms: 0.236
+  type: 'test'
+  ...
+# Subtest: Stack row status reserves its marker for activation errors
+ok 61 - Stack row status reserves its marker for activation errors
+  ---
+  duration_ms: 0.1198
+  type: 'test'
+  ...
+# Subtest: blank Stack enable expressions show the FALSE hint
+ok 62 - blank Stack enable expressions show the FALSE hint
+  ---
+  duration_ms: 0.0708
+  type: 'test'
+  ...
+# Subtest: Stack enable expression inputs retain their base width and expand to fit longer text
+ok 63 - Stack enable expression inputs retain their base width and expand to fit longer text
+  ---
+  duration_ms: 0.7958
+  type: 'test'
+  ...
+# Subtest: Stack disclosure controls clearly label both tree states
+ok 64 - Stack disclosure controls clearly label both tree states
+  ---
+  duration_ms: 0.0893
+  type: 'test'
+  ...
+# Subtest: Stack toolbar is available to active Stacks and drawing containers, not the permanent drawing row
+ok 65 - Stack toolbar is available to active Stacks and drawing containers, not the permanent drawing row
+  ---
+  duration_ms: 0.1868
+  type: 'test'
+  ...
+# Subtest: Stack row activation toggles the clicked Stack
+ok 66 - Stack row activation toggles the clicked Stack
+  ---
+  duration_ms: 0.1006
+  type: 'test'
+  ...
+# Subtest: Stack toolbar anchors to the visible sidebar edge when a row overflows a narrow panel
+ok 67 - Stack toolbar anchors to the visible sidebar edge when a row overflows a narrow panel
+  ---
+  duration_ms: 0.2074
+  type: 'test'
+  ...
+# Subtest: canvas geometry hover resolves the owning Stack for tree highlighting
+ok 68 - canvas geometry hover resolves the owning Stack for tree highlighting
+  ---
+  duration_ms: 0.2466
+  type: 'test'
+  ...
+# Subtest: Stack row hover previews only non-active Stacks on the canvas
+ok 69 - Stack row hover previews only non-active Stacks on the canvas
+  ---
+  duration_ms: 0.1008
+  type: 'test'
+  ...
+1..69
+# tests 69
+# suites 0
+# pass 69
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 154.1316

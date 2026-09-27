@@ -1,0 +1,172 @@
+TAP version 13
+# Subtest: solver execution facade defaults to the synchronous controller path
+ok 1 - solver execution facade defaults to the synchronous controller path
+  ---
+  duration_ms: 5.423
+  type: 'test'
+  ...
+# Subtest: preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+ok 2 - preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+  ---
+  duration_ms: 1.3165
+  type: 'test'
+  ...
+# Subtest: shadow facade mirrors committed and coalesced drag mutations with full parity
+ok 3 - shadow facade mirrors committed and coalesced drag mutations with full parity
+  ---
+  duration_ms: 9.1586
+  type: 'test'
+  ...
+# Subtest: worker-authoritative drag applies only the newest coalesced delta
+ok 4 - worker-authoritative drag applies only the newest coalesced delta
+  ---
+  duration_ms: 4.2727
+  type: 'test'
+  ...
+# Subtest: worker-authoritative constraint add and remove update the local replica without local solves
+ok 5 - worker-authoritative constraint add and remove update the local replica without local solves
+  ---
+  duration_ms: 5.5946
+  type: 'test'
+  ...
+# Subtest: constraint batches return immediately after one local solve and resynchronize the Worker
+ok 6 - constraint batches return immediately after one local solve and resynchronize the Worker
+  ---
+  duration_ms: 4.3206
+  type: 'test'
+  ...
+# Subtest: worker-authoritative parameter updates synchronize renamed dependents without a local solve
+ok 7 - worker-authoritative parameter updates synchronize renamed dependents without a local solve
+  ---
+  duration_ms: 4.4003
+  type: 'test'
+  ...
+# Subtest: worker-authoritative control updates coalesce to the newest absolute parameter value
+ok 8 - worker-authoritative control updates coalesce to the newest absolute parameter value
+  ---
+  duration_ms: 1.8918
+  type: 'test'
+  ...
+# Subtest: worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+ok 9 - worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+  ---
+  duration_ms: 9.3592
+  type: 'test'
+  ...
+# Subtest: shadow facade recreates a failed worker from the latest synchronous checkpoint
+ok 10 - shadow facade recreates a failed worker from the latest synchronous checkpoint
+  ---
+  duration_ms: 5.6348
+  type: 'test'
+  ...
+# Subtest: shadow facade bounds restart attempts before retaining synchronous fallback
+ok 11 - shadow facade bounds restart attempts before retaining synchronous fallback
+  ---
+  duration_ms: 1.6094
+  type: 'test'
+  ...
+# Subtest: solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+ok 12 - solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+  ---
+  duration_ms: 0.2556
+  type: 'test'
+  ...
+# Subtest: solver facade exposes guarded block Jacobian configuration without changing its execution mode
+ok 13 - solver facade exposes guarded block Jacobian configuration without changing its execution mode
+  ---
+  duration_ms: 0.2234
+  type: 'test'
+  ...
+# Subtest: solver worker protocol validates versioned request envelopes
+ok 14 - solver worker protocol validates versioned request envelopes
+  ---
+  duration_ms: 1.4634
+  type: 'test'
+  ...
+# Subtest: worker runtime applies guarded block Jacobians and returns usage diagnostics
+ok 15 - worker runtime applies guarded block Jacobians and returns usage diagnostics
+  ---
+  duration_ms: 12.5443
+  type: 'test'
+  ...
+# Subtest: browser worker client forwards block mode through the Worker module URL
+ok 16 - browser worker client forwards block mode through the Worker module URL
+  ---
+  duration_ms: 0.5959
+  type: 'test'
+  ...
+# Subtest: solver worker returns every affected parameter after a rename
+ok 17 - solver worker returns every affected parameter after a rename
+  ---
+  duration_ms: 4.1169
+  type: 'test'
+  ...
+# Subtest: solver worker runtime owns sketch state and returns changed-entity deltas
+ok 18 - solver worker runtime owns sketch state and returns changed-entity deltas
+  ---
+  duration_ms: 2.7952
+  type: 'test'
+  ...
+# Subtest: solver worker returns accepted and removed constraint deltas
+ok 19 - solver worker returns accepted and removed constraint deltas
+  ---
+  duration_ms: 3.1445
+  type: 'test'
+  ...
+# Subtest: solver worker runtime rejects older interactive generations
+ok 20 - solver worker runtime rejects older interactive generations
+  ---
+  duration_ms: 0.5512
+  type: 'test'
+  ...
+# Subtest: solver worker runtime returns directly edited unconstrained geometry in its delta
+ok 21 - solver worker runtime returns directly edited unconstrained geometry in its delta
+  ---
+  duration_ms: 1.144
+  type: 'test'
+  ...
+# Subtest: solver worker uses a bounded preview solve for drag and a normal final solve on commit
+ok 22 - solver worker uses a bounded preview solve for drag and a normal final solve on commit
+  ---
+  duration_ms: 2.1278
+  type: 'test'
+  ...
+# Subtest: solver worker restores the pre-drag baseline when the strict final solve fails
+ok 23 - solver worker restores the pre-drag baseline when the strict final solve fails
+  ---
+  duration_ms: 0.512
+  type: 'test'
+  ...
+# Subtest: solver worker final result resynchronizes every entity from the affected drag component
+ok 24 - solver worker final result resynchronizes every entity from the affected drag component
+  ---
+  duration_ms: 0.4627
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces drag updates and suppresses superseded in-flight results
+ok 25 - solver worker client coalesces drag updates and suppresses superseded in-flight results
+  ---
+  duration_ms: 0.3937
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces only explicitly keyed parameter updates
+ok 26 - solver worker client coalesces only explicitly keyed parameter updates
+  ---
+  duration_ms: 0.15
+  type: 'test'
+  ...
+# Subtest: solver worker client keeps committed mutations ordered and non-droppable
+ok 27 - solver worker client keeps committed mutations ordered and non-droppable
+  ---
+  duration_ms: 0.1276
+  type: 'test'
+  ...
+1..27
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 181.3905

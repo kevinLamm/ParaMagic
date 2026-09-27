@@ -1,0 +1,452 @@
+TAP version 13
+# Subtest: JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+not ok 1 - JavaScript: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 12.2543
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:51:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 115,
+    +   y: 30
+    -   x: 100,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 115
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+not ok 2 - JavaScript: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 2.7642
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:62:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 125,
+    -   x: 100,
+        y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 125
+    y: 0
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:67:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+not ok 3 - JavaScript: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 4.2652
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:71:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+        x: 100,
+    +   y: 30
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 100
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:75:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JavaScript: independent dimension directions stay independent through three connected Stacks
+not ok 4 - JavaScript: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.3342
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:82:3'
+  failureType: 'testCodeFailure'
+  error: '25 != 0'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:10:31)
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:88:33)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JavaScript: a driven measurement does not couple Stack movement
+not ok 5 - JavaScript: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 1.3964
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:91:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 115,
+    +   y: 30
+    -   x: 100,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 115
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:96:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JavaScript: disabled relationships do not couple Stack movement
+not ok 6 - JavaScript: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 2.5912
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:98:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 15.000000000001,
+    +   y: 30
+    -   x: 9.999996323226604e-13,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 9.999996323226604e-13
+    y: 0
+    rotation: 0
+  actual:
+    x: 15.000000000001
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:105:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 7 - JavaScript: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 4.6136
+  type: 'test'
+  ...
+# Subtest: WASM: Parallel connects rotation without grouping translations, dragging either Stack
+not ok 8 - WASM: Parallel connects rotation without grouping translations, dragging either Stack
+  ---
+  duration_ms: 5.2023
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:51:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 115,
+    +   y: 30
+    -   x: 100,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 115
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:56:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+not ok 9 - WASM: Collinear permits sliding along the shared line and follows only perpendicular movement
+  ---
+  duration_ms: 1.9991
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:62:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 125,
+    -   x: 100,
+        y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 125
+    y: 0
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:67:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: horizontal dimension preserves spacing without coupling vertical movement
+not ok 10 - WASM: horizontal dimension preserves spacing without coupling vertical movement
+  ---
+  duration_ms: 2.9538
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:71:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+        x: 100,
+    +   y: 30
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 100
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:75:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: independent dimension directions stay independent through three connected Stacks
+not ok 11 - WASM: independent dimension directions stay independent through three connected Stacks
+  ---
+  duration_ms: 3.8897
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:82:3'
+  failureType: 'testCodeFailure'
+  error: '25 != 0'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    near (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:10:31)
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:88:33)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: a driven measurement does not couple Stack movement
+not ok 12 - WASM: a driven measurement does not couple Stack movement
+  ---
+  duration_ms: 0.9873
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:91:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 115,
+    +   y: 30
+    -   x: 100,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 100
+    y: 0
+    rotation: 0
+  actual:
+    x: 115
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:96:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: disabled relationships do not couple Stack movement
+not ok 13 - WASM: disabled relationships do not couple Stack movement
+  ---
+  duration_ms: 2.0302
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\stackPlacementFreedom.test.js:98:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        rotation: 0,
+    +   x: 15.000000000001,
+    +   y: 30
+    -   x: 9.999996323226604e-13,
+    -   y: 0
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    x: 9.999996323226604e-13
+    y: 0
+    rotation: 0
+  actual:
+    x: 15.000000000001
+    y: 30
+    rotation: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/stackPlacementFreedom.test.js:105:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+ok 14 - WASM: Fixed keeps a related Stack anchored and an impossible move rolls back
+  ---
+  duration_ms: 3.0775
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 2
+# fail 12
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 135.228

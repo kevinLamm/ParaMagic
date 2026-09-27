@@ -1,0 +1,23 @@
+[61420:62920:0926/152518.946:ERROR:chrome\installer\util\google_update_settings_win.cc:270] Failed opening key Software\Google\Update\ClientStateMedium\{8A69D345-D564-463c-AFF1-A69D9E530F96} to set usagestats; result: 5
+
+DevTools listening on ws://127.0.0.1:63413/devtools/browser/a8279e5f-a69f-4889-ab71-b56c06177f48
+[61420:63040:0926/152519.044:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:42504:0926/152519.045:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\kevin\AppData\Local\Temp\paramagic-solver-baseline-Oaf0Qz\GPUPersistentCache\DawnGraphiteCache\ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB", error: 0: The process cannot access the file because it is being used by another process. (0x20)
+[61420:63040:0926/152519.062:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:63040:0926/152519.070:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:65368:0926/152519.071:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\kevin\AppData\Local\Temp\paramagic-solver-baseline-Oaf0Qz\GPUPersistentCache\DawnGraphiteCache\ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB", error: 0: The process cannot access the file because it is being used by another process. (0x20)
+[61420:63040:0926/152519.077:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:63040:0926/152519.084:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:65036:0926/152519.084:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\kevin\AppData\Local\Temp\paramagic-solver-baseline-Oaf0Qz\GPUPersistentCache\DawnGraphiteCache\ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB", error: 0: The process cannot access the file because it is being used by another process. (0x20)
+[61420:58436:0926/152519.084:ERROR:services\device\public\cpp\geolocation\system_geolocation_source_win.cc:251] Failed to get location access status: The parameter is incorrect. (0x80070057)
+[61420:63040:0926/152519.090:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:63040:0926/152519.096:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:65036:0926/152519.096:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\kevin\AppData\Local\Temp\paramagic-solver-baseline-Oaf0Qz\GPUPersistentCache\DawnGraphiteCache\ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB", error: 0: The process cannot access the file because it is being used by another process. (0x20)
+[61420:63040:0926/152519.102:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:63040:0926/152519.109:ERROR:content\browser\gpu\gpu_process_host.cc:1054] GPU process exited unexpectedly: exit_code=-1073741790
+[61420:63040:0926/152519.109:FATAL:content\browser\gpu\gpu_data_manager_impl_private.cc:417] GPU process isn't usable. Goodbye.
+[61420:65036:0926/152519.513:ERROR:components\viz\host\persistent_cache_sandboxed_file_factory.cc:153] Failed to open persistent cache files in directory "C:\Users\kevin\AppData\Local\Temp\paramagic-solver-baseline-Oaf0Qz\GPUPersistentCache\DawnGraphiteCache\ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB", error: 0: The process cannot access the file because it is being used by another process. (0x20)
+
+DevTools listening on ws://127.0.0.1:60095/devtools/browser/a64eab43-bd4a-4089-b490-dd1c8cbde9d3
+[64288:63856:0926/152549.102:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+Created TensorFlow Lite XNNPACK delegate for CPU.

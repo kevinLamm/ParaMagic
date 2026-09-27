@@ -106,20 +106,22 @@ test('worker runtime applies guarded block Jacobians and returns usage diagnosti
   assert.equal(result.diagnostics.jacobianStats.fallbackBlocks, 0);
 });
 
-test('browser worker client forwards block mode through the Worker module URL', () => {
+test('browser worker client initializes the bundled Worker with its selected modes', () => {
   const OriginalWorker = globalThis.Worker;
   let createdUrl = null;
+  const messages = [];
   class CapturingWorker {
     constructor(url) { createdUrl = url; }
     addEventListener() {}
     removeEventListener() {}
-    postMessage() {}
+    postMessage(message) { messages.push(message); }
     terminate() {}
   }
   globalThis.Worker = CapturingWorker;
   try {
-    const client = createBrowserSolverWorkerClient({ jacobianMode: 'blocks' });
-    assert.equal(createdUrl.searchParams.get('jacobianMode'), 'blocks');
+    const client = createBrowserSolverWorkerClient({ jacobianMode: 'blocks', backend: 'wasm' });
+    assert.ok(createdUrl.pathname.endsWith('/SolverWorker.js'));
+    assert.deepEqual(messages, [{ type: 'initialize', jacobianMode: 'blocks', backend: 'wasm' }]);
     client.terminate();
   } finally {
     globalThis.Worker = OriginalWorker;

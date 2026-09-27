@@ -1,0 +1,382 @@
+TAP version 13
+# Subtest: one edit publishes only after dependent geometry stabilizes, with one history commit
+ok 1 - one edit publishes only after dependent geometry stabilizes, with one history commit
+  ---
+  duration_ms: 1.0301
+  type: 'test'
+  ...
+# Subtest: publishing another edit schedules a distinct update and unknown invalidation stays full
+ok 2 - publishing another edit schedules a distinct update and unknown invalidation stays full
+  ---
+  duration_ms: 0.1342
+  type: 'test'
+  ...
+# Subtest: dependency invalidation includes nested derivatives and their centers, and replaces removed edges
+ok 3 - dependency invalidation includes nested derivatives and their centers, and replaces removed edges
+  ---
+  duration_ms: 0.7159
+  type: 'test'
+  ...
+# Subtest: an inconsistent dependent cycle fails without publishing an intermediate drawing
+ok 4 - an inconsistent dependent cycle fails without publishing an intermediate drawing
+  ---
+  duration_ms: 0.402
+  type: 'test'
+  ...
+# Subtest: color picker input only syncs the expression and commits appearance on change
+ok 5 - color picker input only syncs the expression and commits appearance on change
+  ---
+  duration_ms: 0.9094
+  type: 'test'
+  ...
+# Subtest: a stroke edit targets the selected segment record while fill remains region-wide
+ok 6 - a stroke edit targets the selected segment record while fill remains region-wide
+  ---
+  duration_ms: 2.3454
+  type: 'test'
+  ...
+# Subtest: without a segment target a stroke edit applies to the selected geometry records
+ok 7 - without a segment target a stroke edit applies to the selected geometry records
+  ---
+  duration_ms: 0.331
+  type: 'test'
+  ...
+# Subtest: a derived closed-region provider can authorize an image fill for its open source edges
+ok 8 - a derived closed-region provider can authorize an image fill for its open source edges
+  ---
+  duration_ms: 0.4989
+  type: 'test'
+  ...
+# Subtest: stroke properties report the focused segment instead of a mixed region value
+ok 9 - stroke properties report the focused segment instead of a mixed region value
+  ---
+  duration_ms: 0.1666
+  type: 'test'
+  ...
+# Subtest: resolved boundary paint does not mask individual source strokes
+ok 10 - resolved boundary paint does not mask individual source strokes
+  ---
+  duration_ms: 0.5697
+  type: 'test'
+  ...
+# Subtest: Properties panel edits become persistent class overrides without freezing inherited properties
+ok 11 - Properties panel edits become persistent class overrides without freezing inherited properties
+  ---
+  duration_ms: 2.3489
+  type: 'test'
+  ...
+# Subtest: appearance evaluation is reused and invalidated when parameter values change
+ok 12 - appearance evaluation is reused and invalidated when parameter values change
+  ---
+  duration_ms: 0.2232
+  type: 'test'
+  ...
+# Subtest: solver execution facade defaults to the synchronous controller path
+ok 13 - solver execution facade defaults to the synchronous controller path
+  ---
+  duration_ms: 4.8996
+  type: 'test'
+  ...
+# Subtest: preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+ok 14 - preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+  ---
+  duration_ms: 0.7618
+  type: 'test'
+  ...
+# Subtest: shadow facade mirrors committed and coalesced drag mutations with full parity
+ok 15 - shadow facade mirrors committed and coalesced drag mutations with full parity
+  ---
+  duration_ms: 7.688
+  type: 'test'
+  ...
+# Subtest: worker-authoritative drag applies only the newest coalesced delta
+ok 16 - worker-authoritative drag applies only the newest coalesced delta
+  ---
+  duration_ms: 3.4926
+  type: 'test'
+  ...
+# Subtest: worker-authoritative constraint add and remove update the local replica without local solves
+ok 17 - worker-authoritative constraint add and remove update the local replica without local solves
+  ---
+  duration_ms: 5.2136
+  type: 'test'
+  ...
+# Subtest: constraint batches return immediately after one local solve and resynchronize the Worker
+ok 18 - constraint batches return immediately after one local solve and resynchronize the Worker
+  ---
+  duration_ms: 4.2379
+  type: 'test'
+  ...
+# Subtest: worker-authoritative parameter updates synchronize renamed dependents without a local solve
+ok 19 - worker-authoritative parameter updates synchronize renamed dependents without a local solve
+  ---
+  duration_ms: 4.2672
+  type: 'test'
+  ...
+# Subtest: worker-authoritative control updates coalesce to the newest absolute parameter value
+ok 20 - worker-authoritative control updates coalesce to the newest absolute parameter value
+  ---
+  duration_ms: 1.6374
+  type: 'test'
+  ...
+# Subtest: worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+ok 21 - worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+  ---
+  duration_ms: 8.1346
+  type: 'test'
+  ...
+# Subtest: shadow facade recreates a failed worker from the latest synchronous checkpoint
+ok 22 - shadow facade recreates a failed worker from the latest synchronous checkpoint
+  ---
+  duration_ms: 4.781
+  type: 'test'
+  ...
+# Subtest: shadow facade bounds restart attempts before retaining synchronous fallback
+ok 23 - shadow facade bounds restart attempts before retaining synchronous fallback
+  ---
+  duration_ms: 1.317
+  type: 'test'
+  ...
+# Subtest: solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+ok 24 - solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+  ---
+  duration_ms: 0.2203
+  type: 'test'
+  ...
+# Subtest: solver facade exposes guarded block Jacobian configuration without changing its execution mode
+ok 25 - solver facade exposes guarded block Jacobian configuration without changing its execution mode
+  ---
+  duration_ms: 0.1953
+  type: 'test'
+  ...
+# Subtest: presentation mutations retain the worker model and graph and flush before a following edit
+ok 26 - presentation mutations retain the worker model and graph and flush before a following edit
+  ---
+  duration_ms: 1.957
+  type: 'test'
+  ...
+# Subtest: worker checkpoints include derived fillets before their constraints are restored
+not ok 27 - worker checkpoints include derived fillets before their constraints are restored
+  ---
+  duration_ms: 2.2376
+  type: 'test'
+  location: 'C:\\Apps\\ParaMagic - Experiment\\src\\tests\\solverExecutionFacade.test.js:401:1'
+  failureType: 'testCodeFailure'
+  error: 'Expected "actual" to be strictly unequal to: false'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: false
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Apps/ParaMagic%20-%20Experiment/src/tests/solverExecutionFacade.test.js:415:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: solver worker protocol validates versioned request envelopes
+ok 28 - solver worker protocol validates versioned request envelopes
+  ---
+  duration_ms: 1.4161
+  type: 'test'
+  ...
+# Subtest: worker runtime applies guarded block Jacobians and returns usage diagnostics
+ok 29 - worker runtime applies guarded block Jacobians and returns usage diagnostics
+  ---
+  duration_ms: 9.9401
+  type: 'test'
+  ...
+# Subtest: browser worker client forwards block mode through the Worker module URL
+ok 30 - browser worker client forwards block mode through the Worker module URL
+  ---
+  duration_ms: 0.7782
+  type: 'test'
+  ...
+# Subtest: solver worker returns every affected parameter after a rename
+ok 31 - solver worker returns every affected parameter after a rename
+  ---
+  duration_ms: 3.748
+  type: 'test'
+  ...
+# Subtest: solver worker runtime owns sketch state and returns changed-entity deltas
+ok 32 - solver worker runtime owns sketch state and returns changed-entity deltas
+  ---
+  duration_ms: 3.1437
+  type: 'test'
+  ...
+# Subtest: solver worker returns accepted and removed constraint deltas
+ok 33 - solver worker returns accepted and removed constraint deltas
+  ---
+  duration_ms: 2.7105
+  type: 'test'
+  ...
+# Subtest: solver worker runtime rejects older interactive generations
+ok 34 - solver worker runtime rejects older interactive generations
+  ---
+  duration_ms: 0.2566
+  type: 'test'
+  ...
+# Subtest: solver worker runtime returns directly edited unconstrained geometry in its delta
+ok 35 - solver worker runtime returns directly edited unconstrained geometry in its delta
+  ---
+  duration_ms: 0.8287
+  type: 'test'
+  ...
+# Subtest: solver worker uses a bounded preview solve for drag and a normal final solve on commit
+ok 36 - solver worker uses a bounded preview solve for drag and a normal final solve on commit
+  ---
+  duration_ms: 1.8548
+  type: 'test'
+  ...
+# Subtest: solver worker restores the pre-drag baseline when the strict final solve fails
+ok 37 - solver worker restores the pre-drag baseline when the strict final solve fails
+  ---
+  duration_ms: 0.411
+  type: 'test'
+  ...
+# Subtest: solver worker final result resynchronizes every entity from the affected drag component
+ok 38 - solver worker final result resynchronizes every entity from the affected drag component
+  ---
+  duration_ms: 0.2567
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces drag updates and suppresses superseded in-flight results
+ok 39 - solver worker client coalesces drag updates and suppresses superseded in-flight results
+  ---
+  duration_ms: 0.3633
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces only explicitly keyed parameter updates
+ok 40 - solver worker client coalesces only explicitly keyed parameter updates
+  ---
+  duration_ms: 0.1336
+  type: 'test'
+  ...
+# Subtest: solver worker client keeps committed mutations ordered and non-droppable
+ok 41 - solver worker client keeps committed mutations ordered and non-droppable
+  ---
+  duration_ms: 0.1125
+  type: 'test'
+  ...
+# Subtest: pointer input invalidates an in-flight preview before the next frame dispatch
+ok 42 - pointer input invalidates an in-flight preview before the next frame dispatch
+  ---
+  duration_ms: 0.1396
+  type: 'test'
+  ...
+# Subtest: new Swell entities default to offset-only while legacy definitions retain Swell mode
+ok 43 - new Swell entities default to offset-only while legacy definitions retain Swell mode
+  ---
+  duration_ms: 3.9064
+  type: 'test'
+  ...
+# Subtest: negative Swell expressions reverse direction while retaining positive distances
+ok 44 - negative Swell expressions reverse direction while retaining positive distances
+  ---
+  duration_ms: 1.2329
+  type: 'test'
+  ...
+# Subtest: turning Swell off preserves its expressions and turning it back on restores the transition geometry
+ok 45 - turning Swell off preserves its expressions and turning it back on restores the transition geometry
+  ---
+  duration_ms: 0.7225
+  type: 'test'
+  ...
+# Subtest: Swell decoration forces construction while preserving solver-round-trippable metadata
+ok 46 - Swell decoration forces construction while preserving solver-round-trippable metadata
+  ---
+  duration_ms: 0.5476
+  type: 'test'
+  ...
+# Subtest: Swell line uses right-side base offset, transition arcs, and a central swell line
+ok 47 - Swell line uses right-side base offset, transition arcs, and a central swell line
+  ---
+  duration_ms: 1.1196
+  type: 'test'
+  ...
+# Subtest: overlapping transition distances shrink proportionally no lower than half
+ok 48 - overlapping transition distances shrink proportionally no lower than half
+  ---
+  duration_ms: 0.2986
+  type: 'test'
+  ...
+# Subtest: Swell Offset at or below Offset produces an ordinary offset
+ok 49 - Swell Offset at or below Offset produces an ordinary offset
+  ---
+  duration_ms: 0.2681
+  type: 'test'
+  ...
+# Subtest: Coincident construction endpoints miter their Swell offset sets
+ok 50 - Coincident construction endpoints miter their Swell offset sets
+  ---
+  duration_ms: 1.447
+  type: 'test'
+  ...
+# Subtest: Coincident line and arc offsets share the same joined endpoint
+ok 51 - Coincident line and arc offsets share the same joined endpoint
+  ---
+  duration_ms: 1.1359
+  type: 'test'
+  ...
+# Subtest: a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+ok 52 - a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+  ---
+  duration_ms: 0.7014
+  type: 'test'
+  ...
+# Subtest: Coincident arc offsets intersect at one shared endpoint
+ok 53 - Coincident arc offsets intersect at one shared endpoint
+  ---
+  duration_ms: 0.377
+  type: 'test'
+  ...
+# Subtest: circles and closed line chains offset outward regardless of segment direction
+ok 54 - circles and closed line chains offset outward regardless of segment direction
+  ---
+  duration_ms: 0.8648
+  type: 'test'
+  ...
+# Subtest: closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+ok 55 - closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+  ---
+  duration_ms: 0.218
+  type: 'test'
+  ...
+# Subtest: arc offsets are concentric and follow the right side of their stored direction
+ok 56 - arc offsets are concentric and follow the right side of their stored direction
+  ---
+  duration_ms: 0.2238
+  type: 'test'
+  ...
+# Subtest: connected line, arc, and spline Swell objects join into one closed outward boundary
+ok 57 - connected line, arc, and spline Swell objects join into one closed outward boundary
+  ---
+  duration_ms: 2.7649
+  type: 'test'
+  ...
+# Subtest: legacy polyline entities can retain per-segment Swell settings
+ok 58 - legacy polyline entities can retain per-segment Swell settings
+  ---
+  duration_ms: 0.0932
+  type: 'test'
+  ...
+# Subtest: closed Swell geometry exposes stable analytic boundary features for downstream tools
+ok 59 - closed Swell geometry exposes stable analytic boundary features for downstream tools
+  ---
+  duration_ms: 0.6693
+  type: 'test'
+  ...
+# Subtest: Swell evaluation reuses unaffected components and invalidates changed expressions and endpoint neighbours
+ok 60 - Swell evaluation reuses unaffected components and invalidates changed expressions and endpoint neighbours
+  ---
+  duration_ms: 2.5206
+  type: 'test'
+  ...
+1..60
+# tests 60
+# suites 0
+# pass 59
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 186.0789

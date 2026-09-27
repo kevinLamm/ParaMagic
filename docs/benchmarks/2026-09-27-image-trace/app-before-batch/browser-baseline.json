@@ -1,0 +1,520 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-27T12:13:55.179Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 3,
+    "budgetMs": 5000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "wasmComparison": false,
+    "frontAppOnly": false,
+    "frontWorkerOnly": false,
+    "frontSamples": 1,
+    "corePipelineOnly": false,
+    "builtTarget": "client",
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Local Chromium on one machine. Connected-chain samples are uninstrumented, budget-limited, warm-started edits; setup and validation excluded. Front-view samples time actual rendered control edits separately from Worker numerical solving and validate against the JavaScript reference at 1e-8. Core pipeline samples measure expression evaluation and connected-component processing independently, alternating backend order. Separate profiler, phase, transport and rendering runs must not be added to solve time. Unmeasured fields remain null.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [],
+  "nativeApp": [],
+  "corePipeline": [],
+  "trace": [],
+  "traceApp": [
+    {
+      "checks": [
+        "Trace Region panel opens",
+        "UI continues animating during Worker initialization and tracing",
+        "Trace completed in the image WASM Worker",
+        "Trace polygon is rendered",
+        "Rendered contour exactly matches the reference",
+        "Rendered contour exactly matches the reference",
+        "Edge Detail reuses cached native contour",
+        "Rendered contour exactly matches the reference",
+        "Rendered contour exactly matches the reference",
+        "Repeated settings upload the image only once",
+        "Settings requests contain no image buffers",
+        "Applied trace lines are rendered",
+        "Source image is preserved",
+        "Trace survives serialized reload",
+        "The initialized image Worker is reused after Apply/Undo/Redo/reload",
+        "Reloaded image displays a new native trace",
+        "Idle image Worker produces no repeated work"
+      ],
+      "timings": [
+        {
+          "name": "cold visible trace",
+          "elapsedMs": 287.90000009536743,
+          "animationFrames": 40
+        },
+        {
+          "name": "detail",
+          "elapsedMs": 4.700000047683716
+        },
+        {
+          "name": "smoothing",
+          "elapsedMs": 200.39999997615814
+        },
+        {
+          "name": "apply",
+          "vertices": 17,
+          "synchronousMs": 144.70000004768372,
+          "elapsedMs": 168.39999997615814
+        }
+      ],
+      "requests": [
+        {
+          "id": 1,
+          "type": "open",
+          "sourceVersion": 1,
+          "transferredBuffers": 1
+        },
+        {
+          "id": 2,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 3,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 4,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 5,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 6,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 7,
+          "type": "trace",
+          "sourceVersion": 1,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 8,
+          "type": "release",
+          "sourceVersion": 2,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 9,
+          "type": "release",
+          "sourceVersion": 3,
+          "transferredBuffers": 0
+        },
+        {
+          "id": 10,
+          "type": "open",
+          "sourceVersion": 3,
+          "transferredBuffers": 1
+        },
+        {
+          "id": 11,
+          "type": "trace",
+          "sourceVersion": 3,
+          "transferredBuffers": 0
+        }
+      ],
+      "appliedConstraintTypes": [
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Coincident",
+        "Perpendicular",
+        "Perpendicular",
+        "Perpendicular",
+        "Perpendicular",
+        "Perpendicular",
+        "Vertical"
+      ],
+      "appliedCoordinates": [
+        [
+          [
+            199.92389293926226,
+            -117.22650704116032
+          ],
+          [
+            183.08304529544696,
+            -135.4198540495368
+          ]
+        ],
+        [
+          [
+            183.0830513951421,
+            -135.4198639364443
+          ],
+          [
+            161.89095207106243,
+            -148.46228511034946
+          ]
+        ],
+        [
+          [
+            161.89095817075756,
+            -148.46229499725695
+          ],
+          [
+            140.12131715771233,
+            -155.5892547660312
+          ]
+        ],
+        [
+          [
+            140.12131715771233,
+            -155.5892547660312
+          ],
+          [
+            119.58511121250135,
+            -157.40132485517918
+          ]
+        ],
+        [
+          [
+            119.58511121747327,
+            -157.40132481896583
+          ],
+          [
+            -210.86255493649332,
+            -112.04187947796709
+          ]
+        ],
+        [
+          [
+            -210.86255571643258,
+            -112.04187935449988
+          ],
+          [
+            -178.4489002100587,
+            178.12973970128616
+          ]
+        ],
+        [
+          [
+            -178.44890107711026,
+            178.12973905827388
+          ],
+          [
+            133.3598289676861,
+            143.1535407353459
+          ]
+        ],
+        [
+          [
+            133.3598287171321,
+            143.15353951249293
+          ],
+          [
+            156.720782171802,
+            135.16780900586613
+          ]
+        ],
+        [
+          [
+            156.72078185556683,
+            135.16780826818925
+          ],
+          [
+            179.29911173041432,
+            121.57098506229254
+          ]
+        ],
+        [
+          [
+            179.29911158263081,
+            121.57098481710499
+          ],
+          [
+            197.23434251771945,
+            102.76783435280207
+          ]
+        ],
+        [
+          [
+            197.23433528413855,
+            102.76782991067428
+          ],
+          [
+            215.07073448358594,
+            73.74864467742518
+          ]
+        ],
+        [
+          [
+            215.070726903361,
+            73.74864002393522
+          ],
+          [
+            225.38994800693243,
+            44.84402079722706
+          ]
+        ],
+        [
+          [
+            225.38994800693243,
+            44.84402079722706
+          ],
+          [
+            231.75352787207405,
+            8.968804159445432
+          ]
+        ],
+        [
+          [
+            231.75352799902413,
+            8.968804159445432
+          ],
+          [
+            231.7535283785656,
+            -25.877068230688028
+          ]
+        ],
+        [
+          [
+            231.75352901054288,
+            -25.877068282582
+          ],
+          [
+            227.42550227171904,
+            -57.412854813830755
+          ]
+        ],
+        [
+          [
+            227.42550300272478,
+            -57.41285498574076
+          ],
+          [
+            216.24415349524486,
+            -90.1248205981887
+          ]
+        ],
+        [
+          [
+            216.2441540511208,
+            -90.12482084114265
+          ],
+          [
+            199.92389273502172,
+            -117.22650691824018
+          ]
+        ]
+      ],
+      "diagnostics": [
+        {
+          "backend": "opencv-wasm-worker",
+          "processingMs": 57.299999952316284,
+          "stages": [
+            "threshold",
+            "components",
+            "mask",
+            "smoothing",
+            "contours",
+            "selection"
+          ],
+          "uploads": 1,
+          "segmentations": 1,
+          "masks": 1,
+          "smoothings": 1,
+          "contourExtractions": 1,
+          "selections": 1,
+          "approximations": 1
+        },
+        {
+          "backend": "opencv-wasm-worker",
+          "processingMs": 0.10000002384185791,
+          "stages": [],
+          "uploads": 1,
+          "segmentations": 1,
+          "masks": 1,
+          "smoothings": 1,
+          "contourExtractions": 1,
+          "selections": 1,
+          "approximations": 2
+        },
+        {
+          "backend": "opencv-wasm-worker",
+          "processingMs": 194.19999992847443,
+          "stages": [
+            "smoothing",
+            "contours",
+            "selection"
+          ],
+          "uploads": 1,
+          "segmentations": 1,
+          "masks": 1,
+          "smoothings": 2,
+          "contourExtractions": 2,
+          "selections": 2,
+          "approximations": 3
+        },
+        {
+          "backend": "opencv-wasm-worker",
+          "processingMs": 205.60000002384186,
+          "stages": [
+            "threshold",
+            "components",
+            "mask",
+            "smoothing",
+            "contours",
+            "selection"
+          ],
+          "uploads": 1,
+          "segmentations": 2,
+          "masks": 2,
+          "smoothings": 3,
+          "contourExtractions": 3,
+          "selections": 3,
+          "approximations": 4
+        },
+        {
+          "backend": "opencv-wasm-worker",
+          "processingMs": 207.39999997615814,
+          "stages": [
+            "threshold",
+            "components",
+            "mask",
+            "smoothing",
+            "contours",
+            "selection"
+          ],
+          "uploads": 1,
+          "segmentations": 1,
+          "masks": 1,
+          "smoothings": 1,
+          "contourExtractions": 1,
+          "selections": 1,
+          "approximations": 1
+        }
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "3dd6325ed8303f118b961b52ea0f0c2877fb2e50b0dda6584c9cedf3440f0e7d",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "c8ebe5b01b84d63e07274750537d01d1284f0be08b844c87ef54d80b5336ac6b",
+    "scripts/solver-baseline/browser.js": "1ffc9a3d0444450497fe727f24a94c48db8b80235eb1400b396524c1e2642c1f",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "2e094cef0a547d58b25e8f82e6af90bd6526e862da02b9788888435060454864",
+    "scripts/solver-baseline/front-worker.js": "5bf46f822db78d265858d04502e0e9dc674e3120f882b16b107422670970a196",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "4c4969710cce2614460f40cc5fcb22c96753195f73a574437e8afc90ac8d89e3",
+    "packages/paramagic-core/native/constraint_program.h": "a206fbcbe97056000d390d855e5c3a8968c66e3cb484a86725ebf1920ff14493",
+    "packages/paramagic-core/native/swell_geometry.h": "8e62dacca8e666d5e0f69a4fb85f7ecbeb1a3dd92cf9b15d6851ff161e5a040d",
+    "packages/paramagic-core/native/sparse_elimination.h": "e30c11e26176ac86b3da4794bfb14febc68e82dc96c6db858f546112e79ad3d9",
+    "packages/paramagic-core/native/graph_kernel.h": "cde4eff526cce43c7442f7229d846f6093e317f40026a8f324d1ad6efa856999",
+    "packages/paramagic-core/native/parameter_kernel.h": "c662a1e5f3f8d1bc5ca90b85f04b1d6e8fe52b070a82510d26c0c61e66a24b92",
+    "packages/paramagic-core/native/continuation.h": "52326aeefc4582e659903705dcf846c26efeac75aaa6fce124c2654f71ad497c",
+    "packages/paramagic-core/src/modules/solver/WasmGraph.js": "2145332c262246c5a8a72b98988eeea42ebac3aa4b7b782b8e904e024a1708ae",
+    "packages/paramagic-core/src/modules/solver/WasmParameters.js": "555e125682b6ef3868631de70d15d8721dbd9c177ca031243b43c4a2da7615a7",
+    "packages/paramagic-core/src/modules/solver/WasmContinuation.js": "e203ed116818539f1ec37d405c13d149a7b74268cf6c1cebb36e82243272afb6",
+    "packages/paramagic-core/src/modules/solver/StackPlacementSolver.js": "6aa1ce7e32b9acbfee3e3296102a5e0b84a55afc1cdedd0c3814a50b5a87db79",
+    "scripts/solver-baseline/core-pipeline.js": "55388cdd2d423bbfb7946fe2c38ffc784ffa1e11d3a702a322f5e78d8fa7c855",
+    "packages/paramagic-core/src/modules/SwellGeometry.js": "05cb2fcbdb6302efd145b33734d5fd8e2290c6f8550ef62da3535d30cb025696",
+    "scripts/image-trace/measure.js": "5084f43923daed3bcdfd5a134b6fec9d9d96521e74c051d086603a7d905b3a32",
+    "scripts/image-trace/app.js": "00ec6864ce7213d4e3d609c8a62a7532144b737c1387db3139eba06074e8daf8",
+    "packages/paramagic-core/src/modules/ImageTrace.js": "2b971a5c605d6b53b6010afedf6b216d63e98efbd033d2d5caa21bd02ad2a568",
+    "packages/paramagic-core/src/modules/ImageTraceClient.js": "465108d10093ef601aea55d5766f3d653b309ee37f6f7cbb71794e7dd0549917",
+    "packages/paramagic-core/src/modules/ImageTraceKernel.js": "d76dd50033975970cf970b0eba30dcc9dc4c67d39d31b50260cdee3aa77e4d16",
+    "packages/paramagic-core/src/modules/ImageTraceWorker.js": "4a077d1c57a909526b9518a9e5400e7849bc1424a23bae82503d043ce0b7749d",
+    "packages/paramagic-core/src/modules/ImageTraceWorkerRuntime.js": "6f3f15d4a0649997b005ae15a199ce4a5fd3b8b1cbad448b2fe4cea9f404233c",
+    "packages/paramagic-core/src/modules/ImageSystem.js": "ecbfcba21e117ba115dc5b78e7b6995369c5b1ccdd07460fcf66e3ea50bd7346",
+    "packages/paramagic-core/src/modules/solver/WasmSwellModel.js": "61158d3cfb6e0570aab8231d13ab3c8776d84c8ee1d14bb73b1b38d66a7d13d3",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "db2694f9bac46ab942933dc159fe00de6b0596197deb67cab9d52bdeebb8e336",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "7693553ac4bfa5a7b6207657d11441476a90d718a256c0357b6c5ecfa2b52334",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "65fa796f2c0fa2d6106263d71fefe3cc98751b1ac98cfadf14adf08335bca752",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "efcc6f4812eb7f6ab10480cfd1788896a792e1c803ceeb092ceaf1dc04c5dfae",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "68551b7f1ab121d2785f53404b2ba157767bf2c3fdf3586d886480e79a36a263",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "20cebfb7ead721c8807866523286671ea049965811391a30f0a82c176336a3f6",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "e6ff79936b09ea8e2ad874f4b202267108eb0f7dc5fc5197306cdc341dcc28c4",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "8b8b2231898e5a555233e31fbadf5eb1a648b792d8fbc19c2da2c4648621f877",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "2c9643dd3e609964c94226ef53721e87828ba2cbb0f0b9c4b101036fa255cb8c",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "90e530a6cdf66501b0fa614617e89b14072b1a7b28ba0d02d81e3a88fc8f60f1"
+  },
+  "finishedAt": "2026-09-27T12:14:06.475Z"
+}

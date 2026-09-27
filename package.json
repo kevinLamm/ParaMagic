@@ -19,7 +19,12 @@
     "test:dxf": "node --test src/tests/drawingIO.test.js src/tests/dxfExport.test.js",
     "test:dxf:autodesk": "node scripts/test-autodesk-dxf.mjs",
     "fixture:dxf:autodesk": "node scripts/generate-autodesk-dxf-fixture.mjs",
-    "benchmark:solver": "node scripts/benchmark-solver.js"
+    "benchmark:solver": "node scripts/benchmark-solver.js",
+    "benchmark:solver:browser": "node scripts/solver-baseline/run-browser.mjs",
+    "build:solver": "node scripts/build-solver-wasm.mjs",
+    "predev": "npm run build:solver",
+    "prebuild": "npm run build:solver",
+    "prebuild:pages": "npm run build:solver"
   },
   "dependencies": {
     "@paramagic/core": "file:packages/paramagic-core"

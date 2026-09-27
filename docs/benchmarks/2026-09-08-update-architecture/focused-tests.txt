@@ -1,0 +1,706 @@
+TAP version 13
+# Subtest: rectangular arrays follow the local axes of a rotated Stack
+ok 1 - rectangular arrays follow the local axes of a rotated Stack
+  ---
+  duration_ms: 1.911
+  type: 'test'
+  ...
+# Subtest: array definitions normalize independent row and column spacing expressions
+ok 2 - array definitions normalize independent row and column spacing expressions
+  ---
+  duration_ms: 0.4444
+  type: 'test'
+  ...
+# Subtest: Array sources mirror canonical entity and window selections
+ok 3 - Array sources mirror canonical entity and window selections
+  ---
+  duration_ms: 0.1404
+  type: 'test'
+  ...
+# Subtest: Array window selection tests rendered geometry instead of the placement bounding box
+ok 4 - Array window selection tests rendered geometry instead of the placement bounding box
+  ---
+  duration_ms: 0.181
+  type: 'test'
+  ...
+# Subtest: Array source window selection retains contained derivative objects
+ok 5 - Array source window selection retains contained derivative objects
+  ---
+  duration_ms: 0.2886
+  type: 'test'
+  ...
+# Subtest: Array source selection accepts persistent derivatives while rejecting dimensions and controls
+ok 6 - Array source selection accepts persistent derivatives while rejecting dimensions and controls
+  ---
+  duration_ms: 0.1463
+  type: 'test'
+  ...
+# Subtest: Array derivative source references normalize and deduplicate every supported kind
+ok 7 - Array derivative source references normalize and deduplicate every supported kind
+  ---
+  duration_ms: 0.3216
+  type: 'test'
+  ...
+# Subtest: Array definitions render derivative parents before dependents and identify cycles
+ok 8 - Array definitions render derivative parents before dependents and identify cycles
+  ---
+  duration_ms: 0.2777
+  type: 'test'
+  ...
+# Subtest: rectangular offsets follow left, center, right and up, center, down directions
+ok 9 - rectangular offsets follow left, center, right and up, center, down directions
+  ---
+  duration_ms: 0.3263
+  type: 'test'
+  ...
+# Subtest: equal rectangular spacing values produce equal edge gaps for a non-square object
+ok 10 - equal rectangular spacing values produce equal edge gaps for a non-square object
+  ---
+  duration_ms: 0.2394
+  type: 'test'
+  ...
+# Subtest: rectangular centroid spacing can be enabled independently for rows and columns
+ok 11 - rectangular centroid spacing can be enabled independently for rows and columns
+  ---
+  duration_ms: 0.1173
+  type: 'test'
+  ...
+# Subtest: circular angles distribute a full circle without duplicating 360 degrees
+ok 12 - circular angles distribute a full circle without duplicating 360 degrees
+  ---
+  duration_ms: 0.1126
+  type: 'test'
+  ...
+# Subtest: array dimension identities remain stable and placement transforms match rendered copies
+ok 13 - array dimension identities remain stable and placement transforms match rendered copies
+  ---
+  duration_ms: 0.618
+  type: 'test'
+  ...
+# Subtest: rectangular array placements materialize active source circles as stable Boolean cutters
+ok 14 - rectangular array placements materialize active source circles as stable Boolean cutters
+  ---
+  duration_ms: 0.6123
+  type: 'test'
+  ...
+# Subtest: array Boolean copies inherit Subtract only from their original source object
+ok 15 - array Boolean copies inherit Subtract only from their original source object
+  ---
+  duration_ms: 0.8045
+  type: 'test'
+  ...
+# Subtest: selected array properties expose visibility without a Subtract property
+ok 16 - selected array properties expose visibility without a Subtract property
+  ---
+  duration_ms: 0.1223
+  type: 'test'
+  ...
+# Subtest: circular array cutters rotate analytic composite boundaries without moving the source placement
+ok 17 - circular array cutters rotate analytic composite boundaries without moving the source placement
+  ---
+  duration_ms: 0.4982
+  type: 'test'
+  ...
+# Subtest: inactive derivative source Stacks remain visible to dependent Arrays
+ok 18 - inactive derivative source Stacks remain visible to dependent Arrays
+  ---
+  duration_ms: 0.0896
+  type: 'test'
+  ...
+# Subtest: circular arrays derive radius from the selected-object centroid and count the original
+ok 19 - circular arrays derive radius from the selected-object centroid and count the original
+  ---
+  duration_ms: 0.1353
+  type: 'test'
+  ...
+# Subtest: zero-count arrays have no placements and gate parent visibility to FALSE
+ok 20 - zero-count arrays have no placements and gate parent visibility to FALSE
+  ---
+  duration_ms: 0.1784
+  type: 'test'
+  ...
+# Subtest: array paint order follows its highest-positioned source object
+ok 21 - array paint order follows its highest-positioned source object
+  ---
+  duration_ms: 0.0691
+  type: 'test'
+  ...
+# Subtest: a circular array center is a persistent solver point that accepts point constraints
+ok 22 - a circular array center is a persistent solver point that accepts point constraints
+  ---
+  duration_ms: 8.7762
+  type: 'test'
+  ...
+# Subtest: a circular array center accepts a driving point-to-point dimension
+ok 23 - a circular array center accepts a driving point-to-point dimension
+  ---
+  duration_ms: 5.2348
+  type: 'test'
+  ...
+# Subtest: partial circular arrays use the original as zero and a signed stop-angle sweep
+ok 24 - partial circular arrays use the original as zero and a signed stop-angle sweep
+  ---
+  duration_ms: 0.1428
+  type: 'test'
+  ...
+# Subtest: legacy circular arrays migrate away from radius and absolute start angle
+ok 25 - legacy circular arrays migrate away from radius and absolute start angle
+  ---
+  duration_ms: 0.1387
+  type: 'test'
+  ...
+# Subtest: array expressions resolve existing parameter names without creating parameters
+ok 26 - array expressions resolve existing parameter names without creating parameters
+  ---
+  duration_ms: 0.1622
+  type: 'test'
+  ...
+# Subtest: array expressions resolve real repository parameter names
+ok 27 - array expressions resolve real repository parameter names
+  ---
+  duration_ms: 0.6781
+  type: 'test'
+  ...
+# Subtest: array validation rejects fractional counts and positive circular arrays without a center
+ok 28 - array validation rejects fractional counts and positive circular arrays without a center
+  ---
+  duration_ms: 0.2559
+  type: 'test'
+  ...
+# Subtest: drawing I/O preserves, remaps, and merges array extension data
+ok 29 - drawing I/O preserves, remaps, and merges array extension data
+  ---
+  duration_ms: 6.3132
+  type: 'test'
+  ...
+# Subtest: one edit publishes only after dependent geometry stabilizes, with one history commit
+ok 30 - one edit publishes only after dependent geometry stabilizes, with one history commit
+  ---
+  duration_ms: 1.065
+  type: 'test'
+  ...
+# Subtest: publishing another edit schedules a distinct update and unknown invalidation stays full
+ok 31 - publishing another edit schedules a distinct update and unknown invalidation stays full
+  ---
+  duration_ms: 0.1429
+  type: 'test'
+  ...
+# Subtest: dependency invalidation includes nested derivatives and their centers, and replaces removed edges
+ok 32 - dependency invalidation includes nested derivatives and their centers, and replaces removed edges
+  ---
+  duration_ms: 0.7131
+  type: 'test'
+  ...
+# Subtest: an inconsistent dependent cycle fails without publishing an intermediate drawing
+ok 33 - an inconsistent dependent cycle fails without publishing an intermediate drawing
+  ---
+  duration_ms: 0.3489
+  type: 'test'
+  ...
+# Subtest: color picker input only syncs the expression and commits appearance on change
+ok 34 - color picker input only syncs the expression and commits appearance on change
+  ---
+  duration_ms: 0.9327
+  type: 'test'
+  ...
+# Subtest: a stroke edit targets the selected segment record while fill remains region-wide
+ok 35 - a stroke edit targets the selected segment record while fill remains region-wide
+  ---
+  duration_ms: 2.9577
+  type: 'test'
+  ...
+# Subtest: without a segment target a stroke edit applies to the selected geometry records
+ok 36 - without a segment target a stroke edit applies to the selected geometry records
+  ---
+  duration_ms: 0.4187
+  type: 'test'
+  ...
+# Subtest: a derived closed-region provider can authorize an image fill for its open source edges
+ok 37 - a derived closed-region provider can authorize an image fill for its open source edges
+  ---
+  duration_ms: 1.085
+  type: 'test'
+  ...
+# Subtest: stroke properties report the focused segment instead of a mixed region value
+ok 38 - stroke properties report the focused segment instead of a mixed region value
+  ---
+  duration_ms: 0.2285
+  type: 'test'
+  ...
+# Subtest: resolved boundary paint does not mask individual source strokes
+ok 39 - resolved boundary paint does not mask individual source strokes
+  ---
+  duration_ms: 0.1485
+  type: 'test'
+  ...
+# Subtest: Properties panel edits become persistent class overrides without freezing inherited properties
+ok 40 - Properties panel edits become persistent class overrides without freezing inherited properties
+  ---
+  duration_ms: 2.3454
+  type: 'test'
+  ...
+# Subtest: appearance evaluation is reused and invalidated when parameter values change
+ok 41 - appearance evaluation is reused and invalidated when parameter values change
+  ---
+  duration_ms: 0.223
+  type: 'test'
+  ...
+# Subtest: solver execution facade defaults to the synchronous controller path
+ok 42 - solver execution facade defaults to the synchronous controller path
+  ---
+  duration_ms: 5.2377
+  type: 'test'
+  ...
+# Subtest: preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+ok 43 - preview hysteresis preserves direct manipulation and suppresses only sub-threshold dependents
+  ---
+  duration_ms: 0.7525
+  type: 'test'
+  ...
+# Subtest: shadow facade mirrors committed and coalesced drag mutations with full parity
+ok 44 - shadow facade mirrors committed and coalesced drag mutations with full parity
+  ---
+  duration_ms: 7.6002
+  type: 'test'
+  ...
+# Subtest: worker-authoritative drag applies only the newest coalesced delta
+ok 45 - worker-authoritative drag applies only the newest coalesced delta
+  ---
+  duration_ms: 3.4467
+  type: 'test'
+  ...
+# Subtest: worker-authoritative constraint add and remove update the local replica without local solves
+ok 46 - worker-authoritative constraint add and remove update the local replica without local solves
+  ---
+  duration_ms: 5.3887
+  type: 'test'
+  ...
+# Subtest: constraint batches return immediately after one local solve and resynchronize the Worker
+ok 47 - constraint batches return immediately after one local solve and resynchronize the Worker
+  ---
+  duration_ms: 3.9668
+  type: 'test'
+  ...
+# Subtest: worker-authoritative parameter updates synchronize renamed dependents without a local solve
+ok 48 - worker-authoritative parameter updates synchronize renamed dependents without a local solve
+  ---
+  duration_ms: 3.6436
+  type: 'test'
+  ...
+# Subtest: worker-authoritative control updates coalesce to the newest absolute parameter value
+ok 49 - worker-authoritative control updates coalesce to the newest absolute parameter value
+  ---
+  duration_ms: 1.5235
+  type: 'test'
+  ...
+# Subtest: worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+ok 50 - worker-authoritative dimensions apply parameter and geometry deltas without a local solve
+  ---
+  duration_ms: 8.2691
+  type: 'test'
+  ...
+# Subtest: shadow facade recreates a failed worker from the latest synchronous checkpoint
+ok 51 - shadow facade recreates a failed worker from the latest synchronous checkpoint
+  ---
+  duration_ms: 5.0375
+  type: 'test'
+  ...
+# Subtest: shadow facade bounds restart attempts before retaining synchronous fallback
+ok 52 - shadow facade bounds restart attempts before retaining synchronous fallback
+  ---
+  duration_ms: 1.3185
+  type: 'test'
+  ...
+# Subtest: solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+ok 53 - solver worker mode defaults to authoritative drag with explicit sync and shadow overrides
+  ---
+  duration_ms: 0.222
+  type: 'test'
+  ...
+# Subtest: solver facade exposes guarded block Jacobian configuration without changing its execution mode
+ok 54 - solver facade exposes guarded block Jacobian configuration without changing its execution mode
+  ---
+  duration_ms: 0.2026
+  type: 'test'
+  ...
+# Subtest: presentation mutations retain the worker model and graph and flush before a following edit
+ok 55 - presentation mutations retain the worker model and graph and flush before a following edit
+  ---
+  duration_ms: 1.9776
+  type: 'test'
+  ...
+# Subtest: worker checkpoints include derived fillets before their constraints are restored
+ok 56 - worker checkpoints include derived fillets before their constraints are restored
+  ---
+  duration_ms: 3.1997
+  type: 'test'
+  ...
+# Subtest: solver worker protocol validates versioned request envelopes
+ok 57 - solver worker protocol validates versioned request envelopes
+  ---
+  duration_ms: 1.3997
+  type: 'test'
+  ...
+# Subtest: worker runtime applies guarded block Jacobians and returns usage diagnostics
+ok 58 - worker runtime applies guarded block Jacobians and returns usage diagnostics
+  ---
+  duration_ms: 9.763
+  type: 'test'
+  ...
+# Subtest: browser worker client forwards block mode through the Worker module URL
+ok 59 - browser worker client forwards block mode through the Worker module URL
+  ---
+  duration_ms: 0.3183
+  type: 'test'
+  ...
+# Subtest: solver worker returns every affected parameter after a rename
+ok 60 - solver worker returns every affected parameter after a rename
+  ---
+  duration_ms: 3.5678
+  type: 'test'
+  ...
+# Subtest: solver worker runtime owns sketch state and returns changed-entity deltas
+ok 61 - solver worker runtime owns sketch state and returns changed-entity deltas
+  ---
+  duration_ms: 2.527
+  type: 'test'
+  ...
+# Subtest: solver worker returns accepted and removed constraint deltas
+ok 62 - solver worker returns accepted and removed constraint deltas
+  ---
+  duration_ms: 2.7236
+  type: 'test'
+  ...
+# Subtest: solver worker runtime rejects older interactive generations
+ok 63 - solver worker runtime rejects older interactive generations
+  ---
+  duration_ms: 0.2652
+  type: 'test'
+  ...
+# Subtest: solver worker runtime returns directly edited unconstrained geometry in its delta
+ok 64 - solver worker runtime returns directly edited unconstrained geometry in its delta
+  ---
+  duration_ms: 0.7921
+  type: 'test'
+  ...
+# Subtest: solver worker uses a bounded preview solve for drag and a normal final solve on commit
+ok 65 - solver worker uses a bounded preview solve for drag and a normal final solve on commit
+  ---
+  duration_ms: 1.7952
+  type: 'test'
+  ...
+# Subtest: solver worker restores the pre-drag baseline when the strict final solve fails
+ok 66 - solver worker restores the pre-drag baseline when the strict final solve fails
+  ---
+  duration_ms: 0.4053
+  type: 'test'
+  ...
+# Subtest: solver worker final result resynchronizes every entity from the affected drag component
+ok 67 - solver worker final result resynchronizes every entity from the affected drag component
+  ---
+  duration_ms: 0.2496
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces drag updates and suppresses superseded in-flight results
+ok 68 - solver worker client coalesces drag updates and suppresses superseded in-flight results
+  ---
+  duration_ms: 0.3637
+  type: 'test'
+  ...
+# Subtest: solver worker client coalesces only explicitly keyed parameter updates
+ok 69 - solver worker client coalesces only explicitly keyed parameter updates
+  ---
+  duration_ms: 0.133
+  type: 'test'
+  ...
+# Subtest: solver worker client keeps committed mutations ordered and non-droppable
+ok 70 - solver worker client keeps committed mutations ordered and non-droppable
+  ---
+  duration_ms: 0.1088
+  type: 'test'
+  ...
+# Subtest: pointer input invalidates an in-flight preview before the next frame dispatch
+ok 71 - pointer input invalidates an in-flight preview before the next frame dispatch
+  ---
+  duration_ms: 0.1384
+  type: 'test'
+  ...
+# Subtest: new Swell entities default to offset-only while legacy definitions retain Swell mode
+ok 72 - new Swell entities default to offset-only while legacy definitions retain Swell mode
+  ---
+  duration_ms: 3.3674
+  type: 'test'
+  ...
+# Subtest: negative Swell expressions reverse direction while retaining positive distances
+ok 73 - negative Swell expressions reverse direction while retaining positive distances
+  ---
+  duration_ms: 0.6787
+  type: 'test'
+  ...
+# Subtest: turning Swell off preserves its expressions and turning it back on restores the transition geometry
+ok 74 - turning Swell off preserves its expressions and turning it back on restores the transition geometry
+  ---
+  duration_ms: 0.5316
+  type: 'test'
+  ...
+# Subtest: Swell decoration forces construction while preserving solver-round-trippable metadata
+ok 75 - Swell decoration forces construction while preserving solver-round-trippable metadata
+  ---
+  duration_ms: 0.5354
+  type: 'test'
+  ...
+# Subtest: Swell line uses right-side base offset, transition arcs, and a central swell line
+ok 76 - Swell line uses right-side base offset, transition arcs, and a central swell line
+  ---
+  duration_ms: 0.7728
+  type: 'test'
+  ...
+# Subtest: overlapping transition distances shrink proportionally no lower than half
+ok 77 - overlapping transition distances shrink proportionally no lower than half
+  ---
+  duration_ms: 0.2156
+  type: 'test'
+  ...
+# Subtest: Swell Offset at or below Offset produces an ordinary offset
+ok 78 - Swell Offset at or below Offset produces an ordinary offset
+  ---
+  duration_ms: 0.2087
+  type: 'test'
+  ...
+# Subtest: Coincident construction endpoints miter their Swell offset sets
+ok 79 - Coincident construction endpoints miter their Swell offset sets
+  ---
+  duration_ms: 0.9969
+  type: 'test'
+  ...
+# Subtest: Coincident line and arc offsets share the same joined endpoint
+ok 80 - Coincident line and arc offsets share the same joined endpoint
+  ---
+  duration_ms: 0.6944
+  type: 'test'
+  ...
+# Subtest: a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+ok 81 - a Swell fillet consumes the joined line transition and adds Swell Offset to its radius
+  ---
+  duration_ms: 0.6671
+  type: 'test'
+  ...
+# Subtest: Coincident arc offsets intersect at one shared endpoint
+ok 82 - Coincident arc offsets intersect at one shared endpoint
+  ---
+  duration_ms: 0.3778
+  type: 'test'
+  ...
+# Subtest: circles and closed line chains offset outward regardless of segment direction
+ok 83 - circles and closed line chains offset outward regardless of segment direction
+  ---
+  duration_ms: 0.8589
+  type: 'test'
+  ...
+# Subtest: closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+ok 84 - closed Swell boundaries serialize analytic circle and mixed-feature SVG paths
+  ---
+  duration_ms: 0.2165
+  type: 'test'
+  ...
+# Subtest: arc offsets are concentric and follow the right side of their stored direction
+ok 85 - arc offsets are concentric and follow the right side of their stored direction
+  ---
+  duration_ms: 0.2192
+  type: 'test'
+  ...
+# Subtest: connected line, arc, and spline Swell objects join into one closed outward boundary
+ok 86 - connected line, arc, and spline Swell objects join into one closed outward boundary
+  ---
+  duration_ms: 2.2269
+  type: 'test'
+  ...
+# Subtest: legacy polyline entities can retain per-segment Swell settings
+ok 87 - legacy polyline entities can retain per-segment Swell settings
+  ---
+  duration_ms: 0.0924
+  type: 'test'
+  ...
+# Subtest: closed Swell geometry exposes stable analytic boundary features for downstream tools
+ok 88 - closed Swell geometry exposes stable analytic boundary features for downstream tools
+  ---
+  duration_ms: 0.6736
+  type: 'test'
+  ...
+# Subtest: Swell evaluation reuses unaffected components and invalidates changed expressions and endpoint neighbours
+ok 89 - Swell evaluation reuses unaffected components and invalidates changed expressions and endpoint neighbours
+  ---
+  duration_ms: 2.2994
+  type: 'test'
+  ...
+# Subtest: linked copies rotate their reflection and placement with the owning Stack
+ok 90 - linked copies rotate their reflection and placement with the owning Stack
+  ---
+  duration_ms: 2.0207
+  type: 'test'
+  ...
+# Subtest: reflectionMatrix mirrors points across an arbitrary line
+ok 91 - reflectionMatrix mirrors points across an arbitrary line
+  ---
+  duration_ms: 0.4749
+  type: 'test'
+  ...
+# Subtest: symmetric dimension identities preserve the centerline and source feature owner
+ok 92 - symmetric dimension identities preserve the centerline and source feature owner
+  ---
+  duration_ms: 0.6815
+  type: 'test'
+  ...
+# Subtest: symmetric centerlines are not valid mirror sources
+ok 93 - symmetric centerlines are not valid mirror sources
+  ---
+  duration_ms: 0.1181
+  type: 'test'
+  ...
+# Subtest: derived Seam Lines mirror with their selected parent boundary
+ok 94 - derived Seam Lines mirror with their selected parent boundary
+  ---
+  duration_ms: 0.1172
+  type: 'test'
+  ...
+# Subtest: filled-region selection resolves every source record in the closed shape
+ok 95 - filled-region selection resolves every source record in the closed shape
+  ---
+  duration_ms: 0.1167
+  type: 'test'
+  ...
+# Subtest: standard canvas selection IDs remain mirrorable source entities
+ok 96 - standard canvas selection IDs remain mirrorable source entities
+  ---
+  duration_ms: 0.176
+  type: 'test'
+  ...
+# Subtest: a closed region is mirrored only when its complete boundary is selected
+ok 97 - a closed region is mirrored only when its complete boundary is selected
+  ---
+  duration_ms: 0.1217
+  type: 'test'
+  ...
+# Subtest: notch entities are valid mirror sources while dimensions remain excluded
+ok 98 - notch entities are valid mirror sources while dimensions remain excluded
+  ---
+  duration_ms: 0.3552
+  type: 'test'
+  ...
+# Subtest: construction entities are excluded from symmetric source selection
+ok 99 - construction entities are excluded from symmetric source selection
+  ---
+  duration_ms: 0.3885
+  type: 'test'
+  ...
+# Subtest: Symmetric source selection recognizes a complete derived presentation selection set
+ok 100 - Symmetric source selection recognizes a complete derived presentation selection set
+  ---
+  duration_ms: 0.1511
+  type: 'test'
+  ...
+# Subtest: Symmetric source selection recognizes geometry through its visible point-handle layer
+ok 101 - Symmetric source selection recognizes geometry through its visible point-handle layer
+  ---
+  duration_ms: 0.0851
+  type: 'test'
+  ...
+# Subtest: symmetric centerline snapping shares vector snap and Alt bypass behavior
+ok 102 - symmetric centerline snapping shares vector snap and Alt bypass behavior
+  ---
+  duration_ms: 0.145
+  type: 'test'
+  ...
+# Subtest: linked duplicates retain their own absolute anchor when the parent moves
+ok 103 - linked duplicates retain their own absolute anchor when the parent moves
+  ---
+  duration_ms: 0.1994
+  type: 'test'
+  ...
+# Subtest: window-selected Duplicate and Symmetric definitions move together from their saved anchors
+ok 104 - window-selected Duplicate and Symmetric definitions move together from their saved anchors
+  ---
+  duration_ms: 0.1697
+  type: 'test'
+  ...
+# Subtest: Duplicate and Symmetric definitions persist independent visibility and z-index properties
+ok 105 - Duplicate and Symmetric definitions persist independent visibility and z-index properties
+  ---
+  duration_ms: 0.1687
+  type: 'test'
+  ...
+# Subtest: Linked Copy constraints retain owner, participant, and portable relationship identities
+ok 106 - Linked Copy constraints retain owner, participant, and portable relationship identities
+  ---
+  duration_ms: 0.3484
+  type: 'test'
+  ...
+# Subtest: linked-copy property selection exposes its own Visible expression and paint controls
+ok 107 - linked-copy property selection exposes its own Visible expression and paint controls
+  ---
+  duration_ms: 0.2073
+  type: 'test'
+  ...
+# Subtest: a blank linked-copy Visible expression stays blank and evaluates false
+ok 108 - a blank linked-copy Visible expression stays blank and evaluates false
+  ---
+  duration_ms: 0.0758
+  type: 'test'
+  ...
+# Subtest: linked table copies use outline-only hits so they cannot block source cell editors
+ok 109 - linked table copies use outline-only hits so they cannot block source cell editors
+  ---
+  duration_ms: 0.0683
+  type: 'test'
+  ...
+# Subtest: the click generated after a Symmetric window selection preserves the derived selection
+ok 110 - the click generated after a Symmetric window selection preserves the derived selection
+  ---
+  duration_ms: 0.0564
+  type: 'test'
+  ...
+# Subtest: linked symmetry stores the reflected result location independently of its axis
+ok 111 - linked symmetry stores the reflected result location independently of its axis
+  ---
+  duration_ms: 0.1
+  type: 'test'
+  ...
+# Subtest: duplicate identities and source eligibility exclude dimensions but retain construction geometry
+ok 112 - duplicate identities and source eligibility exclude dimensions but retain construction geometry
+  ---
+  duration_ms: 0.1218
+  type: 'test'
+  ...
+# Subtest: linked-position updates preserve the perpendicular offset while following the reference point
+ok 113 - linked-position updates preserve the perpendicular offset while following the reference point
+  ---
+  duration_ms: 0.1192
+  type: 'test'
+  ...
+# Subtest: linked Coincident uses the existing linked-position operation with a zero offset
+ok 114 - linked Coincident uses the existing linked-position operation with a zero offset
+  ---
+  duration_ms: 0.168
+  type: 'test'
+  ...
+# Subtest: linked constraint helpers hide on inactive Stacks unless tied to active geometry
+ok 115 - linked constraint helpers hide on inactive Stacks unless tied to active geometry
+  ---
+  duration_ms: 0.2134
+  type: 'test'
+  ...
+# Subtest: linked Driving Dimension hover resolves only nearby derived geometry
+ok 116 - linked Driving Dimension hover resolves only nearby derived geometry
+  ---
+  duration_ms: 0.2101
+  type: 'test'
+  ...
+1..116
+# tests 116
+# suites 0
+# pass 116
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164.7938

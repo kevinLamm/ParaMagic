@@ -1,0 +1,9 @@
+
+DevTools listening on ws://127.0.0.1:54973/devtools/browser/f7ea64e2-e5cb-4c5e-b909-f79113208760
+[50864:51340:0926/112849.252:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+
+DevTools listening on ws://127.0.0.1:52591/devtools/browser/8201e1e1-0122-4791-ba55-04490784ec49
+[48592:48784:0926/112918.771:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+
+DevTools listening on ws://127.0.0.1:55084/devtools/browser/1c7085e9-9031-4c6c-a487-c2f6bea5c641
+[45220:45624:0926/112947.490:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT

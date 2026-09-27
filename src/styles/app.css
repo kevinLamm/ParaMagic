@@ -971,6 +971,13 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
   cursor: default;
 }
 .panel-control-row.invalid { border-color: #dc2626; }
+.panel-control-body { min-width: 0; display: grid; gap: 7px; }
+.panel-control-container { background: #f5f7fb; border-color: #9ba8bd; }
+.control-container-children { display: grid; gap: 7px; min-width: 0; padding-left: 8px; border-left: 2px solid #c6cfdd; }
+.control-container-children[hidden] { display: none; }
+.control-drop-zone { padding: 10px 6px; border: 1px dashed #a4b1c5; color: #64748b; text-align: center; font-size: 11px; }
+.control-root-drop { flex: 0 0 auto; margin-top: 2px; }
+.drop-inside { outline: 2px solid var(--cobalt); outline-offset: -2px; background: #e8eefc; }
 .panel-control-row.dragging { opacity: .48; }
 .panel-control-row.drop-before::before,
 .panel-control-row.drop-after::after {
@@ -992,7 +999,9 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
   gap: 6px;
 }
 .controls-panel:not(.editing) .panel-control-row-heading { grid-template-columns: minmax(0, 1fr) auto; }
+.controls-panel:not(.editing) .panel-control-container > .panel-control-body > .panel-control-row-heading { grid-template-columns: auto minmax(0, 1fr) auto; }
 .control-row-drag-handle,
+.panel-control-collapse,
 .panel-control-visibility,
 .panel-control-remove {
   display: inline-grid;
@@ -1007,10 +1016,13 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 }
 .control-row-drag-handle { cursor: grab; touch-action: none; }
 .control-row-drag-handle:active { cursor: grabbing; }
+.panel-control-collapse { cursor: pointer; }
+.panel-control-collapse:hover { background: #e8eefc; color: var(--cobalt-dark); }
 .panel-control-visibility[aria-pressed="true"] { border-color: transparent; background: transparent; color: #555; }
 .panel-control-visibility:hover { background: #e8eefc; color: var(--cobalt-dark); }
 .panel-control-remove:hover { background: #fee2e2; color: #a01818; }
 .control-row-drag-handle svg,
+.panel-control-collapse svg,
 .panel-control-visibility svg,
 .panel-control-remove svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .control-row-drag-handle svg { stroke-width: 3; }
@@ -1272,6 +1284,11 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .modal { width: min(900px, calc(100vw - 48px)); max-height: calc(100vh - 110px); overflow: auto; border: 1px solid var(--surface-border); background: var(--surface-background); color: #202020; border-radius: 0; padding: 18px; box-shadow: 0 12px 36px rgba(0,0,0,.16); position: relative; }
 .modal h2, .modal h3 { color: #242424; }
 .modal p { color: #555; }
+.stack-delete-modal { width: min(520px, calc(100vw - 32px)); }
+.stack-delete-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.stack-delete-actions button { min-height: 36px; padding: 6px 12px; border: 1px solid #888; background: #fff; cursor: pointer; }
+.stack-delete-actions button.destructive { background: #b42318; color: #fff; border-color: #b42318; }
+.stack-delete-actions button:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
 .drawing-diagnostics-errors { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 160px; overflow: auto; }
 .drawing-diagnostics-modal textarea { display: block; width: 100%; height: 220px; margin: 16px 0; font-family: monospace; resize: vertical; }
 .class-list-panel[hidden] { display: none !important; }
@@ -1391,6 +1408,17 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .drawing-properties-modal { width: min(460px, calc(100vw - 32px)); }
 .drawing-properties-modal-content { display: grid; gap: 14px; }
 .drawing-properties-modal-content h2, .drawing-properties-modal-content p { margin: 0; }
+.drawing-description-field, .drawing-developers-field { display: grid; gap: 6px; font-size: 13px; }
+.drawing-developers-field input { width: 100%; height: 32px; padding: 3px 8px; border: 1px solid #aaa; background: #fff; color: #202020; font: inherit; }
+.drawing-description-field textarea { width: 100%; min-height: 96px; resize: vertical; padding: 8px; border: 1px solid #aaa; background: #fff; color: #202020; font: inherit; line-height: 1.45; }
+.drawing-description-field textarea:focus, .drawing-developers-field input:focus { outline: 2px solid #2d7dd2; outline-offset: 1px; }
+.drawing-publish-modal { width: min(460px, calc(100vw - 32px)); }
+.drawing-publish-modal-content { display: grid; gap: 14px; }
+.drawing-publish-modal-content h2, .drawing-publish-modal-content p { margin: 0; }
+.drawing-publish-note, .drawing-publish-status { font-size: 13px; line-height: 1.45; }
+.drawing-publish-status[hidden] { display: none; }
+.drawing-publish-actions { display: flex; justify-content: flex-end; }
+.drawing-publish-actions button { padding: 7px 18px; }
 .drawing-properties-note, .drawing-properties-footnote { line-height: 1.45; }
 .drawing-properties-footnote { font-size: 12px; }
 .document-variables-button { justify-self: start; border: 1px solid #b9c7d8; background: #f4f7fb; color: #245a94; padding: 7px 11px; cursor: pointer; }
@@ -1413,6 +1441,7 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .document-variables-table small { color: #666; }
 .document-variable-value { width: 100%; height: 32px; border: 1px solid transparent; background: transparent; color: #202020; padding: 4px 6px; outline: none; }
 .document-variable-value:focus { border-color: #4b8ed8; background: #fff; }
+.document-variables-table textarea.document-variable-value { min-height: 96px; height: auto; resize: vertical; line-height: 1.45; font: inherit; }
 .document-variable-value[readonly] { color: #555; background: #f0f0f0; cursor: default; }
 .document-variable-state { color: #666; font-size: 12px; }
 .drawing-property-field { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 12px; font-size: 13px; }

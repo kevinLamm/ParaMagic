@@ -6,3 +6,4 @@ dist-pages/
 .sites-scaffold-inspect/
 .env
 .env.local
+tmp/wasm-toolchain/

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-09-26T20:52:24.543Z",
+  "commit": "14585acfced9e778510e9ecc0eb927156e3bca73",
+  "environment": {
+    "node": "v22.20.0",
+    "platform": "win32",
+    "cpu": "Intel(R) Core(TM) Ultra 9 275HX",
+    "logicalCpus": 24,
+    "systemMemoryBytes": 68137205760,
+    "browserPath": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "browser": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/153.0.8010.53",
+      "revision": "@792bf6722e73a45aa9e47c163b9901bdc17f3230",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "jsVersion": "15.3.76.13"
+    },
+    "browserCapabilities": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 24,
+      "crossOriginIsolated": false,
+      "sharedArrayBuffer": "undefined",
+      "wasm": "object"
+    }
+  },
+  "configuration": {
+    "counts": [
+      1000,
+      5000,
+      10000,
+      25000,
+      50000,
+      100000
+    ],
+    "samples": 3,
+    "budgetMs": 5000,
+    "profileCount": 5000,
+    "auxiliary": true,
+    "renderOnly": false,
+    "workerOnly": false,
+    "renderCounts": [
+      333,
+      1000,
+      1666
+    ],
+    "tolerance": 0.001,
+    "maxIterations": 2000
+  },
+  "methodology": "Production JS component solver in a local Chromium page. Headline samples are uninstrumented, budget-limited, warm-started dimension edits on initially satisfied fresh models; setup and validation excluded. Separate profiler/phase/transport runs must not be added to headline time. Wasm times and speedups are null until a replacement is measured.",
+  "results": [],
+  "phases": [],
+  "densePhases": [],
+  "parameters": [],
+  "graphMutations": [],
+  "transport": [],
+  "workers": [],
+  "rendering": [],
+  "profiles": [],
+  "errors": [],
+  "wasmPairs": [],
+  "nativeWorkers": [
+    {
+      "bundledWorkerUrl": "/ParaMagic/assets/SolverWorker-vA6Dwtao.js",
+      "status": "converged",
+      "residualL2": 9.772149644202685e-9,
+      "revisions": [
+        {
+          "status": "superseded",
+          "revision": 2
+        },
+        {
+          "status": "superseded",
+          "revision": 3
+        },
+        {
+          "status": "converged",
+          "revision": 4
+        }
+      ],
+      "diagnostics": {
+        "durationMs": 210,
+        "backend": "wasm",
+        "initialError": 9.265318283516248e-17,
+        "finalError": 9.265318283516248e-17,
+        "solveScope": {
+          "mode": "stack-placement-components",
+          "stackIds": [
+            "e056aa81-14ad-4de7-bd6e-9f4f8c41d1c4",
+            "434d4217-09bc-475b-91af-28ab3413d83f",
+            "05a18dbc-8ec3-4919-901b-640e5a3f404f",
+            "d59aee53-9931-4d87-9efe-2cedb0c35f51",
+            "101ecabb-60cb-48d8-a84e-f99b54c9c3a3"
+          ]
+        },
+        "iterations": 0,
+        "continuationSteps": 18,
+        "continuationIterations": 55,
+        "solveMode": "final",
+        "cancellationReason": null,
+        "acceptedSteps": 0,
+        "rejectedSteps": 0,
+        "rigidFirstSolveAttempted": false,
+        "rigidFirstSolveAccepted": false,
+        "rigidFirstSolveFallback": false,
+        "restoredInteractivePreview": false,
+        "restoredInteractiveBaseline": false,
+        "jacobianStats": {
+          "requestedMode": "blocks",
+          "mode": "matrix-free",
+          "totalBlocks": 195,
+          "analyticalBlocks": 0,
+          "fallbackBlocks": 0,
+          "residualRows": 305,
+          "arenaBytes": 207560,
+          "memoryGrowths": 1,
+          "topologyBuilds": 1,
+          "lastSyncBytes": 13192,
+          "totalLinearIterations": 0,
+          "linearSolver": "native-pcg",
+          "matrixFreeComponentCount": 1,
+          "derivativeEntries": 1436,
+          "linearIterations": 0,
+          "linearConverged": false
+        },
+        "queueMs": 18.69999998807907,
+        "roundTripMs": 210.20000004768372
+      }
+    }
+  ],
+  "nativeApp": [],
+  "sourceSha256": {
+    "scripts/solver-baseline/run-browser.mjs": "5b8eadc9589e2caaa03290c90c3571691e056367a6bfcf717f776ba5b1af45d7",
+    "scripts/solver-baseline/fixtures.js": "7c3681f06a8b0254d803b3a255b3728cf0c292190d467707a7a679b20e422ceb",
+    "scripts/solver-baseline/measure.js": "764c1306d425c657d6fee5ab98ab22efbb42ad61942d11ea1ccf76bd1e53bab8",
+    "scripts/solver-baseline/browser.js": "541841706421a10ab3d9330db1bfc673838018356ba83a1bcea0593111ee1059",
+    "scripts/solver-baseline/render.js": "f1b6fa77b8309cd150f3b2bb64e5b68c6af4f3fa5f3ea54084eb5eac34c4992e",
+    "scripts/solver-baseline/front-app.js": "fe33a32b08b1774031ce6d232707fc0ea60a3b6eec79af0edde5292a9225992e",
+    "scripts/solver-baseline/front-worker.js": "73bb2266e1db683ad18b8d4b210263b7a95239df2ec235ae8e916ad91a9a0b1e",
+    "src/tests/fixtures/front-view-large-control-edit.paramagic": "23cd9019f08c4fb69efd533ff0720b729ee665ea7c948b53a8ab65a165fe7683",
+    "scripts/solver-baseline/wasm.js": "0b10bc661d2b796811219d85adf723dcd05cf421037593dab8a77be88d598cb3",
+    "scripts/solver-baseline/mixed-fixture.js": "19373f48334ceb8f6f8891aef26516ccd496ebed8574caf8ff1eece5464870df",
+    "packages/paramagic-core/native/solver.cpp": "33e923001d8b5b29a83d52b4587a2a60e8bb4515ffa20c46f58e03b5fec5c6f3",
+    "packages/paramagic-core/native/constraint_program.h": "a206fbcbe97056000d390d855e5c3a8968c66e3cb484a86725ebf1920ff14493",
+    "packages/paramagic-core/native/swell_geometry.h": "8544dbe611b23441907a2fcfb194ee4059d9419983db8feada185d9bfce65a80",
+    "packages/paramagic-core/src/modules/solver/WasmSwellModel.js": "5ffe6609c63b14f834e721402cc272f08763fdeebf10f40d09f9eb26c20a559b",
+    "packages/paramagic-core/src/modules/solver/WasmConstraintCompiler.js": "a54cd79623fb45513fef640b6798cf1ef768b6822bf41876715ac8a20f9ccd5c",
+    "packages/paramagic-core/src/modules/solver/WasmFilletCompiler.js": "f08cb1b8796f6c33608b7fe48e9c0ee21e2bc8677da37d77d9c0594ea8517264",
+    "packages/paramagic-core/src/modules/solver/WasmSolverSession.js": "4f089a5de4d3e4597bad409f4d3cadc583bf180de4c87c5f8c8c523630d5d453",
+    "packages/paramagic-core/src/modules/solver/wasm/solver.wasm": "b1d68c25fc3fd37d548fc935aa5a72de453b9f966247363dd941698d9085d313",
+    "packages/paramagic-core/src/modules/solver/NumericSolverCore.js": "414a407f584389a8bf6983736e66b7d92696db1a74feb5ec6d6893a59626d623",
+    "packages/paramagic-core/src/modules/solver/JacobianBlocks.js": "971b17595af2c126fb84798fd73c01e655a75c89bda22b25a46b4af5362958dc",
+    "packages/paramagic-core/src/modules/solver/AnalyticalJacobians.js": "a511813ed7f0b7b3444bac615506a943893baacda1b9388a7b136b41baf44f71",
+    "packages/paramagic-core/src/modules/solver/CompiledConstraintSystem.js": "4ff27f211661a9dd90bd83bc585af7a7454251e96a1511c6783b632a2ce3f7fd",
+    "packages/paramagic-core/src/modules/solver/ComponentSolver.js": "1f7161085c6a296485ba8c826b1841aace182e9d3fa1f3811dca03141804d7c5",
+    "packages/paramagic-core/src/modules/solver/ConstraintGraph.js": "be101a36400eef428af7ce7fe0bc1b35bef140da486f2750f8b1e406a2a0f5fb",
+    "packages/paramagic-core/src/modules/solver/ConstraintRegistry.js": "2a6b9ba27a4ebfe811d1e41e7a277ee326404d66e03a5df2a5195d624be0b757",
+    "packages/paramagic-core/src/modules/solver/ParameterRepository.js": "f464952ec12f2ef93bad0c100225dcc09197cf545d31ef9bcd6c8a89e1835dfd",
+    "packages/paramagic-core/src/modules/solver/SolverModel.js": "e7adf7c90ff9db17eab571609246d9a1a944833503a7717d5cc20c4373b917d2",
+    "packages/paramagic-core/src/modules/solver/SolverController.js": "de9e33166e0392402fbe8473428b4c2de517a260baae2c24ac2a2f939e0ad88a",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerRuntime.js": "953a2e339cb61c0875603a2e0362c1f700666d66e01b32c184097c92d6feffca",
+    "packages/paramagic-core/src/modules/solver/SolverWorkerClient.js": "4c85ea698878d7cd8c2df14630df8021c3e4134e9143d429b70d77ef562dee3f",
+    "packages/paramagic-core/src/modules/solver/SolverExecutionFacade.js": "b35fd42169439c4ff9f96473ab36cc1ae909b94c8dc645bd50f760be58f3fe40"
+  },
+  "finishedAt": "2026-09-26T20:52:30.082Z"
+}

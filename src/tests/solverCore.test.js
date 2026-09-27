@@ -55,7 +55,7 @@ test('normal solves use the reduced 1e-3 convergence tolerance', () => {
 test('driving-dimension solve steps use the normal reduced tolerance', () => {
   const controller = createSolverController();
   let solveOptions = null;
-  controller.solve = (options) => {
+  controller.solveWork = function* (options) {
     solveOptions = options;
     return { status: 'unchanged', changedEntityIds: [] };
   };
@@ -738,6 +738,16 @@ test('LM rejects non-improving steps, reaches its limit, and rolls back', () => 
   assert.equal(result.status, 'max-iterations');
   assert.equal(result.rejectedSteps, 3);
   assert.equal(variable.value, 7);
+});
+
+test('LM continues small improving corrections until the requested tolerance is met', () => {
+  const variable = new Variable({ id: 'small-x', value: 0, owner: 'small-fixture' });
+  const model = { allVariables: () => [variable], activeVariables: () => [variable] };
+  const registry = { evaluate: () => ({ values: [variable.value - 5e-10], equations: [] }) };
+  const result = solveLevenbergMarquardt({ model, registry, dimensions: null, tolerance: 1e-13 });
+  assert.equal(result.status, 'converged');
+  assert.ok(result.acceptedSteps > 1, 'More than one sub-nanometre correction is necessary');
+  assert.ok(Math.abs(variable.value - 5e-10) < 1e-13);
 });
 
 test('LM stops a stalled final solve before exhausting a large iteration budget', () => {

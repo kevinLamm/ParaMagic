@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: native parameter batch preserves grammar, units, types, eager branches and errors
+ok 1 - native parameter batch preserves grammar, units, types, eager branches and errors
+  ---
+  duration_ms: 8.9894
+  type: 'test'
+  ...
+# Subtest: resident numeric expression program updates literals, renames, dependencies and rollback
+ok 2 - resident numeric expression program updates literals, renames, dependencies and rollback
+  ---
+  duration_ms: 2.7377
+  type: 'test'
+  ...
+# Subtest: native numeric DAG handles 10,000 dependent parameters and reuses program memory
+ok 3 - native numeric DAG handles 10,000 dependent parameters and reuses program memory
+  ---
+  duration_ms: 170.1672
+  type: 'test'
+  ...
+# Subtest: native component graph matches JavaScript after bridges, splits and disabled constraints
+ok 4 - native component graph matches JavaScript after bridges, splits and disabled constraints
+  ---
+  duration_ms: 11.1115
+  type: 'test'
+  ...
+# Subtest: supplied drawing uses native placement, sparse elimination and resident continuation
+ok 5 - supplied drawing uses native placement, sparse elimination and resident continuation
+  ---
+  duration_ms: 184.3429
+  type: 'test'
+  ...
+# Subtest: native display geometry preserves Swell pieces and rejects stale source/parameter state
+ok 6 - native display geometry preserves Swell pieces and rejects stale source/parameter state
+  ---
+  duration_ms: 7.5723
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 482.5198

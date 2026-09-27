@@ -1,0 +1,37 @@
+
+> paramagic@0.1.0 prebuild:pages
+> npm run build:solver
+
+
+> paramagic@0.1.0 build:solver
+> node scripts/build-solver-wasm.mjs
+
+Verified ParaMagic WASM (141661 bytes, ABI 4).
+
+> paramagic@0.1.0 build:pages
+> node scripts/validate-app.js && vite build --mode github-pages
+
+Validated 15 required files, syntax-checked 258 JavaScript files, audited 114 production files, and verified 7 extension UUID schemas.
+vite v8.2.2 building client environment for github-pages...
+transforming...
+✓ 115 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-pages/index.html                                          0.61 kB │ gzip:   0.40 kB
+dist-pages/assets/ImageTraceWorker-BMltn5iz.js                 6.13 kB
+dist-pages/assets/solver-hu8J7-gJ.wasm                       141.66 kB │ gzip:  54.82 kB
+dist-pages/assets/MontserratLight-6YemM-CCBnFAy6.otf         227.30 kB
+dist-pages/assets/MontserratExtrabold-VGO60-CS85DtgK.ttf     277.35 kB
+dist-pages/assets/SolverWorker-CqptbBGt.js                   303.75 kB
+dist-pages/assets/opencv-AjJB4fSW.js                      13,298.86 kB
+dist-pages/assets/index-BcqG5tlS.css                          98.30 kB │ gzip:  16.29 kB
+dist-pages/assets/cpexcel.full-CAlsa5X_.js                   442.90 kB │ gzip: 173.98 kB
+dist-pages/assets/xlsx-DwRHmDrW.js                           492.52 kB │ gzip: 160.52 kB
+dist-pages/assets/index-CzCQ7gh5.js                        1,192.60 kB │ gzip: 342.60 kB
+
+✓ built in 438ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

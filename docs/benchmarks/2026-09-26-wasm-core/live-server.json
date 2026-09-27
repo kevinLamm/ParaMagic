@@ -1,0 +1,6 @@
+{
+  "url": "http://localhost:5173/packages/paramagic-core/src/modules/solver/wasm/solver.wasm",
+  "bytes": 141661,
+  "abi": 4,
+  "sha256": "65fa796f2c0fa2d6106263d71fefe3cc98751b1ac98cfadf14adf08335bca752"
+}
