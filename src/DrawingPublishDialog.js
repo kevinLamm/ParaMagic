@@ -1,37 +1,72 @@
 import { drawingMetadataFieldsMarkup, readDrawingMetadataFields } from './DrawingMetadataFields.js';
+import { createPublishingDialog, loadAccountPanel } from './PublishingDialog.js';
 
-export function openPublishDialog({ modal, canvas }) {
-  modal(`<form class="drawing-publish-modal-content">
+export function openPublishDialog({ modal, canvas, client, getName, serialize, openMyDrawings }) {
+  const view = createPublishingDialog(modal, 'Publish Drawing', `<form class="drawing-publish-modal-content">
     <h2>Publish Drawing</h2>
+    <section class="publishing-account" aria-label="Publishing account"></section>
     ${drawingMetadataFieldsMarkup(canvas.getDocumentMetadata(), 'publish')}
-    <p class="drawing-publish-note">Review the drawing details before submitting. Server publishing is not connected yet.</p>
-    <p class="drawing-publish-status" role="status" hidden></p>
-    <div class="drawing-publish-actions"><button type="submit">Submit</button></div>
+    <p class="drawing-publish-note">Publishing creates a stored copy. Anyone with its link can download it. You can delete your published copies from My drawings.</p>
+    <p class="drawing-publish-status" role="status">Sign in to publish.</p>
+    <div class="publishing-result" hidden></div>
+    <div class="drawing-publish-actions">
+      <button type="button" data-action="manage">My drawings</button>
+      <button type="button" data-action="cancel" hidden>Cancel upload</button>
+      <button type="submit" disabled>Publish drawing</button>
+    </div>
   </form>`);
-  const backdrop = document.querySelector('.modal-backdrop');
-  const dialog = backdrop.querySelector('.modal');
-  dialog.classList.add('drawing-publish-modal');
-  dialog.setAttribute('role', 'dialog');
-  dialog.setAttribute('aria-modal', 'true');
-  dialog.setAttribute('aria-label', 'Publish Drawing');
-  const form = dialog.querySelector('form');
+  const form = view.dialog.querySelector('form');
   const status = form.querySelector('.drawing-publish-status');
-  form.addEventListener('submit', (event) => {
+  const accountPanel = form.querySelector('.publishing-account');
+  const publishButton = form.querySelector('[type="submit"]');
+  const cancelButton = form.querySelector('[data-action="cancel"]');
+  const manageButton = form.querySelector('[data-action="manage"]');
+  const result = form.querySelector('.publishing-result');
+  let account;
+  let inProgress = false;
+  manageButton.onclick = () => { view.close(); openMyDrawings(); };
+  loadAccountPanel(accountPanel, client, { signal: view.signal, onChange(value) {
+    account = value;
+    publishButton.disabled = !account?.user || !account?.publishingEnabled;
+    status.textContent = !account ? 'Publishing is currently unavailable.' : !account.publishingEnabled
+      ? 'Publishing is paused while storage is being configured.' : !account.user ? 'Sign in to publish.' : 'Ready to publish.';
+    result.hidden = true;
+  } });
+  form.addEventListener('submit', async event => {
     event.preventDefault();
-    const details = readDrawingMetadataFields(form);
-    const previous = canvas.getDocumentMetadata();
-    if (Object.entries(details).some(([key, value]) => value !== previous[key])) {
-      canvas.requestHistoryCheckpoint?.('publish-metadata');
-      canvas.setDocumentMetadata(details);
+    if (inProgress || !account?.user || !account.publishingEnabled) return;
+    inProgress = true;
+    const upload = new AbortController();
+    view.lock(true); publishButton.disabled = true; manageButton.disabled = true;
+    accountPanel.inert = true;
+    form.querySelectorAll('input, textarea').forEach(input => { input.disabled = true; });
+    cancelButton.hidden = false; cancelButton.onclick = () => upload.abort(); result.hidden = true;
+    let published = false;
+    try {
+      const details = readDrawingMetadataFields(form);
+      const previous = canvas.getDocumentMetadata();
+      if (Object.entries(details).some(([key, value]) => value !== previous[key])) {
+        canvas.requestHistoryCheckpoint?.('publish-metadata'); canvas.setDocumentMetadata(details);
+      }
+      const name = getName();
+      status.textContent = 'Preparing the drawing and its images…';
+      const content = await serialize(name);
+      if (upload.signal.aborted) throw new Error('Upload cancelled.');
+      const drawing = await client.publish({ name, content, signal: upload.signal,
+        onProgress(bytes, total) { status.textContent = `Uploading… ${Math.round(bytes / total * 100)}%`; } });
+      status.textContent = 'Drawing published.';
+      const link = document.createElement('a'); link.href = drawing.url; link.textContent = 'Download published drawing';
+      const share = document.createElement('input'); share.readOnly = true;
+      share.setAttribute('aria-label', 'Drawing share link'); share.value = new URL(drawing.url, location.origin).href;
+      share.addEventListener('focus', () => share.select());
+      result.replaceChildren(link, share); result.hidden = false; published = true;
+    } catch (error) { status.textContent = error.message; }
+    finally {
+      inProgress = false; view.lock(false); manageButton.disabled = false; accountPanel.inert = false;
+      form.querySelectorAll('input, textarea').forEach(input => { input.disabled = false; });
+      cancelButton.hidden = true; publishButton.disabled = published;
+      if (published) publishButton.textContent = 'Published';
     }
-    // The future server integration belongs here, after the metadata is committed.
-    // Do not report a publication until the server has actually accepted a drawing.
-    status.textContent = 'These details are kept in your drawing. It has not been published because the drawing server is not connected yet.';
-    status.hidden = false;
   });
-  form.addEventListener('input', () => { status.hidden = true; });
   form.querySelector('textarea').focus();
-  backdrop.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') backdrop.remove();
-  });
 }

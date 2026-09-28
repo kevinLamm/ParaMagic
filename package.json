@@ -27,12 +27,15 @@
     "prebuild:pages": "npm run build:solver"
   },
   "dependencies": {
-    "@paramagic/core": "file:packages/paramagic-core"
+    "@paramagic/core": "file:packages/paramagic-core",
+    "jose": "^6.1.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.37.1",
     "@cloudflare/workers-types": "^4.20260515.1",
     "@openai/sites-vite-plugin": "^0.2.0",
+    "esbuild": "^0.27.3",
+    "miniflare": "^4.20260515.0",
     "vite": "^8.2.2",
     "wrangler": "^4.92.0"
   }

@@ -3,7 +3,14 @@
   "name": "server",
   "compatibility_date": "2026-05-22",
   "main": "./worker/index.js",
+  "d1_databases": [
+    { "binding": "DB", "database_name": "paramagic", "database_id": "local-paramagic" }
+  ],
+  "r2_buckets": [
+    { "binding": "DRAWINGS", "bucket_name": "paramagic-drawings" }
+  ],
   "assets": {
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
   }
 }

@@ -88,6 +88,8 @@ import { createPrintDialog } from './PrintDialog.js';
 import { showDrawingDiagnostics } from './DrawingDiagnosticsDialog.js';
 import { createDrawingPropertiesDialogs } from './DrawingPropertiesDialog.js';
 import { openPublishDialog } from './DrawingPublishDialog.js';
+import { openMyDrawingsDialog } from './MyDrawingsDialog.js';
+import { createPublishingClient } from './PublishingClient.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
@@ -205,6 +207,7 @@ app.innerHTML = `
           ${appMenuButton('Save', 'id="saveButton"')}
           ${appMenuButton('Save As', 'id="saveAsButton"')}
           ${appMenuButton('Publish', 'id="publishButton"')}
+          ${appMenuButton('My drawings', 'id="myDrawingsButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
@@ -1241,7 +1244,13 @@ const drawingPropertiesDialogs = createDrawingPropertiesDialogs({
   modal,
   mountAdditionalProperties: (host) => notchTools.mountDrawingPropertiesControl(host),
 });
-document.getElementById('publishButton').addEventListener('click', () => openPublishDialog({ modal, canvas: canvasController }));
+const publishingClient = createPublishingClient();
+const openMyDrawings = () => openMyDrawingsDialog({ modal, client: publishingClient });
+document.getElementById('myDrawingsButton').addEventListener('click', openMyDrawings);
+document.getElementById('publishButton').addEventListener('click', () => openPublishDialog({
+  modal, canvas: canvasController, client: publishingClient, getName: currentDrawingName, openMyDrawings,
+  serialize: name => serializePortableDrawingJson(drawingSnapshotForFile(name), name),
+}));
 controlToolsController = createControlTools({
   toolbar: document.getElementById('controlsToggle'),
   canvas: canvasController,

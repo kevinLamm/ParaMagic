@@ -1417,8 +1417,20 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .drawing-publish-modal-content h2, .drawing-publish-modal-content p { margin: 0; }
 .drawing-publish-note, .drawing-publish-status { font-size: 13px; line-height: 1.45; }
 .drawing-publish-status[hidden] { display: none; }
-.drawing-publish-actions { display: flex; justify-content: flex-end; }
+.drawing-publish-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .drawing-publish-actions button { padding: 7px 18px; }
+.publishing-account { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; background: rgba(0,0,0,.04); }
+.publishing-account p { flex-basis: 100%; font-size: 13px; line-height: 1.5; }
+.publishing-account button, .published-drawings button { padding: 6px 10px; }
+.publishing-result { display: grid; gap: 10px; }
+.publishing-result[hidden], .drawing-publish-modal [hidden] { display: none; }
+.publishing-result input, .published-drawings input { width: 100%; box-sizing: border-box; padding: 7px; }
+.published-drawings { display: grid; gap: 14px; list-style: none; margin: 0; padding: 0; }
+.published-drawings li { display: grid; gap: 8px; padding: 12px 0; border-top: 1px solid #c7c7c7; overflow-wrap: anywhere; }
+.published-drawings li > span { color: #555; font-size: 12px; }
+.published-drawing-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.published-delete-confirm { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; border: 1px solid #bbb; }
+.published-delete-confirm p { width: 100%; font-size: 13px; line-height: 1.5; }
 .drawing-properties-note, .drawing-properties-footnote { line-height: 1.45; }
 .drawing-properties-footnote { font-size: 12px; }
 .document-variables-button { justify-self: start; border: 1px solid #b9c7d8; background: #f4f7fb; color: #245a94; padding: 7px 11px; cursor: pointer; }
