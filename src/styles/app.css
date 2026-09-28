@@ -1331,6 +1331,7 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .print-modal-content { display: grid; grid-template-columns: minmax(300px, 360px) minmax(0, 1fr); gap: 14px; min-height: 0; }
 .print-settings { min-height: 0; overflow: auto; padding-right: 3px; }
 .print-settings-group { display: grid; gap: 9px; margin: 0 0 10px; padding: 11px; border: 1px solid var(--surface-border); background: #fff; }
+.print-settings-group[hidden], .print-preview-scale[hidden] { display: none; }
 .print-settings-group legend { padding: 0 5px; color: #2b3440; font-size: 12px; font-weight: 700; }
 .print-field { display: grid; grid-template-columns: 105px minmax(0, 1fr); align-items: center; gap: 10px; color: #333; font-size: 12px; }
 .print-field select, .print-field input { width: 100%; min-width: 0; height: 32px; border: 1px solid #aaa; border-radius: 0; background: #fff; color: #202020; padding: 4px 7px; outline: none; }
@@ -1357,7 +1358,10 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .print-preview-heading h3 { font-size: 14px; }
 .print-preview-scale, .print-preview-status { color: #687384; font-size: 11px; }
 .print-preview-stage { display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; }
-.print-preview-page { display: grid; flex: 0 0 auto; border: 1px solid #aeb7c2; background: #fff; box-shadow: 0 8px 22px rgb(32 43 56 / 17%); }
+.print-preview-page { display: grid; grid-template-rows: minmax(0, 1fr); flex: 0 0 auto; outline: 1px solid #aeb7c2; background: #fff; box-shadow: 0 8px 22px rgb(32 43 56 / 17%); }
+.print-page-header { margin: 0; min-width: 0; color: #202020; font-family: Arial, sans-serif; font-size: calc(var(--print-mm, 1mm) * var(--print-header-font-mm, 3.88)); font-weight: 600; line-height: 1.35; white-space: pre-wrap; overflow-wrap: anywhere; padding-bottom: calc(var(--print-mm, 1mm) * 3); border-bottom: calc(var(--print-mm, 1mm) * .25) solid #b8bec7; }
+.print-page-header[hidden] { display: none; }
+.print-preview-page.has-print-header, .print-output-page.has-print-header { grid-template-rows: auto minmax(0, 1fr); row-gap: calc(var(--print-mm, 1mm) * 4); }
 .print-preview-content { min-width: 0; min-height: 0; overflow: hidden; background: #fff; }
 .print-preview-svg { display: block; width: 100%; height: 100%; }
 .print-preview-status { min-height: 15px; text-align: center; }
@@ -1370,8 +1374,8 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .print-window-selection-box[hidden], .print-window-snap-handle[hidden] { display: none; }
 .print-window-snap-handle { position: absolute; z-index: 31; width: 12px; height: 12px; border: 2px solid #0000ff; border-radius: 50%; background: #fff; pointer-events: none; transform: translate(-50%, -50%); }
 .print-output-root { display: none; }
-.print-output-page { overflow: hidden; background: #fff; }
-.print-output-page svg { display: block; width: 100%; height: 100%; }
+.print-output-page { display: grid; grid-template-rows: minmax(0, 1fr); overflow: hidden; background: #fff; }
+.print-output-page svg { display: block; min-width: 0; min-height: 0; width: 100%; height: 100%; }
 .image-catalog-modal { width: min(780px, calc(100vw - 48px)); display: grid; gap: 14px; }
 .image-catalog-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-right: 28px; }
 .image-catalog-heading h2 { margin: 0; font-size: 18px; }

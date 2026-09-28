@@ -31,7 +31,8 @@ export const DEFAULT_PRINT_SETTINGS = Object.freeze({
   centerOnPage: true,
 });
 
-export function normalizePrintSettings(settings = {}) {
+export function normalizePrintSettings(settings = {}, fixedSettings = {}) {
+  settings = { ...settings, ...fixedSettings };
   const pageSize = PRINT_PAGE_SIZES.some(({ id }) => id === settings.pageSize)
     ? settings.pageSize
     : DEFAULT_PRINT_SETTINGS.pageSize;
@@ -86,9 +87,10 @@ export function printViewport({
   windowBounds,
   windowContentBounds,
   marginMm = PRINT_MARGIN_MM,
+  headerHeightMm = 0,
 } = {}) {
   const printableWidth = Math.max(1, Number(layout?.mmWidth) - marginMm * 2);
-  const printableHeight = Math.max(1, Number(layout?.mmHeight) - marginMm * 2);
+  const printableHeight = Math.max(1, Number(layout?.mmHeight) - marginMm * 2 - headerHeightMm);
   const areaBounds = area === 'display'
     ? displayBounds
     : area === 'window'
@@ -185,8 +187,8 @@ function dimensionViewButton(mode, fixed = false) {
   return `<button type="button" class="print-icon-button print-dimension-view" data-dimension-view="${selected.mode}" aria-label="${selected.label}" title="${selected.label}"${fixed ? ' disabled' : ''}>${icon(selected.icon)}</button><output class="print-dimension-view-label">${selected.shortLabel}</output>`;
 }
 
-export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS, { fixedDimensionView, allowWindowSelection = true } = {}) {
-  const normalized = normalizePrintSettings({ ...settings, ...(fixedDimensionView ? { dimensionView: fixedDimensionView } : {}) });
+export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS, { fixedSettings = {}, showScaleNote = true } = {}) {
+  const normalized = normalizePrintSettings(settings, fixedSettings);
   return `<div class="modal-backdrop print-modal-backdrop">
     <section class="modal print-modal" role="dialog" aria-modal="true" aria-labelledby="printModalTitle">
       <header class="print-modal-heading">
@@ -203,24 +205,24 @@ export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS, { fixedDime
               <button type="button" class="print-icon-button" data-print-orientation="landscape" aria-label="Landscape" title="Landscape" aria-pressed="${normalized.orientation === 'landscape'}">${icon('landscape')}</button>
             </div></div>
           </fieldset>
-          <fieldset class="print-settings-group">
+          <fieldset class="print-settings-group"${fixedSettings.area ? ' hidden disabled' : ''}>
             <legend>Print area</legend>
-            <div class="print-field"><span>Area</span><div class="print-area-control"><select class="print-area" aria-label="Print Area"><option value="full"${normalized.area === 'full' ? ' selected' : ''}>Full</option><option value="display"${normalized.area === 'display' ? ' selected' : ''}>Display</option>${allowWindowSelection ? `<option value="window"${normalized.area === 'window' ? ' selected' : ''}>Window</option>` : ''}</select><button type="button" class="print-icon-button print-window-reselect" aria-label="Select print window" title="Select print window"${normalized.area === 'window' ? '' : ' hidden'}>${icon('window')}</button></div></div>
+            <div class="print-field"><span>Area</span><div class="print-area-control"><select class="print-area" aria-label="Print Area"><option value="full"${normalized.area === 'full' ? ' selected' : ''}>Full</option><option value="display"${normalized.area === 'display' ? ' selected' : ''}>Display</option><option value="window"${normalized.area === 'window' ? ' selected' : ''}>Window</option></select><button type="button" class="print-icon-button print-window-reselect" aria-label="Select print window" title="Select print window"${normalized.area === 'window' ? '' : ' hidden'}>${icon('window')}</button></div></div>
           </fieldset>
-          <fieldset class="print-settings-group">
+          <fieldset class="print-settings-group"${fixedSettings.scaleMode ? ' hidden disabled' : ''}>
             <legend>Print scale</legend>
             <label class="print-field"><span>Scale</span><select class="print-scale-mode"><option value="fit"${normalized.scaleMode === 'fit' ? ' selected' : ''}>Fit to page</option><option value="actual"${normalized.scaleMode === 'actual' ? ' selected' : ''}>1:1</option><option value="custom"${normalized.scaleMode === 'custom' ? ' selected' : ''}>Custom</option></select></label>
             <label class="print-field print-custom-scale"${normalized.scaleMode === 'custom' ? '' : ' hidden'}><span>Ratio</span><span class="print-ratio-input"><b>1:</b><input type="number" min="0.01" step="0.01" value="${normalized.scaleDenominator}" aria-label="Custom print scale denominator" /></span></label>
             <label class="print-check-field print-center-field"${normalized.area === 'window' ? '' : ' hidden'}><input class="print-center" type="checkbox"${normalized.centerOnPage ? ' checked' : ''} /><span>Center on page</span></label>
           </fieldset>
-          <fieldset class="print-settings-group">
+          <fieldset class="print-settings-group"${fixedSettings.dimensionView ? ' hidden disabled' : ''}>
             <legend>Options</legend>
-            <div class="print-field"><span>Dimension view</span><div class="print-dimension-view-control">${dimensionViewButton(normalized.dimensionView, Boolean(fixedDimensionView))}</div></div>
+            <div class="print-field"><span>Dimension view</span><div class="print-dimension-view-control">${dimensionViewButton(normalized.dimensionView, Boolean(fixedSettings.dimensionView))}</div></div>
           </fieldset>
         </div>
         <section class="print-preview-panel" aria-labelledby="printPreviewTitle">
-          <div class="print-preview-heading"><h3 id="printPreviewTitle">Print preview</h3><output class="print-preview-scale"></output></div>
-          <div class="print-preview-stage"><div class="print-preview-page"><div class="print-preview-content"></div></div></div>
+          <div class="print-preview-heading"><h3 id="printPreviewTitle">Print preview</h3><output class="print-preview-scale"${showScaleNote ? '' : ' hidden'}></output></div>
+          <div class="print-preview-stage"><div class="print-preview-page"><header class="print-page-header" hidden></header><div class="print-preview-content"></div></div></div>
           <p class="print-preview-status" role="status"></p>
         </section>
       </div>
@@ -377,15 +379,18 @@ export function createPrintDialog({
   canvas,
   getDrawingName = () => 'Untitled Drawing',
   getDimensionView = () => 'named-value',
-  fixedDimensionView,
-  allowWindowSelection = true,
+  fixedSettings = {},
+  showScaleNote = true,
+  getPageHeader = () => '',
   documentRef = globalThis.document,
   windowRef = globalThis.window,
   print = () => windowRef?.print?.(),
 } = {}) {
-  let settings = normalizePrintSettings({ dimensionView: getDimensionView() });
+  let settings = normalizePrintSettings({ dimensionView: getDimensionView() }, fixedSettings);
   let backdrop = null;
   let printableSvg = null;
+  let printableHeader = null;
+  let printableHeaderHeightMm = 0;
   let preparingPrint = false;
   let keydownListener = null;
   let resizeListener = null;
@@ -456,9 +461,9 @@ export function createPrintDialog({
       area: backdrop.querySelector('.print-area').value,
       scaleMode: backdrop.querySelector('.print-scale-mode').value,
       scaleDenominator: backdrop.querySelector('.print-custom-scale input').value,
-      dimensionView: fixedDimensionView || backdrop.querySelector('.print-dimension-view').dataset.dimensionView,
+      dimensionView: backdrop.querySelector('.print-dimension-view').dataset.dimensionView,
       centerOnPage: backdrop.querySelector('.print-center').checked,
-    });
+    }, fixedSettings);
     return settings;
   }
 
@@ -484,10 +489,33 @@ export function createPrintDialog({
     paper.style.width = `${previewSize.width}px`;
     paper.style.height = `${previewSize.height}px`;
     paper.style.padding = `${PRINT_MARGIN_MM * previewSize.scale}px`;
+    paper.style.setProperty('--print-mm', `${previewSize.scale}px`);
+    const header = paper.querySelector('.print-page-header');
+    header.textContent = String(getPageHeader() || '').trim();
+    header.hidden = !header.textContent;
+    paper.classList.toggle('has-print-header', !header.hidden);
+    // Measure the wrapped header at the same physical size used by printed output.
+    // Long descriptions shrink to leave most of the page available for the drawing.
+    let headerFontMm = 11 * 25.4 / 72;
+    header.style.setProperty('--print-header-font-mm', headerFontMm);
+    const maximumHeaderMm = (layout.mmHeight - PRINT_MARGIN_MM * 2) * 0.35;
+    if (!header.hidden && header.getBoundingClientRect().height / previewSize.scale > maximumHeaderMm) {
+      let low = 0; let high = headerFontMm;
+      for (let attempt = 0; attempt < 12; attempt++) {
+        const candidate = (low + high) / 2;
+        header.style.setProperty('--print-header-font-mm', candidate);
+        if (header.getBoundingClientRect().height / previewSize.scale <= maximumHeaderMm) low = candidate;
+        else high = candidate;
+      }
+      headerFontMm = low;
+      header.style.setProperty('--print-header-font-mm', headerFontMm);
+    }
+    printableHeader = header.hidden ? null : header.cloneNode(true);
+    printableHeaderHeightMm = header.hidden ? 0 : header.getBoundingClientRect().height / previewSize.scale + 4;
     host.replaceChildren();
     printableSvg = null;
     const innerWidthMm = Math.max(1, layout.mmWidth - PRINT_MARGIN_MM * 2);
-    const innerHeightMm = Math.max(1, layout.mmHeight - PRINT_MARGIN_MM * 2);
+    const innerHeightMm = Math.max(1, layout.mmHeight - PRINT_MARGIN_MM * 2 - printableHeaderHeightMm);
     const pixelWidth = 720;
     const pixelHeight = pixelWidth * innerHeightMm / innerWidthMm;
     const displayBounds = canvasDisplayBounds(canvas);
@@ -517,6 +545,7 @@ export function createPrintDialog({
       displayBounds,
       windowBounds: selectedWindowBounds,
       windowContentBounds: canvasContentBoundsWithinWindow(canvas, selectedWindowBounds),
+      headerHeightMm: printableHeaderHeightMm,
     });
     if (!svg || !bounds || !viewport) {
       host.replaceChildren();
@@ -758,13 +787,17 @@ export function createPrintDialog({
     page.style.width = `${layout.mmWidth}mm`;
     page.style.height = `${layout.mmHeight}mm`;
     page.style.padding = `${PRINT_MARGIN_MM}mm`;
+    if (printableHeader) {
+      page.classList.add('has-print-header');
+      page.appendChild(printableHeader.cloneNode(true));
+    }
     const svg = namespaceCanvasPresentationIds(printableSvg.cloneNode(true));
     svg.removeAttribute('aria-label');
     page.appendChild(svg);
     try {
       await prepareImageStrokePrintSvg(printableSvg, svg, {
         widthMm: layout.mmWidth - PRINT_MARGIN_MM * 2,
-        heightMm: layout.mmHeight - PRINT_MARGIN_MM * 2,
+        heightMm: layout.mmHeight - PRINT_MARGIN_MM * 2 - printableHeaderHeightMm,
       });
       if (backdrop !== dialog) return;
       status.textContent = previousStatus;
@@ -817,10 +850,10 @@ export function createPrintDialog({
     open() {
       if (backdrop) return backdrop;
       if (!hasOpened) {
-        settings = normalizePrintSettings({ ...settings, dimensionView: getDimensionView() });
+        settings = normalizePrintSettings({ ...settings, dimensionView: getDimensionView() }, fixedSettings);
         hasOpened = true;
       }
-      documentRef.body.insertAdjacentHTML('beforeend', printDialogMarkup(settings, { fixedDimensionView, allowWindowSelection }));
+      documentRef.body.insertAdjacentHTML('beforeend', printDialogMarkup(settings, { fixedSettings, showScaleNote }));
       backdrop = [...documentRef.querySelectorAll('.print-modal-backdrop')].at(-1);
       bind();
       renderPreview();

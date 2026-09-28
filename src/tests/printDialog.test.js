@@ -15,12 +15,35 @@ import {
 } from '../PrintDialog.js';
 import { PRINT_PAGE_SIZES, printLayout } from '../PrintLayouts.js';
 
-test('a read-only viewer can lock print dimensions to values and use noninteractive print areas', () => {
-  const markup = printDialogMarkup({ dimensionView: 'expression' }, { fixedDimensionView: 'value', allowWindowSelection: false });
+test('Viewer printing hides and enforces Full, Fit to Page, and Value Only while keeping layout editable', () => {
+  const fixedSettings = { area: 'full', scaleMode: 'fit', dimensionView: 'value' };
+  const settings = { area: 'window', scaleMode: 'custom', dimensionView: 'expression', pageSize: 'iso-a4', orientation: 'portrait' };
+  const resolved = normalizePrintSettings(settings, fixedSettings);
+  assert.equal(resolved.area, 'full');
+  assert.equal(resolved.scaleMode, 'fit');
+  assert.equal(resolved.dimensionView, 'value');
+  assert.equal(resolved.pageSize, 'iso-a4');
+  assert.equal(resolved.orientation, 'portrait');
+  const markup = printDialogMarkup(settings, { fixedSettings, showScaleNote: false });
   assert.match(markup, /data-dimension-view="value"[^>]* disabled/);
-  assert.doesNotMatch(markup, /<option value="window"/);
-  assert.match(markup, /<option value="display"/);
-  assert.match(printDialogMarkup(), /<option value="window"/);
+  assert.equal((markup.match(/class="print-settings-group" hidden disabled/g) || []).length, 3);
+  assert.match(markup, /class="print-preview-scale" hidden/);
+  assert.match(markup, /<option value="full" selected/);
+  assert.match(markup, /<option value="fit" selected/);
+  assert.doesNotMatch(printDialogMarkup(), /print-settings-group" hidden|print-preview-scale" hidden/);
+});
+
+test('a print header reserves physical page space before fitting the complete drawing', () => {
+  const layout = printLayout('letter', 'portrait');
+  const contentBounds = { x: 20, y: 30, width: 100, height: 200 };
+  const full = printViewport({ layout, contentBounds });
+  const headed = printViewport({ layout, contentBounds, headerHeightMm: 25 });
+  assert.ok(headed.width > full.width, 'a tall drawing shrinks to fit below the header');
+  assert.ok(headed.x <= contentBounds.x && headed.y <= contentBounds.y);
+  assert.ok(headed.x + headed.width >= contentBounds.x + contentBounds.width);
+  assert.ok(headed.y + headed.height >= contentBounds.y + contentBounds.height);
+  const actual = printViewport({ layout, contentBounds, headerHeightMm: 25, scaleMode: 'actual' });
+  assert.equal(actual.height, layout.mmHeight - 20 - 25);
 });
 
 test('print layouts include every supplied ANSI, ARCH, and ISO paper size in both orientations', () => {

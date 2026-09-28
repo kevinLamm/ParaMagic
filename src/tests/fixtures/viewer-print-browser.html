@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viewer print acceptance</title>
+  <link rel="stylesheet" href="../../styles/app.css" />
+  <style>
+    .fixture-controls { position: absolute; width: 290px; padding: 15px; display: grid; gap: 12px; }
+    .fixture-controls textarea { width: 100%; min-height: 100px; }
+    .fixture-canvas { inset: 0 0 0 300px; }
+    .print-capture { position: fixed; inset: 0; z-index: 200; background: #d8dce2; overflow: auto; padding: 20px; }
+    .print-capture .print-output-page { margin: 15px auto; box-shadow: 0 3px 15px #0003; }
+    .print-capture output { display: block; white-space: pre-wrap; margin: 12px; }
+  </style>
+</head>
+<body><div id="root"></div><script type="module" src="./viewer-print-browser.js"></script></body>
+</html>

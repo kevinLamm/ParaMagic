@@ -84,7 +84,8 @@ export async function openDrawingViewer(id) {
         controller.onObjectsChange(fitIfNeeded);
         new ResizeObserver(fitIfNeeded).observe(controller.getCanvasElement());
         printDialog = createPrintDialog({ canvas: controller, getDrawingName: () => 'Drawing',
-          fixedDimensionView: 'value', allowWindowSelection: false });
+          fixedSettings: { area: 'full', scaleMode: 'fit', dimensionView: 'value' }, showScaleNote: false,
+          getPageHeader: () => controller.getDocumentMetadata().drawingDescription });
       }
       controls = createControlTools({ canvas: controller, solver, host: root.querySelector('.viewer-controls'),
         allowEditing: false, floating: false, showHeader: false, showParameterNames: false });
