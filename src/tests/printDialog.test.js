@@ -15,6 +15,14 @@ import {
 } from '../PrintDialog.js';
 import { PRINT_PAGE_SIZES, printLayout } from '../PrintLayouts.js';
 
+test('a read-only viewer can lock print dimensions to values and use noninteractive print areas', () => {
+  const markup = printDialogMarkup({ dimensionView: 'expression' }, { fixedDimensionView: 'value', allowWindowSelection: false });
+  assert.match(markup, /data-dimension-view="value"[^>]* disabled/);
+  assert.doesNotMatch(markup, /<option value="window"/);
+  assert.match(markup, /<option value="display"/);
+  assert.match(printDialogMarkup(), /<option value="window"/);
+});
+
 test('print layouts include every supplied ANSI, ARCH, and ISO paper size in both orientations', () => {
   assert.equal(PRINT_PAGE_SIZES.length, 19);
   assert.deepEqual(printLayout('letter', 'portrait'), {

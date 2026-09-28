@@ -1,5 +1,5 @@
 const viewing = new URLSearchParams(location.search).get('view');
-if (viewing) {
+if (new URLSearchParams(location.search).has('view')) {
   document.title = 'ParaMagic viewer';
   const { openDrawingViewer } = await import('./DrawingViewer.js');
   await openDrawingViewer(viewing);

@@ -1,6 +1,6 @@
 import { createPublishingDialog, loadAccountPanel } from './PublishingDialog.js';
 
-export function openFindDrawingsDialog({ modal, client }) {
+export function openFindDrawingsDialog({ modal, client, onOpenDrawing, onAccountChange = () => {} }) {
   const view = createPublishingDialog(modal, 'Find drawings', `<section class="drawing-publish-modal-content">
     <h2>Find drawings</h2><section class="publishing-account" aria-label="Publishing account"></section>
     <p>Search descriptions shared by their owners. A match on any keyword is enough. Viewers can adjust controls and export PNG or DXF.</p>
@@ -24,6 +24,13 @@ export function openFindDrawingsDialog({ modal, client }) {
         const item = document.createElement('li'); const name = document.createElement('strong'); name.textContent = drawing.name;
         const description = document.createElement('p'); description.textContent = drawing.description;
         const open = document.createElement('a'); open.href = `/?view=${drawing.id}`; open.target = '_blank'; open.rel = 'noopener'; open.textContent = 'Open viewer';
+        if (onOpenDrawing) {
+          open.removeAttribute('target');
+          open.onclick = event => {
+            if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+            event.preventDefault(); view.close(); onOpenDrawing(drawing);
+          };
+        }
         item.append(name, description, open); list.append(item);
       }
       next = result.next; more.hidden = !next;
@@ -36,6 +43,8 @@ export function openFindDrawingsDialog({ modal, client }) {
   loadAccountPanel(view.dialog.querySelector('.publishing-account'), client, { signal: view.signal, onChange(account) {
     generation++; signedIn = Boolean(account?.user); submit.disabled = !signedIn; list.replaceChildren(); more.hidden = true;
     status.textContent = signedIn ? 'Enter keywords from a drawing description.' : 'Sign in to search shared drawings.';
+    onAccountChange(account);
   } });
   input.focus();
+  return view;
 }

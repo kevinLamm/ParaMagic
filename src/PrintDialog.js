@@ -180,13 +180,13 @@ function dimensionViewMode(mode) {
   return DIMENSION_VIEW_MODES.find((candidate) => candidate.mode === mode) || DIMENSION_VIEW_MODES[0];
 }
 
-function dimensionViewButton(mode) {
+function dimensionViewButton(mode, fixed = false) {
   const selected = dimensionViewMode(mode);
-  return `<button type="button" class="print-icon-button print-dimension-view" data-dimension-view="${selected.mode}" aria-label="${selected.label}" title="${selected.label}">${icon(selected.icon)}</button><output class="print-dimension-view-label">${selected.shortLabel}</output>`;
+  return `<button type="button" class="print-icon-button print-dimension-view" data-dimension-view="${selected.mode}" aria-label="${selected.label}" title="${selected.label}"${fixed ? ' disabled' : ''}>${icon(selected.icon)}</button><output class="print-dimension-view-label">${selected.shortLabel}</output>`;
 }
 
-export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS) {
-  const normalized = normalizePrintSettings(settings);
+export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS, { fixedDimensionView, allowWindowSelection = true } = {}) {
+  const normalized = normalizePrintSettings({ ...settings, ...(fixedDimensionView ? { dimensionView: fixedDimensionView } : {}) });
   return `<div class="modal-backdrop print-modal-backdrop">
     <section class="modal print-modal" role="dialog" aria-modal="true" aria-labelledby="printModalTitle">
       <header class="print-modal-heading">
@@ -205,7 +205,7 @@ export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS) {
           </fieldset>
           <fieldset class="print-settings-group">
             <legend>Print area</legend>
-            <div class="print-field"><span>Area</span><div class="print-area-control"><select class="print-area" aria-label="Print Area"><option value="full"${normalized.area === 'full' ? ' selected' : ''}>Full</option><option value="display"${normalized.area === 'display' ? ' selected' : ''}>Display</option><option value="window"${normalized.area === 'window' ? ' selected' : ''}>Window</option></select><button type="button" class="print-icon-button print-window-reselect" aria-label="Select print window" title="Select print window"${normalized.area === 'window' ? '' : ' hidden'}>${icon('window')}</button></div></div>
+            <div class="print-field"><span>Area</span><div class="print-area-control"><select class="print-area" aria-label="Print Area"><option value="full"${normalized.area === 'full' ? ' selected' : ''}>Full</option><option value="display"${normalized.area === 'display' ? ' selected' : ''}>Display</option>${allowWindowSelection ? `<option value="window"${normalized.area === 'window' ? ' selected' : ''}>Window</option>` : ''}</select><button type="button" class="print-icon-button print-window-reselect" aria-label="Select print window" title="Select print window"${normalized.area === 'window' ? '' : ' hidden'}>${icon('window')}</button></div></div>
           </fieldset>
           <fieldset class="print-settings-group">
             <legend>Print scale</legend>
@@ -215,7 +215,7 @@ export function printDialogMarkup(settings = DEFAULT_PRINT_SETTINGS) {
           </fieldset>
           <fieldset class="print-settings-group">
             <legend>Options</legend>
-            <div class="print-field"><span>Dimension view</span><div class="print-dimension-view-control">${dimensionViewButton(normalized.dimensionView)}</div></div>
+            <div class="print-field"><span>Dimension view</span><div class="print-dimension-view-control">${dimensionViewButton(normalized.dimensionView, Boolean(fixedDimensionView))}</div></div>
           </fieldset>
         </div>
         <section class="print-preview-panel" aria-labelledby="printPreviewTitle">
@@ -377,6 +377,8 @@ export function createPrintDialog({
   canvas,
   getDrawingName = () => 'Untitled Drawing',
   getDimensionView = () => 'named-value',
+  fixedDimensionView,
+  allowWindowSelection = true,
   documentRef = globalThis.document,
   windowRef = globalThis.window,
   print = () => windowRef?.print?.(),
@@ -454,7 +456,7 @@ export function createPrintDialog({
       area: backdrop.querySelector('.print-area').value,
       scaleMode: backdrop.querySelector('.print-scale-mode').value,
       scaleDenominator: backdrop.querySelector('.print-custom-scale input').value,
-      dimensionView: backdrop.querySelector('.print-dimension-view').dataset.dimensionView,
+      dimensionView: fixedDimensionView || backdrop.querySelector('.print-dimension-view').dataset.dimensionView,
       centerOnPage: backdrop.querySelector('.print-center').checked,
     });
     return settings;
@@ -818,7 +820,7 @@ export function createPrintDialog({
         settings = normalizePrintSettings({ ...settings, dimensionView: getDimensionView() });
         hasOpened = true;
       }
-      documentRef.body.insertAdjacentHTML('beforeend', printDialogMarkup(settings));
+      documentRef.body.insertAdjacentHTML('beforeend', printDialogMarkup(settings, { fixedDimensionView, allowWindowSelection }));
       backdrop = [...documentRef.querySelectorAll('.print-modal-backdrop')].at(-1);
       bind();
       renderPreview();

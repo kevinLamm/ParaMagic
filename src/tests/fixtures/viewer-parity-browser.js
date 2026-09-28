@@ -7,10 +7,10 @@ import { imageCatalogResources } from '../../app-config.js';
 const baseline = new URLSearchParams(location.search).has('baseline');
 const root = document.getElementById('root');
 root.innerHTML = `<div class="drawing-viewer">
-  <header class="viewer-header"><h1>Viewer parity regression${baseline ? ' — previous runtime' : ''}</h1><button data-fit>Fit drawing</button></header>
-  <aside class="viewer-sidebar"><div class="viewer-controls"></div><button data-reload>Reload drawing</button><pre data-checks></pre></aside>
+  <aside class="viewer-sidebar"><h1>Viewer parity regression${baseline ? ' — previous runtime' : ''}</h1><button data-fit>Fit drawing</button>
+    <div class="viewer-controls"></div><button data-reload>Reload drawing</button><pre data-checks></pre>
+    <p class="viewer-status" role="status">Loading fixture…</p></aside>
   <main class="canvas viewer-canvas"><div class="grid"></div><svg class="drawing-plane"></svg></main>
-  <p class="viewer-status" role="status">Loading fixture…</p>
 </div>`;
 const solver = baseline ? createSolverExecutionFacade({ mode: 'sync' }) : createAppSolver();
 let workerDiagnostics = null;

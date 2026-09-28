@@ -42,6 +42,20 @@ test('control rows omit the redundant control-type reference icon', () => {
   assert.match(markup, />Enabled</);
 });
 
+test('embedded control rows can omit parameter names while retaining labels and Container toggles', () => {
+  const solver = new SolverController();
+  for (const type of ['Numeric Textbox', 'Container']) {
+    const item = createControlItem(type, { label: 'Overall size', parameterName: 'c7' });
+    const state = controlPanelState(item, solver);
+    assert.match(controlRowMarkup(item, state, false), /panel-control-parameter/);
+    const markup = controlRowMarkup(item, state, false, '', { showParameterNames: false });
+    assert.doesNotMatch(markup, /panel-control-parameter|c7/);
+    assert.match(markup, /Overall size/);
+    if (type === 'Container') assert.match(markup, /data-control-collapse/);
+    else assert.match(markup, /data-control-value/);
+  }
+});
+
 test('panel controls normalize without canvas geometry', () => {
   const item = createControlItem('Horizontal Scrollbar');
   assert.equal(item.controlType, 'horizontal-scrollbar');
