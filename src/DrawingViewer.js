@@ -30,6 +30,8 @@ export async function openDrawingViewer(id) {
     controls?.destroy(); controls = null;
     controller?.clearDrawing();
     loadedFor = null;
+    name = 'Drawing';
+    root.querySelector('h1').textContent = 'Drawing viewer'; document.title = 'ParaMagic viewer';
     exports.forEach(button => { button.disabled = true; }); fit.disabled = true;
     root.querySelector('.viewer-description').textContent = '';
   }
@@ -41,10 +43,12 @@ export async function openDrawingViewer(id) {
     try {
       if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('Invalid drawing link.');
       const { content, name: storedName } = await client.loadForViewing(id);
+      if (current !== loading) return;
+      name = storedName;
+      root.querySelector('h1').textContent = name; document.title = `ParaMagic viewer - ${name}`;
       configureImageCatalogResources(imageCatalogResources);
       const drawing = await parsePortableDrawingText('Shared.paramagic', content, { importAsset: importPortableCatalogImage });
       if (current !== loading) return;
-      name = storedName;
       if (!controller) {
         solver = createSolverExecutionFacade({ mode: 'sync' });
         controller = createInfiniteCanvas({ canvas: root.querySelector('.viewer-canvas'), grid: root.querySelector('.grid'),
@@ -55,7 +59,6 @@ export async function openDrawingViewer(id) {
       controller.loadDrawingData(drawing, { zoomToFit: true }); controls.setVisible(true);
       controls.panel.querySelector('.controls-panel-close').hidden = true;
       root.querySelector('.viewer-description').textContent = controller.getDocumentMetadata().drawingDescription || '';
-      root.querySelector('h1').textContent = name; document.title = `ParaMagic viewer - ${name}`;
       loadedFor = account.user.id;
       exports.forEach(button => { button.disabled = false; }); fit.disabled = false;
       status.textContent = 'Viewing only. Adjust the available controls or export PNG / DXF.';

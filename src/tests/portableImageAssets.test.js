@@ -2,10 +2,65 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   collectDrawingImageReferences, compactSvgImageAssets, configureImageCatalogResources, embedSvgImageAssets,
-  hydratePortableImageAssets, imageFillContentUrl, parsePortableDrawingText,
+  hydratePortableImageAssets, imageFillContentUrl, imageFillReferenceFromContentUrl,
+  importPortableCatalogImage, parsePortableDrawingText, prepareImageFillContentUrl,
   serializePortableDrawingJson, serializePortablePackageJson,
 } from '../../packages/paramagic-core/src/modules/ImageSystem.js';
 import { isUuid } from '../../packages/paramagic-core/src/modules/IdentitySystem.js';
+import { createHash } from 'node:crypto';
+
+const embeddedImage = (reference = 'basic/Fabric/linen.png', bytes = Uint8Array.from([137, 80, 78, 71])) => ({
+  reference, bytes, fileName: 'linen.png', mimeType: 'image/png',
+  sha256: createHash('sha256').update(bytes).digest('hex'),
+});
+
+test('portable images load from embedded bytes without an installed catalog or editor UI', async (context) => {
+  context.after(() => configureImageCatalogResources());
+  configureImageCatalogResources();
+  const asset = embeddedImage();
+  const reference = await importPortableCatalogImage(asset);
+  const url = imageFillContentUrl(reference);
+  assert.match(url, /^blob:/);
+  assert.equal(await prepareImageFillContentUrl(reference), url);
+  assert.equal(imageFillReferenceFromContentUrl(url), reference);
+  assert.deepEqual(new Uint8Array(await (await fetch(url)).arrayBuffer()), asset.bytes);
+  assert.equal(await importPortableCatalogImage(asset), reference);
+  assert.equal(imageFillContentUrl(reference), url);
+  configureImageCatalogResources();
+  assert.equal(imageFillContentUrl(reference), '');
+  await assert.rejects(fetch(url));
+});
+
+test('portable import preserves embedded bytes instead of replacing them with a static catalog image', async (context) => {
+  context.after(() => configureImageCatalogResources());
+  configureImageCatalogResources({ manifestUrl: 'https://app.example/catalog.json', assetBaseUrl: 'https://app.example/images/' });
+  const asset = embeddedImage('basic/Fabric/linen.png', new Uint8Array(200_000).fill(7));
+  const reference = await importPortableCatalogImage(asset);
+  const content = await (await fetch(imageFillContentUrl(reference))).arrayBuffer();
+  assert.deepEqual(new Uint8Array(content), asset.bytes);
+  const changed = await importPortableCatalogImage(embeddedImage(asset.reference));
+  assert.notEqual(changed, reference);
+});
+
+test('portable image import rejects bytes that do not match the document checksum', async () => {
+  await assert.rejects(importPortableCatalogImage({ ...embeddedImage(), sha256: '0'.repeat(64) }), /checksum mismatch/);
+});
+
+test('portable drawing image fills and strokes survive real import and re-export', async (context) => {
+  context.after(() => configureImageCatalogResources());
+  const asset = embeddedImage('user/image-a');
+  const source = { ...drawing, entities: [...drawing.entities, { id: 'stroke-a', type: 'line',
+    start: [0, 0], end: [10, 0], appearance: { strokeExpression: asset.reference, strokeImageReference: asset.reference, strokeType: 'image' } }] };
+  const portable = await serializePortableDrawingJson(source, 'Image drawing', { fetchAsset: async () => asset });
+  const imported = await parsePortableDrawingText('Image drawing.paramagic', portable, { importAsset: importPortableCatalogImage });
+  const reference = imported.entities[0].appearance.fillImageReference;
+  assert.match(reference, /^imported\//);
+  assert.equal(imported.entities[3].appearance.strokeImageReference, reference);
+  const exported = JSON.parse(await serializePortableDrawingJson(imported, 'Image drawing'));
+  assert.equal(exported.embeddedAssets.images.length, 1);
+  assert.equal(exported.embeddedAssets.images[0].dataBase64, Buffer.from(asset.bytes).toString('base64'));
+  assert.match(await embedSvgImageAssets(`<svg><image href="${imageFillContentUrl(reference)}"/></svg>`), /data:image\/png;base64,iVBORw==/);
+});
 
 const drawing = {
   entities: [
