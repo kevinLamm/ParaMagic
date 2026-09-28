@@ -358,7 +358,7 @@ function clipPresentationToBounds(svg, sourceBounds, documentRef) {
   content.setAttribute('clip-path', `url(#${clipId})`);
 }
 
-function applyPresentationViewport(svg, viewport, pixelWidth, pixelHeight) {
+export function applyPresentationViewport(svg, viewport) {
   svg.setAttribute('viewBox', `${viewport.x} ${viewport.y} ${viewport.width} ${viewport.height}`);
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '100%');
@@ -369,10 +369,8 @@ function applyPresentationViewport(svg, viewport, pixelWidth, pixelHeight) {
     background.setAttribute('width', viewport.width);
     background.setAttribute('height', viewport.height);
   }
-  const content = svg.querySelector?.('[data-canvas-presentation-content]');
-  const presentationScale = Math.max(0.0001, Math.min(pixelWidth / viewport.width, pixelHeight / viewport.height));
-  dimensions.updateDimensionPresentationScale(content, presentationScale);
-  return presentationScale;
+  // The snapshot already contains the canvas dimension sizes and placement.
+  // Scale the entire drawing to paper, keeping text and arrows in proportion.
 }
 
 export function createPrintDialog({
@@ -555,7 +553,7 @@ export function createPrintDialog({
       printButton.disabled = true;
       return;
     }
-    applyPresentationViewport(svg, viewport, pixelWidth, pixelHeight);
+    applyPresentationViewport(svg, viewport);
     if (next.dimensionView === 'value') dimensions.applyValueOnlyExportDimensionAppearance(svg);
     svg.classList.add('print-preview-svg');
     svg.setAttribute('aria-label', `${getDrawingName()} print preview`);

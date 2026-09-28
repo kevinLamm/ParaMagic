@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
+  applyPresentationViewport,
   boundsAtAspect,
   handoffPrintOutput,
   normalizePrintSettings,
@@ -14,6 +15,45 @@ import {
   previewPageSize,
 } from '../PrintDialog.js';
 import { PRINT_PAGE_SIZES, printLayout } from '../PrintLayouts.js';
+import { dimensions } from '@paramagic/core/editor';
+
+test('printing preserves canvas dimension geometry when fitting different pages and scales', () => {
+  const node = () => ({
+    attributes: {}, style: {},
+    setAttribute(name, value) { this.attributes[name] = String(value); },
+    getAttribute(name) { return this.attributes[name]; },
+  });
+  const path = node(); const text = node();
+  const arrows = [node(), node()]; const extensions = [node(), node()];
+  text.textContent = '100';
+  const group = Object.assign(node(), {
+    querySelector: selector => selector === '.dimension-text' ? text : path,
+    querySelectorAll: selector => selector.includes('extension') ? extensions : selector === '.dimension-arrow' ? arrows : [],
+  });
+  dimensions.prepareDimensionPresentationClone(null, group, {
+    entity: { type: 'dimension-line', subtype: 'horizontal', dimensionMode: 'driven',
+      start: [0, 0], end: [100, 0], measureStart: [0, 0], measureEnd: [100, 0], label: [50, 30] },
+  });
+  const background = node();
+  const svg = Object.assign(node(), {
+    querySelector: selector => selector.includes('background') ? background : group,
+  });
+  const geometry = () => JSON.stringify([path, text, ...arrows, ...extensions]);
+  for (const canvasScale of [0.2, 1, 4]) {
+    dimensions.updateDimensionPresentationScale(group, canvasScale);
+    const expected = geometry();
+    for (const orientation of ['landscape', 'portrait']) {
+      for (const scaleMode of ['fit', 'actual', 'custom']) {
+        const viewport = printViewport({ layout: printLayout('letter', orientation), scaleMode,
+          scaleDenominator: 10, contentBounds: { x: 0, y: 0, width: 100, height: 60 } });
+        applyPresentationViewport(svg, viewport);
+        assert.equal(geometry(), expected, `${canvasScale}, ${orientation}, ${scaleMode}: text, arrows and placement must match the canvas`);
+        assert.equal(svg.getAttribute('viewBox'), `${viewport.x} ${viewport.y} ${viewport.width} ${viewport.height}`);
+        assert.equal(background.getAttribute('width'), String(viewport.width));
+      }
+    }
+  }
+});
 
 test('Viewer printing hides and enforces Full, Fit to Page, and Value Only while keeping layout editable', () => {
   const fixedSettings = { area: 'full', scaleMode: 'fit', dimensionView: 'value' };

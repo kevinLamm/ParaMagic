@@ -15,8 +15,23 @@ const canvas = createInfiniteCanvas({ canvas: document.querySelector('.fixture-c
 createDrawingFeatures({ canvas });
 configureImageCatalogResources(imageCatalogResources);
 const content = await (await fetch('./front-view-large-control-edit.paramagic')).text();
-canvas.loadDrawingData(await parsePortableDrawingText('TestFrontView.paramagic', content, { importAsset: importPortableCatalogImage }), { zoomToFit: true });
+const drawing = await parsePortableDrawingText('TestFrontView.paramagic', content, { importAsset: importPortableCatalogImage });
+// Include a mix of horizontal and vertical dimensions in the Viewer regression.
+drawing.dimensionAnnotations.slice(0, 6).forEach(dimension => { dimension.includeInValueOnly = true; });
+canvas.loadDrawingData(drawing, { zoomToFit: true });
 canvas.setDimensionTextMode('value');
+
+function matchingDimensionGeometry(root) {
+  const groups = [...root.querySelectorAll('.dimension-record')];
+  return groups.length > 0 && groups.every(group => {
+    const source = [...canvas.getObjectLayer().querySelectorAll('.dimension-record')]
+      .find(candidate => candidate.dataset.recordId === group.dataset.recordId);
+    if (!source) return false;
+    const signature = element => [...element.querySelectorAll('.dimension-text, .dimension-arrow, .dimension-path:not(.hit-target), .dimension-extension:not(.hit-target)')]
+      .map(node => ['d', 'x', 'y', 'transform', 'font-size'].map(name => node.getAttribute(name)));
+    return JSON.stringify(signature(group)) === JSON.stringify(signature(source));
+  });
+}
 
 function capturePrint() {
   const prepared = document.querySelector('.print-output-root');
@@ -34,6 +49,8 @@ function capturePrint() {
     'No overlap between description and drawing': !header || headerRect.bottom < svgRect.top,
     'Drawing inside printed page': svgRect.left >= pageRect.left && svgRect.right <= pageRect.right && svgRect.bottom <= pageRect.bottom,
     'Drawing output present': !!svg.querySelector('.canvas-record'),
+    'Preview dimension sizes and positions match canvas': matchingDimensionGeometry(document.querySelector('.print-preview-svg')),
+    'Printed dimension sizes and positions match canvas': matchingDimensionGeometry(svg),
   };
   report.textContent = Object.entries(checks).map(([name, ok]) => `${ok ? 'PASS' : 'FAIL'} ${name}`).join('\n');
   window.dispatchEvent(new Event('afterprint'));

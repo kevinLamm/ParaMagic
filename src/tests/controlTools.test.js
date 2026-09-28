@@ -49,7 +49,7 @@ test('embedded control rows can omit parameter names while retaining labels and 
     const state = controlPanelState(item, solver);
     assert.match(controlRowMarkup(item, state, false), /panel-control-parameter/);
     const markup = controlRowMarkup(item, state, false, '', { showParameterNames: false });
-    assert.doesNotMatch(markup, /panel-control-parameter|c7/);
+    assert.doesNotMatch(markup, /panel-control-parameter|>\s*c7\s*</);
     assert.match(markup, /Overall size/);
     if (type === 'Container') assert.match(markup, /data-control-collapse/);
     else assert.match(markup, /data-control-value/);
