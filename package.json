@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@paramagic/core": "file:packages/paramagic-core",
+    "firebase": "^12.19.0",
     "jose": "^6.1.0"
   },
   "devDependencies": {

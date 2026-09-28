@@ -2,7 +2,7 @@ import { drawingMetadataFieldsMarkup, readDrawingMetadataFields } from './Drawin
 import { createPublishingDialog, loadAccountPanel } from './PublishingDialog.js';
 
 export function openPublishDialog({ modal, canvas, client, getName, serialize, openMyDrawings }) {
-  const view = createPublishingDialog(modal, 'Publish Drawing', `<form class="drawing-publish-modal-content">
+  const view = createPublishingDialog(modal, 'Publish Drawing', `<section class="drawing-publish-modal-content">
     <h2>Publish Drawing</h2>
     <section class="publishing-account" aria-label="Publishing account"></section>
     ${drawingMetadataFieldsMarkup(canvas.getDocumentMetadata(), 'publish')}
@@ -13,13 +13,13 @@ export function openPublishDialog({ modal, canvas, client, getName, serialize, o
     <div class="drawing-publish-actions">
       <button type="button" data-action="manage">My drawings</button>
       <button type="button" data-action="cancel" hidden>Cancel upload</button>
-      <button type="submit" disabled>Publish drawing</button>
+      <button type="button" data-action="publish" disabled>Publish drawing</button>
     </div>
-  </form>`);
-  const form = view.dialog.querySelector('form');
+  </section>`);
+  const form = view.dialog.querySelector('.drawing-publish-modal-content');
   const status = form.querySelector('.drawing-publish-status');
   const accountPanel = form.querySelector('.publishing-account');
-  const publishButton = form.querySelector('[type="submit"]');
+  const publishButton = form.querySelector('[data-action="publish"]');
   const cancelButton = form.querySelector('[data-action="cancel"]');
   const manageButton = form.querySelector('[data-action="manage"]');
   const result = form.querySelector('.publishing-result');
@@ -33,7 +33,7 @@ export function openPublishDialog({ modal, canvas, client, getName, serialize, o
       ? 'Publishing is paused while storage is being configured.' : !account.user ? 'Sign in to publish.' : 'Ready to publish.';
     result.hidden = true;
   } });
-  form.addEventListener('submit', async event => {
+  publishButton.addEventListener('click', async event => {
     event.preventDefault();
     if (inProgress || !account?.user || !account.publishingEnabled) return;
     inProgress = true;
@@ -58,6 +58,10 @@ export function openPublishDialog({ modal, canvas, client, getName, serialize, o
         onProgress(bytes, total) { status.textContent = `Uploading… ${Math.round(bytes / total * 100)}%`; } });
       status.textContent = 'Drawing published.';
       const link = document.createElement('a'); link.href = drawing.url; link.textContent = 'Download your ParaMagic file';
+      link.onclick = async event => {
+        event.preventDefault();
+        try { await client.download(drawing.id); } catch (error) { status.textContent = error.message; }
+      };
       const share = document.createElement('input'); share.readOnly = true;
       share.setAttribute('aria-label', 'Drawing viewer link'); share.value = new URL(`/?view=${drawing.id}`, location.origin).href;
       share.addEventListener('focus', () => share.select());

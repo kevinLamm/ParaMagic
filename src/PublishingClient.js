@@ -2,10 +2,13 @@ import { descriptionParts } from './PublishingDescription.js';
 export const hostedPublishingUrl = 'https://paramagic-testing.essdog.chatgpt.site';
 
 export function createPublishingClient({ fetchImpl = globalThis.fetch, browser = globalThis.window,
+  authFactory = async config => (await import('./PublishingAuth.js')).createPublishingAuth(config),
   available = import.meta.env?.MODE !== 'github-pages' } = {}) {
-  async function request(path, options = {}) {
+  let auth; let authLoading; let expiresAt = 0; let sessionUid; let syncing;
+  const authHeaders = () => auth?.currentUser()?.uid ? { 'X-ParaMagic-Account': auth.currentUser().uid } : {};
+  async function rawRequest(path, options = {}) {
     if (!available) throw new Error('Storage publishing is available in hosted ParaMagic. Save your drawing, then open it there.');
-    const response = await fetchImpl(path, { credentials: 'same-origin', ...options });
+    const response = await fetchImpl(path, { credentials: 'same-origin', ...options, headers: { ...authHeaders(), ...options.headers } });
     if (!response.headers.get('Content-Type')?.includes('application/json')) {
       throw new Error('Storage publishing is not available on this server. You can continue drawing and saving locally.');
     }
@@ -16,62 +19,98 @@ export function createPublishingClient({ fetchImpl = globalThis.fetch, browser =
     }
     return value;
   }
-  const account = () => request('/api/account');
+  async function syncSession(force = false) {
+    if (!auth) return;
+    const user = auth.currentUser();
+    if (!user?.emailVerified) throw new Error('Sign in and verify your email before using drawing storage.');
+    if (!force && sessionUid === user.uid && expiresAt > Date.now() + 30000) return;
+    if (!syncing) syncing = (async () => {
+      const result = await rawRequest('/api/auth/session', { method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken: await auth.token() }) });
+      expiresAt = result.expiresAt;
+      sessionUid = user.uid;
+    })().finally(() => { syncing = null; });
+    await syncing;
+  }
+  async function request(path, options = {}) {
+    await syncSession();
+    try { return await rawRequest(path, options); }
+    catch (error) {
+      if (!auth || error.status !== 401) throw error;
+      await syncSession(true);
+      return rawRequest(path, options);
+    }
+  }
+  async function account() {
+    let value = await rawRequest('/api/account');
+    if (value.authConfig) {
+      if (!authLoading) authLoading = authFactory(value.authConfig).catch(error => { authLoading = null; throw error; });
+      auth = await authLoading;
+      if (auth.currentUser()?.emailVerified) {
+        try { await syncSession(!value.user); }
+        catch (error) {
+          if (![401, 403].includes(error.status)) throw error;
+          await auth.signOut(); expiresAt = 0;
+          await rawRequest('/api/auth/logout', { method: 'POST' });
+        }
+        value = await rawRequest('/api/account');
+      } else {
+        if (value.user) await rawRequest('/api/auth/logout', { method: 'POST' });
+        value.user = null;
+      }
+      value.verificationEmail = auth.currentUser()?.emailVerified === false ? auth.currentUser().email : null;
+    }
+    return value;
+  }
+  async function authAction(action, ...args) {
+    if (!auth) throw new Error('Sign-in is not configured yet. Please try again later.');
+    expiresAt = 0;
+    try {
+      await auth[action](...args);
+      if (auth.currentUser()?.emailVerified) await syncSession();
+    } catch (error) {
+      if (error.code) throw (await import('./PublishingAuth.js')).accountError(error);
+      throw error;
+    }
+  }
+
   return {
     available, account,
-    signOut: () => request('/api/auth/logout', { method: 'POST' }),
+    signIn: provider => provider === 'google' ? authAction('google') : Promise.reject(new Error('Unknown sign-in provider.')),
+    signInEmail: (email, password) => authAction('email', email, password),
+    register: details => authAction('register', details),
+    resendVerification: () => authAction('resend'),
+    checkVerification: () => authAction('verify'),
+    resetPassword: email => authAction('reset', email),
+    async signOut() {
+      expiresAt = 0;
+      try { await auth?.signOut(); }
+      finally { await rawRequest('/api/auth/logout', { method: 'POST' }); }
+    },
+    async download(id) {
+      await syncSession();
+      const who = auth?.currentUser()?.uid;
+      browser.location.assign('/api/drawings/' + encodeURIComponent(id) + '/download' + (who ? '?account=' + encodeURIComponent(who) : ''));
+    },
     list: (before = '') => request(`/api/drawings${before ? `?before=${encodeURIComponent(before)}` : ''}`),
     search: (query, before = '') => request(`/api/drawings/search?q=${encodeURIComponent(query)}&before=${encodeURIComponent(before)}`),
     setDiscoverable: (id, allowed) => request(`/api/drawings/${encodeURIComponent(id)}/discovery`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ allowed }),
     }),
     async loadForViewing(id) {
-      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { credentials: 'same-origin' });
+      await syncSession();
+      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { credentials: 'same-origin', headers: authHeaders() });
       if (!response.ok) {
         const value = await response.json(); throw new Error(value.error || 'This drawing cannot be opened.');
       }
       return { content: await response.text(), name: decodeURIComponent(response.headers.get('X-ParaMagic-Drawing-Name') || 'Shared drawing') };
     },
     async checkViewingAccess(id) {
-      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { method: 'HEAD', credentials: 'same-origin' });
+      await syncSession();
+      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { method: 'HEAD', credentials: 'same-origin', headers: authHeaders() });
       if (!response.ok) throw new Error('This drawing is no longer available to your account.');
     },
     remove: id => request(`/api/drawings/${encodeURIComponent(id)}`, { method: 'DELETE' }),
-    signIn(provider, signal) {
-      if (!['google', 'github'].includes(provider)) return Promise.reject(new Error('Unknown sign-in provider.'));
-      const popup = browser.open(`/api/auth/${provider}/start`, 'paramagic-sign-in', 'popup,width=520,height=700');
-      if (!popup) return Promise.reject(new Error('Allow pop-up windows for ParaMagic, then try signing in again. Your drawing will stay open.'));
-      return new Promise((resolve, reject) => {
-        let checking = false;
-        let finished = false;
-        const finish = (error, value) => {
-          if (finished) return;
-          finished = true;
-          clearInterval(interval); clearTimeout(timeout);
-          browser.removeEventListener('message', onMessage);
-          signal?.removeEventListener('abort', onAbort);
-          try { popup.close(); } catch { /* Some providers isolate their window. */ }
-          if (error) reject(error); else resolve(value);
-        };
-        const check = async () => {
-          if (checking || finished) return;
-          checking = true;
-          try { const value = await account(); if (value.user) finish(null, value); }
-          catch { /* A network failure should not discard an in-progress sign-in. */ }
-          finally { checking = false; }
-        };
-        const onMessage = event => {
-          if (event.origin !== browser.location.origin || event.source !== popup || event.data?.type !== 'paramagic-auth') return;
-          if (event.data.success) check(); else finish(new Error('Sign-in was not completed. Please try again.'));
-        };
-        const onAbort = () => finish(new Error('Sign-in cancelled.'));
-        const interval = setInterval(check, 1500);
-        const timeout = setTimeout(() => finish(new Error('Sign-in timed out. Please try again.')), 10 * 60 * 1000);
-        browser.addEventListener('message', onMessage);
-        signal?.addEventListener('abort', onAbort, { once: true });
-        if (signal?.aborted) onAbort();
-      });
-    },
     async publish({ name, content, description = '', searchable = false, signal, onProgress = () => {} }) {
       const blob = new Blob([content], { type: 'application/vnd.paramagic+json' });
       const { drawing, chunkBytes } = await request('/api/drawings', {

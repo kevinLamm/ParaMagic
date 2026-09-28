@@ -3,13 +3,12 @@ import test from 'node:test';
 import { publishingTestRuntime } from '../../scripts/publishing-test-runtime.mjs';
 import { CHUNK_BYTES } from '../../worker/drawings.js';
 import { digest } from '../../worker/identity.js';
-import { generateKeyPair, exportJWK, SignJWT } from 'jose';
 import { descriptionParts } from '../PublishingDescription.js';
 
 test('publishing authorization, chunk integrity, quotas, cleanup and sessions', async t => {
-  const { runtime, db, identity, bucket, fetchMock } = await publishingTestRuntime({ limit: CHUNK_BYTES * 2 });
+  const { runtime, db, identity, bucket } = await publishingTestRuntime({ limit: CHUNK_BYTES * 2 });
   t.after(() => runtime.dispose());
-  const owner = await identity(); const stranger = await identity('Another user', 'github');
+  const owner = await identity(); const stranger = await identity('Another user');
   const call = (path, method = 'GET', body, who = owner, origin = 'http://localhost') => runtime.dispatchFetch(`http://localhost${path}`, {
     method, redirect: 'manual', headers: { ...(who ? { Cookie: who.cookie } : {}), ...(origin ? { Origin: origin } : {}),
       ...(body && !(body instanceof Uint8Array) ? { 'Content-Type': 'application/json' } : {}) },
@@ -20,7 +19,7 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal(response.status, 201, await response.clone().text()); return (await response.json()).drawing;
   };
   await t.test('anonymous editor status is public but publishing and listing require a session', async () => {
-    assert.deepEqual((await (await call('/api/account', 'GET', undefined, null)).json()).providers, ['google', 'github']);
+    assert.equal((await (await call('/api/account', 'GET', undefined, null)).json()).authConfig.projectId, 'paramagic-test');
     for (const method of ['GET', 'POST']) assert.equal((await call('/api/drawings', method, method === 'POST' ? {} : undefined, null)).status, 401);
     for (const origin of ['https://evil.example', null]) assert.equal((await call('/api/drawings', 'POST', { bytes: 10, name: 'CSRF' }, owner, origin)).status, 403);
   });
@@ -101,31 +100,6 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal((await call(`/api/drawings/${item.id}`, 'DELETE')).status, 200);
     assert.equal((await db.prepare('SELECT COUNT(*) AS total FROM drawing_descriptions WHERE drawing_id=?').bind(item.id).first()).total, 0);
   });
-  await t.test('OAuth binds state to the browser, consumes it once, and creates a provider account', async () => {
-    const start = await call('/api/auth/github/start', 'GET', undefined, null);
-    assert.equal(start.status, 302);
-    const url = new URL(start.headers.get('Location'));
-    assert.equal(url.searchParams.get('code_challenge_method'), 'S256');
-    assert.equal(url.searchParams.get('scope'), 'read:user');
-    const callback = `/api/auth/github/callback?state=${url.searchParams.get('state')}&code=test-code`;
-    const wrongBrowser = await call(callback, 'GET', undefined, null);
-    assert.match(await wrongBrowser.text(), /Sign-in unsuccessful/);
-    fetchMock.get('https://github.com').intercept({ path: '/login/oauth/access_token', method: 'POST' })
-      .reply(200, { access_token: 'test-provider-token' }, { headers: { 'Content-Type': 'application/json' } });
-    fetchMock.get('https://api.github.com').intercept({ path: '/user' })
-      .reply(200, { id: 12345, login: 'test-user', name: 'Test GitHub owner' }, { headers: { 'Content-Type': 'application/json' } });
-    const cookie = start.headers.get('Set-Cookie').split(';')[0];
-    const result = await call(callback, 'GET', undefined, { cookie });
-    fetchMock.assertNoPendingInterceptors();
-    assert.match(await result.text(), /You are signed in/);
-    assert.match(result.headers.get('Set-Cookie'), /HttpOnly/);
-    const repeat = await call(callback, 'GET', undefined, { cookie });
-    assert.match(await repeat.text(), /Sign-in unsuccessful/);
-    const user = await db.prepare("SELECT * FROM users WHERE provider='github' AND subject='12345'").first();
-    assert.equal(user.name, 'Test GitHub owner');
-    assert.equal(await db.prepare('SELECT * FROM sessions WHERE token_hash=?').bind('test-provider-token').first(), null);
-    fetchMock.assertNoPendingInterceptors();
-  });
   await t.test('logout and expiry revoke server-side access', async () => {
     await db.prepare('UPDATE sessions SET expires_at=0 WHERE token_hash=?').bind(await digest(stranger.token)).run();
     assert.equal((await call('/api/drawings', 'GET', undefined, stranger)).status, 401);
@@ -133,30 +107,7 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal(response.status, 200); assert.match(response.headers.get('Set-Cookie'), /Max-Age=0/);
     assert.equal((await call('/api/drawings')).status, 401);
   });
-  await t.test('Google verifies signed identity, audience, nonce and expiry', async () => {
-    const { privateKey, publicKey } = await generateKeyPair('RS256', { extractable: true });
-    const key = { ...await exportJWK(publicKey), kid: 'fixture-google', alg: 'RS256', use: 'sig' };
-    fetchMock.get('https://www.googleapis.com').intercept({ path: '/oauth2/v3/certs' })
-      .reply(200, { keys: [key] }, { headers: { 'Content-Type': 'application/json' } }).persist();
-    for (const invalid of ['', 'nonce', 'audience', 'issuer', 'expired', 'signature']) {
-      const start = await call('/api/auth/google/start', 'GET', undefined, null);
-      const authorization = new URL(start.headers.get('Location'));
-      const nonce = authorization.searchParams.get('nonce');
-      const signingKey = invalid === 'signature' ? (await generateKeyPair('RS256')).privateKey : privateKey;
-      const token = await new SignJWT({ nonce: invalid === 'nonce' ? 'wrong' : nonce,
-        name: 'Google fixture', email: 'test@example.invalid', email_verified: true })
-        .setProtectedHeader({ alg: 'RS256', kid: key.kid }).setSubject('google-fixture-user')
-        .setIssuer(invalid === 'issuer' ? 'https://evil.example' : 'https://accounts.google.com')
-        .setAudience(invalid === 'audience' ? 'another-app' : 'test-google').setIssuedAt()
-        .setExpirationTime(invalid === 'expired' ? '0s' : '5m').sign(signingKey);
-      fetchMock.get('https://oauth2.googleapis.com').intercept({ path: '/token', method: 'POST' })
-        .reply(200, { id_token: token }, { headers: { 'Content-Type': 'application/json' } });
-      const response = await call(`/api/auth/google/callback?state=${authorization.searchParams.get('state')}&code=fixture`,
-        'GET', undefined, { cookie: start.headers.get('Set-Cookie').split(';')[0] });
-      assert.match(await response.text(), invalid ? /Sign-in unsuccessful/ : /You are signed in/, invalid);
-    }
-    assert.equal((await db.prepare("SELECT COUNT(*) AS total FROM users WHERE subject='google-fixture-user'").first()).total, 1);
-  });
+
 });
 
 test('missing cap pauses publishing while owner deletion remains available', async t => {

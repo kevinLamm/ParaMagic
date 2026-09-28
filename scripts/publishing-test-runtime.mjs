@@ -10,8 +10,8 @@ export async function publishingTestRuntime({ limit = 100_000_000, providers = t
   const runtime = new Miniflare({ modules: true, script: bundle.outputFiles[0].text,
     compatibilityDate: '2026-05-22', d1Databases: ['DB'], r2Buckets: ['DRAWINGS'], fetchMock,
     bindings: { STORAGE_LIMIT_BYTES: String(limit), ...(providers ? {
-      GOOGLE_CLIENT_ID: 'test-google', GOOGLE_CLIENT_SECRET: 'test-google-secret',
-      GITHUB_CLIENT_ID: 'test-github', GITHUB_CLIENT_SECRET: 'test-github-secret',
+      FIREBASE_PROJECT_ID: 'paramagic-test', FIREBASE_API_KEY: 'test-public-api-key',
+      FIREBASE_AUTH_DOMAIN: 'paramagic-test.firebaseapp.com',
     } : {}) } });
   const db = await runtime.getD1Database('DB'); await ensureDatabase(db);
   async function sessionFor(id) {
@@ -20,7 +20,7 @@ export async function publishingTestRuntime({ limit = 100_000_000, providers = t
       .bind(await digest(token), id, Date.now() + 3600000).run();
     return { id, token, cookie: `paramagic_session=${token}` };
   }
-  async function identity(name = 'Test owner', provider = 'google') {
+  async function identity(name = 'Test owner', provider = 'firebase') {
     const id = newIdentity();
     await db.prepare('INSERT INTO users (id,provider,subject,name,created_at) VALUES (?,?,?,?,?)')
       .bind(id, provider, newIdentity(), name, Date.now()).run();

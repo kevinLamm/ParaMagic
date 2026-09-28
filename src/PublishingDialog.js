@@ -1,4 +1,4 @@
-import { hostedPublishingUrl } from './PublishingClient.js';
+export { loadAccountPanel } from './PublishingAccountPanel.js';
 
 export function createPublishingDialog(modal, title, markup) {
   const previousFocus = document.activeElement;
@@ -27,59 +27,4 @@ export function createPublishingDialog(modal, title, markup) {
     }
   });
   return { dialog, signal: lifecycle.signal, close, lock(value) { locked = value; closeButton.disabled = value; } };
-}
-
-export async function loadAccountPanel(root, client, { signal, onChange = () => {} } = {}) {
-  root.replaceChildren();
-  const status = document.createElement('p'); status.role = 'status'; status.textContent = 'Checking sign-in…'; root.append(status);
-  const refresh = async () => {
-    try {
-      const account = await client.account();
-      if (signal?.aborted) return;
-      root.replaceChildren();
-      if (account.user) {
-        const name = document.createElement('p');
-        name.textContent = `Signed in as ${account.user.name} (${account.user.provider === 'google' ? 'Google' : 'GitHub'}).`;
-        const button = document.createElement('button'); button.type = 'button'; button.textContent = 'Sign out';
-        button.addEventListener('click', async () => {
-          button.disabled = true;
-          try { await client.signOut(); await refresh(); }
-          catch (error) { name.textContent = error.message; button.disabled = false; }
-        });
-        root.append(name, button);
-      } else {
-        const note = document.createElement('p');
-        note.textContent = 'Sign in to publish and manage your drawings. Your first sign-in creates a ParaMagic account. You can use the full editor without an account.';
-        root.append(note);
-        if (!account.providers.length) { status.textContent = 'Sign-in is not available yet. Please try again later.'; root.append(status); }
-        for (const provider of account.providers) {
-          const button = document.createElement('button'); button.type = 'button';
-          button.textContent = `Continue with ${provider === 'google' ? 'Google' : 'GitHub'}`;
-          button.addEventListener('click', async () => {
-            const pending = new AbortController(); const abort = () => pending.abort();
-            signal?.addEventListener('abort', abort, { once: true });
-            root.querySelectorAll('button').forEach(item => { item.disabled = true; });
-            status.textContent = 'Finish signing in in the new window. Your drawing will stay open.'; root.append(status);
-            const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancel sign-in';
-            cancel.onclick = abort; root.append(cancel);
-            try { await client.signIn(provider, pending.signal); await refresh(); }
-            catch (error) {
-              status.textContent = error.message; root.querySelectorAll('button').forEach(item => { item.disabled = false; });
-            } finally { cancel.remove(); signal?.removeEventListener('abort', abort); }
-          });
-          root.append(button);
-        }
-      }
-      onChange(account);
-    } catch (error) {
-      if (signal?.aborted) return;
-      status.textContent = error.message;
-      if (!client.available) {
-        const link = document.createElement('a'); link.href = hostedPublishingUrl;
-        link.target = '_blank'; link.rel = 'noopener'; link.textContent = 'Open hosted ParaMagic'; root.append(link);
-      }
-      onChange(null);
-    }
-  };
-  await refresh();
 }

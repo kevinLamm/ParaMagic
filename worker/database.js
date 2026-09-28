@@ -9,11 +9,6 @@ export const schema = [
     token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), expires_at INTEGER NOT NULL
   )`,
   `CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires_at)`,
-  `CREATE TABLE IF NOT EXISTS oauth_attempts (
-    state_hash TEXT PRIMARY KEY, browser_hash TEXT NOT NULL, provider TEXT NOT NULL,
-    verifier TEXT NOT NULL, nonce TEXT NOT NULL, expires_at INTEGER NOT NULL
-  )`,
-  `CREATE INDEX IF NOT EXISTS oauth_expiry ON oauth_attempts(expires_at)`,
   `CREATE TABLE IF NOT EXISTS drawings (
     id TEXT PRIMARY KEY, owner_id TEXT NOT NULL REFERENCES users(id), name TEXT NOT NULL,
     bytes INTEGER NOT NULL CHECK(bytes > 0), parts INTEGER NOT NULL, next_part INTEGER NOT NULL DEFAULT 0,

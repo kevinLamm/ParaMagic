@@ -40,3 +40,42 @@ test('static hosting explains where publishing is available without touching the
   const client = createPublishingClient({ available: false, fetchImpl: () => { throw new Error('Unexpected fetch'); } });
   await assert.rejects(client.account(), /hosted ParaMagic/);
 });
+
+test('verified accounts restore a short session, renew after expiry, and sign out of both services', async () => {
+  let user = { uid: 'firebase-user', emailVerified: true }; let cookie = false; let exchanges = 0; let retry = false;
+  const auth = { currentUser: () => user, token: async () => 'verified-token', signOut: async () => { user = null; } };
+  const client = createPublishingClient({ authFactory: async () => auth, fetchImpl: async (path, options) => {
+    if (path === '/api/account') return Response.json({ authConfig: { projectId: 'test' }, user: cookie ? { id: 'owner' } : null });
+    if (path === '/api/auth/session') {
+      assert.equal(JSON.parse(options.body).idToken, 'verified-token'); exchanges++; cookie = true;
+      return Response.json({ expiresAt: Date.now() + 300000 });
+    }
+    if (path === '/api/auth/logout') { cookie = false; return Response.json({}); }
+    assert.equal(options.headers['X-ParaMagic-Account'], 'firebase-user');
+    if (!retry) { retry = true; return Response.json({ error: 'Expired session' }, { status: 401 }); }
+    return Response.json({ drawings: [] });
+  } });
+  assert.equal((await client.account()).user.id, 'owner'); assert.equal(exchanges, 1);
+  assert.deepEqual((await client.list()).drawings, []); assert.equal(exchanges, 2);
+  await client.signOut(); assert.equal(user, null); assert.equal(cookie, false);
+});
+
+test('unverified signup exposes verification actions but never receives a publishing session', async () => {
+  let user = null; let sent = 0; let exchanges = 0;
+  const auth = { currentUser: () => user, token: async () => 'verified-token',
+    register: async details => { user = { uid: 'email-user', email: details.email, emailVerified: false }; sent++; },
+    resend: async () => { sent++; }, verify: async () => { user.emailVerified = true; }, reset: async () => { sent++; } };
+  const client = createPublishingClient({ authFactory: async () => auth, fetchImpl: async path => {
+    if (path === '/api/account') return Response.json({ authConfig: { projectId: 'test' }, user: exchanges ? { id: 'owner' } : null });
+    if (path === '/api/auth/session') { exchanges++; return Response.json({ expiresAt: Date.now() + 300000 }); }
+    throw new Error('Unexpected storage request');
+  } });
+  await client.account();
+  await client.register({ email: 'test@example.invalid', password: 'not-a-real-password', name: 'Test' });
+  assert.equal((await client.account()).verificationEmail, 'test@example.invalid');
+  await assert.rejects(client.list(), /verify your email/); assert.equal(exchanges, 0);
+  await client.resendVerification(); assert.equal(sent, 2);
+  await client.checkVerification(); assert.equal((await client.account()).user.id, 'owner');
+  await client.resetPassword('test@example.invalid'); assert.equal(sent, 3);
+  await assert.rejects(client.signIn('github'), /Unknown/);
+});

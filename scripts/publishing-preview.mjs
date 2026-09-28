@@ -7,7 +7,7 @@ import { createPublishingClient } from '../src/PublishingClient.js';
 
 // Isolated, in-memory browser fixture. No production credentials or storage are used.
 // The production build starts at worker/index.js and cannot reach these routes.
-const { runtime, identity, sessionFor } = await publishingTestRuntime();
+const { runtime, identity, sessionFor } = await publishingTestRuntime({ providers: false });
 const users = { owner: await identity('Local test owner'), other: await identity('Local other owner') };
 const fixtureClient = createPublishingClient({ fetchImpl: (path, options) => runtime.dispatchFetch(`http://localhost:5180${path}`, {
   ...options, headers: { ...options?.headers, Origin: 'http://localhost:5180', Cookie: users.owner.cookie },
@@ -21,9 +21,6 @@ const server = createServer(async (req, res) => {
     const origin = 'http://localhost:5180';
     if (req.headers.host !== 'localhost:5180' && req.headers.host !== '127.0.0.1:5180') { res.writeHead(403).end(); return; }
     const url = new URL(req.url, origin);
-    if (/^\/api\/auth\/(google|github)\/start$/.test(url.pathname)) {
-      res.writeHead(200, { 'Content-Type': 'text/html' }).end('<h1>Local sign-in fixture</h1><p>This uses disposable local accounts, not Google or GitHub.</p><a href="/__test__/owner">Use local test owner</a><br><a href="/__test__/other">Use other local owner</a>'); return;
-    }
     if (url.pathname.startsWith('/__test__/')) {
       const user = users[url.pathname.slice('/__test__/'.length)];
       if (!user) { res.writeHead(404).end(); return; }

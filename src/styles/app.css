@@ -1642,3 +1642,8 @@ pre { white-space: pre-wrap; background: #fff; border-radius: 0; border: 1px sol
 .dock-panel.floating.collapsed { min-height:32px; }
 .dock-panel-float-resize { display:none; }
 .dock-panel.floating:not(.collapsed) .dock-panel-float-resize { display:block; position:absolute; bottom:0; right:0; width:14px; height:14px; cursor:nwse-resize; touch-action:none; background:linear-gradient(135deg,transparent 55%,#a7b3c3 56%,#a7b3c3 65%,transparent 66%,transparent 75%,#a7b3c3 76%); }
+.publishing-account-form { display: grid; gap: 10px; max-width: 400px; }
+.publishing-account-form label { display: grid; gap: 4px; }
+.publishing-account-form input { box-sizing: border-box; width: 100%; min-height: 36px; padding: 6px 8px; }
+.publishing-account-form p { margin: 0; }
+.publishing-account h3 { margin: 14px 0 10px; }

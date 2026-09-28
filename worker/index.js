@@ -1,6 +1,6 @@
 import { ensureDatabase } from './database.js';
 import { authOrigin, authRoute, sessionUser } from './auth.js';
-import { configuredProviders } from './providers.js';
+import { firebaseConfig } from './firebaseIdentity.js';
 import { drawingsRoute, storageLimit } from './drawings.js';
 import { HttpError, json } from './http.js';
 
@@ -15,7 +15,7 @@ export default {
         try { authOrigin(request, env); originReady = true; } catch { /* Public editor needs no account configuration. */ }
         if (env.DB) await ensureDatabase(env.DB);
         return json({ user: env.DB ? await sessionUser(request, env.DB) : null,
-          providers: connected && originReady ? configuredProviders(env) : [],
+          authConfig: connected && originReady ? firebaseConfig(env) : null,
           publishingEnabled: connected && storageLimit(env) > 0 });
       }
       if (!connected) throw new HttpError(503, 'Storage publishing is not configured yet. You can continue drawing and saving locally.');

@@ -25,6 +25,10 @@ export function openMyDrawingsDialog({ modal, client }) {
         const actions = document.createElement('div'); actions.className = 'published-drawing-actions';
         if (drawing.url) {
           const link = document.createElement('a'); link.href = drawing.url; link.textContent = 'Download ParaMagic'; actions.append(link);
+          link.onclick = async event => {
+            event.preventDefault();
+            try { await client.download(drawing.id); } catch (error) { status.textContent = error.message; }
+          };
           const share = document.createElement('button'); share.type = 'button'; share.textContent = 'Show link';
           share.onclick = () => {
             const input = document.createElement('input'); input.readOnly = true;
