@@ -1,11 +1,11 @@
-import { createInfiniteCanvas, createControlTools, parsePortableDrawingText, importPortableCatalogImage } from '@paramagic/core/editor';
-import { createSolverExecutionFacade } from '@paramagic/core/solver';
+import { createInfiniteCanvas, createDrawingFeatures, createControlTools, parsePortableDrawingText, importPortableCatalogImage } from '@paramagic/core/editor';
 import { configureImageCatalogResources } from '@paramagic/core/images';
 import { serializeDxf } from '@paramagic/core/document';
 import { createCanvasPresentationPng, createDrawingDxfSnapshot, prepareDxfExportGeometry } from '@paramagic/core/export';
 import { imageCatalogResources } from './app-config.js';
 import { createPublishingClient } from './PublishingClient.js';
 import { loadAccountPanel } from './PublishingDialog.js';
+import { createAppSolver } from './AppSolver.js';
 
 export async function openDrawingViewer(id) {
   const root = document.getElementById('root');
@@ -50,13 +50,15 @@ export async function openDrawingViewer(id) {
       const drawing = await parsePortableDrawingText('Shared.paramagic', content, { importAsset: importPortableCatalogImage });
       if (current !== loading) return;
       if (!controller) {
-        solver = createSolverExecutionFacade({ mode: 'sync' });
+        solver = createAppSolver();
         controller = createInfiniteCanvas({ canvas: root.querySelector('.viewer-canvas'), grid: root.querySelector('.grid'),
           svg: root.querySelector('svg'), status: document.createElement('span'), reset: fit, entities: [], solver, interactive: false });
+        createDrawingFeatures({ canvas: controller });
       }
       controls = createControlTools({ canvas: controller, solver,
         host: root.querySelector('.viewer-controls'), allowEditing: false, floating: false });
       controller.loadDrawingData(drawing, { zoomToFit: true }); controls.setVisible(true);
+      controller.flushDrawingUpdate();
       controls.panel.querySelector('.controls-panel-close').hidden = true;
       root.querySelector('.viewer-description').textContent = controller.getDocumentMetadata().drawingDescription || '';
       loadedFor = account.user.id;

@@ -16,7 +16,7 @@ import {
   bindObjectVisibilityOverride,
   bindObjectVisibilityProperties,
   constraintGroups,
-  createArrayTools,
+  createDrawingFeatures,
   createBrowserAutosaveController,
   createClassTools,
   createControlTools,
@@ -35,9 +35,7 @@ import {
   createParametersPanelController,
   createSmartDimensionTools,
   createStackTreePanel,
-  createSwellTools,
   createSubtractTools,
-  createLinkedCopyTools,
   createConstraintHandlers,
   dimensionTools,
   drawingIdentity,
@@ -77,10 +75,7 @@ import {
   serializeCanvasPresentationSvg,
 } from '@paramagic/core/export';
 import {
-  createSolverExecutionFacade,
   formatUnitlessValue,
-  solverJacobianModeFromEnvironment,
-  solverWorkerModeFromEnvironment,
 } from '@paramagic/core/solver';
 import { configureImageCatalogResources, configureOpenCvResources } from '@paramagic/core/images';
 import { drawingBrowserTitle, imageCatalogResources, openCvResources } from './app-config.js';
@@ -92,6 +87,7 @@ import { openMyDrawingsDialog } from './MyDrawingsDialog.js';
 import { createPublishingClient } from './PublishingClient.js';
 import { openFindDrawingsDialog } from './FindDrawingsDialog.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
+import { createAppSolver } from './AppSolver.js';
 
 configureImageCatalogResources(imageCatalogResources);
 configureOpenCvResources(openCvResources);
@@ -1202,16 +1198,8 @@ document.querySelectorAll('.floating-panel').forEach((panelElement) => {
   floatingPanelControllers.set(panelElement, bindFloatingPanelDrag(panelElement));
 });
 
-const solverController = createSolverExecutionFacade({
-  mode: solverWorkerModeFromEnvironment(),
-  jacobianMode: solverJacobianModeFromEnvironment(),
-});
+const solverController = createAppSolver();
 const solverStatus = document.getElementById('solverStatus');
-solverController.subscribeExecution?.(({ mode, state, jacobianMode }) => {
-  document.documentElement.dataset.solverExecutionMode = mode;
-  document.documentElement.dataset.solverExecutionState = state;
-  document.documentElement.dataset.solverJacobianMode = jacobianMode;
-});
 solverController.subscribe((_snapshot, result) => {
   canvasController?.refreshStackActivation?.();
   const failed = result && !['converged', 'unchanged', 'preview'].includes(result.status);
@@ -1612,8 +1600,9 @@ updateDrawingActionState();
 const drawingHint = createDrawingHint({ canvas: canvasController });
 canvasController.setDrawingHint(drawingHint);
 
-const swellTools = createSwellTools({
+const { swellTools, linkedCopyTools, arrayTools } = createDrawingFeatures({
   toolbar: document.querySelector('.drawing-tools'),
+  arrayToolbar: document.querySelector('.array-tool'),
   canvas: canvasController,
 });
 
@@ -1636,29 +1625,7 @@ createSubtractTools({
   canvas: canvasController,
 });
 
-const linkedCopyTools = createLinkedCopyTools({
-  toolbar: document.querySelector('.drawing-tools'),
-  canvas: canvasController,
-});
-
-const arrayTools = createArrayTools({
-  toolbar: document.querySelector('.array-tool'),
-  canvas: canvasController,
-  derivativeSourceProviders: [
-    linkedCopyTools.derivativeSourceProvider,
-    ...(canvasController.getDerivativeSourceProviders?.() || []),
-    swellTools.derivativeSourceProvider,
-  ],
-});
-
-canvasController.registerDerivedDimensionFeatureProvider?.(linkedCopyTools.derivedDimensionProvider);
-canvasController.registerDerivedDimensionFeatureProvider?.(arrayTools.derivedDimensionProvider);
-canvasController.registerDerivedSelectionProvider?.(linkedCopyTools.selectionProvider);
-canvasController.registerDerivedSelectionProvider?.(arrayTools.selectionProvider);
-canvasController.registerSelectionPropertyProvider?.(linkedCopyTools.selectionPropertyProvider);
 constraintController.registerConstraintOperation?.(linkedCopyTools.constraintOperation);
-canvasController.registerSubtractOperandProvider?.(arrayTools.subtractOperandProvider);
-canvasController.registerSelectionPropertyProvider?.(arrayTools.selectionPropertyProvider);
 
 const drawingClipboard = createDrawingClipboard({
   canvas: canvasController,
