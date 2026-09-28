@@ -1,3 +1,4 @@
+import { descriptionParts } from './PublishingDescription.js';
 export const hostedPublishingUrl = 'https://paramagic-testing.essdog.chatgpt.site';
 
 export function createPublishingClient({ fetchImpl = globalThis.fetch, browser = globalThis.window,
@@ -20,6 +21,21 @@ export function createPublishingClient({ fetchImpl = globalThis.fetch, browser =
     available, account,
     signOut: () => request('/api/auth/logout', { method: 'POST' }),
     list: (before = '') => request(`/api/drawings${before ? `?before=${encodeURIComponent(before)}` : ''}`),
+    search: (query, before = '') => request(`/api/drawings/search?q=${encodeURIComponent(query)}&before=${encodeURIComponent(before)}`),
+    setDiscoverable: (id, allowed) => request(`/api/drawings/${encodeURIComponent(id)}/discovery`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ allowed }),
+    }),
+    async loadForViewing(id) {
+      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { credentials: 'same-origin' });
+      if (!response.ok) {
+        const value = await response.json(); throw new Error(value.error || 'This drawing cannot be opened.');
+      }
+      return { content: await response.text(), name: decodeURIComponent(response.headers.get('X-ParaMagic-Drawing-Name') || 'Shared drawing') };
+    },
+    async checkViewingAccess(id) {
+      const response = await fetchImpl(`/api/drawings/${encodeURIComponent(id)}/open`, { method: 'HEAD', credentials: 'same-origin' });
+      if (!response.ok) throw new Error('This drawing is no longer available to your account.');
+    },
     remove: id => request(`/api/drawings/${encodeURIComponent(id)}`, { method: 'DELETE' }),
     signIn(provider, signal) {
       if (!['google', 'github'].includes(provider)) return Promise.reject(new Error('Unknown sign-in provider.'));
@@ -56,13 +72,19 @@ export function createPublishingClient({ fetchImpl = globalThis.fetch, browser =
         if (signal?.aborted) onAbort();
       });
     },
-    async publish({ name, content, signal, onProgress = () => {} }) {
+    async publish({ name, content, description = '', searchable = false, signal, onProgress = () => {} }) {
       const blob = new Blob([content], { type: 'application/vnd.paramagic+json' });
       const { drawing, chunkBytes } = await request('/api/drawings', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, bytes: blob.size }), signal,
+        body: JSON.stringify({ name, bytes: blob.size, descriptionChars: description.length, searchable }), signal,
       });
       try {
+        let descriptionPart = 0;
+        for (const text of descriptionParts(description)) {
+          await request(`/api/drawings/${drawing.id}/description/${descriptionPart++}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }), signal,
+          });
+        }
         for (let offset = 0, part = 0; offset < blob.size; offset += chunkBytes, part++) {
           await request(`/api/drawings/${drawing.id}/parts/${part}`, {
             method: 'PUT', body: blob.slice(offset, offset + chunkBytes), signal,

@@ -6,7 +6,8 @@ export function openPublishDialog({ modal, canvas, client, getName, serialize, o
     <h2>Publish Drawing</h2>
     <section class="publishing-account" aria-label="Publishing account"></section>
     ${drawingMetadataFieldsMarkup(canvas.getDocumentMetadata(), 'publish')}
-    <p class="drawing-publish-note">Publishing creates a stored copy. Anyone with its link can download it. You can delete your published copies from My drawings.</p>
+    <label class="publishing-discovery"><input type="checkbox" name="searchable" /> Allow signed-in users to find and view this drawing</label>
+    <p class="drawing-publish-note">Viewers can adjust your controls and export PNG or DXF. They cannot edit the drawing or save a ParaMagic file. You can change discovery or delete the stored copy in My drawings.</p>
     <p class="drawing-publish-status" role="status">Sign in to publish.</p>
     <div class="publishing-result" hidden></div>
     <div class="drawing-publish-actions">
@@ -52,14 +53,15 @@ export function openPublishDialog({ modal, canvas, client, getName, serialize, o
       status.textContent = 'Preparing the drawing and its images…';
       const content = await serialize(name);
       if (upload.signal.aborted) throw new Error('Upload cancelled.');
-      const drawing = await client.publish({ name, content, signal: upload.signal,
+      const searchable = form.querySelector('[name="searchable"]').checked;
+      const drawing = await client.publish({ name, content, description: details.drawingDescription, searchable, signal: upload.signal,
         onProgress(bytes, total) { status.textContent = `Uploading… ${Math.round(bytes / total * 100)}%`; } });
       status.textContent = 'Drawing published.';
-      const link = document.createElement('a'); link.href = drawing.url; link.textContent = 'Download published drawing';
+      const link = document.createElement('a'); link.href = drawing.url; link.textContent = 'Download your ParaMagic file';
       const share = document.createElement('input'); share.readOnly = true;
-      share.setAttribute('aria-label', 'Drawing share link'); share.value = new URL(drawing.url, location.origin).href;
+      share.setAttribute('aria-label', 'Drawing viewer link'); share.value = new URL(`/?view=${drawing.id}`, location.origin).href;
       share.addEventListener('focus', () => share.select());
-      result.replaceChildren(link, share); result.hidden = false; published = true;
+      result.replaceChildren(link); if (searchable) result.append(share); result.hidden = false; published = true;
     } catch (error) { status.textContent = error.message; }
     finally {
       inProgress = false; view.lock(false); manageButton.disabled = false; accountPanel.inert = false;

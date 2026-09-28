@@ -1,6 +1,7 @@
 import { newIdentity } from './identity.js';
 import { HttpError, json, readJson, boundedBody, sameOrigin } from './http.js';
 import { requireUser } from './auth.js';
+import { discoveryRoute, searchDrawings } from './discovery.js';
 
 // Store independent chunks so a drawing is not constrained by a single HTTP request
 // or R2 multipart part-count limit. Downloads stream the original bytes in order.
@@ -12,7 +13,7 @@ export function storageLimit(env) {
   return /^\d+$/.test(raw) && Number.isSafeInteger(value) && value > 0 ? value : 0;
 }
 function publicDrawing(row) {
-  return { id: row.id, name: row.name, bytes: row.bytes, state: row.state,
+  return { id: row.id, name: row.name, bytes: row.bytes, state: row.state, searchable: Boolean(row.searchable),
     createdAt: row.created_at, url: row.state === 'published' ? `/api/drawings/${row.id}/download` : null };
 }
 const objectKey = (id, part) => `drawings/${id}/${part}`;
@@ -38,6 +39,7 @@ async function download(env, id, request) {
   if (!row) throw new HttpError(404, 'Drawing not found. It may have been deleted by its owner.');
   const headers = {
     'Content-Type': 'application/vnd.paramagic+json', 'Content-Length': String(row.bytes),
+    'X-ParaMagic-Drawing-Name': encodeURIComponent(row.name),
     'Content-Disposition': `attachment; filename="drawing.paramagic"; filename*=UTF-8''${encodeURIComponent(`${row.name}.paramagic`).replace(/['()*]/g, c => `%${c.charCodeAt(0).toString(16)}`)}`,
     'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store',
     'Content-Security-Policy': "default-src 'none'; sandbox", 'Referrer-Policy': 'no-referrer',
@@ -67,15 +69,21 @@ async function download(env, id, request) {
   return new Response(body, { headers });
 }
 export async function drawingsRoute(request, env, path) {
-  const match = path.match(/^\/api\/drawings\/([a-f0-9-]{36})(?:\/(download|complete|parts\/(\d+)))?$/);
-  if (match?.[2] === 'download' && ['GET', 'HEAD'].includes(request.method)) return download(env, match[1], request);
+  if (path === '/api/drawings/search' && request.method === 'GET') return searchDrawings(request, env);
+  const match = path.match(/^\/api\/drawings\/([a-f0-9-]{36})(?:\/(download|open|complete|discovery|description\/\d+|parts\/(\d+)))?$/);
   if (path !== '/api/drawings' && !match) return null;
   const user = await requireUser(request, env.DB);
   if (!['GET', 'HEAD'].includes(request.method)) sameOrigin(request);
+  if (match?.[2] === 'open' && ['GET', 'HEAD'].includes(request.method)) {
+    const shared = await env.DB.prepare(`SELECT d.id FROM drawings d LEFT JOIN drawing_discovery v ON v.drawing_id=d.id
+      WHERE d.id=? AND d.state='published' AND (d.owner_id=? OR v.allowed=1)`).bind(match[1], user.id).first();
+    if (!shared) throw new HttpError(404, 'This drawing is no longer available for viewing.');
+    return download(env, match[1], request);
+  }
   if (path === '/api/drawings' && request.method === 'GET') {
     const cursor = new URL(request.url).searchParams.get('before') || '';
-    const rows = await env.DB.prepare(`SELECT * FROM drawings WHERE owner_id = ? AND (? = '' OR id < ?)
-      ORDER BY id DESC LIMIT 51`).bind(user.id, cursor, cursor).all();
+    const rows = await env.DB.prepare(`SELECT d.*,v.allowed AS searchable FROM drawings d LEFT JOIN drawing_discovery v ON v.drawing_id=d.id
+      WHERE d.owner_id = ? AND (? = '' OR d.id < ?) ORDER BY d.id DESC LIMIT 51`).bind(user.id, cursor, cursor).all();
     return json({ drawings: rows.results.slice(0, 50).map(publicDrawing),
       next: rows.results.length > 50 ? rows.results[49].id : null });
   }
@@ -86,6 +94,9 @@ export async function drawingsRoute(request, env, path) {
     const details = await readJson(request);
     if (!details || typeof details.name !== 'string' || !details.name.trim() || details.name.length > 200
       || !Number.isSafeInteger(details.bytes) || details.bytes <= 0) throw new HttpError(400, 'A drawing name and its size are required.');
+    const descriptionChars = details.descriptionChars ?? 0;
+    if (!Number.isSafeInteger(descriptionChars) || descriptionChars < 0 || descriptionChars > details.bytes
+      || (details.searchable !== undefined && typeof details.searchable !== 'boolean')) throw new HttpError(400, 'Invalid discovery settings.');
     const id = newIdentity();
     const now = Date.now();
     // Admission and reservation are one SQL statement: concurrent users cannot overbook the cap.
@@ -95,12 +106,17 @@ export async function drawingsRoute(request, env, path) {
       .bind(id, user.id, details.name.trim(), details.bytes, Math.ceil(details.bytes / CHUNK_BYTES), now, now,
         details.bytes, limit, user.id).first();
     if (!inserted) throw new HttpError(409, 'There is not enough available storage, or you already have unfinished uploads. Remove a drawing or unfinished upload from My drawings and try again.');
-    return json({ drawing: publicDrawing(inserted), chunkBytes: CHUNK_BYTES }, 201);
+    await env.DB.prepare('INSERT INTO drawing_discovery (drawing_id,allowed,description_chars) VALUES (?,?,?)')
+      .bind(id, details.searchable === true ? 1 : 0, descriptionChars).run();
+    return json({ drawing: publicDrawing({ ...inserted, searchable: details.searchable }), chunkBytes: CHUNK_BYTES }, 201);
   }
   if (!match) return null;
   const [, id, action, partText] = match;
   const row = await env.DB.prepare('SELECT * FROM drawings WHERE id = ? AND owner_id = ?').bind(id, user.id).first();
   if (!row) throw new HttpError(404, 'Drawing not found.');
+  if (action === 'download' && ['GET', 'HEAD'].includes(request.method)) return download(env, id, request);
+  const discovery = await discoveryRoute(request, env, id, action, row);
+  if (discovery) return discovery;
   if (partText !== undefined && request.method === 'PUT') {
     const part = Number(partText);
     if (!Number.isSafeInteger(part) || part < 0 || part >= row.parts) throw new HttpError(400, 'Invalid upload part.');
@@ -128,7 +144,9 @@ export async function drawingsRoute(request, env, path) {
   if (action === 'complete' && request.method === 'POST') {
     if (row.state === 'published') return json({ drawing: publicDrawing(row) });
     const published = await env.DB.prepare(`UPDATE drawings SET state = 'published', updated_at = ?
-      WHERE id = ? AND state = 'uploading' AND next_part = parts RETURNING *`).bind(Date.now(), id).first();
+      WHERE id = ? AND state = 'uploading' AND next_part = parts
+      AND NOT EXISTS (SELECT 1 FROM drawing_discovery v WHERE v.drawing_id=drawings.id
+        AND v.next_part != (v.description_chars + 3999) / 4000) RETURNING *`).bind(Date.now(), id).first();
     if (!published) throw new HttpError(409, 'The drawing has not finished uploading.');
     return json({ drawing: publicDrawing(published) });
   }

@@ -1431,6 +1431,26 @@ button.active .tool-icon-asset::after, button[aria-pressed="true"] .tool-icon-as
 .published-drawing-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .published-delete-confirm { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; border: 1px solid #bbb; }
 .published-delete-confirm p { width: 100%; font-size: 13px; line-height: 1.5; }
+.publishing-discovery { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.5; }
+.publishing-discovery input { width: auto; flex: none; margin-top: 3px; }
+.drawing-search { display: grid; gap: 8px; }
+.drawing-search input { min-width: 0; padding: 8px; }
+.drawing-viewer { display: grid; grid-template-columns: 300px 1fr; grid-template-rows: auto 1fr auto; height: 100dvh; }
+.viewer-header { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 12px 18px; flex-wrap: wrap; border-bottom: 1px solid #ccc; }
+.viewer-header h1 { font-size: 18px; margin: 0; flex: 1; }
+.viewer-header span { font-size: 12px; }
+.viewer-header button { padding: 8px 12px; border: 1px solid #ccc; }
+.viewer-sidebar { overflow: auto; padding: 14px; border-right: 1px solid #ccc; }
+.viewer-sidebar > p { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.viewer-canvas { min-width: 0; min-height: 0; position: relative; inset: auto; cursor: default; }
+.viewer-controls .controls-panel { position: static; width: auto; min-width: 0; max-width: none; box-shadow: none; transform: none; margin: 15px 0; }
+.viewer-controls .controls-panel [hidden] { display: none !important; }
+.viewer-status { grid-column: 1 / -1; padding: 8px 16px; margin: 0; border-top: 1px solid #ccc; font-size: 13px; }
+@media (max-width: 640px) {
+  .drawing-viewer { grid-template-columns: 210px 1fr; }
+  .viewer-header { gap: 8px; padding: 10px; }
+  .viewer-header h1, .viewer-header span { flex-basis: 100%; }
+}
 .drawing-properties-note, .drawing-properties-footnote { line-height: 1.45; }
 .drawing-properties-footnote { font-size: 12px; }
 .document-variables-button { justify-self: start; border: 1px solid #b9c7d8; background: #f4f7fb; color: #245a94; padding: 7px 11px; cursor: pointer; }

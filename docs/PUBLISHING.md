@@ -5,9 +5,22 @@ use ParaMagic accounts created on the first Google or GitHub sign-in. End users 
 not sign in to ChatGPT. Google and GitHub identities are separate accounts; matching
 email addresses do not link them automatically. Users should return with the same provider.
 
-Published drawings are downloadable by anyone with the link. Only the owning account
-can list or delete its copies. Deleting a copy disables its link; existing downloads
-and the open drawing are unaffected. Each Publish creates a new copy.
+Owners can download their `.paramagic` files and delete their stored copies. Each
+Publish creates a new copy. Discovery starts off: owners must explicitly allow
+signed-in users to search a copy's description and open its viewer. Owners can
+change that setting in My drawings. Search matches any keyword, ignores case, and
+matches within words. Long descriptions are indexed in overlapping chunks.
+
+Other users open a separate viewer with the owner's controls and only PNG/DXF
+export. It has no drawing tools, control-authoring interface, local autosave,
+ParaMagic/JSON/SVG export, or publishing actions. Control values affect the local
+viewing session only. Original-file download and all publication mutations are
+checked against the owner on the server. Withdrawing discovery blocks new viewer
+loads and export checks; it cannot retract data already delivered to a browser.
+
+This is an application permission model, not copy protection: a browser must
+receive drawing data to render and solve it, and a technically skilled visitor
+can inspect that data. Do not use this feature as DRM for secret design geometry.
 
 ## Enable the testing site
 
@@ -22,7 +35,7 @@ In the site's environment settings, configure:
 | Variable | Value | Secret |
 | --- | --- | --- |
 | `APP_ORIGIN` | `https://paramagic-testing.essdog.chatgpt.site` (no trailing slash) | No |
-| `STORAGE_LIMIT_BYTES` | Administrator-chosen total drawing bytes; absent or zero pauses new publishing | No |
+| `STORAGE_LIMIT_BYTES` | `500000000` for the requested 500 MB total; absent or zero pauses new publishing | No |
 | `GOOGLE_CLIENT_ID` | Google web application OAuth client ID | No |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | Yes |
 | `GITHUB_CLIENT_ID` | GitHub OAuth app client ID | No |
@@ -97,4 +110,6 @@ can be saved and opened there.
 
 Before declaring live publishing ready, verify on the hosted site: both configured
 providers; sign-out; drawing preserved during sign-in; publish with embedded images;
-download and reopen; owner deletion; a second account denied deletion; and the total cap.
+owner download and reopen; owner deletion; a second account denied mutation and
+original-file download; discovery on/off; keyword search; viewer controls and
+PNG/DXF export; no drawing tools or ParaMagic save in the viewer; and the total cap.

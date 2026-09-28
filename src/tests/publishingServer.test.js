@@ -4,6 +4,7 @@ import { publishingTestRuntime } from '../../scripts/publishing-test-runtime.mjs
 import { CHUNK_BYTES } from '../../worker/drawings.js';
 import { digest } from '../../worker/identity.js';
 import { generateKeyPair, exportJWK, SignJWT } from 'jose';
+import { descriptionParts } from '../PublishingDescription.js';
 
 test('publishing authorization, chunk integrity, quotas, cleanup and sessions', async t => {
   const { runtime, db, identity, bucket, fetchMock } = await publishingTestRuntime({ limit: CHUNK_BYTES * 2 });
@@ -30,7 +31,7 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     for (const [suffix, method, body] of [['', 'DELETE'], ['/parts/0', 'PUT', content.slice(0, 1)], ['/complete', 'POST']]) {
       assert.equal((await call(`/api/drawings/${drawing.id}${suffix}`, method, body, stranger)).status, 404);
     }
-    assert.equal((await call(`/api/drawings/${drawing.id}/download`, 'GET', undefined, null)).status, 404);
+    assert.equal((await call(`/api/drawings/${drawing.id}/download`, 'GET', undefined, null)).status, 401);
     assert.equal((await call(`/api/drawings/${drawing.id}/complete`, 'POST')).status, 409);
     assert.equal((await call(`/api/drawings/${drawing.id}/parts/1`, 'PUT', content.slice(CHUNK_BYTES))).status, 409);
     assert.equal((await call(`/api/drawings/${drawing.id}/parts/0`, 'PUT', content.slice(0, 10))).status, 400);
@@ -38,7 +39,8 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal((await call(`/api/drawings/${drawing.id}/parts/1`, 'PUT', new Uint8Array(32))).status, 413);
     assert.equal((await call(`/api/drawings/${drawing.id}/parts/1`, 'PUT', content.slice(CHUNK_BYTES))).status, 200);
     assert.equal((await call(`/api/drawings/${drawing.id}/complete`, 'POST')).status, 200);
-    const response = await call(`/api/drawings/${drawing.id}/download`, 'GET', undefined, null);
+    assert.equal((await call(`/api/drawings/${drawing.id}/download`, 'GET', undefined, stranger)).status, 404);
+    const response = await call(`/api/drawings/${drawing.id}/download`);
     assert.equal(response.status, 200); assert.match(response.headers.get('Content-Disposition'), /attachment/);
     assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
     assert.deepEqual(new Uint8Array(await response.arrayBuffer()), content);
@@ -51,7 +53,7 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal((await call('/api/drawings', 'POST', { bytes: 1, name: 'Full' })).status, 409);
     assert.equal((await call(`/api/drawings/${pending.id}`, 'DELETE')).status, 200);
     assert.equal((await call(`/api/drawings/${drawing.id}`, 'DELETE')).status, 200);
-    assert.equal((await call(`/api/drawings/${drawing.id}/download`, 'GET', undefined, null)).status, 404);
+    assert.equal((await call(`/api/drawings/${drawing.id}/download`)).status, 404);
     assert.equal((await bucket.list()).objects.length, 0);
     assert.equal((await db.prepare('SELECT COUNT(*) AS total FROM drawings').first()).total, 0);
   });
@@ -65,6 +67,39 @@ test('publishing authorization, chunk integrity, quotas, cleanup and sessions', 
     assert.equal((await bucket.list()).objects.length, 0);
     assert.equal(await db.prepare('SELECT id FROM drawings WHERE id=?').bind(old.id).first(), null);
     await call(`/api/drawings/${fresh.id}`, 'DELETE');
+  });
+  await t.test('discovery is opt-in, searches descriptions with any keyword, and only grants viewing', async () => {
+    const description = 'Private pattern ' + '.'.repeat(3980) + 'SeamAllowance ' + 'x '.repeat(21000) + 'Red OTTOMAN';
+    const bytes = new TextEncoder().encode(JSON.stringify({ description }));
+    const started = await call('/api/drawings', 'POST', { name: 'NameOnlyKeyword', bytes: bytes.length,
+      descriptionChars: description.length, searchable: false });
+    const item = (await started.json()).drawing;
+    await call(`/api/drawings/${item.id}/parts/0`, 'PUT', bytes);
+    assert.equal((await call(`/api/drawings/${item.id}/complete`, 'POST')).status, 409);
+    let part = 0;
+    for (const text of descriptionParts(description)) {
+      const response = await call(`/api/drawings/${item.id}/description/${part++}`, 'PUT', { text });
+      assert.equal(response.status, 200, await response.clone().text());
+    }
+    assert.equal((await call(`/api/drawings/${item.id}/complete`, 'POST')).status, 200);
+    const search = async query => (await (await call(`/api/drawings/search?q=${encodeURIComponent(query)}`, 'GET', undefined, stranger)).json()).drawings;
+    assert.equal((await call('/api/drawings/search?q=red', 'GET', undefined, null)).status, 401);
+    assert.equal((await search('red')).length, 0);
+    assert.equal((await call(`/api/drawings/${item.id}/open`, 'GET', undefined, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}/discovery`, 'PATCH', { allowed: true }, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}/discovery`, 'PATCH', { allowed: true })).status, 200);
+    for (const query of ['red no-match', 'ottoman', 'SeamAllowance']) assert.equal((await search(query))[0].id, item.id);
+    assert.equal((await search('NameOnlyKeyword')).length, 0);
+    assert.equal((await call(`/api/drawings/${item.id}/open`, 'GET', undefined, stranger)).status, 200);
+    assert.equal((await call(`/api/drawings/${item.id}/open`, 'HEAD', undefined, stranger)).status, 200);
+    assert.equal((await call(`/api/drawings/${item.id}/download`, 'GET', undefined, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}`, 'DELETE', undefined, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}/parts/0`, 'PUT', bytes, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}/discovery`, 'PATCH', { allowed: false })).status, 200);
+    assert.equal((await search('red')).length, 0);
+    assert.equal((await call(`/api/drawings/${item.id}/open`, 'HEAD', undefined, stranger)).status, 404);
+    assert.equal((await call(`/api/drawings/${item.id}`, 'DELETE')).status, 200);
+    assert.equal((await db.prepare('SELECT COUNT(*) AS total FROM drawing_descriptions WHERE drawing_id=?').bind(item.id).first()).total, 0);
   });
   await t.test('OAuth binds state to the browser, consumes it once, and creates a provider account', async () => {
     const start = await call('/api/auth/github/start', 'GET', undefined, null);

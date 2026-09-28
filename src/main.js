@@ -90,6 +90,7 @@ import { createDrawingPropertiesDialogs } from './DrawingPropertiesDialog.js';
 import { openPublishDialog } from './DrawingPublishDialog.js';
 import { openMyDrawingsDialog } from './MyDrawingsDialog.js';
 import { createPublishingClient } from './PublishingClient.js';
+import { openFindDrawingsDialog } from './FindDrawingsDialog.js';
 import { toolIconAssetStyle } from './tool-icon-assets.js';
 
 configureImageCatalogResources(imageCatalogResources);
@@ -208,6 +209,7 @@ app.innerHTML = `
           ${appMenuButton('Save As', 'id="saveAsButton"')}
           ${appMenuButton('Publish', 'id="publishButton"')}
           ${appMenuButton('My drawings', 'id="myDrawingsButton"')}
+          ${appMenuButton('Find drawings', 'id="findDrawingsButton"')}
           ${appMenuButton('Drawing Properties', 'id="drawingPropertiesButton"')}
           <div class="app-menu-separator" aria-hidden="true"></div>
           ${appMenuButton('Print', 'id="printButton" data-requires-drawing disabled')}
@@ -1247,6 +1249,7 @@ const drawingPropertiesDialogs = createDrawingPropertiesDialogs({
 const publishingClient = createPublishingClient();
 const openMyDrawings = () => openMyDrawingsDialog({ modal, client: publishingClient });
 document.getElementById('myDrawingsButton').addEventListener('click', openMyDrawings);
+document.getElementById('findDrawingsButton').addEventListener('click', () => openFindDrawingsDialog({ modal, client: publishingClient }));
 document.getElementById('publishButton').addEventListener('click', () => openPublishDialog({
   modal, canvas: canvasController, client: publishingClient, getName: currentDrawingName, openMyDrawings,
   serialize: name => serializePortableDrawingJson(drawingSnapshotForFile(name), name),

@@ -4,6 +4,7 @@ import { join } from 'node:path';
 const required = [
   'index.html',
   'src/main.js',
+  'src/entry.js',
   'src/app-config.js',
   'packages/paramagic-core/package.json',
   'packages/paramagic-core/src/index.js',
@@ -24,7 +25,7 @@ for (const file of required) {
   if (!text.trim()) throw new Error(`${file} is empty`);
 }
 const html = readFileSync('index.html', 'utf8');
-if (!html.includes('/src/main.js')) throw new Error('index.html does not load the application entry point');
+if (!html.includes('/src/entry.js')) throw new Error('index.html does not load the application entry point');
 
 function javascriptFiles(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

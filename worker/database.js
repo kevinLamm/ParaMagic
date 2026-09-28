@@ -21,6 +21,15 @@ export const schema = [
     created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL
   )`,
   `CREATE INDEX IF NOT EXISTS drawings_owner ON drawings(owner_id, created_at DESC, id DESC)`,
+  `CREATE TABLE IF NOT EXISTS drawing_discovery (
+    drawing_id TEXT PRIMARY KEY REFERENCES drawings(id) ON DELETE CASCADE,
+    allowed INTEGER NOT NULL DEFAULT 0 CHECK(allowed IN (0,1)),
+    description_chars INTEGER NOT NULL, next_part INTEGER NOT NULL DEFAULT 0, preview TEXT NOT NULL DEFAULT ''
+  )`,
+  `CREATE TABLE IF NOT EXISTS drawing_descriptions (
+    drawing_id TEXT NOT NULL REFERENCES drawings(id) ON DELETE CASCADE,
+    part INTEGER NOT NULL, search_text TEXT NOT NULL, PRIMARY KEY(drawing_id, part)
+  )`,
 ];
 const initialized = new WeakMap();
 export async function ensureDatabase(db) {

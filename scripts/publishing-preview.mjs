@@ -2,11 +2,17 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
 import { publishingTestRuntime } from './publishing-test-runtime.mjs';
+import { publishingFixtureDrawing } from './publishing-fixture-drawing.mjs';
+import { createPublishingClient } from '../src/PublishingClient.js';
 
 // Isolated, in-memory browser fixture. No production credentials or storage are used.
 // The production build starts at worker/index.js and cannot reach these routes.
 const { runtime, identity, sessionFor } = await publishingTestRuntime();
 const users = { owner: await identity('Local test owner'), other: await identity('Local other owner') };
+const fixtureClient = createPublishingClient({ fetchImpl: (path, options) => runtime.dispatchFetch(`http://localhost:5180${path}`, {
+  ...options, headers: { ...options?.headers, Origin: 'http://localhost:5180', Cookie: users.owner.cookie },
+}) });
+const fixture = await fixtureClient.publish(publishingFixtureDrawing());
 const root = resolve('dist/client');
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
   '.wasm': 'application/wasm', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2' };
@@ -40,6 +46,6 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': types[extname(file)] || 'text/html', 'Cache-Control': 'no-store' }); res.end(body);
   } catch (error) { console.error(error.message); res.writeHead(500).end('Local fixture error'); }
 });
-server.listen(5180, '127.0.0.1', () => console.log('Isolated publishing preview: http://localhost:5180'));
+server.listen(5180, '127.0.0.1', () => console.log(`Isolated publishing preview: http://localhost:5180\nViewer fixture: http://localhost:5180/?view=${fixture.id}`));
 async function stop() { server.close(); await runtime.dispose(); process.exit(); }
 process.on('SIGINT', stop); process.on('SIGTERM', stop);
